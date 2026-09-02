@@ -8,8 +8,12 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "machine-testimony",
   "compatibility_date": "2026-09-02",
+  // The site lives in public/ rather than at the root, so what gets published
+  // is exactly what is meant to be. Pointing this at the repository root read
+  // 108 files out of a directory holding eight, because git internals and the
+  // readme are also files.
   "assets": {
-    "directory": "./",
+    "directory": "./public",
     "not_found_handling": "404-page"
   }
 }

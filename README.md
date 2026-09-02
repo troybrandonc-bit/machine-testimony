@@ -3,14 +3,21 @@
 The site for the research programme. One page, no build step, no dependencies.
 
 ```
-index.html      the page
-og.png          1200x630 social card
-icon.png        512x512, also the apple touch icon
-favicon.ico     32x32
-llms.txt        the same content for a machine reader
-robots.txt      everything is meant to be read
-sitemap.xml     one URL
+public/         everything that gets published, and nothing else
+  index.html      the page
+  og.png          1200x630 social card
+  icon.png        512x512, also the apple touch icon
+  favicon.ico     32x32
+  llms.txt        the same content for a machine reader
+  robots.txt      everything is meant to be read
+  sitemap.xml     one URL
+wrangler.jsonc  how it deploys: an assets-only Worker, no code
 ```
+
+The split matters. Pointing the asset directory at the repository root packaged
+108 files out of a directory holding eight, because git internals and this
+readme are also files. `public/` makes what is published exactly what is meant
+to be.
 
 ## Why it is its own repository
 
