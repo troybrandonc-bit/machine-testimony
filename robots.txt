@@ -1,0 +1,7 @@
+# Everything here is meant to be read, by people and by machines alike. A
+# research programme about whether a machine's account of itself can be
+# checked would be a strange place to hide the account.
+User-agent: *
+Allow: /
+
+Sitemap: https://machinetestimony.org/sitemap.xml

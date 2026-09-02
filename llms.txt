@@ -1,0 +1,51 @@
+# Machine Testimony
+
+> An independent research programme on whether what an automated system says
+> about its own reasoning and actions can be verified by someone who was not
+> there. Machine testimony is what a system says about what it believed, what
+> it was told, what it decided and who allowed it. Testimony is not evidence
+> until someone else can check it, so this programme publishes the formats,
+> validators and benchmarks that make the checking possible, and implements
+> everything it publishes.
+
+The question is not new. In Machine Testimony (126 Yale L.J. 1972, 2017) Andrea
+Roth argued that information conveyed by a machine should carry testimonial
+safeguards, and worked through what those would have to be: credibility testing
+through design and operation protocols, disclosure and access, authentication
+and reliability rules, impeachment, and corroboration. This programme takes that
+as the brief and builds the parts of it that are engineering.
+
+A good deal of current work goes into receipts: signed, hash chained records
+proving an entry has not been altered since it was written. That is worth doing
+and settles less than it appears to, because integrity protects the entry rather
+than the claim inside it. A record can be cryptographically perfect and
+factually false. The harder questions sit underneath: what the system believed
+when it decided and on what evidence, what contradicted it and whether the
+losing side is still in the record, what happened to conclusions resting on a
+premise that was later withdrawn, and whether a human approval came from a
+second party or from the acting agent under another name.
+
+## Published work
+
+- [The Testimony Record](https://infrastructure.omem-cloud.com/spec/testimony-record/): a format for what a system believed, what contradicted it, what it tried to do and who approved it, with four conformance levels TR-1 to TR-4 so a system can be placed rather than described. Specification text CC BY 4.0, schema MIT, free to implement in any language.
+- [The reference validator](https://infrastructure.omem-cloud.com/spec/testimony-record/): one file, Python standard library only, no network. Copy it into your own repository and run it in your own CI. A conformance claim the listener cannot check is an adjective.
+- [The implementations register](https://infrastructure.omem-cloud.com/spec/testimony-record/implementations/): which systems emit records that pass the validator and at what level. Entries follow a checked record, never a self-report.
+- [The commons corpus](https://infrastructure.omem-cloud.com/commons/): regularities in human working behaviour as counts over populations, contributed by installations that opted in, holding no fact about any person. CC BY 4.0, with a dataset card that states what it does not cover.
+- The Witness benchmark: six properties a memory system either has or does not, checked by a runnable harness. No fabrication, retraction honoured, disagreement visible, identities kept apart, conclusions die with their premises, every memory sourced.
+- The calibration benchmark: whether a system's confidence about a person tracks how often it turns out right, scored by Brier skill against the base rate, and reporting nothing rather than a flattering number when the record is too thin to measure.
+- [The claims ledger](https://infrastructure.omem-cloud.com/claims/): every load-bearing sentence next to the executable statement that would go red if it stopped being true.
+
+## What this is not
+
+- Not a certification body. This programme publishes formats and the tools to check them. It audits nobody and issues no certificates. The validator is public so any conformance claim can be checked by the person hearing it, including every claim made here.
+- One member. A research programme run by one person, not an institution with a staff.
+- One implementation so far. The Testimony Record is implemented today by OMEM, which is the reference implementation and is not the specification. A format with one implementation is a proposal rather than a standard, and a second implementation is worth more to this work than anything else on the list.
+- It does not decide what is true. Nothing published here reads two accounts and concludes which is right. The record keeps both sides, says which evidence each rests on, and leaves the judgement to a person.
+
+## Reference implementation
+
+- [OMEM](https://github.com/troybrandonc-bit/Omem): MIT licensed, self hosted, zero runtime dependencies. `pip install omem-infrastructure && omem-server`.
+- [Documentation](https://infrastructure.omem-cloud.com/)
+
+Editor: Troy Clifford. Operated by Black Tier Solutions Ltd.
+Specification text CC BY 4.0. Schema and tools MIT.
