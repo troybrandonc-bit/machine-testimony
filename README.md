@@ -19,19 +19,21 @@ wrangler.jsonc  how it deploys: an assets-only Worker, no code
 
 ## The mark
 
-Four rules of increasing length inside a frame left open at the top right. The
-rules are the conformance levels, each containing the ones before it; the open
-corner is there because a record that cannot be added to is not a record.
+An opening quotation mark and a closing one, facing each other.
 
-One colour, so it survives an embossing, a fax and a favicon. Below about
-24 pixels the frame and the fourth rule become noise, so `mark-solid.svg` drops
-to three heavier rules and no frame. Nothing here is decorative: the mark is
-the one shape this work already owned.
+Testimony is an account, which is why it is a quote mark at all. The two face
+inward because the record keeps both sides: a conflict names at least two
+sides and both are retained, which is what TR-2 asks for. A conventional
+double quote would have said the first half and not the second, and it would
+have looked like every other quote mark.
 
-The split matters. Pointing the asset directory at the repository root packaged
-108 files out of a directory holding eight, because git internals and this
-readme are also files. `public/` makes what is published exactly what is meant
-to be.
+One colour, no frame, and it still reads at sixteen pixels, which is where
+most marks stop being a shape and start being a smudge. The icon, the favicon
+and the social card are generated from the same four coordinates as the SVG
+rather than drawn separately, so they cannot drift apart.
+
+`public/brand/mark.svg` uses `currentColor`, so it inverts with the theme
+instead of needing a second file.
 
 ## Why it is its own repository
 
