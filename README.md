@@ -11,8 +11,22 @@ public/         everything that gets published, and nothing else
   llms.txt        the same content for a machine reader
   robots.txt      everything is meant to be read
   sitemap.xml     one URL
+  brand/
+    mark.svg        the mark, full cut
+    mark-solid.svg  the small cut, three rules, no frame
 wrangler.jsonc  how it deploys: an assets-only Worker, no code
 ```
+
+## The mark
+
+Four rules of increasing length inside a frame left open at the top right. The
+rules are the conformance levels, each containing the ones before it; the open
+corner is there because a record that cannot be added to is not a record.
+
+One colour, so it survives an embossing, a fax and a favicon. Below about
+24 pixels the frame and the fourth rule become noise, so `mark-solid.svg` drops
+to three heavier rules and no frame. Nothing here is decorative: the mark is
+the one shape this work already owned.
 
 The split matters. Pointing the asset directory at the repository root packaged
 108 files out of a directory holding eight, because git internals and this
