@@ -1,0 +1,15 @@
+{
+  // How this site is deployed, kept beside the site rather than in a
+  // dashboard field, so the deploy is reproducible by anyone with the repo.
+  //
+  // There is no Worker code here and no `main`: an assets-only Worker serves
+  // the files as they sit. Nothing compiles, so a deploy can fail for exactly
+  // one reason, a wrong directory, and that is the point.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "machine-testimony",
+  "compatibility_date": "2026-09-02",
+  "assets": {
+    "directory": "./",
+    "not_found_handling": "404-page"
+  }
+}
