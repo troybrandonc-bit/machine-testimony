@@ -102,6 +102,31 @@
   }
   @media (min-width:760px){.works{grid-template-columns:1fr 1fr}}
 
+  /* The conformance ladder. Each level contains the ones beneath it, so the
+     bar accumulates rather than restarting: the shape carries the semantics
+     and the reader does not have to be told twice. */
+  .ladder{margin:40px 0 0;border-left:1px solid var(--line)}
+  .rung{position:relative;padding:24px 0 24px 30px;border-bottom:1px solid var(--line-soft)}
+  .rung:last-child{border-bottom:0;padding-bottom:0}
+  .rung::before{
+    content:"";position:absolute;left:-4px;top:31px;width:7px;height:7px;
+    border-radius:50%;background:var(--line);border:1px solid var(--bg);
+  }
+  .rung.is-top::before{background:var(--accent)}
+  .rung .mark{
+    font-family:var(--mono);font-size:12px;letter-spacing:.06em;
+    color:var(--muted);text-transform:uppercase;
+  }
+  .rung.is-top .mark{color:var(--accent)}
+  .rung h3{
+    font-family:var(--display);font-weight:500;font-size:clamp(1.05rem,2vw,1.28rem);
+    letter-spacing:-.02em;color:var(--ink);margin:7px 0 0;max-width:30rem;
+  }
+  .rung p{margin:8px 0 0;font-size:15px;max-width:36rem}
+  .meter{height:3px;border-radius:2px;background:var(--line-soft);margin-top:16px;max-width:22rem}
+  .meter i{display:block;height:100%;border-radius:2px;background:var(--accent);opacity:.55}
+  .rung.is-top .meter i{opacity:1}
+
   .nots{margin:0;padding:0;list-style:none;display:grid;gap:26px}
   .nots li{padding-left:20px;border-left:2px solid var(--line);}
   .nots strong{color:var(--ink);font-weight:500;display:block;margin-bottom:4px}
@@ -176,6 +201,61 @@
           another name. Those are properties of testimony rather than of
           storage, and they are what this programme works on.
         </p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="two">
+      <div>
+        <h2>Four things a record can be asked to survive</h2>
+        <p class="lede" style="margin-top:18px">
+          Conformance levels exist so a system can be placed rather than
+          described. Each one contains the ones beneath it, and the validator
+          reports the highest a record actually reaches, so nobody has to take
+          an adjective on trust.
+        </p>
+      </div>
+      <div class="ladder">
+        <div class="rung">
+          <span class="mark">TR-1</span>
+          <h3>The record exists, is well formed, and is append-only</h3>
+          <p>
+            Every entry parses, names the specification version, has a unique
+            id that is never reused, carries a write time, and arrives in
+            non-decreasing order.
+          </p>
+          <div class="meter"><i style="width:25%"></i></div>
+        </div>
+        <div class="rung">
+          <span class="mark">TR-2</span>
+          <h3>Beliefs resolve to evidence, and disagreements survive</h3>
+          <p>
+            Every belief states its evidence, even when there is none. Cited
+            evidence exists in the record, a conflict names at least two sides,
+            and both sides are still there afterwards.
+          </p>
+          <div class="meter"><i style="width:50%"></i></div>
+        </div>
+        <div class="rung">
+          <span class="mark">TR-3</span>
+          <h3>Actions carry a verdict, and approvals carry a name</h3>
+          <p>
+            The risk class comes from outside the model proposing the action, a
+            refused action did not execute, and every refusal records why.
+          </p>
+          <div class="meter"><i style="width:75%"></i></div>
+        </div>
+        <div class="rung is-top">
+          <span class="mark">TR-4</span>
+          <h3>The record can be shown not to have changed</h3>
+          <p>
+            An integrity scheme is published, every integrity entry carries a
+            digest over entries that exist, and a replay scheme names the
+            engine and its version.
+          </p>
+          <div class="meter"><i style="width:100%"></i></div>
+        </div>
       </div>
     </div>
   </section>
