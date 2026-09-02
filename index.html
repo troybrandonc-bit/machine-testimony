@@ -24,161 +24,193 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Inter:wght@400;450;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  /* Institutional rather than product. The moves are the ones a research body
-     actually makes: a serif display face, rules instead of boxes, squared
-     corners, near monochrome with a single dark accent used sparingly, and a
-     publications list set like a bibliography. Deliberately not the register
-     of the software, which is a different artefact with a different job. */
+  /* Structure taken from how research bodies actually build a site, rather
+     than from how a product markets itself. The tells, in order of how much
+     they matter: a masthead band with a wordmark lockup and standing nav; the
+     mission stated plainly near the top instead of a headline; publications
+     as typed entries with metadata; a multi column colophon. Type does less
+     work here than layout does. */
   :root{
-    --paper:#fcfcfb; --panel:#ffffff; --rule:#d9dbd7; --rule-soft:#e9eae7;
-    --ink:#14171a; --body:#3c4348; --muted:#6f7780; --accent:#1c3f6e;
+    --band:#16202b; --band-ink:#f4f6f7; --band-dim:#98a4b0;
+    --paper:#fcfcfb; --panel:#ffffff; --rule:#d7dad6; --rule-soft:#e8eae7;
+    --ink:#131719; --body:#3a4147; --muted:#6d757c; --accent:#1c3f6e;
     --display:"Source Serif 4",Georgia,"Times New Roman",serif;
     --text:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
     --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
   }
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
-      --paper:#0f1113; --panel:#141719; --rule:#2b3034; --rule-soft:#1e2225;
-      --ink:#eceeef; --body:#adb4ba; --muted:#7d858d; --accent:#8fb3e8;
+      --band:#0b0f13; --band-ink:#eef1f3; --band-dim:#8b959e;
+      --paper:#101315; --panel:#161a1d; --rule:#2a2f33; --rule-soft:#1d2124;
+      --ink:#eceeef; --body:#aab1b7; --muted:#7b838a; --accent:#8fb3e8;
     }
   }
   :root[data-theme="dark"]{
-    --paper:#0f1113; --panel:#141719; --rule:#2b3034; --rule-soft:#1e2225;
-    --ink:#eceeef; --body:#adb4ba; --muted:#7d858d; --accent:#8fb3e8;
+    --band:#0b0f13; --band-ink:#eef1f3; --band-dim:#8b959e;
+    --paper:#101315; --panel:#161a1d; --rule:#2a2f33; --rule-soft:#1d2124;
+    --ink:#eceeef; --body:#aab1b7; --muted:#7b838a; --accent:#8fb3e8;
   }
   *{box-sizing:border-box}
   body{
-    margin:0; background:var(--paper); color:var(--body);
-    font-family:var(--text); font-size:16.5px; line-height:1.65;
+    margin:0;background:var(--paper);color:var(--body);
+    font-family:var(--text);font-size:16px;line-height:1.62;
     -webkit-font-smoothing:antialiased;
   }
-  .wrap{max-width:1000px;margin:0 auto;padding:0 32px}
-  a{color:var(--accent);text-decoration:none;
-    border-bottom:1px solid color-mix(in srgb, var(--accent) 35%, transparent)}
-  a:hover{border-bottom-color:var(--accent)}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 34px}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline;text-underline-offset:3px}
 
-  /* The masthead: the name, the standing description, one rule under both. */
-  .masthead{border-bottom:2px solid var(--ink);margin-top:44px;padding-bottom:16px}
-  .masthead h1{
-    font-family:var(--display);font-weight:400;color:var(--ink);
-    font-size:clamp(1.6rem,3.4vw,2.15rem);line-height:1.1;letter-spacing:-.012em;
-    margin:0;
+  /* ── the masthead band ──────────────────────────────────────────────── */
+  .band{background:var(--band);color:var(--band-ink)}
+  .band a{color:var(--band-ink)}
+  .lockup{display:flex;align-items:center;gap:18px;padding:26px 0 20px;flex-wrap:wrap}
+  .lockup .name{
+    font-family:var(--display);font-weight:600;font-size:23px;letter-spacing:.005em;
+    color:var(--band-ink);line-height:1;
   }
-  .masthead .standing{
-    margin-top:7px;font-size:12.5px;letter-spacing:.11em;text-transform:uppercase;
-    color:var(--muted);
+  .lockup .bar{width:1px;align-self:stretch;background:var(--band-dim);opacity:.5}
+  .lockup .role{
+    font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--band-dim);line-height:1.5;max-width:15rem;
+  }
+  nav.primary{
+    border-top:1px solid rgba(255,255,255,.14);
+    display:flex;gap:30px;flex-wrap:wrap;padding:13px 0 15px;
+  }
+  nav.primary a{font-size:14px;color:var(--band-dim)}
+  nav.primary a:hover{color:var(--band-ink);text-decoration:none}
+
+  /* ── the standing statement ─────────────────────────────────────────── */
+  .statement{padding:52px 0 46px;border-bottom:1px solid var(--rule)}
+  .statement p{
+    margin:0;max-width:52rem;font-family:var(--display);font-weight:400;
+    font-size:clamp(1.25rem,2.5vw,1.62rem);line-height:1.42;color:var(--ink);
+  }
+  .statement p em{font-style:italic}
+  .statement .sub{
+    margin-top:18px;font-family:var(--text);font-size:16px;color:var(--body);
+    max-width:44rem;
   }
 
-  .lead{padding:64px 0 60px;border-bottom:1px solid var(--rule)}
-  .lead h2{
-    font-family:var(--display);font-weight:400;color:var(--ink);
-    font-size:clamp(1.8rem,4.2vw,2.9rem);line-height:1.16;letter-spacing:-.016em;
-    margin:0;max-width:22ch;
+  /* ── sections: heading in the margin, content in the column ─────────── */
+  section{padding:46px 0;border-bottom:1px solid var(--rule)}
+  .cols{display:grid;gap:22px}
+  @media (min-width:920px){
+    .cols{grid-template-columns:13.5rem minmax(0,1fr);gap:52px;align-items:start}
   }
-  .lead h2 em{font-style:italic;color:var(--ink)}
-  .lead p{margin:26px 0 0;font-size:17.5px;max-width:38rem}
-
-  section{padding:56px 0;border-bottom:1px solid var(--rule)}
-  section:last-of-type{border-bottom:0}
-  h3.sec{
-    font-family:var(--display);font-weight:600;color:var(--ink);
-    font-size:1.06rem;letter-spacing:.01em;margin:0 0 4px;
+  h2.sec{
+    font-size:11.5px;letter-spacing:.15em;text-transform:uppercase;
+    color:var(--muted);margin:0;padding-top:5px;font-weight:500;
   }
-  .two{display:grid;gap:30px}
-  @media (min-width:900px){
-    .two{grid-template-columns:15rem minmax(0,1fr);gap:56px;align-items:start}
-  }
-  .prose p{margin:0 0 18px;max-width:40rem;font-size:16.5px}
+  .note{margin:10px 0 0;font-size:14px;color:var(--muted);max-width:13rem}
+  .prose p{margin:0 0 17px;max-width:41rem}
   .prose p:last-child{margin-bottom:0}
 
-  /* Publications, set as a bibliography rather than a card grid. */
-  .biblio{list-style:none;margin:0;padding:0}
-  .biblio li{padding:22px 0;border-top:1px solid var(--rule-soft)}
-  .biblio li:first-child{border-top:0;padding-top:0}
-  .biblio h4{
-    font-family:var(--display);font-weight:600;font-size:1.06rem;
-    color:var(--ink);margin:0 0 5px;
+  /* ── publications: typed entries, two up ────────────────────────────── */
+  .pubs{display:grid;gap:0;list-style:none;margin:0;padding:0}
+  @media (min-width:760px){.pubs{grid-template-columns:1fr 1fr;column-gap:44px}}
+  .pubs li{padding:20px 0;border-top:1px solid var(--rule-soft)}
+  .kind{
+    font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);
   }
-  .biblio p{margin:0;font-size:15.5px;max-width:44rem}
-  .biblio .meta{
-    margin-top:9px;font-family:var(--mono);font-size:11.5px;color:var(--muted);
-    letter-spacing:.03em;
+  .pubs h3{
+    font-family:var(--display);font-weight:600;font-size:1.12rem;color:var(--ink);
+    margin:6px 0 6px;line-height:1.3;
   }
-  .biblio .meta span + span::before{content:" · ";color:var(--rule)}
+  .pubs p{margin:0;font-size:15px;max-width:34rem}
+  .pubs .meta{margin-top:10px;font-family:var(--mono);font-size:11px;color:var(--muted)}
+  .pubs .meta span + span::before{content:" / ";color:var(--rule)}
 
-  /* The conformance ladder: a scale, not a chart. Rules and figures. */
-  .ladder{margin:0;border-top:1px solid var(--rule-soft)}
-  .rung{
-    display:grid;grid-template-columns:4.2rem 1fr;gap:18px;
-    padding:20px 0;border-bottom:1px solid var(--rule-soft);
+  /* ── conformance as a table, because that is what it is ─────────────── */
+  table.levels{width:100%;border-collapse:collapse;font-size:15px}
+  table.levels th{
+    text-align:left;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);font-weight:500;padding:0 14px 9px 0;
+    border-bottom:1px solid var(--rule);
   }
-  .rung .mark{
-    font-family:var(--mono);font-size:12px;letter-spacing:.05em;color:var(--muted);
-    padding-top:3px;
-  }
-  .rung.is-top .mark{color:var(--accent)}
-  .rung h4{
-    font-family:var(--display);font-weight:600;font-size:1.02rem;color:var(--ink);
-    margin:0;max-width:34rem;
-  }
-  .rung p{margin:6px 0 0;font-size:15px;max-width:40rem}
-  .scale{display:flex;gap:3px;margin-top:12px}
-  .scale i{height:2px;width:26px;background:var(--rule)}
-  .scale i.on{background:var(--accent)}
+  table.levels td{padding:15px 14px 15px 0;border-bottom:1px solid var(--rule-soft);
+    vertical-align:top}
+  table.levels td.lv{font-family:var(--mono);font-size:12px;color:var(--muted);white-space:nowrap}
+  table.levels tr:last-child td.lv{color:var(--accent)}
+  table.levels td.t{font-family:var(--display);font-weight:600;color:var(--ink);
+    font-size:1rem;min-width:16rem}
+  table.levels td.d{color:var(--body)}
 
-  /* Disclosures. A numbered list, because that is what a body publishing its
-     own limits actually does. */
-  .nots{margin:0;padding:0;list-style:none;counter-reset:n}
-  .nots li{
-    counter-increment:n;padding:18px 0 18px 2.4rem;position:relative;
-    border-top:1px solid var(--rule-soft);
+  /* ── disclosures ────────────────────────────────────────────────────── */
+  .disc{margin:0;padding:0;list-style:none;counter-reset:d}
+  .disc li{counter-increment:d;padding:16px 0 16px 2.5rem;position:relative;
+    border-top:1px solid var(--rule-soft)}
+  .disc li:first-child{border-top:0}
+  .disc li::before{
+    content:counter(d,decimal-leading-zero);position:absolute;left:0;top:18px;
+    font-family:var(--mono);font-size:11px;color:var(--muted);
   }
-  .nots li:first-child{border-top:0}
-  .nots li::before{
-    content:counter(n,decimal-leading-zero);position:absolute;left:0;top:20px;
-    font-family:var(--mono);font-size:11.5px;color:var(--muted);
-  }
-  .nots strong{
-    font-family:var(--display);font-weight:600;color:var(--ink);
-    display:block;margin-bottom:3px;font-size:1.02rem;
-  }
-  .nots p{margin:0;font-size:15.5px;max-width:44rem}
+  .disc b{font-family:var(--display);font-size:1.02rem;color:var(--ink);
+    display:block;margin-bottom:2px}
+  .disc p{margin:0;font-size:15px;max-width:42rem}
 
-  .colophon{
-    padding:34px 0 66px;font-size:13.5px;color:var(--muted);
-    display:grid;gap:6px;border-top:2px solid var(--ink);margin-top:8px;
+  /* ── colophon ───────────────────────────────────────────────────────── */
+  footer.colophon{background:var(--band);color:var(--band-dim);margin-top:0}
+  footer.colophon a{color:var(--band-ink)}
+  .cgrid{display:grid;gap:26px;padding:34px 0 40px}
+  @media (min-width:760px){.cgrid{grid-template-columns:repeat(3,1fr);gap:44px}}
+  .cgrid h4{
+    font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--band-dim);opacity:.75;margin:0 0 9px;font-weight:500;
   }
-  .colophon .line{display:flex;gap:10px;flex-wrap:wrap}
-  .colophon b{font-weight:500;color:var(--body)}
+  .cgrid p,.cgrid li{margin:0 0 4px;font-size:14px;color:var(--band-ink)}
+  .cgrid ul{list-style:none;margin:0;padding:0}
+  .legal{
+    border-top:1px solid rgba(255,255,255,.12);padding:15px 0 34px;
+    font-size:12.5px;color:var(--band-dim);
+  }
 </style>
 </head>
 <body>
 
+<div class="band">
+  <div class="wrap">
+    <div class="lockup">
+      <div class="name">Machine&nbsp;Testimony</div>
+      <div class="bar"></div>
+      <div class="role">An independent<br>research programme</div>
+    </div>
+    <nav class="primary">
+      <a href="#question">The question</a>
+      <a href="#conformance">Conformance</a>
+      <a href="#publications">Publications</a>
+      <a href="#disclosures">Disclosures</a>
+      <a href="https://github.com/troybrandonc-bit/Omem">Reference implementation</a>
+    </nav>
+  </div>
+</div>
+
 <div class="wrap">
 
-  <header class="masthead">
-    <h1>Machine Testimony</h1>
-    <div class="standing">An independent research programme</div>
-  </header>
-
-  <div class="lead">
-    <h2>A machine can tell you what it did. <em>Testimony is not evidence until someone else can check it.</em></h2>
+  <div class="statement">
     <p>
       Machine testimony is what an automated system says about its own
       reasoning and actions: what it believed, what it was told, what it
-      decided, and who allowed it. This programme studies whether that account
-      can be verified by someone who was not there, and publishes the formats,
-      validators and benchmarks that make the checking possible.
+      decided, and who allowed it. <em>Testimony is not evidence until someone
+      else can check it.</em>
+    </p>
+    <p class="sub">
+      This programme studies whether that account can be verified by someone
+      who was not there, and publishes the formats, validators and benchmarks
+      that make the checking possible. Everything it publishes, it implements.
     </p>
   </div>
 
-  <section>
-    <div class="two">
-      <div><h3 class="sec">The standing question</h3></div>
+  <section id="question">
+    <div class="cols">
+      <div>
+        <h2 class="sec">The question</h2>
+        <p class="note">Posed in law before anyone built the answer.</p>
+      </div>
       <div class="prose">
         <p>
-          It is not a new one. In
-          <a href="https://yalelawjournal.org/article/machine-testimony">Machine
+          In <a href="https://yalelawjournal.org/article/machine-testimony">Machine
           Testimony</a> (126 Yale L.J. 1972, 2017) Andrea Roth argued that
           information conveyed by a machine should carry testimonial
           safeguards, and worked through what those would have to be:
@@ -200,96 +232,76 @@
           is the losing side still in the record. When a premise was later
           withdrawn, what happened to everything resting on it. When a human
           approved, was it a second party or the same agent under another name.
-          Those are properties of testimony rather than of storage.
         </p>
       </div>
     </div>
   </section>
 
-  <section>
-    <div class="two">
+  <section id="conformance">
+    <div class="cols">
       <div>
-        <h3 class="sec">Conformance</h3>
-        <p style="font-size:15px;margin:8px 0 0;color:var(--muted);max-width:15rem">
-          Levels exist so a system can be placed rather than described. Each
-          contains the ones before it, and the validator reports the highest a
-          record actually reaches.
+        <h2 class="sec">Conformance</h2>
+        <p class="note">
+          Levels so a system can be placed rather than described. Each contains
+          the ones before it, and the validator reports the highest a record
+          reaches.
         </p>
       </div>
-      <div class="ladder">
-        <div class="rung">
-          <div class="mark">TR-1</div>
-          <div>
-            <h4>The record exists, is well formed, and is append-only</h4>
-            <p>
-              Every entry parses, names the specification version, has a unique
-              id that is never reused, carries a write time, and arrives in
-              non-decreasing order.
-            </p>
-            <div class="scale"><i class="on"></i><i></i><i></i><i></i></div>
-          </div>
-        </div>
-        <div class="rung">
-          <div class="mark">TR-2</div>
-          <div>
-            <h4>Beliefs resolve to evidence, and disagreements survive</h4>
-            <p>
-              Every belief states its evidence, even when there is none. Cited
-              evidence exists in the record, a conflict names at least two
-              sides, and both sides are still there afterwards.
-            </p>
-            <div class="scale"><i class="on"></i><i class="on"></i><i></i><i></i></div>
-          </div>
-        </div>
-        <div class="rung">
-          <div class="mark">TR-3</div>
-          <div>
-            <h4>Actions carry a verdict, and approvals carry a name</h4>
-            <p>
-              The risk class comes from outside the model proposing the action,
-              a refused action did not execute, and every refusal records why.
-            </p>
-            <div class="scale"><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div>
-          </div>
-        </div>
-        <div class="rung is-top">
-          <div class="mark">TR-4</div>
-          <div>
-            <h4>The record can be shown not to have changed</h4>
-            <p>
-              An integrity scheme is published, every integrity entry carries a
-              digest over entries that exist, and a replay scheme names the
-              engine and its version.
-            </p>
-            <div class="scale"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div>
-          </div>
-        </div>
+      <div>
+        <table class="levels">
+          <thead>
+            <tr><th>Level</th><th>What it establishes</th><th>Checked by</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="lv">TR-1</td>
+              <td class="t">The record exists, is well formed, and is append-only</td>
+              <td class="d">Every entry parses, names the specification version, has a unique id never reused, carries a write time, and arrives in non-decreasing order.</td>
+            </tr>
+            <tr>
+              <td class="lv">TR-2</td>
+              <td class="t">Beliefs resolve to evidence, and disagreements survive</td>
+              <td class="d">Every belief states its evidence, even when there is none. Cited evidence exists, a conflict names at least two sides, and both sides remain.</td>
+            </tr>
+            <tr>
+              <td class="lv">TR-3</td>
+              <td class="t">Actions carry a verdict, and approvals carry a name</td>
+              <td class="d">Risk class comes from outside the model proposing the action, a refused action did not execute, and every refusal records why.</td>
+            </tr>
+            <tr>
+              <td class="lv">TR-4</td>
+              <td class="t">The record can be shown not to have changed</td>
+              <td class="d">An integrity scheme is published, every integrity entry carries a digest over entries that exist, and a replay scheme names the engine and its version.</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </section>
 
-  <section>
-    <div class="two">
+  <section id="publications">
+    <div class="cols">
       <div>
-        <h3 class="sec">Published work</h3>
-        <p style="font-size:15px;margin:8px 0 0;color:var(--muted);max-width:15rem">
+        <h2 class="sec">Publications</h2>
+        <p class="note">
           Free to implement, in any language, by anyone. Built to be useful to
           people who never run our software.
         </p>
       </div>
       <div>
-        <ul class="biblio">
+        <ul class="pubs">
           <li>
-            <h4><a href="https://infrastructure.omem-cloud.com/spec/testimony-record/">The Testimony Record</a></h4>
+            <div class="kind">Specification</div>
+            <h3><a href="https://infrastructure.omem-cloud.com/spec/testimony-record/">The Testimony Record</a></h3>
             <p>
               A format for what a system believed, what contradicted it, what it
-              tried to do and who approved it, with four conformance levels so a
-              system can be placed rather than described.
+              tried to do and who approved it, with four conformance levels.
             </p>
-            <div class="meta"><span>Specification v0.1</span><span>CC BY 4.0 text</span><span>MIT schema</span></div>
+            <div class="meta"><span>v0.1</span><span>CC BY 4.0 text</span><span>MIT schema</span></div>
           </li>
           <li>
-            <h4><a href="https://infrastructure.omem-cloud.com/spec/testimony-record/">The reference validator</a></h4>
+            <div class="kind">Tool</div>
+            <h3><a href="https://infrastructure.omem-cloud.com/spec/testimony-record/">The reference validator</a></h3>
             <p>
               One file, standard library only, no network. Copy it into your own
               repository and run it in your own CI. A conformance claim the
@@ -298,7 +310,8 @@
             <div class="meta"><span>Python</span><span>Zero dependencies</span></div>
           </li>
           <li>
-            <h4><a href="https://infrastructure.omem-cloud.com/spec/testimony-record/implementations/">The implementations register</a></h4>
+            <div class="kind">Register</div>
+            <h3><a href="https://infrastructure.omem-cloud.com/spec/testimony-record/implementations/">Implementations</a></h3>
             <p>
               Which systems emit records that pass the validator, and at what
               level. Entries follow a checked record, never a self-report.
@@ -306,37 +319,40 @@
             <div class="meta"><span>Open to any implementer</span></div>
           </li>
           <li>
-            <h4><a href="https://infrastructure.omem-cloud.com/commons/">The commons corpus</a></h4>
+            <div class="kind">Dataset</div>
+            <h3><a href="https://infrastructure.omem-cloud.com/commons/">The commons corpus</a></h3>
             <p>
               Regularities in human working behaviour as counts over
               populations, contributed by installations that opted in and
-              holding no fact about any person. Published with a dataset card
-              that states what it does not cover.
+              holding no fact about any person.
             </p>
             <div class="meta"><span>CC BY 4.0</span><span>Consent recorded per contribution</span></div>
           </li>
           <li>
-            <h4>The Witness benchmark</h4>
+            <div class="kind">Benchmark</div>
+            <h3>The Witness benchmark</h3>
             <p>
               Six properties a memory system either has or does not: no
               fabrication, retraction honoured, disagreement visible, identities
               kept apart, conclusions die with their premises, every memory
               sourced.
             </p>
-            <div class="meta"><span>Runnable harness</span><span>In the reference implementation</span></div>
+            <div class="meta"><span>Runnable harness</span></div>
           </li>
           <li>
-            <h4>The calibration benchmark</h4>
+            <div class="kind">Benchmark</div>
+            <h3>The calibration benchmark</h3>
             <p>
               Whether a system's confidence about a person tracks how often it
               turns out right, scored by Brier skill against the base rate, and
               reporting nothing rather than a flattering number when the record
               is too thin to measure.
             </p>
-            <div class="meta"><span>Runnable harness</span><span>In the reference implementation</span></div>
+            <div class="meta"><span>Runnable harness</span></div>
           </li>
           <li>
-            <h4><a href="https://infrastructure.omem-cloud.com/claims/">The claims ledger</a></h4>
+            <div class="kind">Ledger</div>
+            <h3><a href="https://infrastructure.omem-cloud.com/claims/">The claims ledger</a></h3>
             <p>
               Every load-bearing sentence next to the executable statement that
               would go red if it stopped being true.
@@ -348,52 +364,49 @@
     </div>
   </section>
 
-  <section>
-    <div class="two">
+  <section id="disclosures">
+    <div class="cols">
       <div>
-        <h3 class="sec">Disclosures</h3>
-        <p style="font-size:15px;margin:8px 0 0;color:var(--muted);max-width:15rem">
-          Stated here rather than discovered later. Every one of these is
-          currently true.
+        <h2 class="sec">Disclosures</h2>
+        <p class="note">
+          Stated here rather than discovered later. Every one is currently
+          true.
         </p>
       </div>
       <div>
-        <ul class="nots">
+        <ul class="disc">
           <li>
-            <strong>Not a certification body</strong>
+            <b>Not a certification body</b>
             <p>
-              We publish formats and the tools to check them. We do not audit
-              anyone and we issue no certificates. The validator is public so
-              that any conformance claim can be checked by the person hearing
-              it, including every claim we make about ourselves.
+              We publish formats and the tools to check them. We audit nobody
+              and issue no certificates. The validator is public so any
+              conformance claim can be checked by the person hearing it,
+              including every claim we make about ourselves.
             </p>
           </li>
           <li>
-            <strong>One member</strong>
+            <b>One member</b>
             <p>
               A research programme run by one person, not an institution with a
-              staff. It is named for the work rather than for its own
-              importance, and it will stay that way until the output earns
-              otherwise.
+              staff. Named for the work rather than for its own importance, and
+              it stays that way until the output earns otherwise.
             </p>
           </li>
           <li>
-            <strong>One implementation, so far</strong>
+            <b>One implementation, so far</b>
             <p>
               The Testimony Record is implemented today by OMEM, which is the
               reference implementation and is not the specification. A format
               with one implementation is a proposal rather than a standard. The
-              register exists to record the day that stops being true, and a
-              second implementation is worth more to this work than anything
-              else on the list.
+              register exists to record the day that stops being true.
             </p>
           </li>
           <li>
-            <strong>It does not decide what is true</strong>
+            <b>It does not decide what is true</b>
             <p>
-              Nothing published here reads two accounts and concludes which one
-              is right. The record keeps both sides, says which evidence each
-              rests on, and leaves the judgement to a person.
+              Nothing published here reads two accounts and concludes which is
+              right. The record keeps both sides, says which evidence each rests
+              on, and leaves the judgement to a person.
             </p>
           </li>
         </ul>
@@ -401,9 +414,9 @@
     </div>
   </section>
 
-  <section>
-    <div class="two">
-      <div><h3 class="sec">Contributing</h3></div>
+  <section style="border-bottom:0">
+    <div class="cols">
+      <div><h2 class="sec">Contributing</h2></div>
       <div class="prose">
         <p>
           The most useful thing anyone can do with this work is emit a record
@@ -412,22 +425,40 @@
           something an honest architecture cannot give, which is a finding we
           would publish.
         </p>
-        <p>
-          The reference implementation is
-          <a href="https://github.com/troybrandonc-bit/Omem">OMEM</a>, MIT
-          licensed and self hosted.
-        </p>
       </div>
     </div>
   </section>
 
-  <footer class="colophon wrap" style="padding-left:0;padding-right:0">
-    <div class="line"><b>Editor</b> Troy Clifford</div>
-    <div class="line"><b>Operator</b> Black Tier Solutions Ltd</div>
-    <div class="line"><b>Licence</b> Specification text CC BY 4.0. Schema and tools MIT.</div>
-  </footer>
-
 </div>
+
+<footer class="colophon">
+  <div class="wrap">
+    <div class="cgrid">
+      <div>
+        <h4>Programme</h4>
+        <p>Editor: Troy Clifford</p>
+        <p>Operated by Black Tier Solutions Ltd</p>
+      </div>
+      <div>
+        <h4>Published under</h4>
+        <p>Specification text CC BY 4.0</p>
+        <p>Schema and tools MIT</p>
+      </div>
+      <div>
+        <h4>Elsewhere</h4>
+        <ul>
+          <li><a href="https://github.com/troybrandonc-bit/Omem">The reference implementation</a></li>
+          <li><a href="https://infrastructure.omem-cloud.com/spec/testimony-record/">The specification</a></li>
+          <li><a href="/llms.txt">This site, for a machine reader</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="legal">
+      Machine Testimony is a research programme, not a registered institute or
+      a certification body.
+    </div>
+  </div>
+</footer>
 
 </body>
 </html>
