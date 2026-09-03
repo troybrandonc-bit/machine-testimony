@@ -51,5 +51,5 @@ second party or from the acting agent under another name.
 - [OMEM](https://github.com/troybrandonc-bit/Omem): MIT licensed, self hosted, zero runtime dependencies. `pip install omem-infrastructure && omem-server`.
 - [Documentation](https://infrastructure.omem-cloud.com/)
 
-Editor: Troy Clifford. Operated by Black Tier Solutions Ltd.
+Editor: Troy Clifford. Operated by Garnet Taurus Ltd.
 Specification text CC BY 4.0. Schema and tools MIT.
