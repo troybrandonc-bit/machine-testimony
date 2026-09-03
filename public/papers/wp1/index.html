@@ -140,6 +140,78 @@
     padding:22px 0 40px;font-family:var(--sans);font-size:12.5px;
     color:var(--muted)}
   footer.foot p{margin:0 0 5px}
+
+  /* Print, which is also how the citable PDF is rendered. Plain: one neutral
+     sans throughout, black on white, no accent colour, no italics, no rules
+     that are not doing work. A document, not a designed object. Arial and
+     Helvetica rather than the interface sans, because the interface sans is
+     the one every product page uses and this is not a product page. */
+  @media print{
+    .band, .backlink{display:none}
+    body{
+      font-family:Arial, Helvetica, "Liberation Sans", sans-serif;
+      font-size:10pt;line-height:1.45;color:#000;background:#fff}
+    .paper{max-width:none;padding:0}
+    a{color:#000;text-decoration:none}
+
+    .series{font-family:inherit;font-size:9pt;color:#000;margin:0 0 22pt}
+    h1{font-family:inherit;font-size:16pt;font-weight:700;line-height:1.2;
+      letter-spacing:0;margin:0 0 4pt;color:#000}
+    h1 + .subtitle{font-family:inherit;font-size:11pt;font-weight:400;
+      font-style:normal;color:#000;margin:0}
+    .authors{font-family:inherit;font-size:10pt;margin:14pt 0 0;color:#000}
+    .affil{font-family:inherit;font-size:9pt;color:#000;margin:2pt 0 0}
+    .titlerule{border-top:1px solid #000;margin:14pt 0 0}
+
+    .abstract{max-width:none;margin:16pt 0 0}
+    .abstract h2{font-family:inherit;font-size:10pt;font-weight:700;
+      text-align:left;text-transform:none;letter-spacing:0;color:#000;
+      margin:0 0 6pt}
+    .abstract p{font-size:10pt;line-height:1.45;color:#000;margin:0 0 8pt}
+    .kw{font-family:inherit;font-size:9pt;color:#000;margin:12pt 0 0}
+    .kw i, i, em{font-style:normal}
+    .abrule{border-top:1px solid #000;margin:18pt 0 0}
+
+    h2.sec{font-family:inherit;font-size:11pt;font-weight:700;color:#000;
+      margin:20pt 0 0;padding-top:0;border-top:0;
+      page-break-after:avoid;break-after:avoid}
+    h3.sub{font-family:inherit;font-size:10pt;font-weight:700;
+      font-style:normal;color:#000;margin:14pt 0 0;
+      page-break-after:avoid;break-after:avoid}
+    p{margin:8pt 0 0;color:#000}
+    p.cont{text-indent:0;margin-top:8pt}
+    em.key{font-weight:700;font-style:normal;color:#000}
+    sup.fn{font-size:.7em}
+
+    figure.tbl{margin:16pt 0 0;page-break-inside:avoid;break-inside:avoid}
+    figure.tbl figcaption{font-family:inherit;font-size:9.5pt;font-weight:700;
+      color:#000;margin:0 0 5pt}
+    table{font-family:inherit;font-size:9pt;color:#000}
+    table thead th{color:#000;font-weight:700;border-top:1px solid #000;
+      border-bottom:1px solid #000;padding:4pt 0 4pt 12pt}
+    table tbody td{padding:3.5pt 0 3.5pt 12pt;color:#000}
+    table tbody td:first-child{font-family:inherit;font-size:9pt}
+    table tbody tr:last-child td{border-bottom:1px solid #000}
+    .tnote{font-family:inherit;font-size:8.5pt;color:#000;margin:5pt 0 0}
+
+    pre{font-family:"Courier New", Courier, monospace;font-size:8.5pt;
+      line-height:1.5;border-left:0;padding:0;margin:12pt 0 0;color:#000;
+      page-break-inside:avoid;break-inside:avoid}
+
+    ol.plain, ol.notes{color:#000}
+    ol.plain li{margin:0 0 7pt}
+    ol.notes{font-size:9pt;line-height:1.4}
+    ol.notes li{margin:0 0 7pt;page-break-inside:avoid;break-inside:avoid}
+    .endrule{border-top:1px solid #000;margin:22pt 0 0}
+
+    footer.foot{font-family:inherit;font-size:8.5pt;color:#000;
+      border-top:1px solid #000;margin-top:18pt;padding:8pt 0 0}
+    .wrap{padding:0}
+
+    .paper::before{
+      content:"Machine Testimony Working Paper No. 1  B7 September 2026  B7 machinetestimony.org/papers/wp1/";
+      display:block;font-size:8pt;color:#000;margin-bottom:14pt}
+  }
 </style>
 </head>
 <body>
