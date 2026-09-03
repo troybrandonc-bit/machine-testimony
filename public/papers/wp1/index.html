@@ -383,7 +383,8 @@
     information about which beliefs will subsequently hold. What has been
     removed is an estimator performing substantially worse than an uninformed
     reference, whose output was being interpreted as a probability throughout
-    the system. Establishing positive skill remains outstanding.
+    the system. Establishing positive skill remained outstanding when this
+    paper was issued.<sup class="fn"><a href="#n6">6</a></sup>
   </p>
   <p class="cont">
     Three observations arose in the course of the revision. The first is that
@@ -614,6 +615,28 @@ python3 server/tests_scale_leap.py      the belief-forming guard</pre>
     <li id="n5">
       Measurements taken on a consumer laptop with 3.8 GB of available memory.
       Mining executes on a consolidation pass and not within a request.
+    </li>
+    <li id="n6">
+      <b>Added 3 September 2026.</b> Positive skill has since been established,
+      and the sentence above is left standing with this note rather than
+      rewritten, because a paper that quietly revises its own conclusions is
+      the thing this programme exists to make checkable. Two defects were
+      responsible for the parity reported here. A firing prior arrived carrying
+      a direct measurement of how often its consequent follows its antecedent
+      across a population, and that number was computed, used to compose the
+      explanation, and then discarded: every forecast was anchored instead on
+      how often the installation's guesses land in general. Separately the
+      strength cap stood at 0.60 while these expectations hold 68 per cent of
+      the time, so the engine was forbidden from stating the correct forecast,
+      as the scorer's own note in Section 4 records. Repairing both takes Brier
+      skill from &minus;0.0895 to +0.1044 on identical seeds and cases; neither
+      repair reaches positive skill alone, since the first produces an estimate
+      the old cap truncated and the second merely un-clips a wrong one. A
+      further change, admitting negated propositions so the system can express
+      what people tend NOT to do, raises coverage by 64 per cent and marginal
+      lift from +0.128 to +0.197, replicated across three seed groups and again
+      over 693,380 respondents. The figures in Section 4 describe the
+      implementation as it stood in this paper and are not amended.
     </li>
   </ol>
 
