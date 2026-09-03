@@ -25,6 +25,10 @@ losing side is still in the record, what happened to conclusions resting on a
 premise that was later withdrawn, and whether a human approval came from a
 second party or from the acting agent under another name.
 
+## Working papers
+
+- [Working Paper No. 1: Popularity Is Not Association](https://machinetestimony.org/papers/wp1/) (September 2026, Troy Clifford): a belief-forming rule audited against 19,668 Big Five respondents whose correlation structure this programme did not choose. It recovered the dataset's known five-factor structure at 0.185 against a chance rate of 0.184, meaning it was measuring how common a claim was rather than whether two claims were associated. Requiring the Wilson lower bound of a pair's rate to clear the consequent's own base rate took recovery to 0.875, on 94 per cent fewer regularities that covered more claims than before. A second defect is reported in the same paper: confidence at birth was a linear score being read as a probability, scoring Brier skill -0.689 against always predicting the base rate; repaired, it reaches -0.003, which is parity with that baseline and not better than it, and the paper says so explicitly. Also reports the repaired system's behaviour at volume and retracts an earlier finding that the first defect had caused. Text CC BY 4.0; harnesses are runnable in the reference implementation and the external dataset is not redistributed.
+
 ## Published work
 
 - [The Testimony Record](https://infrastructure.omem-cloud.com/spec/testimony-record/): a format for what a system believed, what contradicted it, what it tried to do and who approved it, with four conformance levels TR-1 to TR-4 so a system can be placed rather than described. Specification text CC BY 4.0, schema MIT, free to implement in any language.
