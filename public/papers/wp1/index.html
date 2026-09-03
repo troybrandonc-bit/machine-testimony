@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Popularity Is Not Association — Machine Testimony Working Paper No. 1</title>
-<meta name="description" content="A belief-forming rule was tested against 19,668 respondents whose correlation structure the author did not choose. It recovered the known structure at chance. This paper reports the defect, the repair, the volume behaviour of the repaired system, and a retraction.">
+<meta name="description" content="A belief-forming rule was tested against 19,668 respondents whose correlation structure the author did not choose. It recovered the known latent structure at chance. This paper reports the defect, the revision, the computational behaviour of the revised system, and a correction to a previously published result.">
 <meta property="og:title" content="Popularity Is Not Association">
-<meta property="og:description" content="A belief-forming rule, audited against 19,668 real respondents. It was measuring how common a claim was, not whether two claims were associated.">
+<meta property="og:description" content="A belief-forming rule, audited against 19,668 respondents. It was selecting consequents by frequency rather than by relation to the antecedent.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://machinetestimony.org/papers/wp1/">
 <meta property="og:image" content="https://machinetestimony.org/og.png">
@@ -14,7 +14,7 @@
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Popularity Is Not Association">
-<meta name="twitter:description" content="A belief-forming rule, audited against 19,668 real respondents.">
+<meta name="twitter:description" content="A belief-forming rule, audited against 19,668 respondents.">
 <meta name="twitter:image" content="https://machinetestimony.org/og.png">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/icon.png" type="image/png" sizes="512x512">
@@ -22,16 +22,15 @@
 <link rel="canonical" href="https://machinetestimony.org/papers/wp1/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@400;450;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
 <style>
-  /* Same tokens and band as the front page. The body is a working paper:
-     one column at a reading measure, a ruled abstract, mono tables, and
-     numbered sections. Less furniture than the front page, not more. */
+  /* A working paper. One serif column at a reading measure, numbered
+     sections, booktabs rules, notes at the foot. No boxes, no accent
+     colour in the body, no emphasis that the sentence does not carry. */
   :root{
     --band:#123a6b; --band-2:#0e2f57; --band-ink:#ffffff; --band-dim:#b9cbe4;
-    --paper:#ffffff; --ink:#111417; --body:#24292d; --muted:#5f6a72;
-    --rule:#c9cfd4; --rule-soft:#e3e7ea; --label:#8a1c1c; --link:#123a6b;
-    --flag:#f6f7f8;
+    --paper:#ffffff; --ink:#111417; --body:#1e2429; --muted:#5f6a72;
+    --rule:#111417; --rule-soft:#c9cfd4; --link:#123a6b;
     --display:"Source Serif 4",Georgia,"Times New Roman",serif;
     --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
     --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
@@ -39,25 +38,22 @@
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
       --band:#0c2340; --band-2:#081a2f; --band-ink:#f2f6fb; --band-dim:#9db3ce;
-      --paper:#0f1214; --ink:#eef0f2; --body:#c2c8cd; --muted:#8a939a;
-      --rule:#2c3236; --rule-soft:#1f2427; --label:#d98b8b; --link:#9dc0ef;
-      --flag:#161a1d;
+      --paper:#0f1214; --ink:#eef0f2; --body:#c8ced3; --muted:#8a939a;
+      --rule:#c8ced3; --rule-soft:#2c3236; --link:#9dc0ef;
     }
   }
   :root[data-theme="dark"]{
     --band:#0c2340; --band-2:#081a2f; --band-ink:#f2f6fb; --band-dim:#9db3ce;
-    --paper:#0f1214; --ink:#eef0f2; --body:#c2c8cd; --muted:#8a939a;
-    --rule:#2c3236; --rule-soft:#1f2427; --label:#d98b8b; --link:#9dc0ef;
-    --flag:#161a1d;
+    --paper:#0f1214; --ink:#eef0f2; --body:#c8ced3; --muted:#8a939a;
+    --rule:#c8ced3; --rule-soft:#2c3236; --link:#9dc0ef;
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--paper);color:var(--body);
-    font-family:var(--display);font-size:17px;line-height:1.58;
+    font-family:var(--display);font-size:17px;line-height:1.62;
     -webkit-font-smoothing:antialiased}
   .wrap{max-width:1180px;margin:0 auto;padding:0 30px}
   a{color:var(--link);text-decoration:underline;text-underline-offset:2px;
     text-decoration-thickness:1px}
-  a:hover{text-decoration-thickness:2px}
 
   .band{background:var(--band);color:var(--band-ink);
     background-image:linear-gradient(180deg,var(--band) 0%,var(--band-2) 100%)}
@@ -73,80 +69,77 @@
     display:flex;gap:12px;align-items:center;color:var(--band-dim)}
   .utility .sep{opacity:.45}
   nav.primary{border-bottom:1px solid rgba(255,255,255,.42);
-    display:flex;gap:26px;flex-wrap:wrap;padding:9px 0 11px;
+    display:flex;gap:26px;flex-wrap:wrap;padding:9px 0 14px;
     font-family:var(--sans);font-size:14.5px}
-  .seriesline{font-family:var(--sans);font-size:12.5px;letter-spacing:.08em;
-    text-transform:uppercase;color:var(--band-dim);padding:20px 0 22px}
+  .band .pad{height:18px}
 
-  /* the paper */
-  .paper{max-width:44rem;margin:0 auto;padding:40px 30px 10px}
-  .ph h1{font-family:var(--display);font-weight:700;color:var(--ink);
-    font-size:clamp(1.95rem,4.4vw,2.75rem);line-height:1.12;
-    letter-spacing:-.012em;margin:0}
-  .ph .sub{font-family:var(--display);font-size:1.16rem;line-height:1.4;
-    color:var(--muted);margin:13px 0 0;font-style:italic}
-  .ph .byline{font-family:var(--sans);font-size:14px;color:var(--body);
-    margin:22px 0 0}
-  .ph .dateline{font-family:var(--sans);font-size:13px;color:var(--muted);
-    margin:5px 0 0}
-  .ph{border-bottom:2px solid var(--ink);padding-bottom:22px;margin-bottom:26px}
+  /* title block */
+  .paper{max-width:39rem;margin:0 auto;padding:52px 30px 0}
+  .series{font-family:var(--sans);font-size:12.5px;color:var(--muted);
+    margin:0 0 30px}
+  h1{font-family:var(--display);font-weight:700;color:var(--ink);
+    font-size:1.86rem;line-height:1.2;margin:0 0 6px;letter-spacing:-.006em}
+  h1 + .subtitle{font-family:var(--display);font-weight:400;color:var(--ink);
+    font-size:1.16rem;line-height:1.35;margin:0}
+  .authors{margin:26px 0 0;font-size:16px;color:var(--ink)}
+  .affil{font-family:var(--sans);font-size:13px;color:var(--muted);margin:3px 0 0}
+  .titlerule{border:0;border-top:1px solid var(--rule);margin:30px 0 0}
 
-  .abstract{border-left:3px solid var(--label);padding:2px 0 2px 20px;
-    margin:0 0 34px}
-  .abstract h2{font-family:var(--sans);font-size:11.5px;letter-spacing:.11em;
-    text-transform:uppercase;color:var(--label);margin:0 0 9px;font-weight:700}
-  .abstract p{margin:0 0 12px;font-size:16.5px}
+  /* abstract */
+  .abstract{margin:26px auto 0;max-width:34rem}
+  .abstract h2{font-family:var(--display);font-weight:600;color:var(--ink);
+    font-size:16px;text-align:center;margin:0 0 12px}
+  .abstract p{font-size:15.5px;line-height:1.58;margin:0 0 11px;color:var(--body)}
   .abstract p:last-child{margin-bottom:0}
+  .kw{font-size:14.5px;color:var(--muted);margin:16px 0 0}
+  .abrule{border:0;border-top:1px solid var(--rule-soft);margin:30px 0 0}
 
-  h2.sec{font-family:var(--display);font-weight:700;color:var(--ink);
-    font-size:1.34rem;line-height:1.28;margin:44px 0 3px;
-    padding-top:20px;border-top:1px solid var(--rule-soft)}
-  h2.sec .n{font-family:var(--sans);font-size:12px;font-weight:700;
-    color:var(--label);letter-spacing:.09em;display:block;margin-bottom:7px}
-  h3.sub{font-family:var(--sans);font-weight:600;color:var(--ink);
-    font-size:15.5px;margin:28px 0 0}
-  p{margin:15px 0 0}
-  .lede{font-size:18.5px;line-height:1.5}
-  em.key{font-style:normal;font-weight:600;color:var(--ink)}
+  /* body */
+  h2.sec{font-family:var(--display);font-weight:600;color:var(--ink);
+    font-size:1.08rem;line-height:1.35;margin:38px 0 0}
+  h3.sub{font-family:var(--display);font-weight:600;font-style:italic;
+    color:var(--ink);font-size:1rem;margin:26px 0 0}
+  p{margin:13px 0 0}
+  p.cont{text-indent:1.4em;margin-top:0}
+  sup.fn{font-size:.68em;line-height:0;vertical-align:super}
+  sup.fn a{text-decoration:none}
 
-  table.data{width:100%;border-collapse:collapse;margin:22px 0 6px;
-    font-family:var(--mono);font-size:13px}
-  table.data caption{caption-side:top;text-align:left;font-family:var(--sans);
-    font-size:12px;letter-spacing:.06em;text-transform:uppercase;
-    color:var(--muted);padding-bottom:9px}
-  table.data th{text-align:right;font-weight:500;color:var(--muted);
-    border-bottom:1px solid var(--rule);padding:0 0 7px 16px;
-    font-size:11.5px;letter-spacing:.03em}
-  table.data th:first-child,table.data td:first-child{text-align:left;
-    padding-left:0}
-  table.data td{text-align:right;padding:7px 0 7px 16px;
-    border-bottom:1px solid var(--rule-soft);color:var(--body)}
-  table.data tr.hi td{color:var(--ink);font-weight:500;background:var(--flag)}
-  table.data td.lab{font-family:var(--sans);font-size:13px;white-space:nowrap}
-  .scroll{overflow-x:auto;margin:0 -4px;padding:0 4px}
+  /* tables, booktabs */
+  figure.tbl{margin:30px 0 0}
+  figure.tbl figcaption{font-family:var(--sans);font-size:13.5px;
+    color:var(--ink);margin:0 0 10px;line-height:1.45}
+  figure.tbl figcaption b{font-weight:600}
+  table{width:100%;border-collapse:collapse;font-family:var(--mono);
+    font-size:12.5px;color:var(--body)}
+  table thead th{font-weight:400;color:var(--ink);text-align:right;
+    padding:7px 0 7px 14px;border-top:1.5px solid var(--rule);
+    border-bottom:1px solid var(--rule-soft);white-space:nowrap}
+  table thead th:first-child{text-align:left;padding-left:0}
+  table tbody td{text-align:right;padding:6px 0 6px 14px}
+  table tbody td:first-child{text-align:left;padding-left:0;
+    font-family:var(--sans);font-size:13px;white-space:nowrap}
+  table tbody tr:last-child td{border-bottom:1.5px solid var(--rule)}
   .tnote{font-family:var(--sans);font-size:12.5px;color:var(--muted);
-    line-height:1.45;margin:9px 0 0}
+    line-height:1.5;margin:9px 0 0}
+  .scroll{overflow-x:auto}
 
-  pre{font-family:var(--mono);font-size:12.5px;line-height:1.65;
-    background:var(--flag);border:1px solid var(--rule-soft);
-    padding:14px 16px;overflow-x:auto;margin:20px 0 0;color:var(--body)}
-  code{font-family:var(--mono);font-size:.88em;color:var(--ink)}
+  pre{font-family:var(--mono);font-size:12.5px;line-height:1.7;
+    margin:22px 0 0;padding:0 0 0 18px;
+    border-left:2px solid var(--rule-soft);color:var(--body);overflow-x:auto}
 
-  .callout{border:1px solid var(--rule);padding:17px 20px;margin:24px 0 0;
-    background:var(--flag)}
-  .callout b{font-family:var(--sans);font-size:13px;letter-spacing:.04em;
-    text-transform:uppercase;color:var(--label);display:block;margin-bottom:6px}
-  .callout p{margin:0;font-size:16px}
-  .callout p + p{margin-top:11px}
+  ol.notes{margin:14px 0 0;padding-left:22px;font-size:14.5px;
+    line-height:1.55;color:var(--body)}
+  ol.notes li{margin:0 0 10px}
+  ol.plain{margin:13px 0 0;padding-left:22px}
+  ol.plain li{margin:0 0 11px}
 
-  ol.plain,ul.plain{margin:15px 0 0;padding-left:22px}
-  ol.plain li,ul.plain li{margin:0 0 10px;padding-left:3px}
+  .endrule{border:0;border-top:1px solid var(--rule);margin:44px 0 0}
+  .backlink{font-family:var(--sans);font-size:13.5px;margin:26px 0 0}
 
-  footer.foot{border-top:1px solid var(--rule);margin-top:56px;
-    padding:24px 0 40px;font-family:var(--sans);font-size:13px;
+  footer.foot{border-top:1px solid var(--rule-soft);margin-top:52px;
+    padding:22px 0 40px;font-family:var(--sans);font-size:12.5px;
     color:var(--muted)}
   footer.foot p{margin:0 0 5px}
-  .backlink{font-family:var(--sans);font-size:13.5px;margin:38px 0 0}
 </style>
 </head>
 <body>
@@ -177,434 +170,461 @@
     <nav class="primary">
       <a href="/#question">The question</a>
       <a href="/#conformance">Conformance</a>
+      <a href="/#papers">Working papers</a>
       <a href="/#publications">Publications</a>
       <a href="/#taking-part">Taking part</a>
     </nav>
-    <div class="seriesline">Working Paper Series &nbsp;·&nbsp; No. 1</div>
+    <div class="pad"></div>
   </div>
 </div>
 
 <div class="paper">
 
-  <div class="ph">
-    <h1>Popularity Is Not Association</h1>
-    <p class="sub">A belief-forming rule audited against 19,668 respondents, and what it was
-      measuring instead</p>
-    <p class="byline">Troy Clifford</p>
-    <p class="dateline">Machine Testimony Working Paper No. 1 &nbsp;·&nbsp; September 2026 &nbsp;·&nbsp; Text CC BY 4.0</p>
-  </div>
+  <p class="series">Machine Testimony Working Paper Series &nbsp;·&nbsp; No. 1 &nbsp;·&nbsp; September 2026</p>
+
+  <h1>Popularity Is Not Association</h1>
+  <p class="subtitle">Auditing a belief-forming rule against 19,668 respondents</p>
+
+  <p class="authors">Troy Clifford<sup class="fn"><a href="#n1">1</a></sup></p>
+  <p class="affil">Machine Testimony</p>
+
+  <hr class="titlerule">
 
   <div class="abstract">
     <h2>Abstract</h2>
     <p>
-      A system that forms beliefs about people from partial evidence was tested
-      against a population whose correlation structure the author did not
-      choose. Two defects were found, and both were load-bearing.
+      This paper reports an audit of a system that forms provisional beliefs
+      about individuals from partial evidence. The system was evaluated against
+      a population whose correlation structure was not chosen by the author.
+      Two defects were identified, both of which affected every belief the
+      system would form.
     </p>
     <p>
-      The rule that mined regularities recovered the dataset's known five-factor
-      structure at 0.185, against a chance rate of 0.184. It was measuring how
-      common a claim was, not whether two claims were associated. Separately,
-      the confidence attached to a newly formed belief was a linear score being
-      reported as a probability, and scored substantially worse than a system
-      that ignores its own record and predicts the population base rate every
-      time.
+      The rule used to mine regularities across a population recovered the
+      dataset's known five-factor structure at a rate of 0.185, against a chance
+      rate of 0.184. The rule was selecting consequents according to their
+      frequency in the population rather than according to any relation to the
+      antecedent. Separately, the confidence assigned to a newly formed belief
+      was a linear score rather than a probability, and scored worse than a
+      procedure that ignores all evidence and predicts the population base rate.
     </p>
     <p>
-      Both were repaired and re-measured. Structure recovery reached 0.875, on
-      94 per cent fewer regularities that nonetheless covered more claims than
-      the unfiltered rule. Confidence reached parity with the base rate and did
-      not exceed it, which is a removed negative rather than a demonstrated
-      positive, and this paper is explicit about the difference. The repaired
-      system's behaviour at volume is reported, together with a retraction of an
-      earlier finding that the first defect had caused.
+      Both were revised and re-measured. Recovery of the latent structure rose
+      to 0.875, using 94 per cent fewer regularities that covered a larger
+      number of claims than the unrevised rule. Assigned confidence reached
+      parity with the base rate and did not exceed it; the paper is explicit
+      that this constitutes the removal of a negative rather than a demonstrated
+      positive. The computational behaviour of the revised system is reported,
+      together with a correction to a result this programme published earlier.
+    </p>
+    <p class="kw">
+      <i>Keywords:</i> agent memory, calibration, association mining, Wilson
+      interval, machine accountability, negative results.
     </p>
   </div>
 
-  <h2 class="sec"><span class="n">Section 1</span>Why a synthetic world could not answer this</h2>
-  <p class="lede">
-    The system under test forms provisional beliefs about people. It observes
-    what someone holds to be true, mines regularities across a population, and
-    uses them to form a hunch about a person on a question they have not
-    answered — attaching a confidence to it, and refusing when the evidence is
-    too thin.
-  </p>
+  <hr class="abrule">
+
+  <h2 class="sec">1. Introduction</h2>
   <p>
-    Until this study, the only harness for that machinery generated its own
-    population. That arrangement can confirm the mechanism runs, and it can
-    confirm the mechanism recovers structure that was deliberately placed in
-    front of it. It cannot tell you whether the rule finds structure in people,
-    because the structure was chosen by the same person who wrote the rule.
+    The system examined here forms provisional beliefs about individuals. It
+    records what a person is observed to hold, mines regularities across a
+    population, and uses those regularities to form an expectation about an
+    individual on a question that individual has not answered. Each expectation
+    carries a confidence, and the system declines to form one where the
+    available evidence is insufficient.
   </p>
-  <p>
-    A rule that measures the wrong thing will pass such a test whenever the
-    wrong thing happens to be correlated with the right one in the world that
-    was built. That is what had happened here, and it went unnoticed for as long
-    as the only judge was a world of the author's own construction.
+  <p class="cont">
+    Prior to this study, the only evaluation harness available for that
+    machinery generated its own population. Such a harness can establish that
+    the mechanism executes, and that it recovers structure deliberately placed
+    in front of it. It cannot establish that the rule recovers structure in
+    people, because the structure was specified by the same author who
+    specified the rule.
+  </p>
+  <p class="cont">
+    A rule that measures the wrong quantity will pass such an evaluation
+    whenever the wrong quantity is correlated with the intended one in the
+    constructed world. That is what had occurred, and it was not detected for as
+    long as the only evaluation available was of the author's own construction.
   </p>
 
-  <h2 class="sec"><span class="n">Section 2</span>Data</h2>
+  <h2 class="sec">2. Data</h2>
   <p>
-    Open Psychometrics' Big Five item responses, collected around 2012 through
-    an online personality test, with consent recorded at the time and published
-    for research. Fifty items rated one to five. 19,719 responses were
-    collected; 19,668 remained after dropping those who answered fewer than
-    twenty items.
+    The evaluation uses Open Psychometrics' Big Five item responses, collected
+    around 2012 through an online personality test, with consent recorded at the
+    time of collection and subsequently published for research use. The
+    instrument comprises fifty items rated one to five. Of 19,719 responses
+    collected, 19,668 remain after dropping respondents who answered fewer than
+    twenty items.<sup class="fn"><a href="#n2">2</a></sup>
   </p>
-  <p>
-    The dataset is downloaded when the benchmark runs and is <em class="key">not
-    redistributed</em> by this programme or its repositories. Nothing here
-    republishes another person's survey response.
+  <p class="cont">
+    Two properties of the dataset make it suitable. First, the mapping to the
+    system's semantics is close to exact: a response of four or five corresponds
+    to holding a proposition, one or two to holding its negation, and three, the
+    neutral response, to a silence. The system forms an expectation only into a
+    silence, so the design supplies a held-out question directly. An answer the
+    respondent gave is hidden, and the system is asked to recover it.
   </p>
-  <p>
-    Two properties made it the right instrument, and the second is the one that
-    matters.
-  </p>
-  <p>
-    <em class="key">The mapping to the system's semantics is almost exact.</em>
-    An answer of four or five is holding a proposition, one or two is holding
-    its negation, and three — the neutral answer — is a genuine silence. The
-    system only forms a hunch into a silence, so the experiment gets its
-    held-out question for free: hide an answer somebody actually gave, and ask
-    whether the system can put it back.
-  </p>
-  <p>
-    <em class="key">The latent structure is known.</em> Fifty items, five
-    factors, ten items each. A pair drawn at random joins two items of the same
-    factor with probability 9/49, which is 0.184. That supplies a ground truth
-    for whether the rule finds real psychology or noise — the thing no
-    self-generated world can supply.
+  <p class="cont">
+    Second, the latent structure of the instrument is known. Fifty items are
+    organised into five factors of ten items each, so a pair of distinct items
+    drawn at random belongs to a common factor with probability 9/49, or 0.184.
+    This provides a ground truth against which the mined regularities can be
+    assessed, which a self-generated population cannot provide.
   </p>
 
-  <h2 class="sec"><span class="n">Section 3</span>The rule was measuring popularity</h2>
+  <h2 class="sec">3. The mining rule</h2>
+
+  <h3 class="sub">3.1 Diagnosis</h3>
   <p>
-    The mining rule required that a regularity clear a support floor and then
-    hold at a reliability rate: of the people who hold P, at least sixty per
-    cent must also hold Q.
+    The rule as originally specified required a candidate regularity to clear a
+    support floor and then to hold at a reliability rate: among respondents
+    holding proposition P, at least sixty per cent must also hold proposition Q.
   </p>
-  <p>
-    Against the known structure, the regularities it produced joined same-factor
-    items at 0.185. Chance is 0.184. The rule recovered <em class="key">none</em>
-    of the structure it was supposed to be finding.
+  <p class="cont">
+    Assessed against the known structure, the regularities produced by that rule
+    joined items of a common factor at a rate of 0.185, against a chance rate of
+    0.184. The rule recovered none of the structure it was intended to find.
   </p>
-  <p>
-    The cause is visible in a single number. The consequents of mined
-    regularities had a mean base rate of 0.76, against an overall item mean of
-    0.57. If seventy-six per cent of <em class="key">everyone</em> holds Q, then
-    "sixty per cent of the people who hold P also hold Q" is satisfied by Q
-    being common, and says nothing whatever about P. The rule was a popularity
-    detector wearing the interface of an association detector.
+  <p class="cont">
+    The cause is apparent in the marginal distribution of the selected
+    consequents. Mined consequents had a mean base rate of 0.76, against an
+    overall item mean of 0.57. Where seventy-six per cent of the whole
+    population holds Q, the condition that sixty per cent of the holders of P
+    also hold Q is satisfied by the frequency of Q alone, and carries no
+    information about P. The rule was therefore selecting consequents by
+    frequency rather than by association.
   </p>
 
-  <h3 class="sub">The repair, and why a lower bound rather than a rate</h3>
+  <h3 class="sub">3.2 Revision</h3>
   <p>
-    A regularity is now required to clear the consequent's own base rate by a
-    margin — and to clear it on the <em class="key">lower bound</em> of its
-    rate, not the rate itself. A raw rate treats three cases out of three as
-    certainty. A Wilson lower bound does not, so a pair resting on a handful of
-    people must be markedly cleaner than one resting on hundreds to earn the
-    same standing.
+    The revised rule requires a candidate regularity to exceed the consequent's
+    own base rate by a margin, and applies that test to the lower bound of the
+    observed rate rather than to the rate itself.<sup class="fn"><a href="#n3">3</a></sup>
+    A raw rate treats three observations out of three as certainty; an interval
+    lower bound does not. A pair supported by a small number of respondents must
+    therefore be substantially cleaner than one supported by a large number in
+    order to reach the same standing.
   </p>
 
-  <div class="scroll">
-  <table class="data">
-    <caption>Table 1 · Recovery of the known five-factor structure</caption>
-    <thead>
-      <tr>
-        <th>Rule</th><th>Regularities</th><th>Within-factor</th>
-        <th>Consequent base rate</th><th>Claims covered</th><th>Marginal lift</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr><td class="lab">Rate only</td><td>1,269</td><td>0.199</td><td>0.76</td><td>120</td><td>+0.040</td></tr>
-      <tr class="hi"><td class="lab">Bounded lift</td><td>72</td><td>0.875</td><td>0.48</td><td>152</td><td>+0.128</td></tr>
-      <tr><td class="lab">Chance</td><td>&mdash;</td><td>0.184</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td></tr>
-    </tbody>
-  </table>
-  </div>
-  <p class="tnote">
-    Within-factor is the share of mined regularities joining two items of the
-    same factor. Claims covered is the number of held-out answers the system was
-    willing to form a hunch about; marginal lift is the improvement over the
-    base rate on those answers.
-  </p>
-
-  <p>
-    Recovery reaches 4.8 times chance, marginal lift triples, and the rule does
-    this while forming opinions about <em class="key">more</em> claims than the
-    unfiltered version, not fewer. Ninety-four per cent of the regularities are
-    gone and coverage went up. That is the signature of a filter removing
-    entries that fired constantly and carried nothing.
-  </p>
-  <div class="callout">
-    <b>An in-sample choice, disclosed</b>
-    <p>
-      The margin was set at 0.10 although 0.15 scored better in the sweep. The
-      sweep was run on the same data it was evaluated against, so the better
-      number is not evidence that it generalises; 0.10 already beats the
-      incumbent on every axis including coverage, and the smaller margin
-      concedes less to a fit that may be an artefact. This remains an in-sample
-      choice and is reported as one.
+  <figure class="tbl">
+    <figcaption><b>Table 1.</b> Recovery of the known five-factor structure.</figcaption>
+    <div class="scroll">
+    <table>
+      <thead>
+        <tr><th>Rule</th><th>Regularities</th><th>Within-factor</th><th>Consequent base rate</th><th>Claims covered</th><th>Marginal lift</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Rate only</td><td>1,269</td><td>0.199</td><td>0.76</td><td>120</td><td>+0.040</td></tr>
+        <tr><td>Bounded lift</td><td>72</td><td>0.875</td><td>0.48</td><td>152</td><td>+0.128</td></tr>
+        <tr><td>Chance</td><td>&mdash;</td><td>0.184</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="tnote">
+      Within-factor is the proportion of mined regularities joining two items of
+      a common factor. Claims covered is the number of held-out responses for
+      which the system was willing to form an expectation. Marginal lift is the
+      improvement over the base rate on those responses.
     </p>
-  </div>
+  </figure>
 
-  <h2 class="sec"><span class="n">Section 4</span>Confidence was not a probability</h2>
   <p>
-    Once the mining rule was repaired, the same harness could be turned on the
-    other half of the machinery: how bold a newly formed belief is at birth.
+    Recovery under the revised rule is 4.8 times the chance rate, and marginal
+    lift is approximately three times its previous value. The revised rule
+    achieves this while forming expectations about a larger number of claims
+    than the unrevised rule, not a smaller one. Ninety-four per cent of the
+    regularities are removed and coverage increases, which indicates that the
+    removed regularities were firing frequently without contributing
+    information.
   </p>
+
+  <h2 class="sec">4. Confidence at formation</h2>
   <p>
-    That number was a base constant plus fixed steps for each supporting
-    verdict, clamped at both ends. It is not the probability of anything, but it
-    was being consumed as one, and the system's own calibration benchmark was
-    scoring it as one.
+    With the mining rule revised, the same harness was applied to the second
+    component of the machinery: the confidence assigned to a belief at the point
+    it is formed.
+  </p>
+  <p class="cont">
+    That quantity was defined as a base constant plus fixed increments for each
+    supporting verdict, bounded at both ends. It is not a probability, but it
+    was consumed as one by downstream components, and the system's own
+    calibration benchmark scored it as one.
   </p>
 
-  <div class="scroll">
-  <table class="data">
-    <caption>Table 2 · Calibration of confidence at birth</caption>
-    <thead>
-      <tr><th>Estimator</th><th>Brier</th><th>Brier skill</th><th>Predicted</th><th>Observed</th></tr>
-    </thead>
-    <tbody>
-      <tr><td class="lab">Linear steps, constant anchor</td><td>0.3687</td><td>&minus;0.689</td><td>&mdash;</td><td>&mdash;</td></tr>
-      <tr><td class="lab">Posterior mean, anchor learned</td><td>0.2674</td><td>&minus;0.176</td><td>0.45</td><td>0.65</td></tr>
-      <tr class="hi"><td class="lab">&hellip;borrowing raises the bar</td><td>0.2281</td><td>&minus;0.003</td><td>0.58</td><td>0.66</td></tr>
-    </tbody>
-  </table>
-  </div>
-  <p class="tnote">
-    Brier skill is measured against always predicting the population base rate.
-    Zero is parity with that baseline; negative is worse than it.
-  </p>
-
-  <div class="callout">
-    <b>What &minus;0.003 is, and what it is not</b>
-    <p>
-      Parity is not skill. A Brier skill of &minus;0.003 means the repaired
-      estimator is statistically indistinguishable from a system that ignores
-      every record it holds and predicts the population base rate every single
-      time. It is not evidence that the system's confidence carries information
-      about which beliefs will hold.
+  <figure class="tbl">
+    <figcaption><b>Table 2.</b> Calibration of confidence at formation.</figcaption>
+    <div class="scroll">
+    <table>
+      <thead>
+        <tr><th>Estimator</th><th>Brier</th><th>Brier skill</th><th>Predicted</th><th>Observed</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Linear increments, constant anchor</td><td>0.3687</td><td>&minus;0.689</td><td>&mdash;</td><td>&mdash;</td></tr>
+        <tr><td>Posterior mean, anchor estimated</td><td>0.2674</td><td>&minus;0.176</td><td>0.45</td><td>0.65</td></tr>
+        <tr><td>Posterior mean, borrowing penalised</td><td>0.2281</td><td>&minus;0.003</td><td>0.58</td><td>0.66</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="tnote">
+      Brier skill is computed against a reference forecast that predicts the
+      population base rate on every case.<sup class="fn"><a href="#n4">4</a></sup>
+      Zero denotes parity with that reference; negative values denote worse than
+      it.
     </p>
-    <p>
-      What was removed is a large negative: an estimator actively worse than
-      knowing nothing, whose output was being read as a probability by
-      everything downstream. Removing that matters. Claiming more than that
-      would be the sort of thing this programme exists to check.
+  </figure>
+
+  <p>
+    A Brier skill of &minus;0.003 denotes parity, not skill. The revised
+    estimator is statistically indistinguishable from a procedure that ignores
+    every record the system holds and predicts the population base rate on every
+    case. The result is not evidence that the system's confidence carries
+    information about which beliefs will subsequently hold. What has been
+    removed is an estimator performing substantially worse than an uninformed
+    reference, whose output was being interpreted as a probability throughout
+    the system. Establishing positive skill remains outstanding.
+  </p>
+  <p class="cont">
+    Three observations arose in the course of the revision. The first is that
+    the anchor rather than the estimator accounted for most of the error. The
+    base constant was 0.35, a value assumed about a population that had not been
+    observed; expectations in this population held 68 per cent of the time.
+    Replacing the constant with the system's own measured rate improved skill by
+    approximately a factor of five, whereas altering the functional form of the
+    estimator had little effect. The house rate is now estimated from the
+    record, and is shrunk toward the former constant until sufficient
+    observations accumulate.
+  </p>
+  <p class="cont">
+    The second is that a measurement was confounded by a design choice. An
+    initial parameter sweep indicated that a very small pseudo-count performed
+    best. It performed best because assigned confidence was bounded below the
+    rate these expectations achieve, so the sweep rewarded whichever setting
+    reached the bound most quickly. An internal guard identified the
+    consequence, namely that a single success would move a generator to the
+    ceiling, and the parameter was set on principle rather than on the sweep.
+  </p>
+  <p class="cont">
+    The third is that two independent safeguards were compounding into a fixed
+    error. Every expectation formed by a young installation is borrowed, since a
+    small number of individuals cannot support a mined regularity. A borrowed
+    expectation was bounded at the ceiling multiplied by a discount, or 0.45,
+    while borrowed expectations were holding 65 per cent of the time. This is
+    not conservatism but a twenty-point error that no quantity of subsequent
+    evidence could correct, since the bound applied to the output. Borrowing now
+    raises the evidential threshold instead: a borrowed regularity requires more
+    of its own record before its confidence departs from the house rate.
+  </p>
+
+  <h2 class="sec">5. Computational behaviour</h2>
+  <p>
+    A rule that is correct but cannot be executed at scale is not usable. The
+    revised system was measured against synthetic populations at sizes exceeding
+    those any deployment has reached.<sup class="fn"><a href="#n5">5</a></sup>
+  </p>
+
+  <figure class="tbl">
+    <figcaption><b>Table 3.</b> Mining cost by population size, at 80 propositions.</figcaption>
+    <div class="scroll">
+    <table>
+      <thead><tr><th>Subjects</th><th>Seconds</th><th>Pairs</th><th>&micro;s per pair</th></tr></thead>
+      <tbody>
+        <tr><td>200</td><td>0.356</td><td>6,320</td><td>56.4</td></tr>
+        <tr><td>1,000</td><td>0.315</td><td>6,320</td><td>49.9</td></tr>
+        <tr><td>4,000</td><td>0.505</td><td>6,320</td><td>79.9</td></tr>
+        <tr><td>10,000</td><td>1.076</td><td>6,320</td><td>170.2</td></tr>
+        <tr><td>20,000</td><td>2.371</td><td>6,320</td><td>375.2</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </figure>
+
+  <figure class="tbl">
+    <figcaption><b>Table 4.</b> Mining cost by vocabulary size, at 5,000 subjects.</figcaption>
+    <div class="scroll">
+    <table>
+      <thead><tr><th>Propositions</th><th>Seconds</th><th>Pairs</th><th>&micro;s per pair</th></tr></thead>
+      <tbody>
+        <tr><td>40</td><td>0.223</td><td>1,560</td><td>143.1</td></tr>
+        <tr><td>80</td><td>0.601</td><td>6,320</td><td>95.1</td></tr>
+        <tr><td>160</td><td>1.769</td><td>25,440</td><td>69.5</td></tr>
+        <tr><td>320</td><td>5.982</td><td>101,442</td><td>59.0</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="tnote">
+      Cost per pair rises with population size, since intersecting two bitmasks
+      costs one machine word per sixty-four subjects. It does not rise with
+      vocabulary size, which a cubic loop would.
     </p>
-  </div>
-
-  <h3 class="sub">Three findings, in the order they appeared</h3>
-  <p>
-    <em class="key">The anchor was the problem, not the estimator.</em> The base
-    constant was 0.35, a guess about a population nobody had observed. Hunches
-    in this population held 68 per cent of the time. Moving the anchor to the
-    system's own measured rate improved skill roughly five-fold, while changing
-    the estimator's functional form barely moved it at all. The house rate is
-    now learned, and is itself shrunk toward the old constant until there is
-    enough record to believe it.
-  </p>
-  <p>
-    <em class="key">A measurement can be confounded by a design choice.</em> The
-    first sweep reported that a very small pseudo-count scored best. It scored
-    best because confidence was capped below the rate these hunches actually
-    achieve, so the sweep was rewarding whichever setting reached the cap
-    fastest. An internal guard caught the consequence — at that value, a single
-    success took a generator straight to the ceiling — and the constant was set
-    on the principle instead of the score.
-  </p>
-  <p>
-    <em class="key">Two safeguards were stacking into a fixed error.</em> Every
-    hunch a young installation makes is borrowed, because a handful of people
-    cannot support a mined regularity. A borrowed hunch was capped at the
-    ceiling times a discount, 0.45, while borrowed hunches were holding 65 per
-    cent of the time. That is not caution; it is a twenty-point error no amount
-    of evidence could correct. Borrowing now raises the evidence bar rather than
-    capping the output: a borrowed regularity needs more of its own record
-    before it moves off the house rate, and once it has proved itself on this
-    installation's people it is not meaningfully borrowed any more.
-  </p>
-
-  <h2 class="sec"><span class="n">Section 5</span>Behaviour at volume</h2>
-  <p>
-    A rule that is correct and cannot run is not usable. The repaired system was
-    measured against synthetic populations at sizes no real installation has
-    yet reached, on a laptop with 3.8&nbsp;GB of RAM.
-  </p>
-
-  <div class="scroll">
-  <table class="data">
-    <caption>Table 3 · Mining, by population, at 80 propositions</caption>
-    <thead><tr><th>Subjects</th><th>Seconds</th><th>Pairs</th><th>&micro;s per pair</th></tr></thead>
-    <tbody>
-      <tr><td class="lab">200</td><td>0.356</td><td>6,320</td><td>56.4</td></tr>
-      <tr><td class="lab">1,000</td><td>0.315</td><td>6,320</td><td>49.9</td></tr>
-      <tr><td class="lab">4,000</td><td>0.505</td><td>6,320</td><td>79.9</td></tr>
-      <tr><td class="lab">10,000</td><td>1.076</td><td>6,320</td><td>170.2</td></tr>
-      <tr><td class="lab">20,000</td><td>2.371</td><td>6,320</td><td>375.2</td></tr>
-    </tbody>
-  </table>
-  </div>
-
-  <div class="scroll">
-  <table class="data">
-    <caption>Table 4 · Mining, by vocabulary, at 5,000 subjects</caption>
-    <thead><tr><th>Propositions</th><th>Seconds</th><th>Pairs</th><th>&micro;s per pair</th></tr></thead>
-    <tbody>
-      <tr><td class="lab">40</td><td>0.223</td><td>1,560</td><td>143.1</td></tr>
-      <tr><td class="lab">80</td><td>0.601</td><td>6,320</td><td>95.1</td></tr>
-      <tr><td class="lab">160</td><td>1.769</td><td>25,440</td><td>69.5</td></tr>
-      <tr><td class="lab">320</td><td>5.982</td><td>101,442</td><td>59.0</td></tr>
-    </tbody>
-  </table>
-  </div>
-  <p class="tnote">
-    Cost per pair rises with population, because intersecting two bitmasks costs
-    one machine word per sixty-four subjects, which is real work. It does not
-    rise with vocabulary, which is what a cubic loop would do.
-  </p>
+  </figure>
 
   <p>
-    Two regressions arrived alongside the repair and were caught by the same
-    measurements. A vocabulary walk had been placed inside the pair loop, making
-    a loop quadratic by design into a cubic one; its signature appeared before
-    its cause, as a per-pair cost climbing with population when it should have
-    been flat. Separately, subject membership was held in ordinary sets, whose
-    intersection is linear in the population; bitmasks measured thirty times
-    faster at a thousand subjects and ninety at fifty thousand.
+    Two regressions were introduced alongside the revision and were detected by
+    the same measurements. A walk over the vocabulary had been placed inside the
+    pair loop, converting a loop quadratic in vocabulary by design into a cubic
+    one. Its signature was observable before its cause: cost per pair rose with
+    population where it should have been constant. Separately, subject
+    membership was held in ordinary sets, whose intersection is linear in the
+    population. Bitmask representation measured approximately thirty times
+    faster at one thousand subjects and ninety times at fifty thousand.
+  </p>
+  <p class="cont">
+    The more consequential defect was in the pass that forms new beliefs, and it
+    is not observable on a new installation, where a cap halts the run after
+    twenty-five hypotheses. It appears in the steady state that an established
+    installation occupies on every subsequent pass: most propositions are
+    already determined, few are eligible, the cap does not engage, and the loops
+    run to completion.
   </p>
 
-  <h3 class="sub">The pass that only fails when the system is mature</h3>
+  <figure class="tbl">
+    <figcaption><b>Table 5.</b> The belief-forming pass in steady state, before and after revision.</figcaption>
+    <div class="scroll">
+    <table>
+      <thead><tr><th>Entities</th><th>Before (s)</th><th>After (s)</th><th>Store scans, before</th><th>Assertion reads, before</th></tr></thead>
+      <tbody>
+        <tr><td>400</td><td>5.165</td><td>0.199</td><td>1,200</td><td>2,863,200</td></tr>
+        <tr><td>2,000</td><td>47.585</td><td>13.68</td><td>&mdash;</td><td>&mdash;</td></tr>
+        <tr><td>8,000, sparse</td><td>&mdash;</td><td>46.75</td><td>&mdash;</td><td>&mdash;</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="tnote">
+      Store scans fell from 1,200 to 1, and assertion reads from 2,863,200 to
+      2,386, for a pass that in this state produces no output. The dense case
+      remains quadratic, since where every entity shares a feature with every
+      other there is nothing to skip.
+    </p>
+  </figure>
+
   <p>
-    The worse defect was in the pass that forms new beliefs, and it is invisible
-    on a fresh installation because a cap stops the run after twenty-five
-    hypotheses. It appears in the steady state that a mature installation is in
-    on every subsequent pass: most things are already spoken for, almost nothing
-    is eligible, the cap never fires, and the loops run to completion.
+    The regression guards written against both defects assert counts rather than
+    elapsed time: one store scan per pass, and at most one vocabulary
+    consultation per proposition. A timing assertion on a shared runner produces
+    false alarms. Each guard was verified by reintroducing the corresponding
+    regression and confirming that it failed.
   </p>
 
-  <div class="scroll">
-  <table class="data">
-    <caption>Table 5 · The belief-forming pass in steady state, before and after</caption>
-    <thead><tr><th>Entities</th><th>Before (s)</th><th>After (s)</th><th>Store scans, before</th><th>Assertion reads, before</th></tr></thead>
-    <tbody>
-      <tr><td class="lab">400</td><td>5.165</td><td>0.199</td><td>1,200</td><td>2,863,200</td></tr>
-      <tr><td class="lab">2,000</td><td>47.585</td><td>13.68</td><td>&mdash;</td><td>&mdash;</td></tr>
-      <tr><td class="lab">8,000, sparse</td><td>&mdash;</td><td>46.75</td><td>&mdash;</td><td>&mdash;</td></tr>
-    </tbody>
-  </table>
-  </div>
-  <p class="tnote">
-    Store scans fell from 1,200 to 1, and assertion reads from 2,863,200 to
-    2,386, for a pass that in this state produces nothing at all. The dense case
-    remains quadratic and always will: when every entity shares a feature with
-    every other, there is nothing to skip.
-  </p>
+  <h2 class="sec">6. Correction to a previously published result</h2>
   <p>
-    The guards written against both regressions pin <em class="key">counts, not
-    seconds</em> — one store scan per pass, at most one vocabulary consultation
-    per proposition — because a timing assertion on a shared runner is a
-    generator of false alarms. Each guard was checked by reintroducing the
-    regression and confirming it failed.
+    On the day the first defect was identified, this programme's commons
+    benchmark had reported that pooling regularities across installations fails
+    in a saturated population, that is, one in which almost all members already
+    hold the claim at issue. The reported measurement was &minus;0.116. The
+    measurement was correct and the explanation offered for it was not: the
+    cause was the defect described in Section 3, not a property of pooling.
+  </p>
+  <p class="cont">
+    Under the revised rule that case measures +0.264, and the harness's negative
+    control continues to behave as specified. The claim is withdrawn here, in
+    the reference implementation's claims ledger, and in the benchmark that
+    issued it.
+  </p>
+  <p class="cont">
+    A second and smaller correction belongs with the first. One of the test
+    suites covering pooled regularities was passing without exercising the
+    system: it recomputed the former formula inline rather than invoking the
+    engine, and would have continued to pass after the engine's behaviour
+    changed. It has been rewritten to invoke the engine.
   </p>
 
-  <h2 class="sec"><span class="n">Section 6</span>A retraction</h2>
-  <p>
-    On the day the first defect was found, this programme's own benchmark had
-    reported that pooling regularities across installations fails in a saturated
-    population, where almost everyone already holds the claim in question. The
-    measurement was &minus;0.116 and the number was real. The explanation
-    offered for it was wrong: it was the popularity defect, not a property of
-    pooling.
-  </p>
-  <p>
-    With the rule repaired, that case runs at +0.264, and the harness's negative
-    control still behaves. The claim is withdrawn here, in the repository's
-    claims ledger, and in the benchmark that made it.
-  </p>
-  <p>
-    A second, smaller correction belongs in the same section. One of the test
-    suites covering pooled regularities had been passing without testing
-    anything: it recomputed the old formula inline rather than driving the
-    system, so it would have continued to pass after the system's behaviour
-    changed. It has been rewritten to drive the engine.
-  </p>
-
-  <h2 class="sec"><span class="n">Section 7</span>What this does not show</h2>
+  <h2 class="sec">7. Limitations</h2>
   <ol class="plain">
     <li>
-      <em class="key">The population is not the target population.</em>
-      Personality items are not the working behaviours this system's vocabulary
-      describes. Whether the two resemble each other is untested, and the burden
-      is on anyone claiming they do.
+      The evaluation population is not the target population. Personality items
+      are not the working behaviours this system's vocabulary describes, and
+      whether the two resemble one another is untested.
     </li>
     <li>
-      <em class="key">This tests the rule, not the corpus.</em> The shared
-      corpus is empty. No installation has contributed to it. Nothing here
-      establishes that pooling across real deployments works; it establishes
-      that a rule which would have filled that corpus with popularity no longer
-      does.
+      This study evaluates the rule, not the corpus. The shared corpus is empty
+      and no installation has contributed to it. Nothing here establishes that
+      pooling across deployments is effective; it establishes that a rule which
+      would have populated that corpus with frequency artefacts no longer does.
     </li>
     <li>
-      <em class="key">One dataset, one method, one moment.</em> Self-report,
-      online volunteers, collected around 2012, in one language. Every known
-      limitation of that instrument applies unchanged to every number above.
+      One dataset, one collection method, one period. Responses are self-report,
+      from online volunteers, collected around 2012, in one language. The known
+      limitations of that instrument apply to every figure reported above.
     </li>
     <li>
-      <em class="key">Recovering a hidden answer is not predicting a person.</em>
-      The held-out design hides an answer somebody already gave. That is a
-      weaker task than anticipating what someone will do, and the numbers should
-      not be read as the latter.
+      Recovering a withheld response is a weaker task than anticipating future
+      behaviour, and the figures should not be read as the latter.
     </li>
     <li>
-      <em class="key">The margin is an in-sample choice.</em> See Section 3. It
-      was selected conservatively for that reason, which reduces the exposure
-      without removing it.
+      The margin parameter is an in-sample choice, as described in note 3.
     </li>
   </ol>
 
-  <h2 class="sec"><span class="n">Section 8</span>Reproduction</h2>
+  <h2 class="sec">8. Reproduction</h2>
   <p>
-    Everything in this paper is produced by runnable harnesses in the reference
-    implementation. The external dataset is fetched at run time and is not
+    All figures reported here are produced by harnesses in the reference
+    implementation. The external dataset is retrieved at run time and is not
     contained in the repository.
   </p>
-<pre>python3 benchmarks/external/run.py      # Sections 3 and 4
-python3 benchmarks/scale/run.py         # Section 5
-python3 server/tests_prior_lift.py      # the repaired rule, checked
-python3 server/tests_scale_mining.py    # the mining guard
-python3 server/tests_scale_leap.py      # the belief-forming guard</pre>
+<pre>python3 benchmarks/external/run.py      Sections 3 and 4
+python3 benchmarks/scale/run.py         Section 5
+python3 server/tests_prior_lift.py      the revised rule
+python3 server/tests_scale_mining.py    the mining guard
+python3 server/tests_scale_leap.py      the belief-forming guard</pre>
   <p>
-    The full suite stands at 97 passing files across 2,721 checks. The changes
-    described here are recorded in the reference implementation's history,
-    together with the measurements that prompted each one.
+    The full suite comprises 97 passing files across 2,721 assertions. The
+    revisions described here are recorded in the reference implementation's
+    history together with the measurements that prompted each of them.
+  </p>
+  <p class="cont">
+    Both defects affected what every installation would learn and what the
+    shared corpus would contain. They were identified because the system was
+    evaluated against a population it had not constructed, and before any
+    installation existed to be affected, which is why this paper reports a
+    revision rather than a recall. A programme that publishes a format for
+    holding automated systems to account has no standing unless it applies the
+    same treatment to its own reference implementation, including where the
+    measurement is unfavourable.
   </p>
 
-  <div class="callout">
-    <b>Why this was worth publishing</b>
-    <p>
-      Both defects altered what every installation would learn and what the
-      shared corpus would be filled with. They were found because the system was
-      pointed at a population it did not construct, and they were found before
-      any installation existed to be affected — which is the only reason this
-      paper reports a repair rather than a recall.
-    </p>
-    <p>
-      A programme that publishes a format for holding automated systems to
-      account has no standing unless it does the same to its own reference
-      implementation, including on the days the measurement comes back badly.
-    </p>
-  </div>
+  <hr class="endrule">
 
-  <p class="backlink"><a href="/#publications">← All publications</a></p>
+  <h2 class="sec">Notes</h2>
+  <ol class="notes">
+    <li id="n1">
+      Machine Testimony is an independent research programme, operated by Black
+      Tier Solutions Ltd. It is not a certification body and audits no third
+      party. Correspondence via the reference implementation's issue tracker.
+    </li>
+    <li id="n2">
+      Open Psychometrics, Big Five personality test item responses. The dataset
+      is retrieved when the harness runs and is not redistributed by this
+      programme or its repositories.
+    </li>
+    <li id="n3">
+      The lower bound is the Wilson score interval at the 95 per cent level. The
+      margin was set at 0.10 although 0.15 performed better in the parameter
+      sweep. The sweep was conducted on the same data against which it was
+      evaluated, so the higher figure is not evidence of generalisation; 0.10
+      exceeds the incumbent rule on every measure reported, including coverage.
+      The choice remains in-sample and is reported as such.
+    </li>
+    <li id="n4">
+      Brier skill is 1 &minus; (B / B<sub>ref</sub>), where B<sub>ref</sub> is
+      the Brier score of a forecast issuing the population base rate on every
+      case.
+    </li>
+    <li id="n5">
+      Measurements taken on a consumer laptop with 3.8 GB of available memory.
+      Mining executes on a consolidation pass and not within a request.
+    </li>
+  </ol>
+
+  <p class="backlink"><a href="/#papers">Working papers</a></p>
 
 </div>
 
 <footer class="foot">
   <div class="wrap">
     <p>Editor: Troy Clifford. Operated by Black Tier Solutions Ltd.</p>
-    <p>Working paper text CC BY 4.0. Schema and tools MIT. Harnesses and data are described in Section 8; the external dataset is not redistributed.</p>
+    <p>Working paper text CC BY 4.0. Schema and tools MIT.</p>
     <p>Machine Testimony is a research programme, not a registered institute or a certification body.</p>
   </div>
 </footer>
