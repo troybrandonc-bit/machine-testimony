@@ -1,0 +1,469 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What Eight Agent Systems Record About What They Did &ndash; Machine Testimony</title>
+<meta name="description" content="Eight agent memory and agent framework systems assessed against the Testimony Record conformance levels. No system records who approved a gated action; none cleanly records that data was destroyed.">
+<meta property="og:title" content="What Eight Agent Systems Record About What They Did">
+<meta property="og:description" content="Eight agent memory and agent framework systems assessed against the Testimony Record conformance levels. No system records who approved a gated action; none cleanly records that data was destroyed.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://machinetestimony.org/census/2026-09/">
+<meta property="og:image" content="https://machinetestimony.org/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="What Eight Agent Systems Record About What They Did">
+<meta name="twitter:description" content="Eight agent memory and agent framework systems assessed against the Testimony Record conformance levels. No system records who approved a gated action; none cleanly records that data was destroyed.">
+<meta name="twitter:image" content="https://machinetestimony.org/og.png">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/icon.png" type="image/png" sizes="512x512">
+<link rel="apple-touch-icon" href="/icon.png">
+<link rel="canonical" href="https://machinetestimony.org/census/2026-09/">
+<meta name="citation_title" content="The Testimony Record Conformance Census: What Eight Agent Systems Record About What They Did">
+<meta name="citation_author" content="Clifford, Troy">
+<meta name="citation_publication_date" content="2026/09/04">
+<meta name="citation_publisher" content="Machine Testimony">
+<meta name="citation_doi" content="10.5281/zenodo.22290922">
+<meta name="citation_technical_report_institution" content="Machine Testimony">
+<meta name="citation_technical_report_number" content="Conformance Census No. 1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  /* A working paper. One serif column at a reading measure, numbered
+     sections, booktabs rules, notes at the foot. No boxes, no accent
+     colour in the body, no emphasis that the sentence does not carry. */
+  :root{
+    --band:#123a6b; --band-2:#0e2f57; --band-ink:#ffffff; --band-dim:#b9cbe4;
+    --paper:#ffffff; --ink:#111417; --body:#1e2429; --muted:#5f6a72;
+    --rule:#111417; --rule-soft:#c9cfd4; --link:#123a6b;
+    --display:"Source Serif 4",Georgia,"Times New Roman",serif;
+    --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --band:#0c2340; --band-2:#081a2f; --band-ink:#f2f6fb; --band-dim:#9db3ce;
+      --paper:#0f1214; --ink:#eef0f2; --body:#c8ced3; --muted:#8a939a;
+      --rule:#c8ced3; --rule-soft:#2c3236; --link:#9dc0ef;
+    }
+  }
+  :root[data-theme="dark"]{
+    --band:#0c2340; --band-2:#081a2f; --band-ink:#f2f6fb; --band-dim:#9db3ce;
+    --paper:#0f1214; --ink:#eef0f2; --body:#c8ced3; --muted:#8a939a;
+    --rule:#c8ced3; --rule-soft:#2c3236; --link:#9dc0ef;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--body);
+    font-family:var(--display);font-size:17px;line-height:1.62;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 30px}
+  a{color:var(--link);text-decoration:underline;text-underline-offset:2px;
+    text-decoration-thickness:1px}
+
+  .band{background:var(--band);color:var(--band-ink);
+    background-image:linear-gradient(180deg,var(--band) 0%,var(--band-2) 100%)}
+  .band a{color:var(--band-ink);text-decoration:none}
+  .band a:hover{text-decoration:underline}
+  .topbar{display:flex;align-items:center;gap:26px;flex-wrap:wrap;padding:16px 0 12px}
+  .lockup{display:flex;align-items:center;gap:13px}
+  .lockup .mk{width:31px;height:31px;flex:none;color:var(--band-ink)}
+  .lockup .bar{width:2px;align-self:stretch;background:var(--band-ink);opacity:.55}
+  .lockup .nm{font-family:var(--sans);font-weight:700;font-size:11.5px;
+    letter-spacing:.085em;line-height:1.32;text-transform:uppercase}
+  .utility{margin-left:auto;font-family:var(--sans);font-size:13.5px;
+    display:flex;gap:12px;align-items:center;color:var(--band-dim)}
+  .utility .sep{opacity:.45}
+  nav.primary{border-bottom:1px solid rgba(255,255,255,.42);
+    display:flex;gap:26px;flex-wrap:wrap;padding:9px 0 14px;
+    font-family:var(--sans);font-size:14.5px}
+  .band .pad{height:18px}
+
+  /* title block */
+  .paper{max-width:52rem;margin:0 auto;padding:52px 34px 0}
+  .series{font-family:var(--sans);font-size:12.5px;color:var(--muted);
+    margin:0 0 30px}
+  h1{font-family:var(--display);font-weight:700;color:var(--ink);
+    font-size:1.86rem;line-height:1.2;margin:0 0 6px;letter-spacing:-.006em}
+  h1 + .subtitle{font-family:var(--display);font-weight:400;color:var(--ink);
+    font-size:1.16rem;line-height:1.35;margin:0}
+  .authors{margin:26px 0 0;font-size:16px;color:var(--ink)}
+  .affil{font-family:var(--sans);font-size:13px;color:var(--muted);margin:3px 0 0}
+  .titlerule{border:0;border-top:1px solid var(--rule);margin:30px 0 0}
+
+  /* abstract */
+  .abstract{margin:26px auto 0;max-width:34rem}
+  .abstract h2{font-family:var(--display);font-weight:600;color:var(--ink);
+    font-size:16px;text-align:center;margin:0 0 12px}
+  .abstract p{font-size:15.5px;line-height:1.58;margin:0 0 11px;color:var(--body)}
+  .abstract p:last-child{margin-bottom:0}
+  .kw{font-size:14.5px;color:var(--muted);margin:16px 0 0}
+  .abrule{border:0;border-top:1px solid var(--rule-soft);margin:30px 0 0}
+
+  /* body */
+  h2.sec{font-family:var(--display);font-weight:600;color:var(--ink);
+    font-size:1.08rem;line-height:1.35;margin:38px 0 0}
+  h3.sub{font-family:var(--display);font-weight:600;font-style:italic;
+    color:var(--ink);font-size:1rem;margin:26px 0 0}
+  p{margin:13px 0 0}
+  p.cont{text-indent:1.4em;margin-top:0}
+  sup.fn{font-size:.68em;line-height:0;vertical-align:super}
+  sup.fn a{text-decoration:none}
+
+  /* tables, booktabs */
+  figure.tbl{margin:30px 0 0}
+  figure.tbl figcaption{font-family:var(--sans);font-size:13.5px;
+    color:var(--ink);margin:0 0 10px;line-height:1.45}
+  figure.tbl figcaption b{font-weight:600}
+  /* Set in the reading face, not in monospace. A table of results is part of
+     the document, and a proportional serif is what a table in a written report
+     looks like; monospace makes the same numbers read as terminal output. */
+  table{width:100%;border-collapse:collapse;font-family:var(--display);
+    font-size:15.5px;color:var(--body)}
+  table thead th{font-weight:600;color:var(--ink);text-align:right;
+    padding:7px 0 7px 14px;border-top:1.5px solid var(--rule);
+    border-bottom:1px solid var(--rule-soft);white-space:nowrap}
+  table thead th:first-child{text-align:left;padding-left:0}
+  table tbody td{text-align:right;padding:6px 0 6px 14px}
+  table tbody td:first-child{text-align:left;padding-left:0;
+    font-family:var(--sans);font-size:13px;white-space:nowrap}
+  table tbody tr:last-child td{border-bottom:1.5px solid var(--rule)}
+  .tnote{font-family:var(--display);font-size:14px;color:var(--muted);
+    line-height:1.55;margin:10px 0 0}
+  .scroll{overflow-x:auto;margin:0 -4px}
+
+  pre{font-family:var(--mono);font-size:12.5px;line-height:1.7;
+    margin:22px 0 0;padding:0 0 0 18px;
+    border-left:2px solid var(--rule-soft);color:var(--body);overflow-x:auto}
+
+  ol.notes{margin:14px 0 0;padding-left:22px;font-size:14.5px;
+    line-height:1.55;color:var(--body)}
+  ol.notes li{margin:0 0 10px}
+  ol.plain{margin:13px 0 0;padding-left:22px}
+  ol.plain li{margin:0 0 11px}
+
+  .endrule{border:0;border-top:1px solid var(--rule);margin:44px 0 0}
+  .backlink{font-family:var(--sans);font-size:13.5px;margin:26px 0 0}
+
+  footer.foot{border-top:1px solid var(--rule-soft);margin-top:52px;
+    padding:22px 0 40px;font-family:var(--sans);font-size:12.5px;
+    color:var(--muted)}
+  footer.foot p{margin:0 0 5px}
+
+  /* Print, which is also how the citable PDF is rendered. Plain: one neutral
+     sans throughout, black on white, no accent colour, no italics, no rules
+     that are not doing work. A document, not a designed object. Arial and
+     Helvetica rather than the interface sans, because the interface sans is
+     the one every product page uses and this is not a product page. */
+  @media print{
+    .band, .backlink{display:none}
+    body{
+      font-family:Arial, Helvetica, "Liberation Sans", sans-serif;
+      font-size:10pt;line-height:1.45;color:#000;background:#fff}
+    .paper{max-width:none;padding:0}
+    a{color:#000;text-decoration:none}
+
+    .series{font-family:inherit;font-size:9pt;color:#000;margin:0 0 22pt}
+    h1{font-family:inherit;font-size:16pt;font-weight:700;line-height:1.2;
+      letter-spacing:0;margin:0 0 4pt;color:#000}
+    h1 + .subtitle{font-family:inherit;font-size:11pt;font-weight:400;
+      font-style:normal;color:#000;margin:0}
+    .authors{font-family:inherit;font-size:10pt;margin:14pt 0 0;color:#000}
+    .affil{font-family:inherit;font-size:9pt;color:#000;margin:2pt 0 0}
+    .titlerule{border-top:1px solid #000;margin:14pt 0 0}
+
+    .abstract{max-width:none;margin:16pt 0 0}
+    .abstract h2{font-family:inherit;font-size:10pt;font-weight:700;
+      text-align:left;text-transform:none;letter-spacing:0;color:#000;
+      margin:0 0 6pt}
+    .abstract p{font-size:10pt;line-height:1.45;color:#000;margin:0 0 8pt}
+    .kw{font-family:inherit;font-size:9pt;color:#000;margin:12pt 0 0}
+    .kw i, i, em{font-style:normal}
+    .abrule{border-top:1px solid #000;margin:18pt 0 0}
+
+    h2.sec{font-family:inherit;font-size:11pt;font-weight:700;color:#000;
+      margin:20pt 0 0;padding-top:0;border-top:0;
+      page-break-after:avoid;break-after:avoid}
+    h3.sub{font-family:inherit;font-size:10pt;font-weight:700;
+      font-style:normal;color:#000;margin:14pt 0 0;
+      page-break-after:avoid;break-after:avoid}
+    p{margin:8pt 0 0;color:#000}
+    p.cont{text-indent:0;margin-top:8pt}
+    em.key{font-weight:700;font-style:normal;color:#000}
+    sup.fn{font-size:.7em}
+
+    figure.tbl{margin:16pt 0 0;page-break-inside:avoid;break-inside:avoid}
+    figure.tbl figcaption{font-family:inherit;font-size:9.5pt;font-weight:700;
+      color:#000;margin:0 0 5pt}
+    table{font-family:inherit;font-size:9pt;color:#000}
+    table thead th{color:#000;font-weight:700;border-top:1px solid #000;
+      border-bottom:1px solid #000;padding:4pt 0 4pt 12pt}
+    table tbody td{padding:3.5pt 0 3.5pt 12pt;color:#000}
+    table tbody td:first-child{font-family:inherit;font-size:9pt}
+    table tbody tr:last-child td{border-bottom:1px solid #000}
+    .tnote{font-family:inherit;font-size:8.5pt;color:#000;margin:5pt 0 0}
+
+    pre{font-family:"Courier New", Courier, monospace;font-size:8.5pt;
+      line-height:1.5;border-left:0;padding:0;margin:12pt 0 0;color:#000;
+      page-break-inside:avoid;break-inside:avoid}
+
+    ol.plain, ol.notes{color:#000}
+    ol.plain li{margin:0 0 7pt}
+    ol.notes{font-size:9pt;line-height:1.4}
+    ol.notes li{margin:0 0 7pt;page-break-inside:avoid;break-inside:avoid}
+    .endrule{border-top:1px solid #000;margin:22pt 0 0}
+
+    footer.foot{font-family:inherit;font-size:8.5pt;color:#000;
+      border-top:1px solid #000;margin-top:18pt;padding:8pt 0 0}
+    .wrap{padding:0}
+
+    .paper::before{
+      content:"Machine Testimony Working Paper No. 1 · September 2026 · machinetestimony.org/papers/wp1/";
+      display:block;font-size:8pt;color:#000;margin-bottom:14pt}
+  }
+  table.matrix thead th{text-align:center;padding-left:10px}
+  table.matrix tbody td{text-align:center;padding-left:10px}
+  table.matrix tbody td:first-child{text-align:left;padding-left:0}
+  table td.lvl{text-align:left;color:var(--ink);padding:15px 0 4px;
+    font-family:var(--display);font-weight:600;font-size:15.5px}
+  code{font-family:var(--mono);font-size:.88em}
+</style>
+
+</head>
+<body>
+
+<div class="band">
+  <div class="wrap">
+    <div class="topbar">
+      <div class="lockup">
+        <svg class="mk" viewBox="0 0 64 64" aria-hidden="true">
+          <g fill="currentColor">
+            <rect x="2" y="18" width="20" height="20"/>
+            <polygon points="2,38 22,38 2,56"/>
+            <rect x="30" y="22" width="20" height="20"/>
+            <polygon points="50,22 30,22 50,4"/>
+          </g>
+        </svg>
+        <div class="bar"></div>
+        <div class="nm"><a href="/">Machine<br>Testimony</a></div>
+      </div>
+      <div class="utility">
+        <a href="https://infrastructure.omem-cloud.com/spec/testimony-record/">Specification</a>
+        <span class="sep">|</span>
+        <a href="https://github.com/troybrandonc-bit/Omem">Reference implementation</a>
+        <span class="sep">|</span>
+        <a href="/llms.txt">For machines</a>
+      </div>
+    </div>
+    <nav class="primary">
+      <a href="/#question">The question</a>
+      <a href="/#conformance">Conformance</a>
+      <a href="/#papers">Working papers</a>
+      <a href="/#census">Census</a>
+      <a href="/#publications">Publications</a>
+      <a href="/#taking-part">Taking part</a>
+    </nav>
+    <div class="pad"></div>
+  </div>
+</div>
+
+
+<div class="paper">
+
+  <p class="series">Machine Testimony Conformance Census &nbsp;·&nbsp; No. 1 &nbsp;·&nbsp; 4 September 2026<br>
+  doi <a href="https://doi.org/10.5281/zenodo.22290922">10.5281/zenodo.22290922</a> &nbsp;·&nbsp; this version <a href="https://doi.org/10.5281/zenodo.22290923">10.5281/zenodo.22290923</a><br>
+  Eight systems, read at pinned commits, against the Testimony Record specification</p>
+
+  <h1>What Eight Agent Systems Record About What They Did</h1>
+  <p class="subtitle">The first conformance census of the Testimony Record specification</p>
+
+  <p class="authors">Troy Clifford</p>
+  <p class="affil">Machine Testimony</p>
+
+  <hr class="titlerule">
+
+  <div class="abstract">
+  <h2>Abstract</h2>
+  <p>Eight agent memory and agent framework systems were assessed against the four conformance levels of the Testimony Record specification. They were OMEM, mem0, Graphiti, LangGraph, CrewAI, the OpenAI Agents SDK, AutoGen and Letta Code. Each was read from its public repository at a pinned commit. Every verdict cites a file and line at that commit, or a search that can be repeated against it.</p>
+  <p>The twenty requirements used here come from the published conformance levels, restated as questions about capability rather than about format. A system that keeps the required information in a shape of its own is assessed on whether it keeps the information.</p>
+  <p>Three results hold across every system except the specification's own reference implementation. None records who approved a gated action, although four of the eight stop and wait for a person. None cleanly records that data was destroyed, and in the two cases where a deletion is recorded at all, the deleted content is kept inside the record of its own deletion. None publishes a way for a reader to establish that a past record has not been altered since.</p>
+  <p>One verdict was left formally undetermined rather than guessed, because the record it concerns is held by a server that could not be read.</p>
+  <p class="kw"><i>Keywords:</i> AI accountability, agent memory, audit trail, human oversight, provenance, conformance assessment.</p>
+  </div>
+
+  <hr class="abrule">
+
+  <h2 class="sec">1. What was measured</h2>
+  <p>The specification ships a validator. It answers one question, which is whether a given record conforms, and it cannot answer the question this census asks. Point it at a framework that has never heard of the specification and it reports nothing, for the same reason a spellchecker reports nothing about a blank page. Running it across eight projects would have produced eight identical non-answers.</p>
+  <p class="cont">So the requirements were rewritten as questions about what a system keeps. Instead of asking whether it writes a belief entry with an evidence array, the question became whether the source a stored fact came from can be recovered from the store at all.</p>
+  <p class="cont">That distinction matters more than it sounds. A system holding the information in some private shape is a translation away from conformance, perhaps a day's work. A system that never captured the information cannot get there at any price, because the thing itself is gone.</p>
+  <p class="cont">Twenty requirements came out of the four levels, spread five, five, seven and three. Each subject declares what it is in the business of doing and is scored only on requirements falling inside it. A vector store is not an approval gate, so it is not marked down for lacking one.</p>
+  <h2 class="sec">2. What this does not produce</h2>
+  <p>No totals. No percentages. No ordering of one system against another, and the tooling cannot emit one even if somebody asked it to.</p>
+  <p class="cont">These systems are not attempting the same job. A single number laid across them would be read as a league table inside a week, and after that nobody would read anything else on the page.</p>
+  <p class="cont">What comes out instead is a map of gaps: for each system, the highest level its existing capabilities already satisfy, and above that, the specific facts it does not keep together with where that was checked. A level counts as reached only when nothing in it is missing. That is a strict rule with an unfortunate side effect, which is that a system meeting four requirements out of five shows no level at all. Table 2 gives the per-level counts so the result reads correctly.</p>
+  <h2 class="sec">3. The assessment</h2>
+  <p class="tnote">Tables 1.1 to 1.4 give the verdict on every requirement, one table per conformance level. Throughout: "yes", the system keeps this fact; "part", partially, or not durably; "no", it does not keep it; "n/a", outside what the system claims to do; "?", kept somewhere that could not be read, so not settled.</p>
+  <p class="tnote">Table 1.1. TR-1 Recorded. The record exists and is append-only.</p>
+  <div class="scroll">
+    <table class="matrix">
+      <thead><tr><th></th><th>AutoGen</th><th>CrewAI</th><th>Graphiti</th><th>LangGraph</th><th>Letta</th><th>mem0</th><th>OMEM</th><th>OpenAI SDK</th></tr></thead>
+      <tbody>
+        <tr><td>R1.1</td><td>no</td><td>yes</td><td>yes</td><td>yes</td><td>yes</td><td>yes</td><td>yes</td><td>yes</td></tr>
+        <tr><td>R1.2</td><td>part</td><td>no</td><td>yes</td><td>yes</td><td>yes</td><td>yes</td><td>yes</td><td>part</td></tr>
+        <tr><td>R1.3</td><td>yes</td><td>no</td><td>yes</td><td>yes</td><td>yes</td><td>part</td><td>yes</td><td>part</td></tr>
+        <tr><td>R1.4</td><td>part</td><td>part</td><td>yes</td><td>yes</td><td>part</td><td>yes</td><td>yes</td><td>yes</td></tr>
+        <tr><td>R1.5</td><td>no</td><td>no</td><td>no</td><td>no</td><td>part</td><td>part</td><td>yes</td><td>no</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="tnote">Table 1.2. TR-2 Explained. Every belief resolves to its evidence, and disagreements survive.</p>
+  <div class="scroll">
+    <table class="matrix">
+      <thead><tr><th></th><th>AutoGen</th><th>CrewAI</th><th>Graphiti</th><th>LangGraph</th><th>Letta</th><th>mem0</th><th>OMEM</th><th>OpenAI SDK</th></tr></thead>
+      <tbody>
+        <tr><td>R2.1</td><td>no</td><td>part</td><td>yes</td><td>part</td><td>no</td><td>part</td><td>yes</td><td>part</td></tr>
+        <tr><td>R2.2</td><td>n/a</td><td>part</td><td>yes</td><td>n/a</td><td>n/a</td><td>no</td><td>yes</td><td>yes</td></tr>
+        <tr><td>R2.3</td><td>yes</td><td>part</td><td>yes</td><td>part</td><td>part</td><td>part</td><td>yes</td><td>no</td></tr>
+        <tr><td>R2.4</td><td>no</td><td>no</td><td>part</td><td>no</td><td>no</td><td>no</td><td>yes</td><td>no</td></tr>
+        <tr><td>R2.5</td><td>yes</td><td>part</td><td>part</td><td>part</td><td>part</td><td>part</td><td>yes</td><td>part</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="tnote">Table 1.3. TR-3 Gated. Actions carry a verdict, and approvals carry a name.</p>
+  <div class="scroll">
+    <table class="matrix">
+      <thead><tr><th></th><th>AutoGen</th><th>CrewAI</th><th>Graphiti</th><th>LangGraph</th><th>Letta</th><th>mem0</th><th>OMEM</th><th>OpenAI SDK</th></tr></thead>
+      <tbody>
+        <tr><td>R3.1</td><td>part</td><td>part</td><td>n/a</td><td>yes</td><td>yes</td><td>n/a</td><td>yes</td><td>part</td></tr>
+        <tr><td>R3.2</td><td>yes</td><td>yes</td><td>n/a</td><td>yes</td><td>yes</td><td>n/a</td><td>yes</td><td>yes</td></tr>
+        <tr><td>R3.3</td><td>part</td><td>part</td><td>n/a</td><td>part</td><td>yes</td><td>n/a</td><td>yes</td><td>part</td></tr>
+        <tr><td>R3.4</td><td>part</td><td>no</td><td>n/a</td><td>no</td><td>part</td><td>n/a</td><td>yes</td><td>yes</td></tr>
+        <tr><td>R3.5</td><td>no</td><td>no</td><td>n/a</td><td>no</td><td>?</td><td>n/a</td><td>yes</td><td>no</td></tr>
+        <tr><td>R3.6</td><td>no</td><td>no</td><td>n/a</td><td>no</td><td>?</td><td>n/a</td><td>yes</td><td>no</td></tr>
+        <tr><td>R3.7</td><td>no</td><td>no</td><td>n/a</td><td>no</td><td>?</td><td>n/a</td><td>yes</td><td>no</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="tnote">Table 1.4. TR-4 Verifiable. The record can be shown not to have changed.</p>
+  <div class="scroll">
+    <table class="matrix">
+      <thead><tr><th></th><th>AutoGen</th><th>CrewAI</th><th>Graphiti</th><th>LangGraph</th><th>Letta</th><th>mem0</th><th>OMEM</th><th>OpenAI SDK</th></tr></thead>
+      <tbody>
+        <tr><td>R4.1</td><td>no</td><td>no</td><td>no</td><td>no</td><td>part</td><td>no</td><td>yes</td><td>no</td></tr>
+        <tr><td>R4.2</td><td>no</td><td>no</td><td>no</td><td>no</td><td>yes</td><td>no</td><td>yes</td><td>no</td></tr>
+        <tr><td>R4.3</td><td>no</td><td>no</td><td>no</td><td>no</td><td>part</td><td>no</td><td>yes</td><td>no</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="tnote">Table 2. Requirements met, out of those that apply to what each system claims to do. Never summed across levels.</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>System</th><th>Version assessed</th><th>Reached</th><th>TR-1</th><th>TR-2</th><th>TR-3</th><th>TR-4</th></tr></thead>
+      <tbody>
+        <tr><td>AutoGen</td><td>0.7.5</td><td>none</td><td>1/5</td><td>2/4</td><td>1/7</td><td>0/3</td></tr>
+        <tr><td>CrewAI</td><td>main at 92eb5f9</td><td>none</td><td>1/5</td><td>0/5</td><td>1/7</td><td>0/3</td></tr>
+        <tr><td>Graphiti</td><td>0.30.1</td><td>none</td><td>4/5</td><td>3/5</td><td>n/a</td><td>0/3</td></tr>
+        <tr><td>LangGraph</td><td>1.2.11</td><td>none</td><td>4/5</td><td>0/4</td><td>2/7</td><td>0/3</td></tr>
+        <tr><td>Letta Code</td><td>0.31.12</td><td>none</td><td>3/5</td><td>0/4</td><td>3/7</td><td>1/3</td></tr>
+        <tr><td>mem0</td><td>2.0.20</td><td>none</td><td>3/5</td><td>0/5</td><td>n/a</td><td>0/3</td></tr>
+        <tr><td>OMEM</td><td>0.3.15</td><td>TR-4</td><td>5/5</td><td>5/5</td><td>7/7</td><td>3/3</td></tr>
+        <tr><td>OpenAI Agents SDK</td><td>0.22.0</td><td>none</td><td>2/5</td><td>1/5</td><td>2/7</td><td>0/3</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="cont">OMEM is the specification's reference implementation and was written by the author of these questions. Its row proves nothing. It appears here because the questions ought to be answered about the system that produced them before they are put to anybody else, and because a reader who doubts a question can open the source behind every answer in that column. Section 7 sets out the problem in more detail.</p>
+  <h2 class="sec">4. Three findings</h2>
+  <h3 class="sub">Nobody records who approved</h3>
+  <p>Four of the eight systems will stop a consequential action and wait for a person to decide. None writes down who that person was.</p>
+  <p class="cont">The OpenAI Agents SDK's <code>approve()</code> takes no approver argument. The only thing in its approval path carrying the word identity turns out to identify the tool call, by server label and request id, rather than anybody human. CrewAI's <code>request_human_input</code> reads a line from a console and hands back the text. AutoGen's <code>ApprovalResponse</code> insists on a reason, which is more than most of them manage, and has nowhere to put a name. LangGraph resumes a paused graph with <code>Command(resume=...)</code>, an arbitrary value from whoever happens to hold the thread.</p>
+  <p class="cont">The pause is real everywhere. The attribution is missing everywhere. A deployment that approves programmatically leaves a record indistinguishable from one where somebody read the arguments and thought about them, which is the whole problem for any team that has to evidence human oversight rather than merely perform it.</p>
+  <p class="cont">Letta Code is the exception, and it is recorded as undetermined rather than guessed. It carries an acting-user identity that exists specifically to name the human who started a request instead of the credential that spawned the runtime, and the server validates it before honouring it. Whether that identity survives as far as the approval record could not be established from the harness, because the record lives elsewhere.</p>
+  <h3 class="sub">Nobody records that data was destroyed</h3>
+  <p>Absent in five systems, partial in two.</p>
+  <p class="cont">All eight have a deletion path somebody will reach for when a subject asks to be erased, and afterwards the store looks much like one where the data never arrived.</p>
+  <p class="cont">The two partial cases fail in opposite directions, which is what makes them worth reading. mem0 writes a history row when a memory is deleted, which is the right instinct, and writes the deleted text into that row, so content erased from the vector store is still sitting in the local history database. Letta Code records a deletion as a git commit, dated and attributed, which as a trace is about as good as it gets. The content then stays in history, and on every mirror the commit was pushed to, so honouring a real erasure request means rewriting the history that made the record worth having.</p>
+  <h3 class="sub">Almost nobody can show a record did not change</h3>
+  <p>The fourth level is absent outright in six of the eight.</p>
+  <p class="cont">Where history survives, it survives because the code behaved. That is a weaker claim than it appears, since it says nothing about whether anybody went around the code.</p>
+  <p class="cont">Two systems are closer than their scores suggest. LangGraph's checkpointer already links every checkpoint to its parent, which is the shape of a hash chain with identifiers standing in for digests. Carrying a digest over each checkpoint and its parent would make that chain verifiable without touching the write path. Letta Code keeps memory in a git repository, so its history is content-addressed without anybody having designed it that way, and the post-commit push mirror is most of an external anchor already. Commit signing is switched off deliberately, for a reason that holds up: the harness-managed committer identities have no key, and a global signing setting would break memory initialisation outright.</p>
+  <h2 class="sec">5. What each system would need</h2>
+  <p>Graphiti and LangGraph both meet four of the five requirements at the first level and fail only on recording destruction. One change each.</p>
+  <p class="cont">Neither got there by aiming at this specification. Graphiti is bi-temporal, so a contradicted fact is stamped invalid instead of deleted and facts point back at the episodes they were pulled from. LangGraph needed append-only checkpoints for resumption and time travel, and append-only is append-only whatever the motive. Two independent designs arriving at the same property is better evidence for the property than any argument in the specification.</p>
+  <p class="cont">mem0 and CrewAI both run a model over existing memories to decide whether to keep, update or delete each one. mem0 keeps the old value in a separate history database. CrewAI keeps nothing. Its most tractable finding is small and specific: a blocked tool call builds a refusal reason and throws it away two frames later, so the model receives a fixed string naming the tool instead of the cause.</p>
+  <p class="cont">The OpenAI Agents SDK models the proposal side more carefully than anything else here, down to a ledger recording whether each call executed, and then leaves durability to whatever application embeds it. AutoGen has the best-structured approval request of the eight and returns a refusal as exit code 1, the same shape an execution error takes, so anyone counting failed executions afterwards counts the refusals among them.</p>
+  <h2 class="sec">6. How the instrument refuses</h2>
+  <p>A census of other people's software can do real damage, and the people in it did not ask to be in it. Being careful is not a defence, because nobody can audit care. The rules below are enforced by the tooling on every assessment, and a file breaking one of them cannot be published.</p>
+  <p class="cont">Every verdict cites evidence. That includes a verdict of absent, which has to carry at least one record of where the assessor looked and came up empty. This is the rule that matters most. Saying a system lacks something without saying where you looked is an accusation dressed as a measurement, and it is the failure this exercise was always most likely to commit.</p>
+  <p class="cont">No applicable requirement may be left out, since a silent omission is how an unflattering result quietly disappears. Scope cannot be used as an escape hatch in either direction: a subject cannot mark a requirement irrelevant inside a business it claims, and cannot be scored on a capability it never offered. A requirement whose answer sits somewhere the assessor cannot read is recorded as undetermined, which blocks a level exactly as absence does, because a level awarded on unchecked facts looks identical to one that was verified. Partial does not clear a level either.</p>
+  <p class="cont">These rules caught the author twice. The CrewAI assessment was refused outright for recording an absence with no repeatable search behind it. The Letta Code assessment could not be finished at all until the undetermined verdict existed, because both of the available answers were guesses.</p>
+  <h2 class="sec">7. Conflict of interest</h2>
+  <p>OMEM is the reference implementation of the specification these questions come from, and the same person wrote both. It scores well here in the way a dictionary's author spells well. Read its row as carrying no evidential weight.</p>
+  <p class="cont">It is included for two reasons. The questions ought to be put to the system that produced them before they are put to anybody else. And a reader who suspects a question is unfair can open the source behind every answer in that column and check.</p>
+  <p class="cont">That exercise was not a formality. It turned up three problems, two of them the author's fault. OMEM's own record export was emitting no evidence entries at all, and passed the second conformance level only because an empty list satisfies the check without meaning anything. The first draft of the rubric scored a lawful response to an erasure request as a first-level failure, which would have marked down every system deployed in the European Union for obeying the law. And it scored a system that never resolves contradictions as failing the second level, when the specification records resolution only if it happens, and never resolving is the more careful design. All three were fixed before any other system was read.</p>
+  <h2 class="sec">8. What a verdict is a claim about</h2>
+  <p>Every verdict here is about one named commit. Not about a project.</p>
+  <p class="cont">The claim is not that a system does not record something. It is that at a stated forty character object identifier it did not, with the file and the line given. Each subject pins that identifier and the tooling rejects an abbreviation, so any reader can check out the exact tree a citation refers to.</p>
+  <p class="cont">It follows that a project shipping a missing capability tomorrow has not made anything here false. The assessment was of a commit that still exists and still reads the same way. When a system changes, the response is a new assessment with a new date sitting beside the old one, never an edit to it. That is what this specification asks of everybody else, and the census does not get an exemption from its own rule.</p>
+  <p class="cont">Each requirement in each assessment carries an identifier of the form <code>MTC-2026-09-04-mem0-R1.5</code>. It names the observation and not the state of the world, so it survives the behaviour it describes being changed. The manifest deposited alongside this document fixes the digest of every assessment and of the questions they were scored against, since unchanged answers to changed questions are not the same assessment.</p>
+  <h2 class="sec">9. Reproduction</h2>
+  <p>Everything is in the reference implementation's repository under <code>benchmarks/census</code>. The assessments are data. The rules that reject a careless one are code. Both are checked on every commit.</p>
+  <pre>git clone https://github.com/troybrandonc-bit/Omem
+cd Omem
+
+python3 benchmarks/census/run.py            # the report
+python3 benchmarks/census/run.py --check    # validate every assessment
+python3 benchmarks/census/manifest.py --check
+python3 server/tests_census.py              # the refusal rules, tested</pre>
+  <p class="cont">One finding is demonstrated by execution rather than by reading.</p>
+  <p class="cont">Every other verdict came from reading source, which is honest and weaker than it sounds, and most of them concern what a system does not record, which running it cannot establish either way. The retention of deleted memory text is different on both counts. It asserts that something is written, and it concerns data somebody asked to have erased. So it is checked by running mem0's own storage layer, with no network, no model and no credentials.</p>
+  <pre>git clone https://github.com/mem0ai/mem0
+git -C mem0 checkout 9a7924befd7026e41e445ba809370009e5e985a6
+python3 benchmarks/census/verify/mem0_delete_retains_text.py --repo ./mem0</pre>
+  <h2 class="sec">Corrections</h2>
+  <p>Nothing here is self-reported and nothing is taken on trust in either direction. Every claim cites a file and a line at a pinned commit, or a search that can be repeated, so a wrong verdict can be demonstrated wrong rather than argued about.</p>
+  <p class="cont">If a verdict about your system is wrong, the fix is a pull request against its assessment file, or an email naming the requirement and where to look. A correction that lands changes the file, the report and the assessment date. There is no fee, no membership, and no requirement to use any particular software.</p>
+  <p class="cont">If your system is not here and you would like it to be, the same applies. Absence from this document is not a judgement. It means nobody has done the reading yet.</p>
+  <hr class="endrule">
+  <h2 class="sec">Notes</h2>
+  <ol class="notes">
+    <li id="n1">Assessed commits are recorded in full in each assessment file and in the published manifest. Systems were read in the order they were obtained, and no result was known in advance of reading.</li>
+    <li id="n2">The specification imposes one duty specific to derivation, which is that a fact a system inferred can be told apart from one it was told. No further requirements were invented to fill that column out. Every question here has to trace back to a published conformance level or the assessment stops being checkable.</li>
+    <li id="n3">A dated publication establishes when an observation was made. It does not oblige anybody to credit it. Attribution is reliably produced by coordinated disclosure, where the reporting process names the reporter, and that is not what happened here. These findings were published rather than sent.</li>
+  </ol>
+  <p>Census text CC BY 4.0. Schema and tools MIT. Machine Testimony is a research programme, not a registered institute or a certification body. Operated by Garnet Taurus Ltd.</p>
+  <p class="cont">Also readable at https://machinetestimony.org/census/2026-09/</p>
+  <hr class="endrule">
+
+  <h2 class="sec">If you are wondering about your own system</h2>
+  <p>
+    The question this document raises for most readers is not about the eight
+    systems in it. It is whether their own stack records who approved a
+    consequential action, and where a stored fact came from.
+    <a href="https://infrastructure.omem-cloud.com/spec/testimony-record/emitting">Emitting
+    a record from a system you already have</a> works through that against an
+    ordinary two-table store. Most systems keep the facts already, so it is a
+    translation rather than a rewrite, and for a system that only records it is
+    an afternoon.
+  </p>
+  <p class="cont">
+    Nothing there depends on any particular software. The format is CC BY, the
+    validator is one standard library file, and the assessments behind this
+    document are in the same repository.
+  </p>
+
+  <p class="backlink"><a href="/">Machine Testimony</a></p>
+
+</div>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>Editor: Troy Clifford. Operated by Garnet Taurus Ltd.</p>
+    <p>Census text CC BY 4.0. Schema and tools MIT.</p>
+    <p>Machine Testimony is a research programme, not a registered institute or a certification body.</p>
+  </div>
+</footer>
+
+</body>
+</html>
