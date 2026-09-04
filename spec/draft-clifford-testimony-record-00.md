@@ -35,12 +35,12 @@ informative:
   RFC9162:
   I-D.ietf-scitt-architecture:
   TR-SPEC:
-    title: "The Testimony Record"
+    title: "The Testimony Record: specification source, reference validator and adapters"
     author:
       ins: T. Clifford
       name: Troy Clifford
     date: 2026
-    target: https://infrastructure.omem-cloud.com/spec/testimony-record/
+    target: https://github.com/troybrandonc-bit/machine-testimony
   CENSUS:
     title: "The Testimony Record Conformance Census: What Eight Agent Systems Record About What They Did"
     author:
@@ -511,10 +511,17 @@ regulator.
 
 # Implementation Status
 
-At the time of writing, this format has a reference validator and a reference
-emitter, and a second independent validator implementation in TypeScript that
-is checked against the first on a corpus of records covering each level and
-each failure mode.
+At the time of writing, every implementation of this format is by this
+document's author. There are two validators, one in Python and one in
+TypeScript, written separately and checked against each other on a corpus of
+records covering each level and each failure mode, which tests the
+specification's clarity but is not independent implementation in the sense that
+matters. There are two emitters: one for the author's own system, and one for
+LangGraph, which depends on that framework and on nothing of the author's.
+
+No implementation by another party is known. That is the honest state of it,
+and it is the thing a reader deciding whether to implement this should weigh
+most heavily.
 
 The reference validator is a single standard-library file with no network
 access, published under an MIT licence, so that a conformance claim can be
