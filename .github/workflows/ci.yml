@@ -1,0 +1,140 @@
+name: CI
+
+# This repository holds the specification, its reference validator, and the
+# adapters that emit records. The product that implements the specification
+# lives somewhere else on purpose: a requirement that can only be adopted by
+# adopting one vendor's software is a product, not a specification, and
+# somebody evaluating the format should not have to visit a vendor's
+# repository to read it.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  adapter:
+    name: the LangGraph adapter, against a real graph
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with: { python-version: "3.12" }
+      # Without langgraph the suite skips honestly and verifies nothing, which
+      # is the failure this job exists to prevent. It runs against a real
+      # compiled graph rather than a mock, because the subject is what
+      # LangGraph's resume boundary carries and a mock of that boundary would
+      # be a mock of the finding.
+      - run: pip install langgraph
+      - name: The refusals bite
+        working-directory: tests
+        run: |
+          out=$(python tests_langgraph_testimony.py)
+          echo "$out"
+          if echo "$out" | grep -qE '^[[:space:]]*SKIP:'; then
+            echo "::error::the adapter suite skipped where langgraph is installed"; exit 1
+          fi
+      - name: The example reaches TR-4 through the reference validator
+        run: |
+          python adapters/langgraph/example.py /tmp/record.jsonl
+          python spec/testimony_validate.py /tmp/record.jsonl --require TR-4
+
+  package:
+    name: pip install, emit, check, with no checkout in sight
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with: { python-version: "3.12" }
+      - run: pip install build langgraph
+      - run: cd adapters/langgraph && python -m build
+      - name: The wheel must carry the validator
+        run: |
+          python - <<'PY'
+          import glob, zipfile
+          whl = glob.glob("adapters/langgraph/dist/*.whl")[0]
+          names = zipfile.ZipFile(whl).namelist()
+          for need in ("testimony_langgraph.py", "testimony_validate.py"):
+              assert need in names, "%s missing from the wheel: %s" % (need, names)
+          print("wheel carries both modules")
+          PY
+      # The claim on the package page is "pip install, emit, check, no repo".
+      # Testing that from the source tree would test the source tree.
+      - name: A stranger's graph, against the installed wheel
+        run: |
+          pip install adapters/langgraph/dist/*.whl
+          mkdir -p /tmp/stranger && cd /tmp/stranger
+          cat > agent.py <<'PY'
+          from langgraph.graph import StateGraph, START, END
+          from langgraph.checkpoint.memory import InMemorySaver
+          from langgraph.types import interrupt
+          from typing_extensions import TypedDict
+          from testimony_langgraph import Recorder
+
+          class S(TypedDict, total=False):
+              order: str
+              ok: bool
+
+          def gate(s):
+              return {"ok": bool(interrupt({"action": "cancel_subscription",
+                                            "args": {"order": s["order"]}}))}
+          g = StateGraph(S); g.add_node("gate", gate)
+          g.add_edge(START, "gate"); g.add_edge("gate", END)
+          graph = g.compile(checkpointer=InMemorySaver())
+
+          cfg = {"configurable": {"thread_id": "t1"}}
+          rec = Recorder(agent={"id": "billing-agent", "kind": "agent"},
+                         risk={"cancel_subscription": "high"})
+          rec.believe("customer:zed", "requested_cancellation",
+                      evidence=[rec.cite("api", "crm://accounts/551")])
+          rec.invoke(graph, {"order": "A-551"}, cfg)
+          rec.approve(graph, cfg,
+                      approver={"id": "sam@example.com", "kind": "human"},
+                      identity_source="auth-session")
+          rec.write("out.jsonl")
+          PY
+          python agent.py
+          testimony-validate out.jsonl --require TR-4
+
+  drift:
+    name: the two copies of the validator are the same file
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      # There are two copies of the reference validator in the world. This
+      # repository publishes it as part of the specification; the OMEM
+      # repository vendors it because four of its test suites import it.
+      #
+      # Two copies is two copies to drift, and a validator that disagrees with
+      # itself is worse than no validator: two people would run "the reference
+      # validator" on the same record and get different levels. Rather than
+      # pretend one repository can own a file in another, this fails loudly the
+      # moment they stop being identical.
+      #
+      # A check that cannot run has verified nothing, so a fetch failure fails
+      # the job rather than skipping. Three attempts first, because the network
+      # is allowed one bad day.
+      - name: Compare against the copy in the OMEM repository
+        run: |
+          URL=https://raw.githubusercontent.com/troybrandonc-bit/Omem/main/scripts/testimony_validate.py
+          for i in 1 2 3; do
+            if curl -sfL --max-time 30 "$URL" -o /tmp/theirs.py; then break; fi
+            echo "attempt $i could not fetch, retrying"; sleep 5
+          done
+          if [ ! -s /tmp/theirs.py ]; then
+            echo "::error::could not fetch the other copy after three attempts; this check has verified nothing"
+            exit 1
+          fi
+          if ! diff -u /tmp/theirs.py spec/testimony_validate.py > /tmp/d.txt; then
+            echo "::error::the two copies of the reference validator have diverged"
+            echo "This repository holds the specification, so spec/testimony_validate.py"
+            echo "is the canonical one. Update the OMEM copy from it, or bring the"
+            echo "change here first if it was made there."
+            head -60 /tmp/d.txt
+            exit 1
+          fi
+          echo "identical"

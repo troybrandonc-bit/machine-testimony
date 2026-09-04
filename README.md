@@ -1,6 +1,35 @@
 # Machine Testimony
 
-The site for the research programme. One page, no build step, no dependencies.
+An independent research programme on whether what an automated system says
+about its own reasoning and actions can be verified by someone who was not
+there.
+
+This repository holds the specification, its reference validator, and the
+adapters that emit records. The product that implements the specification is
+developed elsewhere, on purpose: a requirement that can only be met by adopting
+one vendor's software is a product rather than a specification, and somebody
+evaluating the format should not have to read it inside a vendor's repository.
+
+```
+spec/
+  draft-clifford-testimony-record-00.md   the Internet-Draft source
+  testimony_validate.py                   the reference validator, one stdlib
+                                          file, no network, MIT
+adapters/
+  langgraph/                              testimony-langgraph on PyPI
+tests/                                    run against a real graph, not a mock
+public/                                   the site
+```
+
+The draft: <https://datatracker.ietf.org/doc/draft-clifford-testimony-record/>
+The conformance census: <https://doi.org/10.5281/zenodo.22290922>
+
+The specification text is CC BY 4.0. The validator and the adapters are MIT.
+Implementing any of it costs nothing and requires no permission.
+
+## The site
+
+One page, no build step, no dependencies.
 
 ```
 public/         everything that gets published, and nothing else
