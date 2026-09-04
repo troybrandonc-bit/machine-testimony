@@ -283,326 +283,131 @@
   <hr class="titlerule">
 
   <div class="abstract">
-    <h2>Abstract</h2>
-    <p>
-      Eight agent memory and agent framework systems were assessed against the
-      four conformance levels of the Testimony Record specification: OMEM, mem0,
-      Graphiti, LangGraph, CrewAI, the OpenAI Agents SDK, AutoGen and Letta
-      Code. Each was read from its public repository at a pinned commit, and
-      every verdict cites a file and line at that commit, or a search that can
-      be repeated against it.
-    </p>
-    <p>
-      Twenty requirements were derived from the published conformance levels and
-      restated as capability questions, so that a system holding the required
-      information in its own format is assessed on whether it holds the
-      information rather than on whether it uses this format.
-    </p>
-    <p>
-      Three findings hold across every assessed system except the
-      specification's own reference implementation. No system records who
-      approved a gated action: four of the eight pause for human approval and
-      none captures an approver identity, with one case left formally
-      undetermined because the record is held in a component that could not be
-      read. No system cleanly records that data was destroyed; where a deletion
-      is recorded at all, the deleted content is retained alongside it. And no
-      system publishes a scheme under which a past record can be shown not to
-      have altered.
-    </p>
-    <p class="kw">
-      <i>Keywords:</i> AI accountability, agent memory, audit trail, human
-      oversight, provenance, conformance assessment.
-    </p>
+  <h2>Abstract</h2>
+  <p>Eight agent memory and agent framework systems were assessed against the four conformance levels of the Testimony Record specification. They were OMEM, mem0, Graphiti, LangGraph, CrewAI, the OpenAI Agents SDK, AutoGen and Letta Code. Each was read from its public repository at a pinned commit. Every verdict cites a file and line at that commit, or a search that can be repeated against it.</p>
+  <p>The twenty requirements used here come from the published conformance levels, restated as questions about capability rather than about format. A system that keeps the required information in a shape of its own is assessed on whether it keeps the information.</p>
+  <p>Three results hold across every system except the specification's own reference implementation. None records who approved a gated action, although four of the eight stop and wait for a person. None cleanly records that data was destroyed, and in the two cases where a deletion is recorded at all, the deleted content is kept inside the record of its own deletion. None publishes a way for a reader to establish that a past record has not been altered since.</p>
+  <p>One verdict was left formally undetermined rather than guessed, because the record it concerns is held by a server that could not be read.</p>
+  <p class="kw"><i>Keywords:</i> AI accountability, agent memory, audit trail, human oversight, provenance, conformance assessment.</p>
   </div>
 
   <hr class="abrule">
 
   <h2 class="sec">1. What was measured</h2>
-  <p>
-    The specification's reference validator answers one question: does this
-    record conform. It cannot answer the question this census asks, because a
-    system that has never heard of the specification emits nothing for a
-    validator to read. Pointed at any third-party framework it would return
-    "none" for every one of them, which is not a finding about those systems.
-    It is an artefact of asking the wrong question.
-  </p>
-  <p class="cont">
-    So each requirement behind a conformance level was restated as a capability
-    question answerable by reading a system's source. Not "does it write a
-    belief entry with an evidence array", but "can the source a stored fact came
-    from be recovered from the store". A system holding the information in its
-    own shape is a translation away from conformance. A system that does not
-    hold it cannot translate its way there at any price, and that difference is
-    the only thing being measured.
-  </p>
-  <p class="cont">
-    Twenty requirements resulted, distributed across the levels as five, five,
-    seven and three. Each subject declares what it is in the business of doing,
-    and is assessed only on requirements that fall inside it. A vector store is
-    not failing at approval gates. It is not an approval gate.
-  </p>
-
+  <p>The specification ships a validator. It answers one question, which is whether a given record conforms, and it cannot answer the question this census asks. Point it at a framework that has never heard of the specification and it reports nothing, for the same reason a spellchecker reports nothing about a blank page. Running it across eight projects would have produced eight identical non-answers.</p>
+  <p class="cont">So the requirements were rewritten as questions about what a system keeps. Instead of asking whether it writes a belief entry with an evidence array, the question became whether the source a stored fact came from can be recovered from the store at all.</p>
+  <p class="cont">That distinction matters more than it sounds. A system holding the information in some private shape is a translation away from conformance, perhaps a day's work. A system that never captured the information cannot get there at any price, because the thing itself is gone.</p>
+  <p class="cont">Twenty requirements came out of the four levels, spread five, five, seven and three. Each subject declares what it is in the business of doing and is scored only on requirements falling inside it. A vector store is not an approval gate, so it is not marked down for lacking one.</p>
   <h2 class="sec">2. What this does not produce</h2>
-  <p>
-    There is no total, no percentage and no ordering of systems, and the tooling
-    cannot emit one. The systems assessed here are not attempting the same job,
-    and a number pretending otherwise would be read as a league table within a
-    week of publication, after which nothing else would matter.
-  </p>
-  <p class="cont">
-    What is produced instead is a gap map: for each system, the highest level
-    its existing capabilities already satisfy, and for the level above, exactly
-    which facts it does not keep and where that was checked. A level counts as
-    reached only when nothing in it is missing, so a system meeting four of five
-    requirements shows no level at all. The per-level counts in Table 2 are
-    reported so that this reads correctly rather than as a claim that such a
-    system records nothing.
-  </p>
-
+  <p>No totals. No percentages. No ordering of one system against another, and the tooling cannot emit one even if somebody asked it to.</p>
+  <p class="cont">These systems are not attempting the same job. A single number laid across them would be read as a league table inside a week, and after that nobody would read anything else on the page.</p>
+  <p class="cont">What comes out instead is a map of gaps: for each system, the highest level its existing capabilities already satisfy, and above that, the specific facts it does not keep together with where that was checked. A level counts as reached only when nothing in it is missing. That is a strict rule with an unfortunate side effect, which is that a system meeting four requirements out of five shows no level at all. Table 2 gives the per-level counts so the result reads correctly.</p>
   <h2 class="sec">3. The assessment</h2>
-
-  <p class="tnote">Table 1. Verdict by requirement. <b>yes</b>, the system keeps
-  this fact. <b>part</b>, partially, or not durably. <b>no</b>, it does not keep
-  it. <b>&ndash;</b>, outside what the system claims to do. <b>?</b>, kept
-  somewhere that could not be read, so not settled.</p>
-
+  <p class="tnote">Tables 1.1 to 1.4 give the verdict on every requirement, one table per conformance level. Throughout: "yes", the system keeps this fact; "part", partially, or not durably; "no", it does not keep it; "n/a", outside what the system claims to do; "?", kept somewhere that could not be read, so not settled.</p>
+  <p class="tnote">Table 1.1. TR-1 Recorded. The record exists and is append-only.</p>
   <div class="scroll">
     <table class="matrix">
-      <thead><tr><th></th><th>AutoGen</th><th>CrewAI</th><th>Graphiti</th><th>LangGraph</th><th>Letta Code</th><th>mem0</th><th>OMEM</th><th>OpenAI SDK</th></tr></thead>
+      <thead><tr><th></th><th>AutoGen</th><th>CrewAI</th><th>Graphiti</th><th>LangGraph</th><th>Letta</th><th>mem0</th><th>OMEM</th><th>OpenAI SDK</th></tr></thead>
       <tbody>
-        <tr><td class="lvl" colspan="9">TR-1 Recorded</td></tr>
         <tr><td>R1.1</td><td>no</td><td>yes</td><td>yes</td><td>yes</td><td>yes</td><td>yes</td><td>yes</td><td>yes</td></tr>
         <tr><td>R1.2</td><td>part</td><td>no</td><td>yes</td><td>yes</td><td>yes</td><td>yes</td><td>yes</td><td>part</td></tr>
         <tr><td>R1.3</td><td>yes</td><td>no</td><td>yes</td><td>yes</td><td>yes</td><td>part</td><td>yes</td><td>part</td></tr>
         <tr><td>R1.4</td><td>part</td><td>part</td><td>yes</td><td>yes</td><td>part</td><td>yes</td><td>yes</td><td>yes</td></tr>
         <tr><td>R1.5</td><td>no</td><td>no</td><td>no</td><td>no</td><td>part</td><td>part</td><td>yes</td><td>no</td></tr>
-        <tr><td class="lvl" colspan="9">TR-2 Explained</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="tnote">Table 1.2. TR-2 Explained. Every belief resolves to its evidence, and disagreements survive.</p>
+  <div class="scroll">
+    <table class="matrix">
+      <thead><tr><th></th><th>AutoGen</th><th>CrewAI</th><th>Graphiti</th><th>LangGraph</th><th>Letta</th><th>mem0</th><th>OMEM</th><th>OpenAI SDK</th></tr></thead>
+      <tbody>
         <tr><td>R2.1</td><td>no</td><td>part</td><td>yes</td><td>part</td><td>no</td><td>part</td><td>yes</td><td>part</td></tr>
-        <tr><td>R2.2</td><td>&ndash;</td><td>part</td><td>yes</td><td>&ndash;</td><td>&ndash;</td><td>no</td><td>yes</td><td>yes</td></tr>
+        <tr><td>R2.2</td><td>n/a</td><td>part</td><td>yes</td><td>n/a</td><td>n/a</td><td>no</td><td>yes</td><td>yes</td></tr>
         <tr><td>R2.3</td><td>yes</td><td>part</td><td>yes</td><td>part</td><td>part</td><td>part</td><td>yes</td><td>no</td></tr>
         <tr><td>R2.4</td><td>no</td><td>no</td><td>part</td><td>no</td><td>no</td><td>no</td><td>yes</td><td>no</td></tr>
         <tr><td>R2.5</td><td>yes</td><td>part</td><td>part</td><td>part</td><td>part</td><td>part</td><td>yes</td><td>part</td></tr>
-        <tr><td class="lvl" colspan="9">TR-3 Gated</td></tr>
-        <tr><td>R3.1</td><td>part</td><td>part</td><td>&ndash;</td><td>yes</td><td>yes</td><td>&ndash;</td><td>yes</td><td>part</td></tr>
-        <tr><td>R3.2</td><td>yes</td><td>yes</td><td>&ndash;</td><td>yes</td><td>yes</td><td>&ndash;</td><td>yes</td><td>yes</td></tr>
-        <tr><td>R3.3</td><td>part</td><td>part</td><td>&ndash;</td><td>part</td><td>yes</td><td>&ndash;</td><td>yes</td><td>part</td></tr>
-        <tr><td>R3.4</td><td>part</td><td>no</td><td>&ndash;</td><td>no</td><td>part</td><td>&ndash;</td><td>yes</td><td>yes</td></tr>
-        <tr><td>R3.5</td><td>no</td><td>no</td><td>&ndash;</td><td>no</td><td>?</td><td>&ndash;</td><td>yes</td><td>no</td></tr>
-        <tr><td>R3.6</td><td>no</td><td>no</td><td>&ndash;</td><td>no</td><td>?</td><td>&ndash;</td><td>yes</td><td>no</td></tr>
-        <tr><td>R3.7</td><td>no</td><td>no</td><td>&ndash;</td><td>no</td><td>?</td><td>&ndash;</td><td>yes</td><td>no</td></tr>
-        <tr><td class="lvl" colspan="9">TR-4 Verifiable</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="tnote">Table 1.3. TR-3 Gated. Actions carry a verdict, and approvals carry a name.</p>
+  <div class="scroll">
+    <table class="matrix">
+      <thead><tr><th></th><th>AutoGen</th><th>CrewAI</th><th>Graphiti</th><th>LangGraph</th><th>Letta</th><th>mem0</th><th>OMEM</th><th>OpenAI SDK</th></tr></thead>
+      <tbody>
+        <tr><td>R3.1</td><td>part</td><td>part</td><td>n/a</td><td>yes</td><td>yes</td><td>n/a</td><td>yes</td><td>part</td></tr>
+        <tr><td>R3.2</td><td>yes</td><td>yes</td><td>n/a</td><td>yes</td><td>yes</td><td>n/a</td><td>yes</td><td>yes</td></tr>
+        <tr><td>R3.3</td><td>part</td><td>part</td><td>n/a</td><td>part</td><td>yes</td><td>n/a</td><td>yes</td><td>part</td></tr>
+        <tr><td>R3.4</td><td>part</td><td>no</td><td>n/a</td><td>no</td><td>part</td><td>n/a</td><td>yes</td><td>yes</td></tr>
+        <tr><td>R3.5</td><td>no</td><td>no</td><td>n/a</td><td>no</td><td>?</td><td>n/a</td><td>yes</td><td>no</td></tr>
+        <tr><td>R3.6</td><td>no</td><td>no</td><td>n/a</td><td>no</td><td>?</td><td>n/a</td><td>yes</td><td>no</td></tr>
+        <tr><td>R3.7</td><td>no</td><td>no</td><td>n/a</td><td>no</td><td>?</td><td>n/a</td><td>yes</td><td>no</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="tnote">Table 1.4. TR-4 Verifiable. The record can be shown not to have changed.</p>
+  <div class="scroll">
+    <table class="matrix">
+      <thead><tr><th></th><th>AutoGen</th><th>CrewAI</th><th>Graphiti</th><th>LangGraph</th><th>Letta</th><th>mem0</th><th>OMEM</th><th>OpenAI SDK</th></tr></thead>
+      <tbody>
         <tr><td>R4.1</td><td>no</td><td>no</td><td>no</td><td>no</td><td>part</td><td>no</td><td>yes</td><td>no</td></tr>
         <tr><td>R4.2</td><td>no</td><td>no</td><td>no</td><td>no</td><td>yes</td><td>no</td><td>yes</td><td>no</td></tr>
         <tr><td>R4.3</td><td>no</td><td>no</td><td>no</td><td>no</td><td>part</td><td>no</td><td>yes</td><td>no</td></tr>
       </tbody>
     </table>
   </div>
-
-  <p class="tnote">Table 2. Requirements met, out of those that apply to what
-  each system claims to do. Never summed across levels.</p>
-
+  <p class="tnote">Table 2. Requirements met, out of those that apply to what each system claims to do. Never summed across levels.</p>
   <div class="scroll">
     <table>
-      <thead><tr><th>System</th><th>Reached</th><th>TR-1</th><th>TR-2</th><th>TR-3</th><th>TR-4</th></tr></thead>
+      <thead><tr><th>System</th><th>Version assessed</th><th>Reached</th><th>TR-1</th><th>TR-2</th><th>TR-3</th><th>TR-4</th></tr></thead>
       <tbody>
-        <tr><td>AutoGen 0.7.5</td><td>&ndash;</td><td>1/5</td><td>2/4</td><td>1/7</td><td>0/3</td></tr>
-        <tr><td>CrewAI</td><td>&ndash;</td><td>1/5</td><td>0/5</td><td>1/7</td><td>0/3</td></tr>
-        <tr><td>Graphiti 0.30.1</td><td>&ndash;</td><td>4/5</td><td>3/5</td><td>n/a</td><td>0/3</td></tr>
-        <tr><td>LangGraph 1.2.11</td><td>&ndash;</td><td>4/5</td><td>0/4</td><td>2/7</td><td>0/3</td></tr>
-        <tr><td>Letta Code 0.31.12</td><td>&ndash;</td><td>3/5</td><td>0/4</td><td>3/7</td><td>1/3</td></tr>
-        <tr><td>mem0 2.0.20</td><td>&ndash;</td><td>3/5</td><td>0/5</td><td>n/a</td><td>0/3</td></tr>
-        <tr><td>OMEM 0.3.15</td><td>TR-4</td><td>5/5</td><td>5/5</td><td>7/7</td><td>3/3</td></tr>
-        <tr><td>OpenAI Agents SDK 0.22.0</td><td>&ndash;</td><td>2/5</td><td>1/5</td><td>2/7</td><td>0/3</td></tr>
+        <tr><td>AutoGen</td><td>0.7.5</td><td>none</td><td>1/5</td><td>2/4</td><td>1/7</td><td>0/3</td></tr>
+        <tr><td>CrewAI</td><td>main at 92eb5f9</td><td>none</td><td>1/5</td><td>0/5</td><td>1/7</td><td>0/3</td></tr>
+        <tr><td>Graphiti</td><td>0.30.1</td><td>none</td><td>4/5</td><td>3/5</td><td>n/a</td><td>0/3</td></tr>
+        <tr><td>LangGraph</td><td>1.2.11</td><td>none</td><td>4/5</td><td>0/4</td><td>2/7</td><td>0/3</td></tr>
+        <tr><td>Letta Code</td><td>0.31.12</td><td>none</td><td>3/5</td><td>0/4</td><td>3/7</td><td>1/3</td></tr>
+        <tr><td>mem0</td><td>2.0.20</td><td>none</td><td>3/5</td><td>0/5</td><td>n/a</td><td>0/3</td></tr>
+        <tr><td>OMEM</td><td>0.3.15</td><td>TR-4</td><td>5/5</td><td>5/5</td><td>7/7</td><td>3/3</td></tr>
+        <tr><td>OpenAI Agents SDK</td><td>0.22.0</td><td>none</td><td>2/5</td><td>1/5</td><td>2/7</td><td>0/3</td></tr>
       </tbody>
     </table>
   </div>
-
-  <p class="tnote">OMEM is the specification's reference implementation, written
-  by the author of these questions. Its row carries no evidential weight and is
-  included so the questions are applied to the system that produced them before
-  they are applied to anyone else's. See section 7.</p>
-
+  <p class="cont">OMEM is the specification's reference implementation and was written by the author of these questions. Its row proves nothing. It appears here because the questions ought to be answered about the system that produced them before they are put to anybody else, and because a reader who doubts a question can open the source behind every answer in that column. Section 7 sets out the problem in more detail.</p>
   <h2 class="sec">4. Three findings</h2>
-
-  <h3 class="sub">No system records who approved</h3>
-  <p>
-    Four of the eight gate consequential actions behind a human decision, and
-    not one of them records who made it. The OpenAI Agents SDK's
-    <code>approve()</code> takes no approver argument, and the only thing named
-    an identity in its approval path identifies the tool call rather than a
-    person. CrewAI's <code>request_human_input</code> reads a line from a
-    console and returns the text. AutoGen's <code>ApprovalResponse</code>
-    requires a reason, which is more than most, and has no field for who gave
-    it. LangGraph resumes an interrupt with an arbitrary value supplied by
-    whoever holds the thread.
-  </p>
-  <p class="cont">
-    The pause is real in every case. The attribution is absent in every case.
-    An application that approves programmatically produces a record identical to
-    one where a person read the arguments and decided, which matters to anyone
-    who has to evidence human oversight rather than perform it.
-  </p>
-  <p class="cont">
-    Letta Code is the single unsettled case and is recorded as undetermined
-    rather than guessed. It carries a server-validated acting-user identity
-    built to name the human who initiated a request rather than the credential
-    that spawned the runtime, which is exactly the property this requirement
-    asks for. Whether that identity reaches the approval record could not be
-    established, because the record is held by a server outside the repository
-    that was read.
-  </p>
-
-  <h3 class="sub">No system records that data was destroyed</h3>
-  <p>
-    This is absent in five of the assessed systems and partial in two. Each has
-    a deletion path somebody will reach for on a subject-erasure request, and
-    the store afterwards is largely indistinguishable from one where the data
-    never existed.
-  </p>
-  <p class="cont">
-    The two partial cases fail in opposite directions and are instructive for
-    it. mem0 writes a history row recording the deletion, and writes the deleted
-    memory's own text into that row, so content erased from the vector store
-    remains on disk in the local history database. Letta Code records a deletion
-    as a git commit, which is exemplary as a trace, and the content stays in
-    history and on every mirror it was pushed to, so satisfying a real erasure
-    request means rewriting the history that made the record trustworthy.
-  </p>
-
-  <h3 class="sub">Almost no system can show a record did not change</h3>
-  <p>
-    The fourth conformance level is absent outright in six of the eight. Where
-    history is preserved, it is preserved because the code path behaved, which
-    is a weaker property than being able to demonstrate that nobody went around
-    the code path.
-  </p>
-  <p class="cont">
-    Two systems are closer than they appear. LangGraph's checkpointer already
-    links every checkpoint to its parent, which is the shape of a hash chain
-    with identifiers where the digests should be; carrying a digest over each
-    checkpoint and its parent would make the existing structure verifiable
-    without altering the write path. Letta Code stores memory in a git
-    repository, so the history is content-addressed by construction, and its
-    post-commit push mirror is most of an external anchor already. It disables
-    commit signing deliberately, for the sound reason that its harness-managed
-    committer identities hold no key.
-  </p>
-
+  <h3 class="sub">Nobody records who approved</h3>
+  <p>Four of the eight systems will stop a consequential action and wait for a person to decide. None writes down who that person was.</p>
+  <p class="cont">The OpenAI Agents SDK's <code>approve()</code> takes no approver argument. The only thing in its approval path carrying the word identity turns out to identify the tool call, by server label and request id, rather than anybody human. CrewAI's <code>request_human_input</code> reads a line from a console and hands back the text. AutoGen's <code>ApprovalResponse</code> insists on a reason, which is more than most of them manage, and has nowhere to put a name. LangGraph resumes a paused graph with <code>Command(resume=...)</code>, an arbitrary value from whoever happens to hold the thread.</p>
+  <p class="cont">The pause is real everywhere. The attribution is missing everywhere. A deployment that approves programmatically leaves a record indistinguishable from one where somebody read the arguments and thought about them, which is the whole problem for any team that has to evidence human oversight rather than merely perform it.</p>
+  <p class="cont">Letta Code is the exception, and it is recorded as undetermined rather than guessed. It carries an acting-user identity that exists specifically to name the human who started a request instead of the credential that spawned the runtime, and the server validates it before honouring it. Whether that identity survives as far as the approval record could not be established from the harness, because the record lives elsewhere.</p>
+  <h3 class="sub">Nobody records that data was destroyed</h3>
+  <p>Absent in five systems, partial in two.</p>
+  <p class="cont">All eight have a deletion path somebody will reach for when a subject asks to be erased, and afterwards the store looks much like one where the data never arrived.</p>
+  <p class="cont">The two partial cases fail in opposite directions, which is what makes them worth reading. mem0 writes a history row when a memory is deleted, which is the right instinct, and writes the deleted text into that row, so content erased from the vector store is still sitting in the local history database. Letta Code records a deletion as a git commit, dated and attributed, which as a trace is about as good as it gets. The content then stays in history, and on every mirror the commit was pushed to, so honouring a real erasure request means rewriting the history that made the record worth having.</p>
+  <h3 class="sub">Almost nobody can show a record did not change</h3>
+  <p>The fourth level is absent outright in six of the eight.</p>
+  <p class="cont">Where history survives, it survives because the code behaved. That is a weaker claim than it appears, since it says nothing about whether anybody went around the code.</p>
+  <p class="cont">Two systems are closer than their scores suggest. LangGraph's checkpointer already links every checkpoint to its parent, which is the shape of a hash chain with identifiers standing in for digests. Carrying a digest over each checkpoint and its parent would make that chain verifiable without touching the write path. Letta Code keeps memory in a git repository, so its history is content-addressed without anybody having designed it that way, and the post-commit push mirror is most of an external anchor already. Commit signing is switched off deliberately, for a reason that holds up: the harness-managed committer identities have no key, and a global signing setting would break memory initialisation outright.</p>
   <h2 class="sec">5. What each system would need</h2>
-  <p>
-    Graphiti and LangGraph each meet four of the five requirements at the first
-    level and fail only on recording destruction, so both are one change away
-    from a level neither was aiming at. Graphiti arrived there by being
-    bi-temporal: a contradicted fact is stamped invalid rather than deleted, and
-    facts point back at the episodes they were extracted from. LangGraph
-    arrived there because resumption and time travel required it. Neither was
-    built against this specification, which is the most useful kind of
-    agreement there is.
-  </p>
-  <p class="cont">
-    mem0 and CrewAI both consolidate through a model that decides whether to
-    keep, update or delete an existing memory. mem0 retains the previous value
-    in a separate history database. CrewAI retains nothing, and its most
-    tractable finding is narrow: a blocked tool call constructs a refusal reason
-    and discards it two frames later, so the model receives a fixed string
-    naming the tool rather than the cause.
-  </p>
-  <p class="cont">
-    The OpenAI Agents SDK models what was proposed more carefully than any other
-    framework here, including a ledger recording whether each tool call
-    executed, and leaves durability to the application embedding it. AutoGen
-    carries the best-structured approval request of the eight, and then returns
-    a refusal as an exit code of one, which is the shape an execution error
-    takes, so a refusal and a crash are indistinguishable to anything counting
-    afterwards.
-  </p>
-
+  <p>Graphiti and LangGraph both meet four of the five requirements at the first level and fail only on recording destruction. One change each.</p>
+  <p class="cont">Neither got there by aiming at this specification. Graphiti is bi-temporal, so a contradicted fact is stamped invalid instead of deleted and facts point back at the episodes they were pulled from. LangGraph needed append-only checkpoints for resumption and time travel, and append-only is append-only whatever the motive. Two independent designs arriving at the same property is better evidence for the property than any argument in the specification.</p>
+  <p class="cont">mem0 and CrewAI both run a model over existing memories to decide whether to keep, update or delete each one. mem0 keeps the old value in a separate history database. CrewAI keeps nothing. Its most tractable finding is small and specific: a blocked tool call builds a refusal reason and throws it away two frames later, so the model receives a fixed string naming the tool instead of the cause.</p>
+  <p class="cont">The OpenAI Agents SDK models the proposal side more carefully than anything else here, down to a ledger recording whether each call executed, and then leaves durability to whatever application embeds it. AutoGen has the best-structured approval request of the eight and returns a refusal as exit code 1, the same shape an execution error takes, so anyone counting failed executions afterwards counts the refusals among them.</p>
   <h2 class="sec">6. How the instrument refuses</h2>
-  <p>
-    A census of other people's software can do real damage, and the people in it
-    did not ask to be. Care is not a defence, because care is not auditable.
-    The rules are therefore enforced by the tooling on every assessment, and a
-    file breaking one of them cannot be published:
-  </p>
-  <ol class="notes">
-    <li>Every verdict cites evidence, <i>including</i> a verdict of absent,
-    which must carry at least one record of where the assessor looked and did
-    not find it. Stating that a system lacks something without saying where you
-    looked is an accusation wearing a measurement's clothes, and it is the
-    failure this exercise was most likely to commit.</li>
-    <li>No applicable requirement may be omitted, since a silent omission is how
-    an unflattering result disappears.</li>
-    <li>Scope cannot be an escape hatch in either direction. A subject may not
-    mark a requirement irrelevant inside a business it claims, and may not be
-    scored on a capability it never claimed.</li>
-    <li>A requirement whose answer is held somewhere the assessor cannot read is
-    recorded as undetermined, which blocks a level exactly as absence does. A
-    level awarded on unchecked facts is indistinguishable from one that was
-    verified, which makes it worse than no level at all.</li>
-    <li>A verdict of partial does not clear a level.</li>
-  </ol>
-  <p>
-    These rules rejected the author's own work twice during preparation. The
-    CrewAI assessment was refused for recording an absence without a repeatable
-    search behind it, and the Letta Code assessment could not be completed until
-    the undetermined verdict was added, because the only two answers available
-    were both guesses.
-  </p>
-
+  <p>A census of other people's software can do real damage, and the people in it did not ask to be in it. Being careful is not a defence, because nobody can audit care. The rules below are enforced by the tooling on every assessment, and a file breaking one of them cannot be published.</p>
+  <p class="cont">Every verdict cites evidence. That includes a verdict of absent, which has to carry at least one record of where the assessor looked and came up empty. This is the rule that matters most. Saying a system lacks something without saying where you looked is an accusation dressed as a measurement, and it is the failure this exercise was always most likely to commit.</p>
+  <p class="cont">No applicable requirement may be left out, since a silent omission is how an unflattering result quietly disappears. Scope cannot be used as an escape hatch in either direction: a subject cannot mark a requirement irrelevant inside a business it claims, and cannot be scored on a capability it never offered. A requirement whose answer sits somewhere the assessor cannot read is recorded as undetermined, which blocks a level exactly as absence does, because a level awarded on unchecked facts looks identical to one that was verified. Partial does not clear a level either.</p>
+  <p class="cont">These rules caught the author twice. The CrewAI assessment was refused outright for recording an absence with no repeatable search behind it. The Letta Code assessment could not be finished at all until the undetermined verdict existed, because both of the available answers were guesses.</p>
   <h2 class="sec">7. Conflict of interest</h2>
-  <p>
-    OMEM is the reference implementation of the specification these questions
-    derive from, written by the author of this census. It scores well here in
-    the way a dictionary's author spells well, and its row should be read as
-    carrying no evidential weight. It is included so that the questions were
-    applied to the system that produced them before being applied to anyone
-    else's, and so that a reader who doubts a question can open the source
-    behind every answer to it.
-  </p>
-  <p class="cont">
-    Building the instrument against it first was not a formality. It produced
-    three findings, two of them against the author. OMEM's own record export was
-    emitting no evidence entries at all, passing the second conformance level
-    only because an empty list satisfies the check vacuously. The first draft of
-    the rubric scored a lawful response to an erasure request as a first-level
-    failure, which would have marked down every system deployed in the European
-    Union for obeying the law. And it scored a system that never resolves
-    contradictions as failing the second level, when the specification records
-    resolution only if it occurs and never resolving is the more conservative
-    design. All three were corrected before any other system was assessed.
-  </p>
-
+  <p>OMEM is the reference implementation of the specification these questions come from, and the same person wrote both. It scores well here in the way a dictionary's author spells well. Read its row as carrying no evidential weight.</p>
+  <p class="cont">It is included for two reasons. The questions ought to be put to the system that produced them before they are put to anybody else. And a reader who suspects a question is unfair can open the source behind every answer in that column and check.</p>
+  <p class="cont">That exercise was not a formality. It turned up three problems, two of them the author's fault. OMEM's own record export was emitting no evidence entries at all, and passed the second conformance level only because an empty list satisfies the check without meaning anything. The first draft of the rubric scored a lawful response to an erasure request as a first-level failure, which would have marked down every system deployed in the European Union for obeying the law. And it scored a system that never resolves contradictions as failing the second level, when the specification records resolution only if it happens, and never resolving is the more careful design. All three were fixed before any other system was read.</p>
   <h2 class="sec">8. What a verdict is a claim about</h2>
-  <p>
-    Every verdict here is a claim about one named commit, not about a project.
-    Not that a system does not record something, but that at a stated forty
-    character object identifier it did not, with the file and the line. Each
-    subject pins that identifier and the tooling refuses an abbreviation, so any
-    reader can check out the exact tree every citation refers to.
-  </p>
-  <p class="cont">
-    A project that ships a missing capability tomorrow has therefore made
-    nothing here false. The assessment was of a commit that still exists and
-    still reads the same way. When a system changes, the response is a new
-    assessment with a new date beside the old one, never an edit to it, which is
-    what this specification asks of everybody else and is not a rule the census
-    exempts itself from.
-  </p>
-  <p class="cont">
-    Each requirement in each assessment carries a stable identifier of the form
-    <code>MTC-2026-09-04-mem0-R1.5</code>, naming the observation rather than the
-    state of the world, so it remains valid after the behaviour it describes is
-    changed. A published manifest fixes the digest of every assessment and of
-    the questions they were scored against, because unchanged answers to changed
-    questions are not the same assessment.
-  </p>
-
+  <p>Every verdict here is about one named commit. Not about a project.</p>
+  <p class="cont">The claim is not that a system does not record something. It is that at a stated forty character object identifier it did not, with the file and the line given. Each subject pins that identifier and the tooling rejects an abbreviation, so any reader can check out the exact tree a citation refers to.</p>
+  <p class="cont">It follows that a project shipping a missing capability tomorrow has not made anything here false. The assessment was of a commit that still exists and still reads the same way. When a system changes, the response is a new assessment with a new date sitting beside the old one, never an edit to it. That is what this specification asks of everybody else, and the census does not get an exemption from its own rule.</p>
+  <p class="cont">Each requirement in each assessment carries an identifier of the form <code>MTC-2026-09-04-mem0-R1.5</code>. It names the observation and not the state of the world, so it survives the behaviour it describes being changed. The manifest deposited alongside this document fixes the digest of every assessment and of the questions they were scored against, since unchanged answers to changed questions are not the same assessment.</p>
   <h2 class="sec">9. Reproduction</h2>
-  <p>
-    Everything is in the reference implementation's repository under
-    <code>benchmarks/census</code>. The assessments are data, the rules that
-    reject a bad one are code, and both are checked on every commit.
-  </p>
+  <p>Everything is in the reference implementation's repository under <code>benchmarks/census</code>. The assessments are data. The rules that reject a careless one are code. Both are checked on every commit.</p>
   <pre>git clone https://github.com/troybrandonc-bit/Omem
 cd Omem
 
@@ -610,59 +415,27 @@ python3 benchmarks/census/run.py            # the report
 python3 benchmarks/census/run.py --check    # validate every assessment
 python3 benchmarks/census/manifest.py --check
 python3 server/tests_census.py              # the refusal rules, tested</pre>
-  <p>
-    One finding is demonstrated by execution rather than by reading. Every other
-    verdict here was reached by reading source, which is honest and weaker than
-    it sounds, and most concern what a system does not record, which no amount
-    of running can establish. The retention of deleted memory text is different:
-    it asserts that something is written, and it concerns data somebody asked to
-    have erased. It is therefore checked by running the assessed system's own
-    storage layer, with no network, no model and no credentials.
-  </p>
+  <p class="cont">One finding is demonstrated by execution rather than by reading.</p>
+  <p class="cont">Every other verdict came from reading source, which is honest and weaker than it sounds, and most of them concern what a system does not record, which running it cannot establish either way. The retention of deleted memory text is different on both counts. It asserts that something is written, and it concerns data somebody asked to have erased. So it is checked by running mem0's own storage layer, with no network, no model and no credentials.</p>
   <pre>git clone https://github.com/mem0ai/mem0
 git -C mem0 checkout 9a7924befd7026e41e445ba809370009e5e985a6
 python3 benchmarks/census/verify/mem0_delete_retains_text.py --repo ./mem0</pre>
-
   <h2 class="sec">Corrections</h2>
-  <p>
-    Nothing here is self-reported and nothing is taken on trust, in either
-    direction. Every claim cites a file and a line at a pinned commit, or a
-    search that can be repeated against it, so a wrong verdict can be shown to
-    be wrong rather than argued about.
-  </p>
-  <p class="cont">
-    If a verdict concerning your system is wrong, the correction is a pull
-    request against its assessment file, or an email naming the requirement and
-    where to look. A correction that lands changes the file, the report and the
-    assessment date. There is no fee, no membership, and no requirement to use
-    any particular software. If your system is not here and you would like it to
-    be, the same applies: absence from this document is not a judgement, it
-    means nobody has done the reading yet.
-  </p>
-
+  <p>Nothing here is self-reported and nothing is taken on trust in either direction. Every claim cites a file and a line at a pinned commit, or a search that can be repeated, so a wrong verdict can be demonstrated wrong rather than argued about.</p>
+  <p class="cont">If a verdict about your system is wrong, the fix is a pull request against its assessment file, or an email naming the requirement and where to look. A correction that lands changes the file, the report and the assessment date. There is no fee, no membership, and no requirement to use any particular software.</p>
+  <p class="cont">If your system is not here and you would like it to be, the same applies. Absence from this document is not a judgement. It means nobody has done the reading yet.</p>
   <hr class="endrule">
-
   <h2 class="sec">Notes</h2>
   <ol class="notes">
-    <li id="n1">Assessed commits, in full, are recorded in each assessment file
-    and in the published manifest. Systems were read in the order they were
-    obtained and no result was known in advance of reading.</li>
-    <li id="n2">The specification imposes exactly one duty specific to
-    derivation, which is that a fact a system inferred can be told apart from
-    one it was told. Requirements were not invented to make that column look
-    fuller, because every question here has to trace to a published conformance
-    level for the assessment to be checkable.</li>
-    <li id="n3">A dated publication establishes when an observation was made. It
-    does not oblige anyone to credit it. The mechanism that reliably produces
-    attribution is coordinated disclosure, in which the reporting process names
-    the reporter, and it was not used here: these findings were published rather
-    than sent.</li>
+    <li id="n1">Assessed commits are recorded in full in each assessment file and in the published manifest. Systems were read in the order they were obtained, and no result was known in advance of reading.</li>
+    <li id="n2">The specification imposes one duty specific to derivation, which is that a fact a system inferred can be told apart from one it was told. No further requirements were invented to fill that column out. Every question here has to trace back to a published conformance level or the assessment stops being checkable.</li>
+    <li id="n3">A dated publication establishes when an observation was made. It does not oblige anybody to credit it. Attribution is reliably produced by coordinated disclosure, where the reporting process names the reporter, and that is not what happened here. These findings were published rather than sent.</li>
   </ol>
-
+  <p>Census text CC BY 4.0. Schema and tools MIT. Machine Testimony is a research programme, not a registered institute or a certification body. Operated by Garnet Taurus Ltd.</p>
+  <p class="cont">Also readable at https://machinetestimony.org/census/2026-09/</p>
   <p class="backlink"><a href="/">Machine Testimony</a></p>
 
 </div>
-
 
 <footer class="foot">
   <div class="wrap">
