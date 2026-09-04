@@ -138,3 +138,51 @@ jobs:
             exit 1
           fi
           echo "identical"
+
+  draft:
+    name: the draft renders, and agrees with the validator
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ruby/setup-ruby@v1
+        with: { ruby-version: "3.3" }
+      - uses: actions/setup-python@v7
+        with: { python-version: "3.12" }
+      - run: gem install kramdown-rfc2629 && pip install xml2rfc
+      # There are now two normative statements of this format: the validator,
+      # which decides what passes, and the draft, which is what the IETF and
+      # anyone implementing from paper will read. A specification that
+      # disagrees with its own reference implementation is worse than none,
+      # because the disagreement is invisible until somebody has built the
+      # wrong thing.
+      - name: The draft and the validator agree about every field
+        working-directory: tests
+        run: python tests_draft_sync.py
+      - name: Markdown to xml2rfc v3
+        run: |
+          # Every reference is committed under .refcache, so the usual run needs
+          # no network. An earlier version fetched from bib.ietf.org on every
+          # commit and failed on a connection reset, which is a job that teaches
+          # people to ignore it.
+          for i in 1 2 3; do
+            kdrfc --v3 --xml spec/draft-clifford-testimony-record-00.md 2>&1               | tee /tmp/kdrfc.log && break
+            echo "attempt $i failed, retrying"; sleep 5
+          done
+          if grep -qE '^\*\*' /tmp/kdrfc.log; then
+            echo "::error::kramdown-rfc warned"; cat /tmp/kdrfc.log; exit 1
+          fi
+          test -f spec/draft-clifford-testimony-record-00.xml || {
+            echo "::error::no XML produced"; exit 1; }
+      - name: xml2rfc v3 to text
+        run: |
+          xml2rfc --text --v3 spec/draft-clifford-testimony-record-00.xml             --out /tmp/draft.txt 2>&1 | tee /tmp/x2r.log
+          if grep -qiE "^.*(Error|undefined|unused)" /tmp/x2r.log; then
+            echo "::error::xml2rfc reported problems"; cat /tmp/x2r.log; exit 1
+          fi
+          head -30 /tmp/draft.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: internet-draft
+          path: |
+            spec/draft-clifford-testimony-record-00.xml
+            /tmp/draft.txt
