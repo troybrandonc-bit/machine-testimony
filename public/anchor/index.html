@@ -3,23 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Proposing a change to the specification &ndash; Machine Testimony</title>
-<meta name="description" content="How somebody other than the editor gets a defect fixed or a change into the Testimony Record, what is accepted, what is not, and the honest limits.">
-<meta property="og:title" content="Proposing a change to the specification">
-<meta property="og:description" content="How somebody other than the editor gets a defect fixed or a change into the Testimony Record, what is accepted, what is not, and the honest limits.">
+<title>A record you can check without us &ndash; Machine Testimony</title>
+<meta name="description" content="A published Testimony Record, anchored to a Time Stamp Authority. Three commands verify it, none of them ours.">
+<meta property="og:title" content="A record you can check without us">
+<meta property="og:description" content="A published Testimony Record, anchored to a Time Stamp Authority. Three commands verify it, none of them ours.">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://machinetestimony.org/changes/">
+<meta property="og:url" content="https://machinetestimony.org/anchor/">
 <meta property="og:image" content="https://machinetestimony.org/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Proposing a change to the specification">
-<meta name="twitter:description" content="How somebody other than the editor gets a defect fixed or a change into the Testimony Record, what is accepted, what is not, and the honest limits.">
+<meta name="twitter:title" content="A record you can check without us">
+<meta name="twitter:description" content="A published Testimony Record, anchored to a Time Stamp Authority. Three commands verify it, none of them ours.">
 <meta name="twitter:image" content="https://machinetestimony.org/og.png">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/icon.png" type="image/png" sizes="512x512">
 <link rel="apple-touch-icon" href="/icon.png">
-<link rel="canonical" href="https://machinetestimony.org/changes/">
+<link rel="canonical" href="https://machinetestimony.org/anchor/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
@@ -151,7 +151,6 @@
   pre.snip{background:none;border-left:2px solid var(--rule);margin:0 0 16px;
     padding:2px 0 2px 13px;font-size:13px;overflow-x:auto;max-width:100%;
     font-family:var(--mono);line-height:1.55}
-  /* A bare address is not code to be scrolled sideways past; let it wrap. */
   pre.snip.addr{overflow-x:visible;white-space:pre-wrap;overflow-wrap:anywhere}
   .block h3{font-family:var(--display);font-weight:600;color:var(--ink);
     font-size:1.08rem;margin:26px 0 8px}
@@ -159,8 +158,18 @@
   .block li{margin:0 0 7px}
   .dateline{font-family:var(--sans);font-size:12.5px;color:var(--muted);
     margin:0 0 22px}
+  table.facts{width:100%;border-collapse:collapse;font-size:14px;margin:0 0 20px}
+  table.facts th{text-align:left;font-family:var(--sans);font-size:11px;
+    font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--muted);padding:0 12px 6px 0;white-space:nowrap;
+    vertical-align:top;width:8.5rem}
+  table.facts td{padding:0 0 6px;font-family:var(--mono);font-size:12.5px;
+    overflow-wrap:anywhere;border-bottom:1px solid var(--rule-soft)}
+  table.facts th{border-bottom:1px solid var(--rule-soft)}
   @media (max-width:620px){
     pre.snip{font-size:12px}
+    table.facts th{width:6.6rem;font-size:10px}
+    table.facts td{font-size:11.5px}
   }
 </style>
 </head>
@@ -198,129 +207,143 @@
       <a href="/eu-ai-act/">EU AI Act</a>
       <a href="/approvals/">Approvals</a>
       <a href="/check/">Check a record</a>
-      
       <a href="/#taking-part">Taking part</a>
     </nav>
   </div>
-</div>
-
-
 <div class="wrap main">
   <div>
-    <p class="dateline">Governance, 5 September 2026</p>
-    <h2 class="label">Proposing a change to the specification</h2>
+    <p class="dateline">Reference record, 5 September 2026</p>
+    <h2 class="label">A record you can check without us</h2>
 
     <div class="block">
-      <p>The Testimony Record is edited by one person. That is a real limitation
-        and this page exists because pretending otherwise is how a format gets
-        forked.</p>
-      <p>Formats do not fragment over their content. They fragment over
-        governance: somebody could not get a change in, or the terms moved under
-        them, and the cheapest response was to start again. Markdown was forked
-        because its author declined to standardise it. RSS split over a
-        governance dispute. Neither fork was about the syntax.</p>
-      <p>So the route in is written down, before anyone needs it.</p>
+      <p>A record's integrity digest is computed by whoever wrote the record.
+        It detects an outsider's edit, which is worth having, and it establishes
+        nothing about the writer: anybody able to change the entries can
+        recompute the digest over the changed ones and hand you a file that
+        agrees with itself.</p>
 
-      <h3>What gets accepted</h3>
-      <ul>
-        <li><b>A defect.</b> The validator refuses something the specification
-          permits, or accepts something it forbids. These are fixed fastest and
-          the person who reported it is named in the erratum.</li>
-        <li><b>An internal inconsistency.</b> Two clauses that cannot both be
-          satisfied, or a requirement stated in one place and contradicted in
-          another.</li>
-        <li><b>A case the format cannot express</b> that it plainly should. The
-          strongest form of this is a real record from a real system that has to
-          be distorted to fit.</li>
-        <li><b>A requirement that cannot be checked.</b> Anything the validator
-          cannot decide is a defect in the specification, not in the validator.
-          A conformance claim nobody can check is an adjective.</li>
-      </ul>
+      <p>The record below closes that. Its digest is signed by a Time Stamp
+        Authority, under that authority's own key, at a time nobody here
+        chose. Three commands check it. None of them is ours, and none of them
+        needs anything from this site except the two files.</p>
 
-      <h3>What does not</h3>
-      <ul>
-        <li>A field for a use case with no implementation behind it. The format
-          stays small on purpose and every addition is a thing every future
-          reader must understand.</li>
-        <li>Anything that requires particular software to satisfy. If a
-          competitor could not implement it, it does not go in.</li>
-        <li>Loosening a refusal because a system fails it. That the format
-          refuses something is usually the point.</li>
-      </ul>
+      <h3>The files</h3>
+      <p><a href="/anchor/record.jsonl">record.jsonl</a> is thirteen entries: a
+        support agent that reads four sources, finds two systems of record
+        disagreeing about a customer's balance, refuses to close the account,
+        and issues a smaller refund that a named person approved. It is a
+        worked example rather than a real customer, and everything in it is
+        invented except the anchor.</p>
 
-      <h3>How to raise one</h3>
-      <p>Open an issue on the repository, or write to the editor. Both are read
-        by the same person, and neither is a form.</p>
-      <pre class="snip addr"><code>https://github.com/troybrandonc-bit/machine-testimony/issues
-troy@machinetestimony.com</code></pre>
-      <p>A report is strongest with a record that demonstrates it. The validator
-        is one standard-library file with no network access, so the smallest
-        useful bug report is a few lines of JSON and the level you expected.</p>
+      <p><a href="/anchor/anchor.tsr">anchor.tsr</a> is the timestamp token,
+        as returned by the authority.</p>
 
-      <h3>What happens then</h3>
-      <ol>
-        <li>A defect that can be shown gets a fix and an erratum on the
-          specification page, <b>naming the person who found it</b>. This has
-          happened: the <code>scope</code> entry in version 0.2 exists because
-          Phill Clapham reported that the validator refused TR-3 to any record
-          containing no decisions, a requirement that appeared nowhere in the
-          specification text.</li>
-        <li>A change to the format itself waits for the next version. Within a
-          major version, entry types and required fields are only added, never
-          removed or repurposed, so a reader written against 0.1 keeps working.
-          Breaking changes get a new major version and both stay published.</li>
-        <li>A rejection comes with a reason. If the reason is wrong, say so;
-          being argued out of a position in public is a better outcome for the
-          format than being right quietly.</li>
-      </ol>
+      <table class="facts">
+        <tr><th>Digest</th>
+          <td>sha256:34bf5a95693e32fe9bb9a8f4975ea1807d309855e9f09bbb0f3d6cb05606b6e8</td></tr>
+        <tr><th>Authority</th><td>http://timestamp.digicert.com</td></tr>
+        <tr><th>Signed at</th><td>2026-09-05T14:31:54Z</td></tr>
+        <tr><th>Covers</th><td>12 entries, named in the record</td></tr>
+      </table>
 
-      <h3>The honest limits</h3>
-      <p>There is no committee, no vote, and no appeal to anybody other than the
-        editor. A single editor is faster than a process and you can see exactly
-        who to argue with, which is worth saying plainly rather than dressing
-        up.</p>
-      <p>The counterweight is that nothing here is held back. The specification
-        text is CC BY 4.0 and the validator is MIT, so anyone who disagrees
-        strongly enough can take the format and go, with no permission needed
-        and nothing to negotiate. That option existing is what makes the
-        arrangement fair, and using it is not a hostile act.</p>
-      <p>The specification is also deposited as an IETF Internet-Draft, which is
-        archived independently of this site and of its editor. It confers no
-        formal standing and the datatracker says so on the page. What it means
-        is that the document survives whether or not anything here does.</p>
+      <h3>One: recompute the digest</h3>
+      <p>The digest is over the twelve entries the record's integrity entry
+        names, each written as JSON with its members in order and no spare
+        whitespace, joined by newlines. Nothing here reads the digest; it
+        computes one and you compare.</p>
+
+      <pre class="snip">python3 -c '
+import hashlib, json, sys
+e = [json.loads(l) for l in open("record.jsonl") if l.strip()]
+b = [x for x in e if x["type"] != "integrity"]
+c = [json.dumps(x, sort_keys=True, separators=(",", ":")) for x in b]
+print(hashlib.sha256("\n".join(c).encode()).hexdigest())'</pre>
+
+      <h3>Two: read what the authority signed</h3>
+      <pre class="snip">openssl ts -reply -in anchor.tsr -text</pre>
+
+      <p>The <code>Message data</code> it prints is the same digest. That is
+        the binding: the authority signed this record and not another one.</p>
+
+      <h3>Three: check the signature against your own roots</h3>
+      <p>Use your system's certificate store, not one we supply. On Debian or
+        Ubuntu it is the path below; on a Mac with Homebrew's OpenSSL it is
+        usually <code>/opt/homebrew/etc/openssl@3/cert.pem</code>.</p>
+
+      <pre class="snip">openssl ts -verify -in anchor.tsr \
+  -digest 34bf5a95693e32fe9bb9a8f4975ea1807d309855e9f09bbb0f3d6cb05606b6e8 \
+  -CAfile /etc/ssl/certs/ca-certificates.crt</pre>
+
+      <pre class="snip">Verification: OK</pre>
+
+      <p>At that point you have checked, without trusting this site, that a
+        third party signed this exact set of bytes at that time.</p>
+
+      <h3>What that does and does not establish</h3>
+      <p>It establishes that the record existed in exactly this form at
+        2026-09-05T14:31:54Z, and that it has not changed since.</p>
+
+      <p>It does not establish that the record is true. It does not establish
+        that it is complete. It does not establish that a different record was
+        not produced at the same time and discarded. A timestamp fixes bytes
+        and a time, and a page that let you infer more from it would be making
+        the mistake this project exists to point at.</p>
+
+      <p>The record says as much in its own integrity entry, in a
+        <code>does_not_prove</code> member, so a reader who has the file and
+        not this page is told the same thing.</p>
+
+      <h3>Anchoring your own</h3>
+      <p>The tool is one standard-library file, MIT licensed, with no
+        dependencies. It builds the request by hand rather than asking you to
+        install a certificate library to emit one entry.</p>
+
+      <pre class="snip">python3 testimony_anchor.py record.jsonl &gt;&gt; record.jsonl
+python3 testimony_validate.py record.jsonl</pre>
+
+      <p>Both are in the
+        <a href="https://github.com/troybrandonc-bit/machine-testimony">specification
+        repository</a>. You can also
+        <a href="/check/">check a record in the browser</a>, which runs the
+        same checks in a second implementation and never uploads anything.</p>
+
+      <h3>What was wrong here until today</h3>
+      <p>Until 5 September 2026 the validator did not recompute digests. It
+        checked that an integrity entry carried one. A record could reach the
+        top level with a digest of sixty-four zeros, and an anchored record
+        could carry a real, correctly signed token over some entirely different
+        record.</p>
+
+      <p>Two further things came out of fixing it. The specification had never
+        said how a digest is computed, so no independent implementer could have
+        recomputed one; that is now written down. And the two implementations
+        of the rule in this author's own repositories had never agreed with
+        each other, because one of them left the default spacing in its JSON.
+        Neither was noticed for as long as nothing checked.</p>
+
+      <p>They are recorded here rather than quietly repaired, on the same
+        reasoning the rest of this applies to everybody else: a system that
+        cannot show what it got wrong is asking to be taken on trust.</p>
     </div>
   </div>
 
   <aside class="rail">
-    <h2>The short version</h2>
-    <div class="item">
-      <b>Defects are fixed and credited</b>
-      <p>The reporter is named in the erratum. Version 0.2's scope entry came in
-        this way.</p>
-    </div>
-    <div class="item">
-      <b>Additions are rare</b>
-      <p>Nothing goes in without an implementation behind it, and nothing that
-        only one vendor could satisfy.</p>
-    </div>
-    <div class="item">
-      <b>One editor, said out loud</b>
-      <p>No committee and no appeal. Faster, and you can see who to argue
-        with.</p>
-    </div>
-    <div class="item">
-      <b>Forking is permitted</b>
-      <p>CC BY on the text, MIT on the validator. Nobody needs permission to
-        leave, which is what makes staying meaningful.</p>
-    </div>
-    <ul class="links">
-      <li><a href="https://github.com/troybrandonc-bit/machine-testimony/issues">Open an issue</a></li>
-      <li><a href="https://datatracker.ietf.org/doc/draft-clifford-testimony-record/">The Internet-Draft</a></li>
-      <li><a href="/check/">Check a record</a></li>
-    </ul>
+    <h2 class="label">The files</h2>
+    <p class="cont"><a href="/anchor/record.jsonl">record.jsonl</a><br>
+      <a href="/anchor/anchor.tsr">anchor.tsr</a></p>
+
+    <h2 class="label">What each check rests on</h2>
+    <p class="cont">Recomputing the digest and reading the token are settled
+      from the files. The record's claim that its risk classes came from a
+      registry is not, and the browser validator marks it as an attestation
+      rather than counting it as proof.</p>
+
+    <hr>
+    <p class="cont"><a href="/check/">Check a record</a><br>
+      <a href="https://datatracker.ietf.org/doc/draft-clifford-testimony-record/">The specification, as an Internet-Draft</a><br>
+      <a href="/census/2026-09/">Eight systems, assessed</a></p>
   </aside>
 </div>
-
 <footer class="foot">
   <div class="wrap">
     <p>Editor: Troy Clifford. Operated by Garnet Taurus Ltd.</p>

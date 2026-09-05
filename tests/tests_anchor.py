@@ -103,13 +103,75 @@ def main():
         check("refused: " + label, bool(failed) and r.level != "TR-4",
               "level %s" % r.level)
 
-    print("\na hash-chain entry is unaffected by the new check")
+    print("\na hash-chain entry is unaffected by the anchor check")
+    # This test used a digest of sixty-four zeros and passed, which is how the
+    # hole was visible in the suite for a day without being read as one. A
+    # record's digest is now recomputed, so a placeholder no longer stands in
+    # for one and the fixture has to be honest to make its point.
+    body = record()
     g = {"spec": tv.SPEC, "type": "integrity", "id": "i1",
          "at": "2026-09-05T10:00:05Z", "scheme": "hash-chain",
-         "digest": "sha256:" + "0" * 64, "covers": ["s1"]}
-    r = tv.validate(as_text(record() + [g]))
+         "digest": "sha256:" + tv.digest_of(body),
+         "covers": [e["id"] for e in body]}
+    r = tv.validate(as_text(body + [g]))
     check("a hash chain still reaches TR-4", r.level == "TR-4",
           [c["check"] for c in r.failures("TR-4")])
+
+    print("\na digest nobody recomputed is not evidence")
+    for mutate, label in (
+        (lambda e: e.update(digest="sha256:" + "0" * 64),
+         "sixty-four zeros is refused"),
+        (lambda e: e.pop("covers"),
+         "a digest that says nothing about what it covers is refused"),
+    ):
+        g2 = json.loads(json.dumps(g))
+        mutate(g2)
+        r = tv.validate(as_text(body + [g2]))
+        check(label, r.level != "TR-4", "reached %s" % r.level)
+
+    tampered = json.loads(json.dumps(body))
+    for e in tampered:
+        if e["type"] == "approval":
+            e["approver"]["id"] = "someone-else@example.com"
+    r = tv.validate(as_text(tampered + [g]))
+    check("softening the approver breaks the recomputation", r.level != "TR-4",
+          "reached %s" % r.level)
+
+    print("\na source the emitter invented is not a source")
+    for field, value, ok in (("identity_source", "auth-session", True),
+                             ("identity_source", "the-model-said-so", False),
+                             ("identity_source", "vibes", False),
+                             ("identity_source", "x-corp-sso", True),
+                             ("risk_source", "registry", True),
+                             ("risk_source", "a-post-it-note", False)):
+        body2 = record()
+        for e in body2:
+            if field == "risk_source" and e["type"] == "decision":
+                e["risk_source"] = value
+            if field == "identity_source" and e["type"] == "approval":
+                e["identity_source"] = value
+        g3 = {"spec": tv.SPEC, "type": "integrity", "id": "i1",
+              "at": "2026-09-05T10:00:05Z", "scheme": "hash-chain",
+              "digest": "sha256:" + tv.digest_of(body2),
+              "covers": [e["id"] for e in body2]}
+        r = tv.validate(as_text(body2 + [g3]))
+        check("%s=%s %s" % (field, value, "passes" if ok else "is refused"),
+              (r.level == "TR-4") == ok, "reached %s" % r.level)
+
+    print("\nevery check says whether a reader could confirm it")
+    r = tv.validate(as_text(record() + [g]))
+    check("no check is left without a basis",
+          all(c["basis"] in ("verified", "attested") for c in r.checks))
+    try:
+        r.add("TR-1", "a check nobody classified", True)
+        check("a check cannot be added without one", False)
+    except TypeError:
+        check("a check cannot be added without one", True)
+    attested = {c["check"] for c in r.checks if c["basis"] == "attested"}
+    check("the provenance claims are not counted as proof",
+          any("risk class" in c for c in attested)
+          and any("authentication" in c for c in attested),
+          sorted(attested))
 
     print("\nthe request is a well formed RFC 3161 query")
     q = ta.timestamp_query(bytes(range(32)))

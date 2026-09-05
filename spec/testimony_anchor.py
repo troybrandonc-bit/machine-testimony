@@ -174,14 +174,10 @@ def generation_time(reply: bytes) -> str | None:
 
 # ── anchoring a record ───────────────────────────────────────────────────────
 
-def canonical(entry: dict) -> str:
-    return json.dumps({k: v for k, v in entry.items() if not k.startswith("_")},
-                      sort_keys=True, separators=(",", ":"))
-
-
-def digest_of(entries: list) -> str:
-    return hashlib.sha256(
-        "\n".join(canonical(e) for e in entries).encode()).hexdigest()
+# Taken from the validator rather than restated here. They were two copies of
+# the same four lines, which is how an emitter and the checker of that emitter
+# come to disagree about what a record hashes to while both look right.
+from testimony_validate import canonical, digest_of   # noqa: E402,F401
 
 
 def _ask(url: str, req: bytes, timeout: int) -> bytes:

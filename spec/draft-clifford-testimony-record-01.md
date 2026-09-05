@@ -271,12 +271,21 @@ risk_class:
 : REQUIRED. `low`, `medium` or `high`.
 
 risk_source:
-: REQUIRED at TR-3. Where the risk class came from. A risk class originating in
-  the output of the model proposing the action is not a gate. The values
-  `model`, `plan`, `prompt`, `request`, `request-body` and `agent` therefore do
-  not satisfy this requirement, and neither does omitting the member. A
-  conforming value names something the proposing model cannot write: a policy
-  registry, an action-type table, an operator's configuration.
+: REQUIRED at TR-3. Where the risk class came from, named from this list:
+  `registry`, `policy`, `catalogue`, `catalog`, `configuration`, `config`,
+  `regulation`, `operator` or `human`. A deployment whose source is none of
+  these writes it with an `x-` prefix, as in `x-inhouse-registry`, so that a
+  reader sees an extension rather than a value they might mistake for a defined
+  one. Omitting the member does not satisfy the requirement, and neither do
+  `model`, `plan`, `prompt`, `request`, `request-body` or `agent`, a risk class
+  originating in the proposing model's own output being no gate at all.
+
+: What this member establishes is bounded, and the bound should be stated
+  rather than discovered. It is an assertion by the emitter. No reader can
+  confirm from the record that a registry exists or that the class in the entry
+  came from it. Requiring a named value rather than free text makes the
+  assertion specific and comparable across systems; it does not make it
+  evidence.
 
 proposed_by:
 : REQUIRED. An Actor.
@@ -308,10 +317,18 @@ approver:
 : REQUIRED. An Actor whose `kind` is `human`.
 
 identity_source:
-: REQUIRED. Where the approver's identity was obtained. It MUST NOT be content
-  the proposing model can write, and the same values excluded for `risk_source`
-  are excluded here. An authenticated session, a signed assertion or a
-  directory lookup satisfies this. A name the model produced does not.
+: REQUIRED. Where the approver's identity was obtained, named from this list:
+  `auth-session`, `session`, `api-key`, `jwt`, `oidc`, `oauth`, `saml`, `mtls`,
+  `webauthn`, `passkey`, `signed-token`, `directory`, `sso`, `ldap` or
+  `kerberos`. Anything else is written with an `x-` prefix. The values excluded for `risk_source` are excluded here, and a
+  name the proposing model produced does not satisfy the requirement.
+
+: Like `risk_source`, this is an assertion. A record cannot show that the name
+  in an approval came from the session it names, and a validator reading the
+  record cannot either. It is worth requiring because a system that records no
+  approver at all cannot be asked afterwards who decided, and one that records
+  a name and where it says the name came from can at least be contradicted by
+  its own logs.
 
 method:
 : OPTIONAL. How the approval was given.
@@ -327,15 +344,22 @@ scheme:
 : REQUIRED. `replay`, `hash-chain`, `signature` or `external-anchor`.
 
 digest:
-: REQUIRED. The value under which alteration would be detected.
+: REQUIRED. `sha256:` followed by the lowercase hexadecimal SHA-256 of the
+  canonical form of the entries `covers` names, computed as in
+  {{digest-computation}}. A digest whose computation is not specified cannot be
+  recomputed by a reader, which is the only thing that makes it worth
+  recording.
 
 engine, engine_version:
 : REQUIRED where the scheme is `replay`. A replay nobody else can reproduce is
   not a verification.
 
 covers:
-: OPTIONAL. Identifiers of the entries the digest is computed over, each of
-  which MUST be present in the record.
+: OPTIONAL in general, REQUIRED at TR-4. Identifiers of the entries the digest
+  is computed over, in the order they are hashed, each of which MUST be present
+  in the record. A digest that does not say what it is over cannot be
+  recomputed by anyone, so a record reaching the verifiable level cannot omit
+  this.
 
 anchor:
 : REQUIRED where the scheme is `external-anchor`. An object carrying `kind`,
@@ -344,12 +368,47 @@ anchor:
   and carrying no token is the claim without the thing, and is refused.
 
 An `external-anchor` of kind `rfc3161` carries, as `token`, the base64 of a
-TimeStampResp obtained from a Time Stamp Authority over the entry's digest.
+TimeStampResp {{!RFC3161}} obtained from a Time Stamp Authority over the
+entry's digest. The `messageImprint` of the TSTInfo in that token MUST be
+the entry's digest: a token signed over anything else is a valid timestamp
+for some other record and says nothing about this one.
 Such a token is verifiable by any RFC 3161 implementation, without reference to
 the emitter or to this document's tooling, which is the property that makes it
 worth more than a digest the emitter computed. It fixes the bytes and the time
 and nothing else: it does not establish that the record is accurate, that it is
 complete, or that a different record was not also produced and discarded.
+
+## Computing a digest {#digest-computation}
+
+An implementation computes the digest of an integrity entry as follows.
+
+1. Take the entries `covers` names, in the order it names them.
+
+2. Serialise each as a JSON object with no insignificant whitespace, its
+   members ordered by name comparing names as sequences of Unicode code points,
+   and members whose names begin with U+005F LOW LINE omitted. Those are reader
+   annotations rather than record content, and a digest that varied with them
+   would change when a tool added a line number.
+
+3. Join the serialised entries with a single U+000A LINE FEED, with none after
+   the last.
+
+4. Encode the result as UTF-8 and take its SHA-256. The `digest` member is
+   `sha256:` followed by the lowercase hexadecimal.
+
+Member names defined by this document are ASCII, so ordering by code point and
+the UTF-16 code unit ordering of {{!RFC8785}} cannot differ for them. An
+extension using non-ASCII member names should expect that they can, and should
+not.
+
+Numbers are the one place where two implementations can serialise the same
+value into different bytes. A number that is a whole number is written without
+a fraction, as {{!RFC8785}} requires: `1`, never `1.0`. Outside that,
+implementations agree on the shortest representation that round-trips, but not
+on where to switch to an exponent, so a covered entry MUST NOT contain a number
+whose magnitude is below 0.0001 or at or above 1e21, nor an integer whose
+magnitude exceeds 2^53. An implementation encountering one refuses the record
+rather than emitting a digest another implementation would not reproduce.
 
 # Conformance Levels
 
@@ -387,9 +446,43 @@ gate. This is satisfaction rather than exemption: such a system may reach TR-4.
 
 ## TR-4: Verifiable
 
-The record publishes an integrity scheme, every integrity entry carries a
-digest, a replay scheme names the engine and its version, and anything an
-integrity entry claims to cover is present in the record.
+The record publishes an integrity scheme; every integrity entry carries a
+digest and says which entries that digest is over; everything an integrity
+entry claims to cover is present in the record; and, for each entry, the digest
+is the digest of exactly those entries, computed as in {{digest-computation}}.
+Where the scheme is `external-anchor`, the token names an authority and the
+message imprint that authority signed is the digest in the entry.
+
+The name of this level is a claim about what a reader can do, so the checks
+behind it are arithmetic over bytes already in the record rather than
+statements about the emitter. The exception is `replay`, which names an engine
+whose behaviour no reader can confirm from the record. It is reported as an
+attestation, and a record whose only integrity is a replay claim reaches this
+level on the emitter's word.
+
+## What a Level Rests On {#what-a-level-rests-on}
+
+The checks behind these levels are not all of one kind, and a level reported
+without saying so is a number standing on an unknown mixture.
+
+A **verified** check is one a reader can settle from the record alone. That the
+evidence a belief cites is present, that both sides of a conflict are retained,
+that a refused action is not also recorded as executed, that a digest is the
+digest of the entries it covers, that the authority named in an anchor signed
+that digest and not a different one. A reader who disagrees with a validator
+about any of these can settle it without asking anybody.
+
+An **attested** check is one the record asserts and no reader can confirm from
+it. That a risk class came from a registry. That an approver's name came from
+an authenticated session. That a replay engine reproduces what it claims to.
+These are worth requiring, because a system that records nothing cannot be
+contradicted and one that records a specific claim can be. They are not
+evidence, and a conformance report that presents them as though they were is
+making the error this format exists to make visible.
+
+An implementation reporting a level SHOULD report, for each level, how many of
+its checks were of each kind. The reference validator does. A level cited
+without that distinction is a weaker statement than it appears.
 
 ## On the Ordering
 
@@ -584,6 +677,24 @@ The `external-anchor` integrity scheme was named in -00 and not specified. The
 `anchor` member is now defined, with an RFC 3161 profile, and the Security
 Considerations distinguish the schemes that place evidence outside the
 emitter's control from those that do not.
+
+-00 did not say how a digest was computed. It said only that the digest was
+the value under which alteration would be detected, which names no algorithm,
+no serialisation and no ordering. Two conforming implementations would have
+produced different digests for one record, and no reader could have recomputed
+either, so the level called Verifiable was not reachable by anyone reading this
+document alone. {{digest-computation}} specifies it, `covers` is required at
+that level, and the reference validator recomputes rather than accepts. This
+was found in the author's own implementations, which had two versions of the
+rule that had never agreed, neither of them written down.
+
+The values of `risk_source` and `identity_source` were specified as a list of
+words that did not satisfy them, which meant any other word did. They are
+specified as lists of words that do, with an `x-` prefix for anything else.
+
+Nothing in -00 distinguished the checks a reader can settle from the record
+from the ones the record merely asserts. {{what-a-level-rests-on}} does, and
+implementations are asked to report the split alongside a level.
 
 # Acknowledgements
 {:numbered="false"}
