@@ -186,3 +186,43 @@ jobs:
           path: |
             spec/draft-clifford-testimony-record-00.xml
             /tmp/draft.txt
+
+  browser-validator:
+    name: the browser validator agrees with the reference, and is not hand-edited
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with: { node-version: "24" }
+      - uses: actions/setup-python@v7
+        with: { python-version: "3.12" }
+      - run: npm install -g typescript
+      # public/check/testimony.js is generated from spec/testimony.ts and served
+      # to browsers. A generated file that anyone can hand-edit is a third
+      # validator wearing the second one's name, so this regenerates it and
+      # fails on any difference. tsc's exit code is ignored on purpose: ambient
+      # @types resolution can complain without affecting the emit, and what
+      # matters is whether the emitted file matches.
+      - name: Regenerating from the TypeScript reproduces the committed file
+        run: |
+          mkdir -p /tmp/gen
+          tsc spec/testimony.ts --target es2020 --module es2020             --removeComments false --outDir /tmp/gen || true
+          test -f /tmp/gen/testimony.js || {
+            echo "::error::tsc emitted nothing"; exit 1; }
+          if ! diff -u /tmp/gen/testimony.js public/check/testimony.js; then
+            echo "::error::public/check/testimony.js is not what spec/testimony.ts produces."
+            echo "Edit the TypeScript and regenerate; never edit the .js by hand."
+            exit 1
+          fi
+          echo "identical"
+      # Two validators that disagree are worse than one, because a conformance
+      # claim then depends on which you ran. This runs both over the same
+      # records and fails if any verdict differs.
+      - name: The TypeScript and the Python agree on every record
+        working-directory: tests
+        run: |
+          out=$(python tests_testimony_js.py)
+          echo "$out"
+          if echo "$out" | grep -qE '^[[:space:]]*SKIP:'; then
+            echo "::error::the cross-validator suite skipped"; exit 1
+          fi
