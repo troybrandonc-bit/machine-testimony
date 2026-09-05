@@ -15,11 +15,39 @@ spec/
   draft-clifford-testimony-record-01.md   the Internet-Draft source
   testimony_validate.py                   the reference validator, one stdlib
                                           file, no network, MIT
+  testimony_emit.py                       write a record from an ordinary
+                                          program; copy it, no dependencies
+  testimony_anchor.py                     have a Time Stamp Authority sign one
+conformance/                              47 records and the verdict each
+                                          should get, with a runner
 adapters/
   langgraph/                              testimony-langgraph on PyPI
 tests/                                    run against a real graph, not a mock
 public/                                   the site
 ```
+
+## Implementing it
+
+Two things, so that a first implementation is an afternoon rather than a
+project, and so that finishing is something you can check rather than assume.
+
+```
+python3 conformance/run.py --command "python3 my_validator.py --json {file}"
+```
+
+The corpus is 47 records and the verdict each one should get. Conformance means
+your implementation reaches the same verdict, not that it prints the same
+sentences: an independent implementation is the point, so the comparison is
+blind to everything except the answer. `run.py` imports nothing of ours. Copy
+it. See `conformance/README.md`.
+
+To emit rather than to check, `spec/testimony_emit.py` is one file with no
+dependencies that refuses the mistakes where they are written, rather than
+leaving you to find them from a validator after the run is over.
+
+If you have read the specification and reached a different answer from the
+reference on a case, that disagreement is worth more than the corpus is. Open
+an issue naming it.
 
 The draft: <https://datatracker.ietf.org/doc/draft-clifford-testimony-record/>
 The conformance census: <https://doi.org/10.5281/zenodo.22290922>

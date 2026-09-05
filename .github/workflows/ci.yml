@@ -283,3 +283,33 @@ jobs:
           if echo "$out" | grep -qiE 'NOT VERIFIED'; then
             echo "::error::the page's commands were not actually run"; exit 1
           fi
+
+  implementers:
+    name: somebody else can check their own implementation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with: { python-version: "3.12" }
+      - uses: actions/setup-node@v4
+        with: { node-version: "24" }
+      # The corpus is what an outsider runs their implementation against, and
+      # the emitter is a file they copy. Both are only worth anything if they
+      # still agree with the reference, so both are run here rather than
+      # trusted because they passed once.
+      - name: The corpus still describes the validator, and both pass it
+        working-directory: tests
+        run: |
+          set +e; out=$(python tests_conformance.py 2>&1); rc=$?; set -e
+          echo "$out"
+          [ $rc -eq 0 ] || { echo "::error::the conformance suite failed"; exit 1; }
+          if echo "$out" | grep -qiE 'NOT VERIFIED'; then
+            echo "::error::the second implementation was not run through the corpus"
+            exit 1
+          fi
+      - name: The emitter agrees with the reference about every digest
+        working-directory: tests
+        run: |
+          set +e; out=$(python tests_emit.py 2>&1); rc=$?; set -e
+          echo "$out"
+          [ $rc -eq 0 ] || { echo "::error::the emitter suite failed"; exit 1; }
