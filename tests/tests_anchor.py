@@ -124,6 +124,44 @@ def main():
     except ValueError:
         check("a wrong-length digest raises", True)
 
+    print("\nevery integer in the request is minimally encoded")
+    # The authority copies the nonce verbatim into the token it signs, so a
+    # non-minimally encoded integer here yields a signed token that strict
+    # parsers refuse. It fails about half the time, because whether a leading
+    # zero is legal depends on the first random byte, and one round trip
+    # against a real authority is therefore a coin toss. That is what two runs
+    # of this suite disagreeing actually meant, and it was read as flaky
+    # infrastructure. These checks test the encoding rather than one sample of
+    # it, so they need neither the network nor luck.
+    bad = []
+    for _ in range(400):
+        bad += _nonminimal(ta.timestamp_query(os.urandom(32)))
+    check("400 requests, not one over-padded integer", not bad, bad[:2])
+
+    real_urandom = ta.os.urandom
+    try:
+        for first, padded in ((0x01, False), (0x81, True)):
+            ta.os.urandom = lambda n, f=first: bytes([f]) + b"\x00" * (n - 1)
+            want = bytes([first]) + b"\x00" * 7
+            if padded:
+                want = b"\x00" + want
+            want = bytes([0x02, len(want)]) + want
+            check("a nonce beginning %#04x is encoded %s a leading zero"
+                  % (first, "with" if padded else "without"),
+                  want in ta.timestamp_query(bytes(range(32))))
+    finally:
+        ta.os.urandom = real_urandom
+
+    if shutil.which("openssl"):
+        refused = 0
+        for _ in range(20):
+            r = subprocess.run(["openssl", "asn1parse", "-inform", "der"],
+                               input=ta.timestamp_query(os.urandom(32)),
+                               capture_output=True)
+            refused += r.returncode != 0
+        check("openssl parses twenty requests without complaint", not refused,
+              "%d refused" % refused)
+
     if os.environ.get("TESTIMONY_NO_NETWORK"):
         print("\nSKIP: the timestamp exchange needs network access")
         print("\n%d passed, %d failed" % (PASS, FAIL))
@@ -202,6 +240,37 @@ def main():
 
     print("\n%d passed, %d failed" % (PASS, FAIL))
     return 1 if FAIL else 0
+
+
+def _nonminimal(der: bytes, depth: int = 0) -> list:
+    """Every INTEGER in this structure that DER would refuse.
+
+    Written from the rule rather than from testimony_anchor's encoder, so that
+    it cannot agree with a mistake by sharing one. DER content octets are two's
+    complement and minimal: the first nine bits may be neither all zero nor
+    all one.
+    """
+    out = []
+    i = 0
+    while i + 1 < len(der):
+        tag, n, j = der[i], der[i + 1], i + 2
+        if n & 0x80:
+            k = n & 0x7F
+            if k == 0 or j + k > len(der):
+                return out
+            n = int.from_bytes(der[j:j + k], "big")
+            j += k
+        if j + n > len(der):
+            return out
+        body = der[j:j + n]
+        if tag == 0x02 and len(body) > 1 and (
+                (body[0] == 0x00 and not body[1] & 0x80)
+                or (body[0] == 0xFF and body[1] & 0x80)):
+            out.append("INTEGER starting %s at offset %d" % (body[:3].hex(), i))
+        if tag & 0x20 and depth < 8:
+            out += _nonminimal(body, depth + 1)
+        i = j + n
+    return out
 
 
 def _same_time(openssl_text: str, ours: str) -> bool:
