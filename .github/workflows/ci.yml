@@ -313,3 +313,30 @@ jobs:
           set +e; out=$(python tests_emit.py 2>&1); rc=$?; set -e
           echo "$out"
           [ $rc -eq 0 ] || { echo "::error::the emitter suite failed"; exit 1; }
+
+  census:
+    name: the register says what the assessments say
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with: { python-version: "3.12" }
+      # The census assesses other people's software, and the register is the
+      # surface they would object to. It has to be generated from the subject
+      # files rather than written, and the subject files have to keep refusing
+      # an assessment nobody else can go and check.
+      - name: Every assessment is checkable, and the register renders them
+        working-directory: tests
+        run: |
+          set +e; out=$(python tests_census.py 2>&1); rc=$?; set -e
+          echo "$out"
+          [ $rc -eq 0 ] || { echo "::error::the census suite failed"; exit 1; }
+      - name: The shipped manifest is the manifest of the shipped files
+        run: |
+          before=$(python -c "import json,io;print(json.load(io.open('census/MANIFEST.json',encoding='utf-8'))['digest'])")
+          python census/manifest.py >/dev/null
+          after=$(python -c "import json,io;print(json.load(io.open('census/MANIFEST.json',encoding='utf-8'))['digest'])")
+          echo "digest $after"
+          if [ "$before" != "$after" ]; then
+            echo "::error::MANIFEST.json is stale; run census/manifest.py"; exit 1
+          fi

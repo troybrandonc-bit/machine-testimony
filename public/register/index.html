@@ -3,23 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Implementing it &ndash; Machine Testimony</title>
-<meta name="description" content="Two files and an afternoon. A single-file emitter with no dependencies, and 47 records with the verdict each should get, so you can tell when you are finished.">
-<meta property="og:title" content="Implementing it">
-<meta property="og:description" content="Two files and an afternoon. A single-file emitter with no dependencies, and 47 records with the verdict each should get, so you can tell when you are finished.">
+<title>The register &ndash; Machine Testimony</title>
+<meta name="description" content="Which agent systems record what, with every verdict citing a file and a line at a pinned commit. Updated rather than dated, and a wrong verdict is fixed by a pull request.">
+<meta property="og:title" content="The register">
+<meta property="og:description" content="Which agent systems record what, with every verdict citing a file and a line at a pinned commit. Updated rather than dated, and a wrong verdict is fixed by a pull request.">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://machinetestimony.org/implement/">
+<meta property="og:url" content="https://machinetestimony.org/register/">
 <meta property="og:image" content="https://machinetestimony.org/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Implementing it">
-<meta name="twitter:description" content="Two files and an afternoon. A single-file emitter with no dependencies, and 47 records with the verdict each should get, so you can tell when you are finished.">
+<meta name="twitter:title" content="The register">
+<meta name="twitter:description" content="Which agent systems record what, with every verdict citing a file and a line at a pinned commit. Updated rather than dated, and a wrong verdict is fixed by a pull request.">
 <meta name="twitter:image" content="https://machinetestimony.org/og.png">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/icon.png" type="image/png" sizes="512x512">
 <link rel="apple-touch-icon" href="/icon.png">
-<link rel="canonical" href="https://machinetestimony.org/implement/">
+<link rel="canonical" href="https://machinetestimony.org/register/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
@@ -241,142 +241,63 @@
   </div>
 <div class="wrap main">
   <div>
-    <p class="dateline">For implementers, 5 September 2026</p>
-    <h2 class="label">Implementing it</h2>
-
+    <p class="dateline">Standing register, last read 2026-09-05</p>
+    <h2 class="label">Which systems record what</h2>
     <div class="block">
-      <p>Until today this site explained the format and left you to write it.
-        That is a project: work out the required members from prose, get the
-        digest rule right unaided, and find out whether you have finished by
-        asking somebody. Two files make it an afternoon, and neither of them
-        needs anything else of ours at runtime.</p>
-
-      <h3>Writing a record</h3>
-      <p><a href="https://github.com/troybrandonc-bit/machine-testimony/blob/main/spec/testimony_emit.py">testimony_emit.py</a>
-        is one standard-library file with no dependencies, MIT licensed, meant
-        to be copied into your repository rather than depended on.</p>
-
-      <pre class="snip">from testimony_emit import Record
-
-r = Record()
-r.scope(acts=True, description="Support agent. Refunds to 500 EUR.")
-e = r.evidence(kind="api", source="crm://customers/8842")
-r.belief(subject="customer:8842", proposition="requested_refund",
-         asserted_by={"id": "agent", "kind": "agent"}, evidence=[e])
-d = r.decision(action_type="issue_refund", risk_class="high",
-               risk_source="registry",
-               proposed_by={"id": "agent", "kind": "agent"},
-               verdict="permitted", executed=True)
-r.approval(decision=d, approver={"id": "sam@example.com", "kind": "human"},
-           identity_source="auth-session")
-r.seal()
-print(r.jsonl())</pre>
-
-      <p>That reaches TR-4. It refuses at the point of the mistake rather than
-        leaving you to find it from a validator after the run is over:</p>
-
-      <pre class="snip">a refused action cannot also have executed
-risk_source: 'model' is the proposing side of the same system
-the approver is the proposer, 'agent'. An agent's own credential signing
-  off its own action meets every other requirement and is worth nothing
-'corp-sso' is not a known source. Use one of auth-session, api-key, jwt,
-  ... or 'x-corp-sso' to declare your own</pre>
-
-      <p>What it cannot check is what no emitter can. Whether the evidence you
-        cite is what you say it is, whether the risk class really came from a
-        registry, whether the name in an approval came from the session it
-        claims. Those are attestations, the specification says so, and the
-        validator reports them as attestations rather than counting them as
-        proof.</p>
-
-      <h3>Knowing when you are finished</h3>
-      <p>The
-        <a href="https://github.com/troybrandonc-bit/machine-testimony/tree/main/conformance">conformance
-        corpus</a> is 47 records and the verdict each one should get. The runner
-        takes your command and compares.</p>
-
-      <pre class="snip">python3 conformance/run.py --command "python3 my_validator.py --json {file}"
-
-47 of 47 agree with the reference</pre>
-
-      <p><code>run.py</code> imports nothing of ours. Copy it into your
-        repository and run it in your own CI, which is the only kind of
-        conformance claim this project is willing to make about anybody.</p>
-
-      <h3>What conformance means here, and what it does not</h3>
-      <p>Your implementation reaches the same verdict as the reference on all
-        47 cases. It does not mean the same check names, the same wording, or
-        the same number of checks. Those are this project's prose, and a corpus
-        that compared them would be testing whether you had transliterated
-        somebody else's file rather than implemented a specification. An
-        independent implementation is the entire point, so the comparison is
-        deliberately blind to everything except the answer.</p>
-
-      <p>It is also not a certificate. It is a statement about 47 cases, and
-        the specification is larger than any 47 cases.</p>
-
-      <h3>Two cases worth reading first</h3>
-      <p><code>digest-of-nothing</code> is sixty-four zeros where a digest
-        should be. <code>anchor-over-another-record</code> carries a genuine,
-        correctly signed RFC 3161 token issued over a different record.</p>
-
-      <p>Both reached TR-4 in this project's own reference validator until 5
-        September 2026, because it checked that an integrity entry carried a
-        digest and never that the digest was the digest of the record. An
-        implementation that accepts either has the same hole, which is why they
-        are in the corpus rather than in a changelog.</p>
-
-      <h3>If you already keep logs</h3>
-      <p>You almost certainly have the timestamps and the actions. The four
-        things a log usually lacks, in the order they cost you:</p>
-      <ol>
-        <li><b>Who approved, taken from authentication.</b> Not that a human
-          approved. Which one.</li>
-        <li><b>What was refused.</b> A log of executions is a receipt, and the
-          interesting question afterwards is usually what the system was
-          stopped from doing.</li>
-        <li><b>Both sides of a disagreement.</b> When two sources conflict and
-          the system picks one, a log that keeps only the winner has hidden the
-          decision that mattered.</li>
-        <li><b>A digest somebody else can recompute.</b> Which is the whole of
-          <a href="/anchor/">the next page</a>.</li>
-      </ol>
-
-      <h3>The honest state of this</h3>
-      <p>There are two implementations and both are this author's, one in
-        Python and one in TypeScript, written separately and compared against
-        each other on every case. That is not an independent implementation in
-        the sense that matters, and the Internet-Draft says so in its
-        implementation status section rather than leaving you to notice.</p>
-
-      <p>If you build one, it is the most useful thing that could happen to this
-        format, and you do not need to tell anybody or ask for anything. The
-        licence is MIT for the tooling and CC BY 4.0 for the specification.</p>
-
-      <h3>When you disagree with the reference</h3>
-      <p>A case you fail is not necessarily your bug. If you have read the
-        specification and reached a different answer, that disagreement is worth
-        more than the corpus is: open an issue naming the case. The reference
-        has been wrong before, the specification has been vaguer than it knew,
-        and two of the checks exist because somebody said so.</p>
+      <p>8 systems, read against 20 requirements drawn from the four conformance levels. Every verdict cites a file and a line at a pinned commit, and an <b>absent</b> verdict cites where the assessor looked and did not find it, which is the difference between a measurement and an accusation.</p>
+      <p>This is not a certification and nobody applied for it. It is a reading of published source, and it is wrong in the ordinary way that readings are wrong. The remedy is below and it does not involve persuading anybody.</p>
+      <div class="scroller">
+      <table class="reg">
+        <thead><tr><th>System</th><th>TR-1</th><th>TR-2</th><th>TR-3</th><th>TR-4</th><th>Reaches</th><th>Last read</th></tr></thead>
+        <tbody>
+          <tr><td class="s">AutoGen</td><td class="n">1/5</td><td class="n">2/4</td><td class="n">1/7</td><td class="n">0/3</td><td class="lv">none yet</td><td class="d">2026-09-04</td></tr>
+          <tr><td class="s">CrewAI</td><td class="n">1/5</td><td class="n">0/5</td><td class="n">1/7</td><td class="n">0/3</td><td class="lv">none yet</td><td class="d">2026-09-04</td></tr>
+          <tr><td class="s">Graphiti</td><td class="n">4/5</td><td class="n">3/5</td><td class="n">n/a</td><td class="n">0/3</td><td class="lv">none yet</td><td class="d">2026-09-04</td></tr>
+          <tr><td class="s">LangGraph</td><td class="n">4/5</td><td class="n">0/4</td><td class="n">2/7</td><td class="n">0/3</td><td class="lv">none yet</td><td class="d">2026-09-04</td></tr>
+          <tr><td class="s">Letta Code</td><td class="n">3/5</td><td class="n">0/4</td><td class="n">3/7</td><td class="n">1/3</td><td class="lv">none yet</td><td class="d">2026-09-04</td></tr>
+          <tr><td class="s">mem0</td><td class="n">3/5</td><td class="n">0/5</td><td class="n">n/a</td><td class="n">0/3</td><td class="lv">none yet</td><td class="d">2026-09-04</td></tr>
+          <tr class="own"><td class="s">OMEM <span class="tag">the author's own</span></td><td class="n">5/5</td><td class="n">5/5</td><td class="n">7/7</td><td class="n">3/3</td><td class="lv">TR-4</td><td class="d">2026-09-05</td></tr>
+          <tr><td class="s">OpenAI Agents SDK</td><td class="n">2/5</td><td class="n">1/5</td><td class="n">2/7</td><td class="n">0/3</td><td class="lv">none yet</td><td class="d">2026-09-04</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p class="cont">A count is met out of applicable. A system that does not act is not marked down for having no gate, and the requirements that do not apply to it are not counted against it.</p>
+      <h3>The question this started from</h3>
+      <p><i>Does a consequential action produce a durable entry whether or not it ran?</i></p>
+      <div class="scroller">
+      <table class="reg">
+        <thead><tr><th>System</th><th>R3.1</th><th>Where it was read</th></tr></thead>
+        <tbody>
+          <tr><td class="s">AutoGen</td><td class="v p">part</td><td class="w">python/packages/autogen-agentchat/src/autogen_agentchat/agents/_code_executor_agent.py:69-73 ApprovalRequest</td></tr>
+          <tr><td class="s">CrewAI</td><td class="v p">part</td><td class="w">lib/crewai/src/crewai/agents/crew_agent_executor.py:984-989</td></tr>
+          <tr><td class="s">Graphiti</td><td class="v x">n/a</td><td class="w"></td></tr>
+          <tr><td class="s">LangGraph</td><td class="v y">yes</td><td class="w">libs/langgraph/langgraph/types.py:851 interrupt</td></tr>
+          <tr><td class="s">Letta Code</td><td class="v y">yes</td><td class="w">src/agent/check-approval.ts:26-34</td></tr>
+          <tr><td class="s">mem0</td><td class="v x">n/a</td><td class="w"></td></tr>
+          <tr><td class="s">OMEM</td><td class="v y">yes</td><td class="w">server/tests_testimony_export.py</td></tr>
+          <tr><td class="s">OpenAI Agents SDK</td><td class="v p">part</td><td class="w">src/agents/run_state.py:1356-1370 _serialize_tool_invocations</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <h3>If a verdict here is wrong</h3>
+      <p>It is a file. Open a pull request against the subject file naming the requirement and where to look, or write to <code>troy@machinetestimony.com</code> with the same. A correction that lands changes the file, this page, and the date on the row. There is no fee, no membership, and no requirement to use any software of mine.</p>
+      <p>Arguing with me is not the remedy and does not work. Pointing at code is, and has: this register carries corrections that came from being told I had read something wrong.</p>
+      <h3>If your system is not here</h3>
+      <p>Being absent is not a judgement. It means nobody has done the reading yet. The rubric and the harness are in the repository, so you can run the questions against your own system before anybody else does, and the answer will be the same one I would get.</p>
+      <h3>The conflict of interest</h3>
+      <p>One row is the author's own implementation, of the format the questions derive from. It scores well here the way a dictionary's author spells well, and it carries no evidential weight. It is included so the questions are applied to the system that produced them before they are applied to anybody else's.</p>
+      <p>That has not been costless. Five findings so far are recorded against this assessment, three of them against its author, including one after publication: on 5 September 2026 the top conformance level was found not to be checking what it claimed, and the author's own passing row was the one affected. It is written up in full rather than quietly repaired.</p>
+      <h3>What a verdict rests on</h3>
+      <p>Some of these questions a reader can settle from a record alone: whether cited evidence exists, whether a refused action is also recorded as executed, whether a digest is the digest of what it covers. Others are attestations, and no reading of source can confirm them: that a risk class really came from a registry, that an approver's name really came from the session it names. The specification marks the difference and the validator reports it, and a conformance claim that does not distinguish them is weaker than it looks.</p>
     </div>
   </div>
-
   <aside class="rail">
-    <h2 class="label">The files</h2>
-    <p class="cont"><a href="https://github.com/troybrandonc-bit/machine-testimony/blob/main/spec/testimony_emit.py">testimony_emit.py</a><br>
-      <a href="https://github.com/troybrandonc-bit/machine-testimony/blob/main/spec/testimony_validate.py">testimony_validate.py</a><br>
-      <a href="https://github.com/troybrandonc-bit/machine-testimony/tree/main/conformance">the conformance corpus</a></p>
-
-    <h2 class="label">Already in a framework</h2>
-    <p class="cont"><code>pip install testimony-langgraph</code> emits a record
-      from a LangGraph run, and depends on LangGraph and on nothing of
-      ours.</p>
-
+    <h2 class="label">This reading</h2>
+    <p class="cont">8 systems, 20 requirements.<br>Last read 2026-09-05.<br>Digest <code>...</code></p>
+    <h2 class="label">The dated edition</h2>
+    <p class="cont">The September 2026 census is the same evidence as a document, with a DOI, for citing.<br><a href="/census/2026-09/">Read it</a><br><a href="https://doi.org/10.5281/zenodo.22290922">10.5281/zenodo.22290922</a></p>
     <hr>
-    <p class="cont"><a href="/check/">Check a record in the browser</a><br>
-      <a href="/anchor/">A record you can check without us</a><br>
-      <a href="https://datatracker.ietf.org/doc/draft-clifford-testimony-record/">The specification, as an Internet-Draft</a></p>
+    <p class="cont"><a href="/implement/">Implementing it</a><br><a href="/check/">Check a record</a><br><a href="https://github.com/troybrandonc-bit/machine-testimony/tree/main/census">The rubric and every subject file</a></p>
   </aside>
 </div>
 <footer class="foot">
