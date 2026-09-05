@@ -93,6 +93,11 @@
 
   /* ── the body: main column and a rail ───────────────────────────────── */
   .main{display:grid;gap:34px;padding-top:40px;padding-bottom:10px}
+  /* Grid children default to min-width:auto and so refuse to shrink below
+     their content. On a phone this is a single column, so one wide code
+     block or table pushed the whole page past the viewport. The desktop
+     rule below says minmax(0,1fr) and was masking it above 960px. */
+  .main>*{min-width:0}
   @media (min-width:960px){
     .main{grid-template-columns:minmax(0,1fr) 21rem;gap:52px;align-items:start}
   }
@@ -144,8 +149,10 @@
 
   /* Only what a prose page needs beyond the shared stylesheet. */
   pre.snip{background:none;border-left:2px solid var(--rule);margin:0 0 16px;
-    padding:2px 0 2px 13px;font-size:13px;overflow-x:auto;
+    padding:2px 0 2px 13px;font-size:13px;overflow-x:auto;max-width:100%;
     font-family:var(--mono);line-height:1.55}
+  /* A bare address is not code to be scrolled sideways past; let it wrap. */
+  pre.snip.addr{overflow-x:visible;white-space:pre-wrap;overflow-wrap:anywhere}
   .block h3{font-family:var(--display);font-weight:600;color:var(--ink);
     font-size:1.08rem;margin:26px 0 8px}
   .block ol,.block ul{margin:0 0 15px;padding-left:1.15rem;max-width:46rem}
@@ -243,7 +250,7 @@
       <h3>How to raise one</h3>
       <p>Open an issue on the repository, or write to the editor. Both are read
         by the same person, and neither is a form.</p>
-      <pre class="snip"><code>https://github.com/troybrandonc-bit/machine-testimony/issues
+      <pre class="snip addr"><code>https://github.com/troybrandonc-bit/machine-testimony/issues
 troy@machinetestimony.com</code></pre>
       <p>A report is strongest with a record that demonstrates it. The validator
         is one standard-library file with no network access, so the smallest

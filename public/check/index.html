@@ -93,6 +93,11 @@
 
   /* ── the body: main column and a rail ───────────────────────────────── */
   .main{display:grid;gap:34px;padding-top:40px;padding-bottom:10px}
+  /* Grid children default to min-width:auto and so refuse to shrink below
+     their content. On a phone this is a single column, so one wide code
+     block or table pushed the whole page past the viewport. The desktop
+     rule below says minmax(0,1fr) and was masking it above 960px. */
+  .main>*{min-width:0}
   @media (min-width:960px){
     .main{grid-template-columns:minmax(0,1fr) 21rem;gap:52px;align-items:start}
   }
