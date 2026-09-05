@@ -49,7 +49,34 @@ EXTRA = """
   table.facts td{padding:0 0 6px;font-family:var(--mono);font-size:12.5px;
     overflow-wrap:anywhere;border-bottom:1px solid var(--rule-soft)}
   table.facts th{border-bottom:1px solid var(--rule-soft)}
+  /* The register's tables. A wide table scrolls inside its own box rather
+     than pushing the page sideways, which is the thing that made the site
+     unreadable on a phone the first time. */
+  .scroller{overflow-x:auto;max-width:100%;margin:0 0 16px}
+  table.reg{border-collapse:collapse;font-size:14px;min-width:34rem}
+  table.reg th{text-align:left;font-family:var(--sans);font-size:11px;
+    font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--muted);padding:0 14px 7px 0;white-space:nowrap;
+    border-bottom:1px solid var(--rule)}
+  table.reg td{padding:8px 14px 8px 0;border-bottom:1px solid var(--rule-soft);
+    vertical-align:top}
+  table.reg td.s{font-weight:600;white-space:nowrap}
+  table.reg td.n,table.reg td.lv,table.reg td.d{font-family:var(--sans);
+    font-size:12.5px;white-space:nowrap;color:var(--body)}
+  table.reg td.lv{font-weight:700}
+  table.reg td.v{font-family:var(--sans);font-size:11px;font-weight:700;
+    letter-spacing:.02em;white-space:nowrap;color:var(--muted)}
+  /* Absent is the finding, so it is the one that is not muted. */
+  table.reg td.v.n{color:var(--ink)}
+  table.reg td.w{font-family:var(--mono);font-size:12px;color:var(--muted);
+    overflow-wrap:anywhere}
+  table.reg tr.own td{background:#f4f7fb}
+  .tag{font-family:var(--sans);font-size:10.5px;font-weight:700;
+    letter-spacing:.04em;text-transform:uppercase;color:var(--muted);
+    white-space:nowrap}
   @media (max-width:620px){
+    table.reg{font-size:13px}
+    table.reg td.w{font-size:11px}
     pre.snip{font-size:12px}
     table.facts th{width:6.6rem;font-size:10px}
     table.facts td{font-size:11.5px}
