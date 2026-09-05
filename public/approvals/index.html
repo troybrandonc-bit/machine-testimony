@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Recording who approved &ndash; Machine Testimony</title>
+<meta name="description" content="An agent that pauses for a person leaves a record of the pause, not of the person. What an approval has to carry, and where the identity has to come from.">
+<meta property="og:title" content="Recording who approved">
+<meta property="og:description" content="An agent that pauses for a person leaves a record of the pause, not of the person. What an approval has to carry, and where the identity has to come from.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://machinetestimony.org/approvals/">
+<meta property="og:image" content="https://machinetestimony.org/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Recording who approved">
+<meta name="twitter:description" content="An agent that pauses for a person leaves a record of the pause, not of the person. What an approval has to carry, and where the identity has to come from.">
+<meta name="twitter:image" content="https://machinetestimony.org/og.png">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/icon.png" type="image/png" sizes="512x512">
+<link rel="apple-touch-icon" href="/icon.png">
+<link rel="canonical" href="https://machinetestimony.org/approvals/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+
+  /* Built to the NBER pattern, which is what a research bureau's site actually
+     looks like: one coloured band carrying the lockup, the utility links, the
+     navigation and the name together; the institution named large and centred
+     in a serif; outlined destination tiles; then a dense white body in two
+     columns with a rail. Serif for reading, sans for metadata, underlined
+     links, hairline rules, and far less air than a product page. */
+  :root{
+    --band:#123a6b; --band-2:#0e2f57; --band-ink:#ffffff; --band-dim:#b9cbe4;
+    --paper:#ffffff; --ink:#111417; --body:#24292d; --muted:#5f6a72;
+    --rule:#c9cfd4; --rule-soft:#e3e7ea; --label:#123a6b; --link:#123a6b;
+    --display:"Source Serif 4",Georgia,"Times New Roman",serif;
+    --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --band:#0c2340; --band-2:#081a2f; --band-ink:#f2f6fb; --band-dim:#9db3ce;
+      --paper:#0f1214; --ink:#eef0f2; --body:#c2c8cd; --muted:#8a939a;
+      --rule:#2c3236; --rule-soft:#1f2427; --label:#9dc0ef; --link:#9dc0ef;
+    }
+  }
+  :root[data-theme="dark"]{
+    --band:#0c2340; --band-2:#081a2f; --band-ink:#f2f6fb; --band-dim:#9db3ce;
+    --paper:#0f1214; --ink:#eef0f2; --body:#c2c8cd; --muted:#8a939a;
+    --rule:#2c3236; --rule-soft:#1f2427; --label:#9dc0ef; --link:#9dc0ef;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--body);
+    font-family:var(--display);font-size:17px;line-height:1.55;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 30px}
+  a{color:var(--link);text-decoration:underline;text-underline-offset:2px;
+    text-decoration-thickness:1px}
+  a:hover{text-decoration-thickness:2px}
+
+  /* ── the band: lockup, utility, nav and the name, all one field ─────── */
+  .band{background:var(--band);color:var(--band-ink);
+    background-image:linear-gradient(180deg,var(--band) 0%,var(--band-2) 100%)}
+  .band a{color:var(--band-ink);text-decoration:none}
+  .band a:hover{text-decoration:underline}
+  .topbar{display:flex;align-items:center;gap:26px;flex-wrap:wrap;padding:16px 0 12px}
+  .lockup{display:flex;align-items:center;gap:13px}
+  .lockup .mk{width:31px;height:31px;flex:none;color:var(--band-ink)}
+  .lockup .bar{width:2px;align-self:stretch;background:var(--band-ink);opacity:.55}
+  .lockup .nm{font-family:var(--sans);font-weight:700;font-size:11.5px;
+    letter-spacing:.085em;line-height:1.32;text-transform:uppercase}
+  .utility{margin-left:auto;font-family:var(--sans);font-size:13.5px;
+    display:flex;gap:12px;align-items:center;color:var(--band-dim)}
+  .utility .sep{opacity:.45}
+  nav.primary{border-bottom:1px solid rgba(255,255,255,.42);
+    display:flex;gap:26px;flex-wrap:wrap;padding:9px 0 11px;
+    font-family:var(--sans);font-size:14.5px}
+
+  .hero{text-align:center;padding:54px 0 46px}
+  .hero h1{font-family:var(--display);font-weight:700;color:var(--band-ink);
+    font-size:clamp(2.3rem,5.4vw,3.5rem);line-height:1.05;letter-spacing:-.012em;
+    margin:0}
+  .hero .strap{max-width:44rem;margin:20px auto 0;color:var(--band-ink);
+    font-size:clamp(1.02rem,2vw,1.24rem);line-height:1.45;opacity:.94}
+  .tiles{display:grid;gap:16px;margin:34px auto 0;max-width:52rem}
+  @media (min-width:700px){.tiles{grid-template-columns:1fr 1fr}}
+  .tile{border:1px solid rgba(255,255,255,.6);padding:17px 20px;
+    font-family:var(--sans);font-weight:600;font-size:15px;color:var(--band-ink);
+    text-decoration:none;display:block}
+  .tile:hover{background:rgba(255,255,255,.09);text-decoration:none}
+
+  /* ── the body: main column and a rail ───────────────────────────────── */
+  .main{display:grid;gap:34px;padding-top:40px;padding-bottom:10px}
+  @media (min-width:960px){
+    .main{grid-template-columns:minmax(0,1fr) 21rem;gap:52px;align-items:start}
+  }
+  h2.label{font-family:var(--display);font-weight:700;color:var(--label);
+    font-size:1.06rem;margin:0 0 12px;padding-bottom:9px;
+    border-bottom:1px solid var(--rule)}
+  .block{margin:0 0 40px}
+  .block p{margin:0 0 15px;max-width:46rem}
+  .block p:last-child{margin-bottom:0}
+
+  table.levels{width:100%;border-collapse:collapse;font-size:16px}
+  table.levels th{text-align:left;font-family:var(--sans);font-size:11px;
+    letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+    font-weight:600;padding:0 14px 8px 0;border-bottom:1px solid var(--rule)}
+  table.levels td{padding:13px 14px 13px 0;border-bottom:1px solid var(--rule-soft);
+    vertical-align:top}
+  table.levels td.lv{font-family:var(--sans);font-weight:700;font-size:12.5px;
+    color:var(--label);white-space:nowrap;letter-spacing:.04em}
+  table.levels td.t{font-weight:600;color:var(--ink);min-width:15rem}
+
+  .entries{list-style:none;margin:0;padding:0}
+  .entries li{padding:16px 0;border-bottom:1px solid var(--rule-soft)}
+  .entries li:first-child{padding-top:0}
+  .entries h3{font-size:1.12rem;font-weight:600;margin:0 0 4px;line-height:1.32}
+  .entries h3 a{color:var(--ink)}
+  .entries .kind{font-family:var(--sans);font-weight:700;font-size:11px;
+    letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+    display:block;margin-bottom:5px}
+  .entries p{margin:0;font-size:16px;max-width:44rem}
+  .entries .meta{margin-top:7px;font-family:var(--sans);font-size:12.5px;
+    color:var(--muted)}
+
+  /* ── the rail ───────────────────────────────────────────────────────── */
+  .rail{border-top:3px solid var(--band);padding-top:14px}
+  .rail h2{font-family:var(--display);font-weight:700;color:var(--label);
+    font-size:1.02rem;margin:0 0 10px}
+  .rail .item{padding:13px 0;border-bottom:1px solid var(--rule-soft)}
+  .rail .item:last-of-type{border-bottom:0}
+  .rail .item b{display:block;font-weight:600;color:var(--ink);font-size:1rem;
+    margin-bottom:3px}
+  .rail .item p{margin:0;font-size:15px;color:var(--body)}
+  .rail .links{list-style:none;margin:16px 0 0;padding:16px 0 0;
+    border-top:1px solid var(--rule);font-family:var(--sans);font-size:14.5px}
+  .rail .links li{margin:0 0 7px}
+
+  footer.foot{border-top:3px solid var(--band);margin-top:34px;
+    padding:20px 0 46px;font-family:var(--sans);font-size:13.5px;color:var(--muted)}
+  footer.foot p{margin:0 0 4px}
+
+  /* Only what a prose page needs beyond the shared stylesheet. */
+  pre.snip{background:none;border-left:2px solid var(--rule);margin:0 0 16px;
+    padding:2px 0 2px 13px;font-size:13px;overflow-x:auto;
+    font-family:var(--mono);line-height:1.55}
+  .block h3{font-family:var(--display);font-weight:600;color:var(--ink);
+    font-size:1.08rem;margin:26px 0 8px}
+  .block ol,.block ul{margin:0 0 15px;padding-left:1.15rem;max-width:46rem}
+  .block li{margin:0 0 7px}
+  .dateline{font-family:var(--sans);font-size:12.5px;color:var(--muted);
+    margin:0 0 22px}
+  @media (max-width:620px){
+    pre.snip{font-size:12px}
+  }
+</style>
+</head>
+<body>
+
+<div class="band">
+  <div class="wrap">
+    <div class="topbar">
+      <div class="lockup">
+        <svg class="mk" viewBox="0 0 64 64" aria-hidden="true">
+          <g fill="currentColor">
+            <rect x="2" y="18" width="20" height="20"/>
+            <polygon points="2,38 22,38 2,56"/>
+            <rect x="30" y="22" width="20" height="20"/>
+            <polygon points="50,22 30,22 50,4"/>
+          </g>
+        </svg>
+        <div class="bar"></div>
+        <div class="nm">Machine<br>Testimony</div>
+      </div>
+      <div class="utility">
+        <a href="https://datatracker.ietf.org/doc/draft-clifford-testimony-record/">Specification</a>
+        <span class="sep">|</span>
+        <a href="https://github.com/troybrandonc-bit/machine-testimony">Validator and adapters</a>
+        <span class="sep">|</span>
+        <a href="/llms.txt">For machines</a>
+      </div>
+    </div>
+    <nav class="primary">
+      <a href="/#question">The question</a>
+      <a href="/#conformance">Conformance</a>
+      <a href="/#papers">Working papers</a>
+      <a href="/#census">Census</a>
+      <a href="/#publications">Publications</a>
+      <a href="/approvals/">Approvals</a>
+      <a href="/check/">Check a record</a>
+      <a href="/check/">Check a record</a>
+      <a href="/#taking-part">Taking part</a>
+    </nav>
+  </div>
+</div>
+
+
+<div class="wrap main">
+  <div>
+    <p class="dateline">Technical note, 5 September 2026</p>
+    <h2 class="label">Recording who approved</h2>
+
+    <div class="block">
+      <p>An agent that pauses for a person leaves a record of the pause. It does
+        not usually leave a record of the person. That gap is invisible while
+        everything works and total the moment anybody asks.</p>
+
+      <p>The question asked afterwards is never whether a pause occurred. It is
+        who decided, on what basis, and how anyone knows it was them. A record
+        that answers the first and not the rest describes a procedure rather
+        than an event.</p>
+
+      <h3>What an approval has to carry</h3>
+      <p>Four properties, and each exists because a reader cannot otherwise
+        detect its absence.</p>
+      <ol>
+        <li><b>The action, and its risk class, from outside the model.</b> If
+          the system proposing the action also decides how dangerous it is,
+          there is no gate, only a suggestion. The class belongs in a registry
+          or a policy file the proposing model cannot write to.</li>
+        <li><b>A person, named.</b> Not that a human approved. Which one, or
+          which named role holder.</li>
+        <li><b>That name taken from authentication.</b> An identity supplied in
+          a request body, or produced by the model, is an assertion about a
+          person rather than a fact about one.</li>
+        <li><b>The approver distinct from the proposer.</b> An agent's own
+          credential signing off its own action satisfies every other
+          requirement and is worth nothing.</li>
+      </ol>
+      <p>A refusal is worth the same care. A system that records only what it
+        did is a receipt, and the interesting question is usually what it was
+        stopped from doing.</p>
+
+      <h3>Where the identity has to come from</h3>
+      <p>It is tempting to take the approver from whatever state the run is
+        carrying, because the value is already there. That value identifies the
+        person the run was started for, which is not necessarily the person who
+        answered, and anything able to write to that state can set it.</p>
+      <p>The identity exists in exactly one place at exactly one moment: the
+        authenticated request that submits the decision. Read it there, and
+        record it with the outcome.</p>
+      <pre class="snip"><code>def submit_decision(thread_id, approved, session):
+    approver = session.user          # from the auth layer, not from state
+    record.approval(
+        decision=thread_id,
+        approver={"id": approver.id, "kind": "human"},
+        identity_source="auth-session",
+        verdict="permitted" if approved else "refused",
+    )</code></pre>
+      <p>Nothing above is specific to any framework, and none of it needs any
+        particular software. It is the shape of the problem.</p>
+
+      <h3>What this looks like in practice</h3>
+      <p>Agent frameworks generally pause and resume by passing a value back
+        into a paused run. The value says what was decided. Most of them model
+        no principal on that boundary at all, so any code holding the handle
+        can resume it, including the process that raised the pause.</p>
+      <p>That is not a defect in those frameworks. They are orchestration
+        libraries and they never claimed to be authorisation layers. It does
+        mean that an approval flow built on them produces, by default, a record
+        in which somebody who read the arguments and decided is
+        indistinguishable from a script that approved everything.</p>
+      <p>How widespread this is was measured rather than assumed. Of eight
+        agent memory and agent framework implementations assessed in September
+        2026, six take or gate actions. Against the question of whether an
+        approval identifies a person or a named role holder, four were assessed
+        absent and one could not be established either way. The assessment
+        includes the author's own implementation, which is the single entry
+        that passes, and states that this entry carries no evidential weight.
+        Every verdict cites a file and a line at a named commit, so any of them
+        can be overturned by pointing at code.</p>
+
+      <h3>Why it is becoming urgent</h3>
+      <p>Obligations for high-risk systems under the EU AI Act began applying on
+        2 August 2026, and Article 14 requires oversight by natural persons who
+        can understand, interpret, decide against, and intervene. The
+        harmonised standard that will say what satisfies that, prEN 18229-3, is
+        still at public comment. Deployers are being asked for evidence of
+        oversight before the document defining that evidence exists.</p>
+      <p>A record that names the approver is not compliance, and nothing here
+        claims it is. Whether a deployment satisfies a legal obligation is a
+        matter for the parties to it and their regulator. But an organisation
+        that cannot say who approved an action has no answer to give, whatever
+        the standard eventually says.</p>
+
+      <h3>The record format</h3>
+      <p>These four properties are levels TR-3 of the Testimony Record, which is
+        published as an Internet-Draft and carries a validator anyone can run.
+        Implementing it costs nothing and requires no permission. A record can
+        be checked in a browser without installing anything.</p>
+    </div>
+  </div>
+
+  <aside class="rail">
+    <h2>In short</h2>
+    <div class="item">
+      <b>The record must name a person</b>
+      <p>Not that a human approved. Which one.</p>
+    </div>
+    <div class="item">
+      <b>From authentication</b>
+      <p>Not from run state, not from a request body, and never from anything
+        the model produced.</p>
+    </div>
+    <div class="item">
+      <b>Not the proposer</b>
+      <p>An agent approving its own action meets every other requirement and is
+        worth nothing.</p>
+    </div>
+    <div class="item">
+      <b>Refusals too</b>
+      <p>A system that records only what it did is a receipt.</p>
+    </div>
+    <ul class="links">
+      <li><a href="/check/">Check a record in the browser</a></li>
+      <li><a href="https://datatracker.ietf.org/doc/draft-clifford-testimony-record/">The specification</a></li>
+      <li><a href="https://doi.org/10.5281/zenodo.22290922">Eight systems, assessed</a></li>
+      <li><a href="/changes/">Proposing a change</a></li>
+    </ul>
+  </aside>
+</div>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>Editor: Troy Clifford. Operated by Garnet Taurus Ltd.</p>
+    <p>Specification text CC BY 4.0. Schema and tools MIT.</p>
+    <p>Machine Testimony is a research programme, not a registered institute or a certification body.</p>
+  </div>
+</footer>
+
+</body>
+</html>
