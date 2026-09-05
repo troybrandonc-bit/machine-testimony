@@ -12,7 +12,7 @@ evaluating the format should not have to read it inside a vendor's repository.
 
 ```
 spec/
-  draft-clifford-testimony-record-00.md   the Internet-Draft source
+  draft-clifford-testimony-record-01.md   the Internet-Draft source
   testimony_validate.py                   the reference validator, one stdlib
                                           file, no network, MIT
 adapters/

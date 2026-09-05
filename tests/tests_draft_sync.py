@@ -1,7 +1,7 @@
 """The Internet-Draft says what the validator does. Run: python3 tests_draft_sync.py
 
 There are now two normative statements of this format: scripts/testimony_validate.py,
-which decides what passes, and spec/draft-clifford-testimony-record-00.md, which is
+which decides what passes, and spec/draft-clifford-testimony-record-NN.md, which is
 what the IETF and anyone implementing from paper will read. A specification that
 disagrees with its own reference implementation is worse than no specification,
 because the disagreement is invisible until somebody has already built the wrong
@@ -19,6 +19,7 @@ enumerated values, and the untrusted identity sources. Prose is not checked and
 cannot be. The point is that no field name, type name or allowed value can be added
 to, removed from, or renamed in one file without the other failing.
 """
+import glob
 import os
 import re
 import sys
@@ -29,7 +30,10 @@ sys.path.insert(0, os.path.join(ROOT, "spec"))
 
 import testimony_validate as tv  # noqa: E402
 
-DRAFT = os.path.join(ROOT, "spec", "draft-clifford-testimony-record-00.md")
+_drafts = sorted(glob.glob(os.path.join(ROOT, "spec", "draft-*-[0-9][0-9].md")))
+if len(_drafts) != 1:
+    raise SystemExit("expected one draft source in spec/, found %d" % len(_drafts))
+DRAFT = _drafts[0]
 
 PASS = FAIL = 0
 

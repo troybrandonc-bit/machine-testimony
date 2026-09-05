@@ -1,6 +1,6 @@
 # The Testimony Record as an Internet-Draft
 
-`draft-clifford-testimony-record-00.md` is the specification rewritten in
+`draft-clifford-testimony-record-01.md` is the specification rewritten in
 Internet-Draft form.
 
 **Posted 4 September 2026:**
@@ -16,7 +16,7 @@ the honest answer today is that they cannot know.
 
 An Internet-Draft does not fix that, and it is not a standard. What it does is
 give the format an identifier that does not belong to us:
-`draft-clifford-testimony-record-00`, a datatracker URL, an archived text that
+`draft-clifford-testimony-record-01`, a datatracker URL, an archived text that
 stays readable whether or not anything of ours is still online, and a public
 record of what it said on the day it was published. Nobody grants permission
 for this. Anyone may submit a draft, and there is no gatekeeper at the door.
@@ -47,8 +47,8 @@ the draft now cites RFC 9162.
     gem install kramdown-rfc2629
     pip install xml2rfc
 
-    kdrfc --v3 --xml spec/draft-clifford-testimony-record-00.md
-    xml2rfc --text --v3 spec/draft-clifford-testimony-record-00.xml
+    kdrfc --v3 --xml spec/draft-clifford-testimony-record-01.md
+    xml2rfc --text --v3 spec/draft-clifford-testimony-record-01.xml
 
 CI runs exactly these two commands on every commit, under the
 `internet-draft renders` job, and uploads the built `.xml` and `.txt` as an

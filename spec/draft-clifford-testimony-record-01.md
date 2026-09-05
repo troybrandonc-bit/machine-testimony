@@ -1,7 +1,7 @@
 ---
 title: "The Testimony Record: An Interchange Format for What an Automated System Believed and Did"
 abbrev: "Testimony Record"
-docname: draft-clifford-testimony-record-00
+docname: draft-clifford-testimony-record-01
 category: info
 ipr: trust200902
 submissionType: independent
@@ -557,6 +557,33 @@ and records two defects the survey found in it during preparation.
 The `scope` entry, the conditional TR-3 requirement, and the recommendation to
 report per-level results are new in `testimony-record/0.2` and have one
 implementation each at the time of writing.
+
+# Changes Since -00
+{:numbered="false"}
+
+This section is to be removed before publication as an RFC.
+
+The Introduction of -00 stated that none of the eight surveyed systems records
+the identity of the person who approved an action. The survey it cites does not
+support that. Four of the eight were assessed absent on that requirement, a
+fifth could not be established either way, and the three remaining include this
+document's author's own system, which does record it. The claim was stronger
+than the evidence behind it, and a document arguing that a system should not
+assert more than it can show is the wrong place for one. Corrected.
+
+The {{TR-SPEC}} reference pointed at a product's documentation site, which made
+the format read as the manual for a piece of software. The specification
+source, the reference validator and the adapters are now published in a
+repository of their own, and the reference points there.
+
+An Implementation Status section was added. It states that every implementation
+of this format is by this document's author, and that no independent
+implementation is known.
+
+The `external-anchor` integrity scheme was named in -00 and not specified. The
+`anchor` member is now defined, with an RFC 3161 profile, and the Security
+Considerations distinguish the schemes that place evidence outside the
+emitter's control from those that do not.
 
 # Acknowledgements
 {:numbered="false"}

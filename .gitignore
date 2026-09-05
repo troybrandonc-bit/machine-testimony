@@ -9,4 +9,4 @@ adapters/langgraph/dist/
 adapters/langgraph/record.jsonl
 __pycache__/
 *.pyc
-spec/draft-clifford-testimony-record-00.xml
+spec/draft-*-[0-9][0-9].xml
