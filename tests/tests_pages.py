@@ -143,6 +143,28 @@ def main():
             check("the page's digest is the one the reader is told to check",
                   want in " ".join(args))
 
+    print("\nthe check page reads a record, not only grades it")
+    # The format was written for somebody who has to answer for a system they
+    # did not build, and that person does not read JSON Lines. The reader is
+    # the only part of the site aimed at them rather than at an implementer.
+    chk = io.open(os.path.join(PUB, "check", "index.html"),
+                  encoding="utf-8").read()
+    check("it has a reader", "function readable(" in chk
+          and "function sentence(" in chk)
+    check("reading is the default view, not the checks",
+          'id="v-read"' in chk and 'id="v-checks" hidden' in chk)
+    check("a refusal is marked rather than blended in",
+          "tr.refused" in chk and 'refused ? "REFUSED ' in chk)
+    check("an approval says where the name came from",
+          "identity from " in chk)
+    # A type the reader does not know renders as a bare word with no sentence.
+    # Adding one to the specification without teaching the reader is silent,
+    # so it is checked here rather than noticed by an auditor.
+    known = set(re.findall(r'case "([a-z]+)":', chk))
+    missing = sorted(tv.TYPES - known)
+    check("every entry type the specification defines has a sentence",
+          not missing, "no case for: %s" % missing)
+
     print("\nthe site does not link at things that are not there")
     dead = []
     for page in pages():

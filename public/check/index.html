@@ -191,6 +191,39 @@
     letter-spacing:.02em;color:var(--muted);white-space:nowrap;
     padding-right:14px;vertical-align:top}
   table.checks td.b.at{color:var(--ink)}
+  .views{display:flex;gap:6px;margin:14px 0 4px}
+  .vb{font-family:var(--sans);font-size:12px;font-weight:600;cursor:pointer;
+    padding:5px 11px;border:1px solid var(--rule);background:none;
+    color:var(--muted);border-radius:3px}
+  .vb.on{color:var(--band-ink);background:var(--band);border-color:var(--band)}
+  table.reg.read td.t{font-family:var(--mono);font-size:12px;color:var(--muted);
+    white-space:nowrap;vertical-align:top}
+  table.reg.read td.k{font-family:var(--sans);font-size:11px;font-weight:700;
+    letter-spacing:.03em;color:var(--muted);white-space:nowrap;
+    vertical-align:top}
+  table.reg.read td{padding:8px 14px 8px 0;vertical-align:top}
+  /* A refusal is the half of the record nobody prints, so it is the half that
+     is not muted. */
+  table.reg.read tr.refused td{background:#fbf5f4}
+  table.reg.read tr.refused td.k{color:var(--ink)}
+  table.reg.read th:nth-child(1){width:11rem}
+  table.reg.read th:nth-child(2){width:5.5rem}
+  /* Narrow, an entry stops being a row and becomes a paragraph with a
+     timestamp over it. Three columns of a fixed-width timestamp and a
+     sentence do not fit on a phone, and a record somebody has to read is the
+     wrong thing to make them scroll sideways through. */
+  @media (max-width:620px){
+    table.reg.read,table.reg.read tbody,table.reg.read tr,
+    table.reg.read td{display:block;width:auto}
+    table.reg.read thead{display:none}
+    table.reg.read tr.ev{padding:9px 0;border-bottom:1px solid var(--rule)}
+    table.reg.read td{padding:0}
+    table.reg.read td.t,table.reg.read td.k{display:inline;font-size:11px}
+    table.reg.read td.k{margin-left:9px}
+    table.reg.read tr.refused td{background:none}
+    table.reg.read tr.refused{background:#fbf5f4;
+      padding-left:9px;margin-left:-9px;padding-right:9px}
+  }
   /* A fixed layout, because a width on a td is only a suggestion otherwise and
      the three metadata columns were taking half the table between them. Under
      table-layout:fixed the columns are sized from the header row, so the
@@ -386,6 +419,82 @@ const EXAMPLE = [
 
 const esc = (s) => String(s).replace(/[&<>]/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
 
+/* Reading a record, as opposed to checking one.
+ *
+ * The format was written for somebody who has to answer for a system they did
+ * not build, and that person does not read JSON Lines. This renders the same
+ * entries the validator parsed, in the order they happened, in sentences.
+ *
+ * Two things are deliberately loud. A refusal is shown as prominently as an
+ * execution, because a record of what a system did is a receipt and the
+ * interesting question afterwards is usually what it was stopped from doing.
+ * And an approval shows where the name came from, because a name with no
+ * source is an assertion about a person rather than a fact about one. */
+const WHO = (a) => (a && a.id) ? esc(a.id) : "somebody unnamed";
+
+function sentence(e, byId) {
+  switch (e.type) {
+    case "scope":
+      return e.acts
+        ? "This system takes or gates actions."
+        : "This system declares that it does not act, so there is nothing to gate.";
+    case "evidence":
+      return "Read " + esc(e.source) + (e.description ? " &mdash; " + esc(e.description) : "");
+    case "belief": {
+      const st = { believed_true: "believed", believed_false: "believed false",
+                   contradicted: "contradicted", unknown: "unknown" }[e.state] || esc(e.state);
+      const neg = e.polarity === "deny" ? "not " : "";
+      const ev = (e.evidence || []).length
+        ? " on " + e.evidence.length + " piece" + (e.evidence.length > 1 ? "s" : "") + " of evidence"
+        : " on no evidence, and says so";
+      return "Believed " + esc(e.subject) + " is " + neg + esc(e.proposition)
+        + " (" + st + ")" + ev;
+    }
+    case "conflict": {
+      const r = e.resolution;
+      const base = "Two sides disagreed about " + esc(e.proposition) + " for "
+        + esc(e.subject) + ", and both were kept";
+      return r
+        ? base + ". Resolved by " + WHO(r.by) + " using " + esc(r.method)
+          + ", keeping " + esc(r.kept)
+        : base + ", unresolved";
+    }
+    case "decision": {
+      const refused = e.verdict === "refused";
+      return (refused ? "REFUSED " : "Permitted ") + esc(e.action_type)
+        + " (" + esc(e.risk_class) + " risk, from " + esc(e.risk_source || "unstated") + ")"
+        + (refused
+            ? ", not executed. " + esc(e.reason || "no reason given")
+            : e.executed ? ", and it ran" : ", and it did not run");
+    }
+    case "approval":
+      return "Approved by " + WHO(e.approver) + ", identity from "
+        + esc(e.identity_source || "an unstated source");
+    case "integrity":
+      return "Sealed with " + esc(e.scheme) + " over "
+        + ((e.covers || []).length || "an unstated number of") + " entries"
+        + (e.anchor && e.anchor.authority
+            ? ", signed by " + esc(e.anchor.authority) : "");
+    default:
+      return esc(e.type);
+  }
+}
+
+function readable(entries) {
+  const byId = new Map(entries.map((e) => [String(e.id), e]));
+  const rows = entries.map((e) => {
+    const refused = e.type === "decision" && e.verdict === "refused";
+    const attested = e.type === "approval" || (e.type === "decision" && e.risk_source);
+    return '<tr class="ev' + (refused ? " refused" : "") + '">'
+      + '<td class="t">' + esc(String(e.at || "").replace("T", " ").replace("Z", "")) + "</td>"
+      + '<td class="k">' + esc(e.type) + "</td>"
+      + "<td>" + sentence(e, byId) + "</td></tr>";
+  }).join("");
+  return '<table class="reg read">'
+    + "<thead><tr><th>When</th><th>What</th><th>It says</th></tr></thead>"
+    + "<tbody>" + rows + "</tbody></table>";
+}
+
 function render(text) {
   if (!text.trim()) { out.innerHTML = ""; return; }
   let r;
@@ -427,15 +536,35 @@ function render(text) {
       " on the emitter's word."
     : "";
 
+  /* Two views of one file. The record is what somebody came to read; the
+     checks are what a validator has to say about it. Reading is first because
+     the person this format was written for is not here to audit the
+     validator. */
   out.innerHTML =
     '<div class="result">' +
       '<p class="verdict">' + esc(per) + "</p>" +
       '<p class="said">' + esc(said) + "</p>" +
       (rests ? '<p class="said rests">' + esc(rests) + "</p>" : "") +
+      '<div class="views">' +
+        '<button type="button" class="vb on" data-v="read">What it says</button>' +
+        '<button type="button" class="vb" data-v="checks">What was checked</button>' +
+      "</div>" +
+      '<div id="v-read">' + readable(r.entries) + "</div>" +
+      '<div id="v-checks" hidden>' +
       '<table class="checks"><thead><tr><th></th><th>Level</th>' +
       "<th>Basis</th><th>Check</th></tr></thead><tbody>" + rows +
-      "</tbody></table>" +
+      "</tbody></table></div>" +
     "</div>";
+
+  out.querySelectorAll(".vb").forEach((b) => {
+    b.addEventListener("click", () => {
+      const want = b.dataset.v;
+      out.querySelectorAll(".vb").forEach((x) =>
+        x.classList.toggle("on", x === b));
+      out.querySelector("#v-read").hidden = want !== "read";
+      out.querySelector("#v-checks").hidden = want !== "checks";
+    });
+  });
 }
 
 const load = (f) => f.text().then((t) => { area.value = t; render(t); });
