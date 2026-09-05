@@ -3,23 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Recording who approved &ndash; Machine Testimony</title>
-<meta name="description" content="An agent that pauses for a person leaves a record of the pause, not of the person. What an approval has to carry, and where the identity has to come from.">
-<meta property="og:title" content="Recording who approved">
-<meta property="og:description" content="An agent that pauses for a person leaves a record of the pause, not of the person. What an approval has to carry, and where the identity has to come from.">
+<title>Assess a system yourself &ndash; Machine Testimony</title>
+<meta name="description" content="The rubric, the harness and the method are CC BY and MIT, commercial use included. If you audit AI systems you can run these questions against a supplier and charge for it, without asking anybody.">
+<meta property="og:title" content="Assess a system yourself">
+<meta property="og:description" content="The rubric, the harness and the method are CC BY and MIT, commercial use included. If you audit AI systems you can run these questions against a supplier and charge for it, without asking anybody.">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://machinetestimony.org/approvals/">
+<meta property="og:url" content="https://machinetestimony.org/assess/">
 <meta property="og:image" content="https://machinetestimony.org/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Recording who approved">
-<meta name="twitter:description" content="An agent that pauses for a person leaves a record of the pause, not of the person. What an approval has to carry, and where the identity has to come from.">
+<meta name="twitter:title" content="Assess a system yourself">
+<meta name="twitter:description" content="The rubric, the harness and the method are CC BY and MIT, commercial use included. If you audit AI systems you can run these questions against a supplier and charge for it, without asking anybody.">
 <meta name="twitter:image" content="https://machinetestimony.org/og.png">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/icon.png" type="image/png" sizes="512x512">
 <link rel="apple-touch-icon" href="/icon.png">
-<link rel="canonical" href="https://machinetestimony.org/approvals/">
+<link rel="canonical" href="https://machinetestimony.org/assess/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
@@ -151,7 +151,6 @@
   pre.snip{background:none;border-left:2px solid var(--rule);margin:0 0 16px;
     padding:2px 0 2px 13px;font-size:13px;overflow-x:auto;max-width:100%;
     font-family:var(--mono);line-height:1.55}
-  /* A bare address is not code to be scrolled sideways past; let it wrap. */
   pre.snip.addr{overflow-x:visible;white-space:pre-wrap;overflow-wrap:anywhere}
   .block h3{font-family:var(--display);font-weight:600;color:var(--ink);
     font-size:1.08rem;margin:26px 0 8px}
@@ -159,8 +158,45 @@
   .block li{margin:0 0 7px}
   .dateline{font-family:var(--sans);font-size:12.5px;color:var(--muted);
     margin:0 0 22px}
+  table.facts{width:100%;border-collapse:collapse;font-size:14px;margin:0 0 20px}
+  table.facts th{text-align:left;font-family:var(--sans);font-size:11px;
+    font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--muted);padding:0 12px 6px 0;white-space:nowrap;
+    vertical-align:top;width:8.5rem}
+  table.facts td{padding:0 0 6px;font-family:var(--mono);font-size:12.5px;
+    overflow-wrap:anywhere;border-bottom:1px solid var(--rule-soft)}
+  table.facts th{border-bottom:1px solid var(--rule-soft)}
+  /* The register's tables. A wide table scrolls inside its own box rather
+     than pushing the page sideways, which is the thing that made the site
+     unreadable on a phone the first time. */
+  .scroller{overflow-x:auto;max-width:100%;margin:0 0 16px}
+  table.reg{border-collapse:collapse;font-size:14px;min-width:34rem}
+  table.reg th{text-align:left;font-family:var(--sans);font-size:11px;
+    font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--muted);padding:0 14px 7px 0;white-space:nowrap;
+    border-bottom:1px solid var(--rule)}
+  table.reg td{padding:8px 14px 8px 0;border-bottom:1px solid var(--rule-soft);
+    vertical-align:top}
+  table.reg td.s{font-weight:600;white-space:nowrap}
+  table.reg td.n,table.reg td.lv,table.reg td.d{font-family:var(--sans);
+    font-size:12.5px;white-space:nowrap;color:var(--body)}
+  table.reg td.lv{font-weight:700}
+  table.reg td.v{font-family:var(--sans);font-size:11px;font-weight:700;
+    letter-spacing:.02em;white-space:nowrap;color:var(--muted)}
+  /* Absent is the finding, so it is the one that is not muted. */
+  table.reg td.v.n{color:var(--ink)}
+  table.reg td.w{font-family:var(--mono);font-size:12px;color:var(--muted);
+    overflow-wrap:anywhere}
+  table.reg tr.own td{background:#f4f7fb}
+  .tag{font-family:var(--sans);font-size:10.5px;font-weight:700;
+    letter-spacing:.04em;text-transform:uppercase;color:var(--muted);
+    white-space:nowrap}
   @media (max-width:620px){
+    table.reg{font-size:13px}
+    table.reg td.w{font-size:11px}
     pre.snip{font-size:12px}
+    table.facts th{width:6.6rem;font-size:10px}
+    table.facts td{font-size:11.5px}
   }
 </style>
 </head>
@@ -204,134 +240,138 @@
       <a href="/#taking-part">Taking part</a>
     </nav>
   </div>
-</div>
-
-
 <div class="wrap main">
   <div>
-    <p class="dateline">Technical note, 5 September 2026</p>
-    <h2 class="label">Recording who approved</h2>
+    <p class="dateline">For assessors, 5 September 2026</p>
+    <h2 class="label">Assess a system yourself</h2>
 
     <div class="block">
-      <p>An agent that pauses for a person leaves a record of the pause. It does
-        not usually leave a record of the person. That gap is invisible while
-        everything works and total the moment anybody asks.</p>
+      <p>The register is one person's reading. That is the weakest thing about
+        it, and the fix is not for that person to read more carefully. It is for
+        the instrument to be something other people run.</p>
 
-      <p>The question asked afterwards is never whether a pause occurred. It is
-        who decided, on what basis, and how anyone knows it was them. A record
-        that answers the first and not the rest describes a procedure rather
-        than an event.</p>
+      <p>So it is not reserved. Twenty requirements, a harness that refuses an
+        assessment nobody can check, and a method written down. The rubric is
+        CC BY 4.0, the tooling is MIT, and <b>commercial use is expected rather
+        than tolerated</b>. There is no fee, no licence to sign, no
+        certification body, no partner tier and nothing to buy.</p>
 
-      <h3>What an approval has to carry</h3>
-      <p>Four properties, and each exists because a reader cannot otherwise
-        detect its absence.</p>
+      <h3>If you audit AI systems, this is billable work</h3>
+      <p>You already have clients asking what their agent stack records, what
+        they will have to show under Article 12, and whether a supplier's claims
+        about human oversight survive contact with the source. Those questions
+        take a repeatable instrument, and building one is months.</p>
+
+      <p>Take this one. Run it against a client's supplier, charge them your
+        rate, and keep the deliverable. Nothing here asks you to publish
+        anything, credit anybody beyond the licence, or tell this project it
+        happened.</p>
+
+      <pre class="snip">git clone https://github.com/troybrandonc-bit/machine-testimony
+python3 census/run.py                    # the current table
+python3 census/run.py --for langgraph    # one subject, in prose
+python3 census/run.py --check            # do these assessments hold up
+cp census/TEMPLATE.json census/subjects/their-system.json</pre>
+
+      <p>The template carries all twenty questions with the bar for
+        <code>present</code> beside each one, so the work is reading source and
+        writing down what you found.</p>
+
+      <h3>The rule the whole thing rests on</h3>
+      <p>Every verdict cites evidence, <b>including a verdict of absence</b>.
+        Saying a system does not record something, without saying where you
+        looked, is an accusation wearing a measurement's clothes. An
+        <code>absent</code> or <code>undetermined</code> verdict must carry
+        evidence of kind <code>searched</code>, and the harness rejects the file
+        if it does not.</p>
+
+      <p>That is the difference between this and an opinion piece about other
+        people's software, and it is the reason an assessment run with it can be
+        handed to the party it is about.</p>
+
+      <h3>The five verdicts</h3>
+      <ul>
+        <li><code>present</code> and <code>partial</code>, each with a stated
+          bar in the rubric rather than left to judgement.</li>
+        <li><code>absent</code>, which cites where you looked.</li>
+        <li><code>undetermined</code>, for when you genuinely cannot see. It
+          exists because one system's approval record lives in a server that is
+          not in the repository, and the choice was otherwise between calling a
+          capability absent without looking and calling it present without
+          looking. It does not clear a level, and it is a better answer than a
+          guess.</li>
+        <li><code>not_applicable</code>, because a system that takes no actions
+          is not marked down for having no approval gate.</li>
+      </ul>
+
+      <h3>Pin the commit</h3>
+      <p>A full 40-character object id, not an abbreviation. An assessment of
+        "the latest version" is false as soon as the software moves, and an
+        abbreviated id leaves room to argue about which tree was read. The
+        harness refuses both.</p>
+
+      <h3>What to do with the result</h3>
+      <p>Three options, and no obligation.</p>
       <ol>
-        <li><b>The action, and its risk class, from outside the model.</b> If
-          the system proposing the action also decides how dangerous it is,
-          there is no gate, only a suggestion. The class belongs in a registry
-          or a policy file the proposing model cannot write to.</li>
-        <li><b>A person, named.</b> Not that a human approved. Which one, or
-          which named role holder.</li>
-        <li><b>That name taken from authentication.</b> An identity supplied in
-          a request body, or produced by the model, is an assertion about a
-          person rather than a fact about one.</li>
-        <li><b>The approver distinct from the proposer.</b> An agent's own
-          credential signing off its own action satisfies every other
-          requirement and is worth nothing.</li>
+        <li><b>Keep it.</b> A client deliverable that never leaves their
+          building is a perfectly good use of this.</li>
+        <li><b>Publish it yourself.</b> CC BY asks for attribution to the
+          rubric, not for permission. The assessment is yours.</li>
+        <li><b>Put it on the register.</b> A pull request against
+          <code>census/subjects/</code>. It has to pass
+          <code>run.py --check</code>, the same bar every row already there had
+          to clear, and <code>assessed_by</code> carries your name, which the
+          register shows.</li>
       </ol>
-      <p>A refusal is worth the same care. A system that records only what it
-        did is a receipt, and the interesting question is usually what it was
-        stopped from doing.</p>
 
-      <h3>Where the identity has to come from</h3>
-      <p>It is tempting to take the approver from whatever state the run is
-        carrying, because the value is already there. That value identifies the
-        person the run was started for, which is not necessarily the person who
-        answered, and anything able to write to that state can set it.</p>
-      <p>The identity exists in exactly one place at exactly one moment: the
-        authenticated request that submits the decision. Read it there, and
-        record it with the outcome.</p>
-      <pre class="snip"><code>def submit_decision(thread_id, approved, session):
-    approver = session.user          # from the auth layer, not from state
-    record.approval(
-        decision=thread_id,
-        approver={"id": approver.id, "kind": "human"},
-        identity_source="auth-session",
-        verdict="permitted" if approved else "refused",
-    )</code></pre>
-      <p>Nothing above is specific to any framework, and none of it needs any
-        particular software. It is the shape of the problem.</p>
+      <h3>Disagreeing with a row, including mine</h3>
+      <p>A second assessor contradicting an existing verdict is more useful here
+        than a new subject. Point at the code: open a pull request naming the
+        requirement and where to look. If it lands, the file changes, the
+        register changes, and the date on the row changes.</p>
+      <p>Arguing with me is not the remedy and does not work. This register
+        already carries corrections that arrived because somebody said I had
+        read something wrong.</p>
 
-      <h3>What this looks like in practice</h3>
-      <p>Agent frameworks generally pause and resume by passing a value back
-        into a paused run. The value says what was decided. Most of them model
-        no principal on that boundary at all, so any code holding the handle
-        can resume it, including the process that raised the pause.</p>
-      <p>That is not a defect in those frameworks. They are orchestration
-        libraries and they never claimed to be authorisation layers. It does
-        mean that an approval flow built on them produces, by default, a record
-        in which somebody who read the arguments and decided is
-        indistinguishable from a script that approved everything.</p>
-      <p>How widespread this is was measured rather than assumed. Of eight
-        agent memory and agent framework implementations assessed in September
-        2026, six take or gate actions. Against the question of whether an
-        approval identifies a person or a named role holder, four were assessed
-        absent and one could not be established either way. The assessment
-        includes the author's own implementation, which is the single entry
-        that passes, and states that this entry carries no evidential weight.
-        Every verdict cites a file and a line at a named commit, so any of them
-        can be overturned by pointing at code.</p>
+      <h3>Conflicts of interest</h3>
+      <p>If you assess something you built, sell, or are paid by, say so in the
+        file, and expect the row to be read as carrying no weight. That is what
+        this project does with its own row.</p>
+      <p>If a client pays you to assess their own system, a reader is right to
+        discount it, for the same reason a credit rating paid for by the issuer
+        is worth less than one paid for by the buyer. The assessments worth most
+        are the ones commissioned by whoever has to rely on the answer.</p>
 
-      <h3>Why it is becoming urgent</h3>
-      <p>Obligations for high-risk systems under the EU AI Act began applying on
-        2 August 2026, and Article 14 requires oversight by natural persons who
-        can understand, interpret, decide against, and intervene. The
-        harmonised standard that will say what satisfies that, prEN 18229-3, is
-        still at public comment. Deployers are being asked for evidence of
-        oversight before the document defining that evidence exists.</p>
-      <p>A record that names the approver is not compliance, and nothing here
-        claims it is. Whether a deployment satisfies a legal obligation is a
-        matter for the parties to it and their regulator. But an organisation
-        that cannot say who approved an action has no answer to give, whatever
-        the standard eventually says.</p>
-
-      <h3>The record format</h3>
-      <p>These four properties are levels TR-3 of the Testimony Record, which is
-        published as an Internet-Draft and carries a validator anyone can run.
-        Implementing it costs nothing and requires no permission. A record can
-        be checked in a browser without installing anything.</p>
+      <h3>What this is not</h3>
+      <p>Not a certification, an accreditation, or a mark. Nobody is entitled to
+        call themselves conformant because a file says so, and no system is
+        non-compliant with any law because a row says <code>absent</code>. The
+        EU AI Act's obligations run through Articles 12, 13 and 14, and
+        presumption of conformity comes from the harmonised standards, not from
+        this.</p>
+      <p>What it gives you is a repeatable reading of what a system actually
+        records, with every answer traceable to a line of somebody's source.
+        That is worth money to whoever has to rely on it, which is why you
+        should feel free to charge them for it.</p>
     </div>
   </div>
 
   <aside class="rail">
-    <h2>In short</h2>
-    <div class="item">
-      <b>The record must name a person</b>
-      <p>Not that a human approved. Which one.</p>
-    </div>
-    <div class="item">
-      <b>From authentication</b>
-      <p>Not from run state, not from a request body, and never from anything
-        the model produced.</p>
-    </div>
-    <div class="item">
-      <b>Not the proposer</b>
-      <p>An agent approving its own action meets every other requirement and is
-        worth nothing.</p>
-    </div>
-    <div class="item">
-      <b>Refusals too</b>
-      <p>A system that records only what it did is a receipt.</p>
-    </div>
-    <ul class="links">
-      <li><a href="/check/">Check a record in the browser</a></li>
-      <li><a href="https://datatracker.ietf.org/doc/draft-clifford-testimony-record/">The specification</a></li>
-      <li><a href="https://doi.org/10.5281/zenodo.22290922">Eight systems, assessed</a></li>
-      <li><a href="/changes/">Proposing a change</a></li>
-    </ul>
+    <h2 class="label">The instrument</h2>
+    <p class="cont"><a href="https://github.com/troybrandonc-bit/machine-testimony/blob/main/census/ASSESSING.md">The method, in full</a><br>
+      <a href="https://github.com/troybrandonc-bit/machine-testimony/blob/main/census/rubric.py">The twenty requirements</a><br>
+      <a href="https://github.com/troybrandonc-bit/machine-testimony/blob/main/census/TEMPLATE.json">A blank assessment</a></p>
+
+    <h2 class="label">Licence</h2>
+    <p class="cont">Rubric and assessments CC BY 4.0. Harness MIT. Commercial
+      use included, and intended.</p>
+
+    <hr>
+    <p class="cont"><a href="/register/">The register</a><br>
+      <a href="/census/2026-09/">The dated edition, with a DOI</a><br>
+      <a href="/implement/">Implementing the format</a></p>
   </aside>
 </div>
-
 <footer class="foot">
   <div class="wrap">
     <p>Editor: Troy Clifford. Operated by Garnet Taurus Ltd.</p>

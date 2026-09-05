@@ -1,0 +1,136 @@
+<!--title: Assess a system yourself
+    desc: The rubric, the harness and the method are CC BY and MIT, commercial use included. If you audit AI systems you can run these questions against a supplier and charge for it, without asking anybody.
+    slug: assess-->
+
+<div class="wrap main">
+  <div>
+    <p class="dateline">For assessors, 5 September 2026</p>
+    <h2 class="label">Assess a system yourself</h2>
+
+    <div class="block">
+      <p>The register is one person's reading. That is the weakest thing about
+        it, and the fix is not for that person to read more carefully. It is for
+        the instrument to be something other people run.</p>
+
+      <p>So it is not reserved. Twenty requirements, a harness that refuses an
+        assessment nobody can check, and a method written down. The rubric is
+        CC BY 4.0, the tooling is MIT, and <b>commercial use is expected rather
+        than tolerated</b>. There is no fee, no licence to sign, no
+        certification body, no partner tier and nothing to buy.</p>
+
+      <h3>If you audit AI systems, this is billable work</h3>
+      <p>You already have clients asking what their agent stack records, what
+        they will have to show under Article 12, and whether a supplier's claims
+        about human oversight survive contact with the source. Those questions
+        take a repeatable instrument, and building one is months.</p>
+
+      <p>Take this one. Run it against a client's supplier, charge them your
+        rate, and keep the deliverable. Nothing here asks you to publish
+        anything, credit anybody beyond the licence, or tell this project it
+        happened.</p>
+
+      <pre class="snip">git clone https://github.com/troybrandonc-bit/machine-testimony
+python3 census/run.py                    # the current table
+python3 census/run.py --for langgraph    # one subject, in prose
+python3 census/run.py --check            # do these assessments hold up
+cp census/TEMPLATE.json census/subjects/their-system.json</pre>
+
+      <p>The template carries all twenty questions with the bar for
+        <code>present</code> beside each one, so the work is reading source and
+        writing down what you found.</p>
+
+      <h3>The rule the whole thing rests on</h3>
+      <p>Every verdict cites evidence, <b>including a verdict of absence</b>.
+        Saying a system does not record something, without saying where you
+        looked, is an accusation wearing a measurement's clothes. An
+        <code>absent</code> or <code>undetermined</code> verdict must carry
+        evidence of kind <code>searched</code>, and the harness rejects the file
+        if it does not.</p>
+
+      <p>That is the difference between this and an opinion piece about other
+        people's software, and it is the reason an assessment run with it can be
+        handed to the party it is about.</p>
+
+      <h3>The five verdicts</h3>
+      <ul>
+        <li><code>present</code> and <code>partial</code>, each with a stated
+          bar in the rubric rather than left to judgement.</li>
+        <li><code>absent</code>, which cites where you looked.</li>
+        <li><code>undetermined</code>, for when you genuinely cannot see. It
+          exists because one system's approval record lives in a server that is
+          not in the repository, and the choice was otherwise between calling a
+          capability absent without looking and calling it present without
+          looking. It does not clear a level, and it is a better answer than a
+          guess.</li>
+        <li><code>not_applicable</code>, because a system that takes no actions
+          is not marked down for having no approval gate.</li>
+      </ul>
+
+      <h3>Pin the commit</h3>
+      <p>A full 40-character object id, not an abbreviation. An assessment of
+        "the latest version" is false as soon as the software moves, and an
+        abbreviated id leaves room to argue about which tree was read. The
+        harness refuses both.</p>
+
+      <h3>What to do with the result</h3>
+      <p>Three options, and no obligation.</p>
+      <ol>
+        <li><b>Keep it.</b> A client deliverable that never leaves their
+          building is a perfectly good use of this.</li>
+        <li><b>Publish it yourself.</b> CC BY asks for attribution to the
+          rubric, not for permission. The assessment is yours.</li>
+        <li><b>Put it on the register.</b> A pull request against
+          <code>census/subjects/</code>. It has to pass
+          <code>run.py --check</code>, the same bar every row already there had
+          to clear, and <code>assessed_by</code> carries your name, which the
+          register shows.</li>
+      </ol>
+
+      <h3>Disagreeing with a row, including mine</h3>
+      <p>A second assessor contradicting an existing verdict is more useful here
+        than a new subject. Point at the code: open a pull request naming the
+        requirement and where to look. If it lands, the file changes, the
+        register changes, and the date on the row changes.</p>
+      <p>Arguing with me is not the remedy and does not work. This register
+        already carries corrections that arrived because somebody said I had
+        read something wrong.</p>
+
+      <h3>Conflicts of interest</h3>
+      <p>If you assess something you built, sell, or are paid by, say so in the
+        file, and expect the row to be read as carrying no weight. That is what
+        this project does with its own row.</p>
+      <p>If a client pays you to assess their own system, a reader is right to
+        discount it, for the same reason a credit rating paid for by the issuer
+        is worth less than one paid for by the buyer. The assessments worth most
+        are the ones commissioned by whoever has to rely on the answer.</p>
+
+      <h3>What this is not</h3>
+      <p>Not a certification, an accreditation, or a mark. Nobody is entitled to
+        call themselves conformant because a file says so, and no system is
+        non-compliant with any law because a row says <code>absent</code>. The
+        EU AI Act's obligations run through Articles 12, 13 and 14, and
+        presumption of conformity comes from the harmonised standards, not from
+        this.</p>
+      <p>What it gives you is a repeatable reading of what a system actually
+        records, with every answer traceable to a line of somebody's source.
+        That is worth money to whoever has to rely on it, which is why you
+        should feel free to charge them for it.</p>
+    </div>
+  </div>
+
+  <aside class="rail">
+    <h2 class="label">The instrument</h2>
+    <p class="cont"><a href="https://github.com/troybrandonc-bit/machine-testimony/blob/main/census/ASSESSING.md">The method, in full</a><br>
+      <a href="https://github.com/troybrandonc-bit/machine-testimony/blob/main/census/rubric.py">The twenty requirements</a><br>
+      <a href="https://github.com/troybrandonc-bit/machine-testimony/blob/main/census/TEMPLATE.json">A blank assessment</a></p>
+
+    <h2 class="label">Licence</h2>
+    <p class="cont">Rubric and assessments CC BY 4.0. Harness MIT. Commercial
+      use included, and intended.</p>
+
+    <hr>
+    <p class="cont"><a href="/register/">The register</a><br>
+      <a href="/census/2026-09/">The dated edition, with a DOI</a><br>
+      <a href="/implement/">Implementing the format</a></p>
+  </aside>
+</div>

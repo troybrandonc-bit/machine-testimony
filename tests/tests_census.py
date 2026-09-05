@@ -311,6 +311,58 @@ check("the author's own row is marked as such",
       "the author's own" in _page and 'class="own"' in _page)
 check("the register says where a wrong verdict is fixed",
       "pull request" in _page and "troy@machinetestimony.com" in _page)
+check("the register names who read each row", "Read by" in _page)
+check("the register points at the instrument", "/assess/" in _page)
+
+# ── the instrument is something somebody else can pick up ───────────────────
+#
+# The register is one person's reading, and the fix is not reading more
+# carefully. It is other people running the same questions, which only works if
+# the licence, the method and a starting point are all actually there and say
+# so.
+_assess = io.open(os.path.join(ROOT, "public", "assess", "index.html"),
+                  encoding="utf-8").read()
+_method = io.open(os.path.join(ROOT, "census", "ASSESSING.md"),
+                  encoding="utf-8").read()
+
+print("\n== an outside assessor can run this, and charge for it ==")
+
+
+def _flat(text):
+    """Prose, with wrapping and sentence case taken out of the comparison.
+
+    Checking an exact phrase against hard-wrapped HTML tests the line breaks,
+    not the claim, and fails the moment somebody reflows a paragraph.
+    """
+    return " ".join(text.split()).lower()
+
+
+_m, _a = _flat(_method), _flat(_assess)
+check("the method is written down", len(_method) > 2000, len(_method))
+for _w in ("cc by 4.0", "mit", "commercial use"):
+    check("the method states the licence: %s" % _w, _w in _m)
+check("it says charging is intended rather than merely permitted",
+      "expected rather than tolerated" in _m
+      and "expected rather than tolerated" in _a)
+check("the page says where to look for absence",
+      "searched" in _a and "where you looked" in _a)
+check("the page refuses to be read as a certification",
+      "not a certification" in _a and "non-compliant" in _a)
+
+_tpl = os.path.join(ROOT, "census", "TEMPLATE.json")
+check("there is a blank assessment to start from", os.path.exists(_tpl))
+_t = json.load(io.open(_tpl, encoding="utf-8"))
+check("the template covers every requirement",
+      set(_t["assessments"]) == {r.id for r in rubric.REQUIREMENTS},
+      len(_t["assessments"]))
+check("each entry carries its question and the bar for present",
+      all("_question" in v and "_present_means" in v
+          for v in _t["assessments"].values()))
+# A template that validates is one somebody submits without reading a line of
+# anybody's source.
+check("the template does not pass as an assessment", subject.validate(_t) != [])
+check("the template is not in subjects/, where it would be read as one",
+      not os.path.exists(os.path.join(SUBJ, "TEMPLATE.json")))
 
 print("\n%d passed, %d failed" % (PASS, FAIL))
 sys.exit(1 if FAIL else 0)

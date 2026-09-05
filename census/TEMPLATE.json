@@ -1,0 +1,300 @@
+{
+ "subject": "your-system",
+ "name": "Your System",
+ "version": "the version you read, exactly as it names itself",
+ "url": "https://github.com/you/your-system",
+ "commit": "0000000000000000000000000000000000000000",
+ "license": "Apache-2.0",
+ "claims": [
+  "stores",
+  "acts"
+ ],
+ "assessed_on": "2026-01-01",
+ "assessed_by": "Your name or your firm's",
+ "method": "How you read it, in a sentence a reader can repeat: what you cloned, what you ran, and what you did not look at.",
+ "notes": [
+  "Anything a reader needs to interpret the row fairly, including any interest you have in the subject."
+ ],
+ "assessments": {
+  "R1.1": {
+   "_question": "When the system stores a fact, does it durably record when that happened?",
+   "_present_means": "a write time is stored with the fact and survives restart",
+   "_applies_to": "stores",
+   "verdict": "present | partial | absent | undetermined | not_applicable",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "path/to/file.py:120-134",
+     "note": "what is there, in your words"
+    }
+   ],
+   "note": "optional, for anything the evidence does not carry"
+  },
+  "R1.2": {
+   "_question": "When a stored fact changes, is the previous version still readable?",
+   "_present_means": "an update writes a new version and the old one remains queryable",
+   "_applies_to": "stores",
+   "verdict": "present | partial | absent | undetermined | not_applicable",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "path/to/file.py:120-134",
+     "note": "what is there, in your words"
+    }
+   ],
+   "note": "optional, for anything the evidence does not carry"
+  },
+  "R1.3": {
+   "_question": "Does the ordinary write path ever destroy what was previously recorded?",
+   "_present_means": "no routine call edits or deletes in place; a correction is a new entry",
+   "_applies_to": "stores",
+   "verdict": "present | partial | absent | undetermined | not_applicable",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "path/to/file.py:120-134",
+     "note": "what is there, in your words"
+    }
+   ],
+   "note": "optional, for anything the evidence does not carry"
+  },
+  "R1.4": {
+   "_question": "Are entries distinguishable by kind, or is everything one undifferentiated blob of text?",
+   "_present_means": "assertions, sources and actions are separate typed records",
+   "_applies_to": "stores",
+   "verdict": "present | partial | absent | undetermined | not_applicable",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "path/to/file.py:120-134",
+     "note": "what is there, in your words"
+    }
+   ],
+   "note": "optional, for anything the evidence does not carry"
+  },
+  "R1.5": {
+   "_question": "When data must be destroyed for a legal reason, is the destruction itself recorded?",
+   "_present_means": "erasure is a privileged act that leaves a durable, queryable trace that it happened, without re-retaining what was erased",
+   "_applies_to": "stores",
+   "verdict": "present | partial | absent | undetermined | not_applicable",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "path/to/file.py:120-134",
+     "note": "what is there, in your words"
+    }
+   ],
+   "note": "optional, for anything the evidence does not carry"
+  },
+  "R2.1": {
+   "_question": "Can the source a stored fact came from be recovered from the store, by following a link rather than by guessing?",
+   "_present_means": "each fact carries a resolvable reference to the message, document or event it came from",
+   "_applies_to": "stores",
+   "verdict": "present | partial | absent | undetermined | not_applicable",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "path/to/file.py:120-134",
+     "note": "what is there, in your words"
+    }
+   ],
+   "note": "optional, for anything the evidence does not carry"
+  },
+  "R2.2": {
+   "_question": "Can a fact the system inferred be told apart from one it was told?",
+   "_present_means": "derived facts are marked as derived and name what they came from",
+   "_applies_to": "derives",
+   "verdict": "present | partial | absent | undetermined | not_applicable",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "path/to/file.py:120-134",
+     "note": "what is there, in your words"
+    }
+   ],
+   "note": "optional, for anything the evidence does not carry"
+  },
+  "R2.3": {
+   "_question": "When two stored facts about the same proposition disagree, do both survive?",
+   "_present_means": "both are retained; neither is silently overwritten by the later one",
+   "_applies_to": "stores",
+   "verdict": "present | partial | absent | undetermined | not_applicable",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "path/to/file.py:120-134",
+     "note": "what is there, in your words"
+    }
+   ],
+   "note": "optional, for anything the evidence does not carry"
+  },
+  "R2.4": {
+   "_question": "Is the disagreement itself queryable, or must a reader diff rows to notice it?",
+   "_present_means": "a conflict is a first-class object that can be listed",
+   "_applies_to": "stores",
+   "verdict": "present | partial | absent | undetermined | not_applicable",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "path/to/file.py:120-134",
+     "note": "what is there, in your words"
+    }
+   ],
+   "note": "optional, for anything the evidence does not carry"
+  },
+  "R2.5": {
+   "_question": "When a conflict is resolved, does the record say who resolved it and by what method?",
+   "_present_means": "resolution records an actor and a method, or the system never resolves conflicts and unresolved is a durable, visible state",
+   "_applies_to": "stores",
+   "verdict": "present | partial | absent | undetermined | not_applicable",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "path/to/file.py:120-134",
+     "note": "what is there, in your words"
+    }
+   ],
+   "note": "optional, for anything the evidence does not carry"
+  },
+  "R3.1": {
+   "_question": "Does a consequential action produce a durable entry whether or not it ran?",
+   "_present_means": "attempted actions are recorded, including those that never executed",
+   "_applies_to": "acts",
+   "verdict": "present | partial | absent | undetermined | not_applicable",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "path/to/file.py:120-134",
+     "note": "what is there, in your words"
+    }
+   ],
+   "note": "optional, for anything the evidence does not carry"
+  },
+  "R3.2": {
+   "_question": "Does an action's risk class come from somewhere the proposing model cannot write to?",
+   "_present_means": "risk comes from a registry, policy file or config outside model output",
+   "_applies_to": "acts",
+   "verdict": "present | partial | absent | undetermined | not_applicable",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "path/to/file.py:120-134",
+     "note": "what is there, in your words"
+    }
+   ],
+   "note": "optional, for anything the evidence does not carry"
+  },
+  "R3.3": {
+   "_question": "Are refusals recorded as faithfully as permissions?",
+   "_present_means": "a refused action leaves a record of the same standing as a permitted one",
+   "_applies_to": "acts",
+   "verdict": "present | partial | absent | undetermined | not_applicable",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "path/to/file.py:120-134",
+     "note": "what is there, in your words"
+    }
+   ],
+   "note": "optional, for anything the evidence does not carry"
+  },
+  "R3.4": {
+   "_question": "Does a refusal record why it was refused?",
+   "_present_means": "a machine-readable reason accompanies the refusal",
+   "_applies_to": "acts",
+   "verdict": "present | partial | absent | undetermined | not_applicable",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "path/to/file.py:120-134",
+     "note": "what is there, in your words"
+    }
+   ],
+   "note": "optional, for anything the evidence does not carry"
+  },
+  "R3.5": {
+   "_question": "Does an approval identify a person or a named role holder?",
+   "_present_means": "the approver is a person or a role, not a model or a process",
+   "_applies_to": "acts",
+   "verdict": "present | partial | absent | undetermined | not_applicable",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "path/to/file.py:120-134",
+     "note": "what is there, in your words"
+    }
+   ],
+   "note": "optional, for anything the evidence does not carry"
+  },
+  "R3.6": {
+   "_question": "Does the approver's identity come from the authentication layer rather than from something the model can write?",
+   "_present_means": "identity is taken from the authenticated session, not the request body",
+   "_applies_to": "acts",
+   "verdict": "present | partial | absent | undetermined | not_applicable",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "path/to/file.py:120-134",
+     "note": "what is there, in your words"
+    }
+   ],
+   "note": "optional, for anything the evidence does not carry"
+  },
+  "R3.7": {
+   "_question": "Is the acting agent prevented from approving its own action?",
+   "_present_means": "the approver principal cannot be the proposing principal",
+   "_applies_to": "acts",
+   "verdict": "present | partial | absent | undetermined | not_applicable",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "path/to/file.py:120-134",
+     "note": "what is there, in your words"
+    }
+   ],
+   "note": "optional, for anything the evidence does not carry"
+  },
+  "R4.1": {
+   "_question": "Does the system publish a scheme under which the record's past state can be verified?",
+   "_present_means": "a documented integrity scheme exists: replay, hash chain, signatures or an external anchor",
+   "_applies_to": "stores",
+   "verdict": "present | partial | absent | undetermined | not_applicable",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "path/to/file.py:120-134",
+     "note": "what is there, in your words"
+    }
+   ],
+   "note": "optional, for anything the evidence does not carry"
+  },
+  "R4.2": {
+   "_question": "Can an independent party run that verification without the vendor's cooperation?",
+   "_present_means": "the verification can be run by the record holder against their own copy",
+   "_applies_to": "stores",
+   "verdict": "present | partial | absent | undetermined | not_applicable",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "path/to/file.py:120-134",
+     "note": "what is there, in your words"
+    }
+   ],
+   "note": "optional, for anything the evidence does not carry"
+  },
+  "R4.3": {
+   "_question": "Would alteration of a past entry be detectable after the fact?",
+   "_present_means": "alteration breaks a digest, chain or replay that anyone can check",
+   "_applies_to": "stores",
+   "verdict": "present | partial | absent | undetermined | not_applicable",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "path/to/file.py:120-134",
+     "note": "what is there, in your words"
+    }
+   ],
+   "note": "optional, for anything the evidence does not carry"
+  }
+ }
+}

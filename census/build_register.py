@@ -128,7 +128,7 @@ def main() -> int:
     w('      <table class="reg">')
     w("        <thead><tr><th>System</th>"
       + "".join("<th>%s</th>" % esc(l) for l in rubric.LEVEL_ORDER)
-      + "<th>Reaches</th><th>Last read</th></tr></thead>")
+      + "<th>Reaches</th><th>Read by</th><th>Last read</th></tr></thead>")
     w("        <tbody>")
     for d in docs:
         cells = []
@@ -138,11 +138,11 @@ def main() -> int:
         lv = reached[d["subject"]] or "none yet"
         own = d["subject"] == "omem"
         w('          <tr%s><td class="s">%s%s</td>%s<td class="lv">%s</td>'
-          '<td class="d">%s</td></tr>'
+          '<td class="d">%s</td><td class="d">%s</td></tr>'
           % (' class="own"' if own else "",
              esc(d["name"]),
              ' <span class="tag">the author\'s own</span>' if own else "",
-             "".join(cells), esc(lv),
+             "".join(cells), esc(lv), esc(d["assessed_by"]),
              esc(last_read(d))))
     w("        </tbody>")
     w("      </table>")
@@ -189,6 +189,25 @@ def main() -> int:
     w("      <p>Arguing with me is not the remedy and does not work. Pointing "
       "at code is, and has: this register carries corrections that came from "
       "being told I had read something wrong.</p>")
+
+    # One name in every row is the honest state and the argument at once.
+    readers = sorted({d["assessed_by"] for d in docs})
+    w("      <h3>Who read these</h3>")
+    if len(readers) == 1:
+        w("      <p>All of them, %s, which is the weakest thing about this "
+          "register. A reading nobody has repeated is one person's reading, "
+          "however carefully it cites its sources.</p>" % esc(readers[0]))
+    else:
+        w("      <p>%s. A row read by somebody with no stake in the answer is "
+          "worth more than a row read here.</p>" % esc(", ".join(readers)))
+    w('      <p>The instrument is not reserved. The rubric is CC BY 4.0 and the '
+      'tooling is MIT, commercial use included and expected: if you audit AI '
+      'systems, or advise on Article 12 or Article 14, or have to answer a '
+      'procurement question about what a supplier\'s agent records, you can run '
+      'these questions yourself and bill for it without asking anybody. '
+      '<a href="/assess/">How to do that</a>, including how to put the result '
+      'here with your own name on the row, or keep it and publish it '
+      'yourself.</p>')
 
     w("      <h3>If your system is not here</h3>")
     w("      <p>Being absent is not a judgement. It means nobody has done the "
