@@ -3,23 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Proposing a change to the specification &ndash; Machine Testimony</title>
-<meta name="description" content="How somebody other than the editor gets a defect fixed or a change into the Testimony Record, what is accepted, what is not, and the honest limits.">
-<meta property="og:title" content="Proposing a change to the specification">
-<meta property="og:description" content="How somebody other than the editor gets a defect fixed or a change into the Testimony Record, what is accepted, what is not, and the honest limits.">
+<title>Implementing it &ndash; Machine Testimony</title>
+<meta name="description" content="Two files and an afternoon. A single-file emitter with no dependencies, and 47 records with the verdict each should get, so you can tell when you are finished.">
+<meta property="og:title" content="Implementing it">
+<meta property="og:description" content="Two files and an afternoon. A single-file emitter with no dependencies, and 47 records with the verdict each should get, so you can tell when you are finished.">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://machinetestimony.org/changes/">
+<meta property="og:url" content="https://machinetestimony.org/implement/">
 <meta property="og:image" content="https://machinetestimony.org/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Proposing a change to the specification">
-<meta name="twitter:description" content="How somebody other than the editor gets a defect fixed or a change into the Testimony Record, what is accepted, what is not, and the honest limits.">
+<meta name="twitter:title" content="Implementing it">
+<meta name="twitter:description" content="Two files and an afternoon. A single-file emitter with no dependencies, and 47 records with the verdict each should get, so you can tell when you are finished.">
 <meta name="twitter:image" content="https://machinetestimony.org/og.png">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/icon.png" type="image/png" sizes="512x512">
 <link rel="apple-touch-icon" href="/icon.png">
-<link rel="canonical" href="https://machinetestimony.org/changes/">
+<link rel="canonical" href="https://machinetestimony.org/implement/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
@@ -151,7 +151,6 @@
   pre.snip{background:none;border-left:2px solid var(--rule);margin:0 0 16px;
     padding:2px 0 2px 13px;font-size:13px;overflow-x:auto;max-width:100%;
     font-family:var(--mono);line-height:1.55}
-  /* A bare address is not code to be scrolled sideways past; let it wrap. */
   pre.snip.addr{overflow-x:visible;white-space:pre-wrap;overflow-wrap:anywhere}
   .block h3{font-family:var(--display);font-weight:600;color:var(--ink);
     font-size:1.08rem;margin:26px 0 8px}
@@ -159,8 +158,18 @@
   .block li{margin:0 0 7px}
   .dateline{font-family:var(--sans);font-size:12.5px;color:var(--muted);
     margin:0 0 22px}
+  table.facts{width:100%;border-collapse:collapse;font-size:14px;margin:0 0 20px}
+  table.facts th{text-align:left;font-family:var(--sans);font-size:11px;
+    font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--muted);padding:0 12px 6px 0;white-space:nowrap;
+    vertical-align:top;width:8.5rem}
+  table.facts td{padding:0 0 6px;font-family:var(--mono);font-size:12.5px;
+    overflow-wrap:anywhere;border-bottom:1px solid var(--rule-soft)}
+  table.facts th{border-bottom:1px solid var(--rule-soft)}
   @media (max-width:620px){
     pre.snip{font-size:12px}
+    table.facts th{width:6.6rem;font-size:10px}
+    table.facts td{font-size:11.5px}
   }
 </style>
 </head>
@@ -202,125 +211,146 @@
       <a href="/#taking-part">Taking part</a>
     </nav>
   </div>
-</div>
-
-
 <div class="wrap main">
   <div>
-    <p class="dateline">Governance, 5 September 2026</p>
-    <h2 class="label">Proposing a change to the specification</h2>
+    <p class="dateline">For implementers, 5 September 2026</p>
+    <h2 class="label">Implementing it</h2>
 
     <div class="block">
-      <p>The Testimony Record is edited by one person. That is a real limitation
-        and this page exists because pretending otherwise is how a format gets
-        forked.</p>
-      <p>Formats do not fragment over their content. They fragment over
-        governance: somebody could not get a change in, or the terms moved under
-        them, and the cheapest response was to start again. Markdown was forked
-        because its author declined to standardise it. RSS split over a
-        governance dispute. Neither fork was about the syntax.</p>
-      <p>So the route in is written down, before anyone needs it.</p>
+      <p>Until today this site explained the format and left you to write it.
+        That is a project: work out the required members from prose, get the
+        digest rule right unaided, and find out whether you have finished by
+        asking somebody. Two files make it an afternoon, and neither of them
+        needs anything else of ours at runtime.</p>
 
-      <h3>What gets accepted</h3>
-      <ul>
-        <li><b>A defect.</b> The validator refuses something the specification
-          permits, or accepts something it forbids. These are fixed fastest and
-          the person who reported it is named in the erratum.</li>
-        <li><b>An internal inconsistency.</b> Two clauses that cannot both be
-          satisfied, or a requirement stated in one place and contradicted in
-          another.</li>
-        <li><b>A case the format cannot express</b> that it plainly should. The
-          strongest form of this is a real record from a real system that has to
-          be distorted to fit.</li>
-        <li><b>A requirement that cannot be checked.</b> Anything the validator
-          cannot decide is a defect in the specification, not in the validator.
-          A conformance claim nobody can check is an adjective.</li>
-      </ul>
+      <h3>Writing a record</h3>
+      <p><a href="https://github.com/troybrandonc-bit/machine-testimony/blob/main/spec/testimony_emit.py">testimony_emit.py</a>
+        is one standard-library file with no dependencies, MIT licensed, meant
+        to be copied into your repository rather than depended on.</p>
 
-      <h3>What does not</h3>
-      <ul>
-        <li>A field for a use case with no implementation behind it. The format
-          stays small on purpose and every addition is a thing every future
-          reader must understand.</li>
-        <li>Anything that requires particular software to satisfy. If a
-          competitor could not implement it, it does not go in.</li>
-        <li>Loosening a refusal because a system fails it. That the format
-          refuses something is usually the point.</li>
-      </ul>
+      <pre class="snip">from testimony_emit import Record
 
-      <h3>How to raise one</h3>
-      <p>Open an issue on the repository, or write to the editor. Both are read
-        by the same person, and neither is a form.</p>
-      <pre class="snip addr"><code>https://github.com/troybrandonc-bit/machine-testimony/issues
-troy@machinetestimony.com</code></pre>
-      <p>A report is strongest with a record that demonstrates it. The validator
-        is one standard-library file with no network access, so the smallest
-        useful bug report is a few lines of JSON and the level you expected.</p>
+r = Record()
+r.scope(acts=True, description="Support agent. Refunds to 500 EUR.")
+e = r.evidence(kind="api", source="crm://customers/8842")
+r.belief(subject="customer:8842", proposition="requested_refund",
+         asserted_by={"id": "agent", "kind": "agent"}, evidence=[e])
+d = r.decision(action_type="issue_refund", risk_class="high",
+               risk_source="registry",
+               proposed_by={"id": "agent", "kind": "agent"},
+               verdict="permitted", executed=True)
+r.approval(decision=d, approver={"id": "sam@example.com", "kind": "human"},
+           identity_source="auth-session")
+r.seal()
+print(r.jsonl())</pre>
 
-      <h3>What happens then</h3>
+      <p>That reaches TR-4. It refuses at the point of the mistake rather than
+        leaving you to find it from a validator after the run is over:</p>
+
+      <pre class="snip">a refused action cannot also have executed
+risk_source: 'model' is the proposing side of the same system
+the approver is the proposer, 'agent'. An agent's own credential signing
+  off its own action meets every other requirement and is worth nothing
+'corp-sso' is not a known source. Use one of auth-session, api-key, jwt,
+  ... or 'x-corp-sso' to declare your own</pre>
+
+      <p>What it cannot check is what no emitter can. Whether the evidence you
+        cite is what you say it is, whether the risk class really came from a
+        registry, whether the name in an approval came from the session it
+        claims. Those are attestations, the specification says so, and the
+        validator reports them as attestations rather than counting them as
+        proof.</p>
+
+      <h3>Knowing when you are finished</h3>
+      <p>The
+        <a href="https://github.com/troybrandonc-bit/machine-testimony/tree/main/conformance">conformance
+        corpus</a> is 47 records and the verdict each one should get. The runner
+        takes your command and compares.</p>
+
+      <pre class="snip">python3 conformance/run.py --command "python3 my_validator.py --json {file}"
+
+47 of 47 agree with the reference</pre>
+
+      <p><code>run.py</code> imports nothing of ours. Copy it into your
+        repository and run it in your own CI, which is the only kind of
+        conformance claim this project is willing to make about anybody.</p>
+
+      <h3>What conformance means here, and what it does not</h3>
+      <p>Your implementation reaches the same verdict as the reference on all
+        47 cases. It does not mean the same check names, the same wording, or
+        the same number of checks. Those are this project's prose, and a corpus
+        that compared them would be testing whether you had transliterated
+        somebody else's file rather than implemented a specification. An
+        independent implementation is the entire point, so the comparison is
+        deliberately blind to everything except the answer.</p>
+
+      <p>It is also not a certificate. It is a statement about 47 cases, and
+        the specification is larger than any 47 cases.</p>
+
+      <h3>Two cases worth reading first</h3>
+      <p><code>digest-of-nothing</code> is sixty-four zeros where a digest
+        should be. <code>anchor-over-another-record</code> carries a genuine,
+        correctly signed RFC 3161 token issued over a different record.</p>
+
+      <p>Both reached TR-4 in this project's own reference validator until 5
+        September 2026, because it checked that an integrity entry carried a
+        digest and never that the digest was the digest of the record. An
+        implementation that accepts either has the same hole, which is why they
+        are in the corpus rather than in a changelog.</p>
+
+      <h3>If you already keep logs</h3>
+      <p>You almost certainly have the timestamps and the actions. The four
+        things a log usually lacks, in the order they cost you:</p>
       <ol>
-        <li>A defect that can be shown gets a fix and an erratum on the
-          specification page, <b>naming the person who found it</b>. This has
-          happened: the <code>scope</code> entry in version 0.2 exists because
-          Phill Clapham reported that the validator refused TR-3 to any record
-          containing no decisions, a requirement that appeared nowhere in the
-          specification text.</li>
-        <li>A change to the format itself waits for the next version. Within a
-          major version, entry types and required fields are only added, never
-          removed or repurposed, so a reader written against 0.1 keeps working.
-          Breaking changes get a new major version and both stay published.</li>
-        <li>A rejection comes with a reason. If the reason is wrong, say so;
-          being argued out of a position in public is a better outcome for the
-          format than being right quietly.</li>
+        <li><b>Who approved, taken from authentication.</b> Not that a human
+          approved. Which one.</li>
+        <li><b>What was refused.</b> A log of executions is a receipt, and the
+          interesting question afterwards is usually what the system was
+          stopped from doing.</li>
+        <li><b>Both sides of a disagreement.</b> When two sources conflict and
+          the system picks one, a log that keeps only the winner has hidden the
+          decision that mattered.</li>
+        <li><b>A digest somebody else can recompute.</b> Which is the whole of
+          <a href="/anchor/">the next page</a>.</li>
       </ol>
 
-      <h3>The honest limits</h3>
-      <p>There is no committee, no vote, and no appeal to anybody other than the
-        editor. A single editor is faster than a process and you can see exactly
-        who to argue with, which is worth saying plainly rather than dressing
-        up.</p>
-      <p>The counterweight is that nothing here is held back. The specification
-        text is CC BY 4.0 and the validator is MIT, so anyone who disagrees
-        strongly enough can take the format and go, with no permission needed
-        and nothing to negotiate. That option existing is what makes the
-        arrangement fair, and using it is not a hostile act.</p>
-      <p>The specification is also deposited as an IETF Internet-Draft, which is
-        archived independently of this site and of its editor. It confers no
-        formal standing and the datatracker says so on the page. What it means
-        is that the document survives whether or not anything here does.</p>
+      <h3>The honest state of this</h3>
+      <p>There are two implementations and both are this author's, one in
+        Python and one in TypeScript, written separately and compared against
+        each other on every case. That is not an independent implementation in
+        the sense that matters, and the Internet-Draft says so in its
+        implementation status section rather than leaving you to notice.</p>
+
+      <p>If you build one, it is the most useful thing that could happen to this
+        format, and you do not need to tell anybody or ask for anything. The
+        licence is MIT for the tooling and CC BY 4.0 for the specification.</p>
+
+      <h3>When you disagree with the reference</h3>
+      <p>A case you fail is not necessarily your bug. If you have read the
+        specification and reached a different answer, that disagreement is worth
+        more than the corpus is: open an issue naming the case. The reference
+        has been wrong before, the specification has been vaguer than it knew,
+        and two of the checks exist because somebody said so.</p>
     </div>
   </div>
 
   <aside class="rail">
-    <h2>The short version</h2>
-    <div class="item">
-      <b>Defects are fixed and credited</b>
-      <p>The reporter is named in the erratum. Version 0.2's scope entry came in
-        this way.</p>
-    </div>
-    <div class="item">
-      <b>Additions are rare</b>
-      <p>Nothing goes in without an implementation behind it, and nothing that
-        only one vendor could satisfy.</p>
-    </div>
-    <div class="item">
-      <b>One editor, said out loud</b>
-      <p>No committee and no appeal. Faster, and you can see who to argue
-        with.</p>
-    </div>
-    <div class="item">
-      <b>Forking is permitted</b>
-      <p>CC BY on the text, MIT on the validator. Nobody needs permission to
-        leave, which is what makes staying meaningful.</p>
-    </div>
-    <ul class="links">
-      <li><a href="https://github.com/troybrandonc-bit/machine-testimony/issues">Open an issue</a></li>
-      <li><a href="https://datatracker.ietf.org/doc/draft-clifford-testimony-record/">The Internet-Draft</a></li>
-      <li><a href="/check/">Check a record</a></li>
-    </ul>
+    <h2 class="label">The files</h2>
+    <p class="cont"><a href="https://github.com/troybrandonc-bit/machine-testimony/blob/main/spec/testimony_emit.py">testimony_emit.py</a><br>
+      <a href="https://github.com/troybrandonc-bit/machine-testimony/blob/main/spec/testimony_validate.py">testimony_validate.py</a><br>
+      <a href="https://github.com/troybrandonc-bit/machine-testimony/tree/main/conformance">the conformance corpus</a></p>
+
+    <h2 class="label">Already in a framework</h2>
+    <p class="cont"><code>pip install testimony-langgraph</code> emits a record
+      from a LangGraph run, and depends on LangGraph and on nothing of
+      ours.</p>
+
+    <hr>
+    <p class="cont"><a href="/check/">Check a record in the browser</a><br>
+      <a href="/anchor/">A record you can check without us</a><br>
+      <a href="https://datatracker.ietf.org/doc/draft-clifford-testimony-record/">The specification, as an Internet-Draft</a></p>
   </aside>
 </div>
-
 <footer class="foot">
   <div class="wrap">
     <p>Editor: Troy Clifford. Operated by Garnet Taurus Ltd.</p>

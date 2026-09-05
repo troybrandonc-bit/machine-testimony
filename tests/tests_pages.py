@@ -184,16 +184,32 @@ def main():
     check("no page has drifted from the homepage's navigation", not odd,
           "; ".join(odd[:4]))
 
-    print("\nthe anchor page is what its source produces")
-    built = subprocess.run(
-        [sys.executable, os.path.join(ROOT, "build_page.py"),
-         os.path.join(ROOT, "pages", "anchor.html"),
-         os.path.join(work, "anchor.html")],
-        capture_output=True, text=True)
-    made = io.open(os.path.join(work, "anchor.html"), encoding="utf-8").read() \
-        if built.returncode == 0 else ""
-    check("rebuilding it changes nothing", made == anchor,
-          "regenerate with build_page.py" if made else built.stderr[:120])
+    print("\nevery generated page is what its source produces")
+    # Anything in pages/ is built by build_page.py. A generated page that has
+    # been hand-edited loses the edit the next time anybody rebuilds, so the
+    # divergence is a defect rather than a matter of taste.
+    srcdir = os.path.join(ROOT, "pages")
+    for src in sorted(os.listdir(srcdir)):
+        if not src.endswith(".html"):
+            continue
+        slug = ""
+        for line in io.open(os.path.join(srcdir, src), encoding="utf-8"):
+            if "slug:" in line:
+                slug = line.split("slug:", 1)[1].strip().rstrip(">").rstrip("-")
+                slug = slug.strip()
+                break
+        live = os.path.join(PUB, slug, "index.html")
+        out = os.path.join(work, slug + ".html")
+        built = subprocess.run(
+            [sys.executable, os.path.join(ROOT, "build_page.py"),
+             os.path.join(srcdir, src), out], capture_output=True, text=True)
+        made = io.open(out, encoding="utf-8").read() \
+            if built.returncode == 0 else ""
+        have = io.open(live, encoding="utf-8").read() \
+            if os.path.exists(live) else ""
+        check("/%s/ rebuilds to exactly what is published" % slug,
+              bool(made) and made == have,
+              "regenerate with build_page.py" if made else built.stderr[:120])
 
     print("\n%d passed, %d failed" % (PASS, FAIL))
     return 1 if FAIL else 0
