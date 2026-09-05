@@ -77,6 +77,24 @@ def _der(tag: int, payload: bytes) -> bytes:
     return bytes([tag]) + _dlen(len(payload)) + payload
 
 
+def _uint(v: bytes) -> bytes:
+    """A DER INTEGER holding a non-negative value, minimally encoded.
+
+    DER is not "any encoding that decodes to the right number". The content
+    octets are two's complement and must be minimal, so a leading zero byte is
+    permitted only where the next byte has its high bit set, and required where
+    it does. That is not a cosmetic rule here. A Time Stamp Authority copies
+    the nonce verbatim into the token it signs, so an over-padded integer
+    becomes a signed token that strict parsers refuse, and no amount of care
+    afterwards can correct it without asking for a new signature.
+    """
+    i = 0
+    while i < len(v) - 1 and v[i] == 0 and not v[i + 1] & 0x80:
+        i += 1
+    v = v[i:] or b"\x00"
+    return _der(INT, b"\x00" + v if v[0] & 0x80 else v)
+
+
 def timestamp_query(digest: bytes) -> bytes:
     """An RFC 3161 TimeStampReq over a SHA-256 digest.
 
@@ -88,8 +106,8 @@ def timestamp_query(digest: bytes) -> bytes:
         raise ValueError("expected a 32 byte SHA-256 digest")
     algid = _der(SEQ, _der(OID, SHA256_OID) + _der(NULL, b""))
     imprint = _der(SEQ, algid + _der(OCTET, digest))
-    nonce = _der(INT, b"\x00" + os.urandom(8))
-    return _der(SEQ, _der(INT, b"\x01") + imprint + nonce + _der(BOOL, b"\xff"))
+    nonce = _uint(os.urandom(8))
+    return _der(SEQ, _uint(b"\x01") + imprint + nonce + _der(BOOL, b"\xff"))
 
 
 def _walk(data: bytes, want: int, depth: int = 0):
