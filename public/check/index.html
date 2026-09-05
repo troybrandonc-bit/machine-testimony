@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Check a record &ndash; Machine Testimony</title>
+<meta name="description" content="Drop a Testimony Record and see which conformance level it reaches. Nothing is uploaded: the validator runs in your browser.">
+<meta property="og:title" content="Check a Testimony Record">
+<meta property="og:description" content="Drop a record and see which conformance level it reaches. Nothing is uploaded: the validator runs in your browser.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://machinetestimony.org/check/">
+<meta property="og:image" content="https://machinetestimony.org/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Check a Testimony Record">
+<meta name="twitter:description" content="Drop a record and see which conformance level it reaches. Nothing is uploaded.">
+<meta name="twitter:image" content="https://machinetestimony.org/og.png">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/icon.png" type="image/png" sizes="512x512">
+<link rel="apple-touch-icon" href="/icon.png">
+<link rel="canonical" href="https://machinetestimony.org/check/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  /* The bureau shell, same tokens as the rest of the site. The only new thing
+     on this page is the verdict block, which is set as a result table rather
+     than a dashboard: no colour beyond met and unmet, no gauges, no score out
+     of ten. A conformance level is a finding, and it should look like one. */
+  :root{
+    --band:#123a6b; --band-2:#0e2f57; --band-ink:#ffffff; --band-dim:#b9cbe4;
+    --paper:#ffffff; --ink:#111417; --body:#24292d; --muted:#5f6a72;
+    --rule:#c9cfd4; --rule-soft:#e3e7ea; --label:#8a1c1c; --link:#123a6b;
+    --met:#1c6b3a; --unmet:#8a1c1c; --wash:#f6f7f8;
+    --display:"Source Serif 4",Georgia,"Times New Roman",serif;
+    --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --band:#0c2340; --band-2:#081a2f; --band-ink:#f2f6fb; --band-dim:#9db3ce;
+      --paper:#0f1214; --ink:#eef0f2; --body:#c2c8cd; --muted:#8a939a;
+      --rule:#2c3236; --rule-soft:#1f2427; --label:#d98b8b; --link:#9dc0ef;
+      --met:#6fbf8e; --unmet:#d98b8b; --wash:#151a1d;
+    }
+  }
+  :root[data-theme="dark"]{
+    --band:#0c2340; --band-2:#081a2f; --band-ink:#f2f6fb; --band-dim:#9db3ce;
+    --paper:#0f1214; --ink:#eef0f2; --body:#c2c8cd; --muted:#8a939a;
+    --rule:#2c3236; --rule-soft:#1f2427; --label:#d98b8b; --link:#9dc0ef;
+    --met:#6fbf8e; --unmet:#d98b8b; --wash:#151a1d;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--body);
+    font-family:var(--display);font-size:17px;line-height:1.62;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 30px}
+  a{color:var(--link);text-decoration:underline;text-underline-offset:2px;
+    text-decoration-thickness:1px}
+  a:hover{text-decoration-thickness:2px}
+  code,pre{font-family:var(--mono);font-size:.86em}
+
+  .band{background:var(--band);color:var(--band-ink);
+    background-image:linear-gradient(180deg,var(--band) 0%,var(--band-2) 100%)}
+  .band a{color:var(--band-ink);text-decoration:none}
+  .band a:hover{text-decoration:underline}
+  .topbar{display:flex;align-items:center;gap:26px;flex-wrap:wrap;padding:16px 0 12px}
+  .lockup{display:flex;align-items:center;gap:13px}
+  .lockup .mk{width:31px;height:31px;flex:none;color:var(--band-ink)}
+  .lockup .bar{width:2px;align-self:stretch;background:var(--band-ink);opacity:.55}
+  .lockup .nm{font-family:var(--sans);font-weight:700;font-size:11.5px;
+    letter-spacing:.085em;line-height:1.32;text-transform:uppercase}
+  .utility{margin-left:auto;font-family:var(--sans);font-size:13.5px;
+    display:flex;gap:12px;align-items:center;color:var(--band-dim);flex-wrap:wrap}
+  .utility .sep{opacity:.45}
+  nav.primary{border-bottom:1px solid rgba(255,255,255,.42);
+    display:flex;gap:26px;flex-wrap:wrap;padding:9px 0 11px;
+    font-family:var(--sans);font-size:14.5px}
+  .pad{height:26px}
+
+  .paper{padding:40px 0 10px}
+  .col{max-width:53rem}
+  h1{font-family:var(--display);font-weight:700;color:var(--ink);
+    font-size:clamp(1.9rem,4vw,2.6rem);line-height:1.12;margin:0 0 6px;
+    letter-spacing:-.01em}
+  .kicker{font-family:var(--sans);font-size:12px;letter-spacing:.11em;
+    text-transform:uppercase;color:var(--label);font-weight:700;margin:0 0 10px}
+  .strap{font-size:1.1rem;color:var(--muted);margin:0 0 30px;max-width:44rem}
+  h2{font-family:var(--display);font-weight:600;color:var(--ink);
+    font-size:1.34rem;margin:38px 0 10px;padding-bottom:6px;
+    border-bottom:1px solid var(--rule)}
+  p{margin:0 0 14px}
+  .note{font-family:var(--sans);font-size:14px;color:var(--muted)}
+
+  /* the drop target */
+  .drop{border:1px dashed var(--rule);background:var(--wash);
+    padding:30px 26px;text-align:center;margin:8px 0 12px}
+  .drop.over{border-color:var(--link);border-style:solid}
+  .drop p{margin:0 0 12px;font-family:var(--sans);font-size:15px;color:var(--muted)}
+  .btn{font-family:var(--sans);font-size:14px;font-weight:600;
+    background:var(--band);color:#fff;border:0;padding:9px 16px;cursor:pointer;
+    text-decoration:none;display:inline-block}
+  .btn.sec{background:transparent;color:var(--link);
+    border:1px solid var(--rule);font-weight:500}
+  .btn:hover{opacity:.92}
+  textarea{width:100%;min-height:150px;font-family:var(--mono);font-size:12.5px;
+    padding:12px;border:1px solid var(--rule);background:var(--paper);
+    color:var(--body);line-height:1.5}
+
+  /* the verdict */
+  .verdict{border-top:2px solid var(--ink);border-bottom:1px solid var(--rule);
+    margin:22px 0 0;padding:16px 0}
+  .level{font-family:var(--display);font-weight:700;font-size:2.1rem;
+    color:var(--ink);line-height:1;margin:0}
+  .scope{font-family:var(--sans);font-size:13.5px;color:var(--muted);margin:6px 0 0}
+  .levels{display:flex;gap:22px;flex-wrap:wrap;margin:16px 0 0;
+    font-family:var(--sans);font-size:14px}
+  .levels b{font-weight:600}
+  .met{color:var(--met)} .unmet{color:var(--unmet)}
+  table{border-collapse:collapse;width:100%;margin:18px 0 0;
+    font-family:var(--sans);font-size:14px}
+  th{text-align:left;font-weight:600;color:var(--ink);
+    border-bottom:1px solid var(--rule);padding:7px 10px 7px 0;
+    font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+  td{border-bottom:1px solid var(--rule-soft);padding:7px 10px 7px 0;
+    vertical-align:top}
+  td.mark{width:2.4rem;font-weight:700}
+  td.detail{color:var(--muted);font-size:13px}
+  .hide{display:none}
+
+  .foot{border-top:1px solid var(--rule);margin-top:52px;padding:22px 0 40px;
+    font-family:var(--sans);font-size:13.5px;color:var(--muted)}
+  .foot p{margin:0 0 5px}
+</style>
+</head>
+<body>
+
+<div class="band">
+  <div class="wrap">
+    <div class="topbar">
+      <div class="lockup">
+        <svg class="mk" viewBox="0 0 64 64" aria-hidden="true">
+          <g fill="currentColor">
+            <rect x="2" y="18" width="20" height="20"/>
+            <polygon points="2,38 22,38 2,56"/>
+            <rect x="30" y="22" width="20" height="20"/>
+            <polygon points="50,22 30,22 50,4"/>
+          </g>
+        </svg>
+        <div class="bar"></div>
+        <div class="nm"><a href="/">Machine<br>Testimony</a></div>
+      </div>
+      <div class="utility">
+        <a href="https://datatracker.ietf.org/doc/draft-clifford-testimony-record/">Specification</a>
+        <span class="sep">|</span>
+        <a href="https://github.com/troybrandonc-bit/machine-testimony">Validator and adapters</a>
+        <span class="sep">|</span>
+        <a href="/llms.txt">For machines</a>
+      </div>
+    </div>
+    <nav class="primary">
+      <a href="/#question">The question</a>
+      <a href="/#conformance">Conformance</a>
+      <a href="/#papers">Working papers</a>
+      <a href="/#census">Census</a>
+      <a href="/check/">Check a record</a>
+      <a href="/#taking-part">Taking part</a>
+    </nav>
+    <div class="pad"></div>
+  </div>
+</div>
+
+<div class="paper">
+  <div class="wrap col">
+
+    <p class="kicker">Conformance</p>
+    <h1>Check a record</h1>
+    <p class="strap">Drop a Testimony Record and see which level it reaches.
+      Nothing is uploaded. The validator runs in this page, so a record about
+      your customers never leaves your machine.</p>
+
+    <div class="drop" id="drop">
+      <p>Drop a <code>.jsonl</code> record here, or paste one below.</p>
+      <input type="file" id="file" accept=".jsonl,.json,.txt" class="hide">
+      <button class="btn" id="pick">Choose a file</button>
+      <button class="btn sec" id="demo">Load an example</button>
+    </div>
+
+    <textarea id="text" spellcheck="false"
+      placeholder="or paste the record here, one JSON object per line"></textarea>
+
+    <div id="out"></div>
+
+    <h2>If you do not have a record yet</h2>
+    <p>Any system can emit one and the format needs nothing of ours. If you use
+      LangGraph, this takes about five minutes:</p>
+    <pre><code>pip install testimony-langgraph</code></pre>
+    <p>Your node names the action so the operator's risk table can classify it,
+      and the identity of whoever approves comes from your authentication layer
+      rather than from anything the model wrote. The adapter will not invent an
+      approver, because there is nothing in LangGraph for it to find, so a graph
+      resumed the ordinary way produces a record that says so plainly instead of
+      claiming a human was involved.</p>
+    <p class="note">The same validator ships with that package as
+      <code>testimony-validate</code>, so a record can be checked at a terminal
+      as well as here.</p>
+
+    <h2>What the levels mean</h2>
+    <table>
+      <thead><tr><th style="width:5.5rem">Level</th><th>Property</th></tr></thead>
+      <tbody>
+        <tr><td><b>TR-1</b></td><td>Recorded. The record is well formed and append-only.</td></tr>
+        <tr><td><b>TR-2</b></td><td>Explained. Beliefs cite their evidence, or say there is none, and both sides of a disagreement are kept.</td></tr>
+        <tr><td><b>TR-3</b></td><td>Gated. Consequential actions carry a verdict, and approvals name a person whose identity came from authentication.</td></tr>
+        <tr><td><b>TR-4</b></td><td>Verifiable. The record publishes a scheme under which alteration would be detected.</td></tr>
+      </tbody>
+    </table>
+    <p class="note">The levels are cumulative, so a record can satisfy a level
+      it has not reached. Each level's own result is reported separately for
+      that reason.</p>
+
+  </div>
+</div>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>Editor: Troy Clifford. Operated by Garnet Taurus Ltd.</p>
+    <p>Specification text CC BY 4.0. Validator and adapters MIT.</p>
+    <p>Machine Testimony is a research programme, not a registered institute or a certification body.</p>
+  </div>
+</footer>
+
+<script type="module">
+import { validate, LEVELS } from "./testimony.js";
+
+const $ = (id) => document.getElementById(id);
+const out = $("out"), area = $("text"), drop = $("drop");
+
+/* One record, emitted by the LangGraph adapter and reaching TR-4. It is here
+   so somebody can see what a verdict looks like before installing anything,
+   which is the whole reason this page exists. */
+const EXAMPLE = [
+ {spec:"testimony-record/0.2",type:"scope",id:"s_1",at:"2026-09-04T21:30:12Z",acts:true,declared_by:{id:"testimony-langgraph",kind:"system"}},
+ {spec:"testimony-record/0.2",type:"evidence",id:"e_2",at:"2026-09-04T21:30:12Z",kind:"api",source:"billing://orders/8812",digest:"sha256:"+"0".repeat(64),redacted:true},
+ {spec:"testimony-record/0.2",type:"belief",id:"b_3",at:"2026-09-04T21:30:12Z",subject:"customer:acme",proposition:"eligible_for_refund",polarity:"affirm",state:"believed_true",asserted_by:{id:"support-agent",kind:"agent"},evidence:["e_2"]},
+ {spec:"testimony-record/0.2",type:"decision",id:"d_4",at:"2026-09-04T21:30:12Z",action_type:"issue_refund",risk_class:"high",risk_source:"registry",proposed_by:{id:"support-agent",kind:"agent"},verdict:"permitted",executed:true,args:{ticket:41,amount:4200},approval:"a_5"},
+ {spec:"testimony-record/0.2",type:"approval",id:"a_5",at:"2026-09-04T21:30:12Z",decision:"d_4",approver:{id:"troy@example.com",kind:"human",name:"T. Clifford",role:"owner"},identity_source:"auth-session",method:"langgraph-resume"},
+ {spec:"testimony-record/0.2",type:"integrity",id:"i_6",at:"2026-09-04T21:30:12Z",scheme:"hash-chain",digest:"sha256:54e22176bc8056f6858cfecd9aa9253ef7239ba087e8dfaef4b38ed77dac312d",covers:["s_1","e_2","b_3","d_4","a_5"]}
+].map((e) => JSON.stringify(e)).join("\n");
+
+const esc = (s) => String(s).replace(/[&<>]/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+
+function render(text) {
+  if (!text.trim()) { out.innerHTML = ""; return; }
+  let r;
+  try { r = validate(text); }
+  catch (err) { out.innerHTML = '<div class="verdict"><p class="level">Not a record</p>' +
+      '<p class="scope">' + esc(err.message) + "</p></div>"; return; }
+
+  /* levelsMet comes from the validator rather than being re-derived here. Two
+     answers to the same question is how a page ends up disagreeing with the
+     tool it is showing. */
+  const chips = LEVELS.map((l) =>
+    '<span><b>' + l + '</b> <span class="' + (r.levelsMet[l] ? "met" : "unmet") + '">' +
+    (r.levelsMet[l] ? "met" : "not met") + "</span></span>").join("");
+
+  const rows = r.checks.map((c) =>
+    "<tr><td class=\"mark " + (c.ok ? "met" : "unmet") + '">' + (c.ok ? "ok" : "no") +
+    "</td><td>" + esc(c.level) + "</td><td>" + esc(c.check) +
+    (c.ok || !c.detail ? "" : '<div class="detail">' + esc(c.detail) + "</div>") +
+    "</td></tr>").join("");
+
+  out.innerHTML =
+    '<div class="verdict">' +
+      '<p class="level">' + (r.level ? esc(r.level) : "No level reached") + "</p>" +
+      '<p class="scope">' + (r.scope === "acts"
+        ? "The record declares that this system takes or gates actions."
+        : "The record declares that this system does not act, so there is nothing to gate.") +
+      "</p>" +
+      '<div class="levels">' + chips + "</div>" +
+    "</div>" +
+    "<table><thead><tr><th></th><th style=\"width:4.5rem\">Level</th><th>Check</th></tr></thead>" +
+    "<tbody>" + rows + "</tbody></table>";
+}
+
+area.addEventListener("input", () => render(area.value));
+$("pick").addEventListener("click", () => $("file").click());
+$("file").addEventListener("change", (e) => {
+  const f = e.target.files[0];
+  if (f) f.text().then((t) => { area.value = t; render(t); });
+});
+$("demo").addEventListener("click", () => { area.value = EXAMPLE; render(EXAMPLE); });
+
+["dragenter", "dragover"].forEach((n) => drop.addEventListener(n, (e) => {
+  e.preventDefault(); drop.classList.add("over"); }));
+["dragleave", "drop"].forEach((n) => drop.addEventListener(n, (e) => {
+  e.preventDefault(); drop.classList.remove("over"); }));
+drop.addEventListener("drop", (e) => {
+  const f = e.dataTransfer.files[0];
+  if (f) f.text().then((t) => { area.value = t; render(t); });
+});
+</script>
+
+</body>
+</html>
