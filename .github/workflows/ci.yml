@@ -33,8 +33,9 @@ jobs:
       - name: The refusals bite
         working-directory: tests
         run: |
-          out=$(python tests_langgraph_testimony.py)
+          set +e; out=$(python tests_langgraph_testimony.py 2>&1); rc=$?; set -e
           echo "$out"
+          [ $rc -eq 0 ] || { echo "::error::adapter suite failed"; exit 1; }
           if echo "$out" | grep -qE '^[[:space:]]*SKIP:'; then
             echo "::error::the adapter suite skipped where langgraph is installed"; exit 1
           fi
@@ -221,8 +222,9 @@ jobs:
       - name: The TypeScript and the Python agree on every record
         working-directory: tests
         run: |
-          out=$(python tests_testimony_js.py)
+          set +e; out=$(python tests_testimony_js.py 2>&1); rc=$?; set -e
           echo "$out"
+          [ $rc -eq 0 ] || { echo "::error::cross-validator suite failed"; exit 1; }
           if echo "$out" | grep -qE '^[[:space:]]*SKIP:'; then
             echo "::error::the cross-validator suite skipped"; exit 1
           fi
@@ -241,8 +243,11 @@ jobs:
       - name: The anchor is held by somebody else
         working-directory: tests
         run: |
-          out=$(python tests_anchor.py)
+          set +e; out=$(python tests_anchor.py 2>&1); rc=$?; set -e
           echo "$out"
+          if [ $rc -ne 0 ]; then
+            echo "::error::the anchor suite reported failures"; exit 1
+          fi
           if echo "$out" | grep -qiE 'SKIP:|NOT VERIFIED'; then
             echo "::error::the anchor suite degraded to the offline checks; it has not verified that an authority signs anything"
             exit 1
