@@ -337,6 +337,20 @@ covers:
 : OPTIONAL. Identifiers of the entries the digest is computed over, each of
   which MUST be present in the record.
 
+anchor:
+: REQUIRED where the scheme is `external-anchor`. An object carrying `kind`,
+  `authority` and `token`. The point of an external anchor is that its evidence
+  is held by somebody other than the emitter, so a scheme naming no authority
+  and carrying no token is the claim without the thing, and is refused.
+
+An `external-anchor` of kind `rfc3161` carries, as `token`, the base64 of a
+TimeStampResp obtained from a Time Stamp Authority over the entry's digest.
+Such a token is verifiable by any RFC 3161 implementation, without reference to
+the emitter or to this document's tooling, which is the property that makes it
+worth more than a digest the emitter computed. It fixes the bytes and the time
+and nothing else: it does not establish that the record is accurate, that it is
+complete, or that a different record was not also produced and discarded.
+
 # Conformance Levels
 
 Each level states a property of the record. The level reached is the highest
@@ -399,6 +413,14 @@ A record is not a secure log below TR-4. Nothing in the format prevents an
 entry being altered after the fact. Non-decreasing write times demonstrate that
 a record is consistent with having been appended to, not that it was. Consumers
 MUST NOT treat conformance at TR-1 through TR-3 as tamper evidence.
+
+Not every integrity scheme is worth the same. A digest computed by the emitter
+detects alteration by a third party and establishes nothing about the emitter,
+who can recompute it over whatever they please. Only `signature` and
+`external-anchor` place evidence outside the emitter's control, and only those
+support a claim made against the emitter rather than on the emitter's behalf. A
+consumer evaluating a TR-4 record SHOULD read the scheme rather than the
+level.
 
 A self-declared scope is believed by the validator. An emitter that acts and
 declares otherwise skips the gate requirements. Two things limit the damage: a
