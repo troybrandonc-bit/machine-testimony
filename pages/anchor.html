@@ -1,0 +1,138 @@
+<!--title: A record you can check without us
+    desc: A published Testimony Record, anchored to a Time Stamp Authority. Three commands verify it, none of them ours.
+    slug: anchor-->
+
+<div class="wrap main">
+  <div>
+    <p class="dateline">Reference record, 5 September 2026</p>
+    <h2 class="label">A record you can check without us</h2>
+
+    <div class="block">
+      <p>A record's integrity digest is computed by whoever wrote the record.
+        It detects an outsider's edit, which is worth having, and it establishes
+        nothing about the writer: anybody able to change the entries can
+        recompute the digest over the changed ones and hand you a file that
+        agrees with itself.</p>
+
+      <p>The record below closes that. Its digest is signed by a Time Stamp
+        Authority, under that authority's own key, at a time nobody here
+        chose. Three commands check it. None of them is ours, and none of them
+        needs anything from this site except the two files.</p>
+
+      <h3>The files</h3>
+      <p><a href="/anchor/record.jsonl">record.jsonl</a> is thirteen entries: a
+        support agent that reads four sources, finds two systems of record
+        disagreeing about a customer's balance, refuses to close the account,
+        and issues a smaller refund that a named person approved. It is a
+        worked example rather than a real customer, and everything in it is
+        invented except the anchor.</p>
+
+      <p><a href="/anchor/anchor.tsr">anchor.tsr</a> is the timestamp token,
+        as returned by the authority.</p>
+
+      <table class="facts">
+        <tr><th>Digest</th>
+          <td>sha256:34bf5a95693e32fe9bb9a8f4975ea1807d309855e9f09bbb0f3d6cb05606b6e8</td></tr>
+        <tr><th>Authority</th><td>http://timestamp.digicert.com</td></tr>
+        <tr><th>Signed at</th><td>2026-09-05T14:31:54Z</td></tr>
+        <tr><th>Covers</th><td>12 entries, named in the record</td></tr>
+      </table>
+
+      <h3>One: recompute the digest</h3>
+      <p>The digest is over the twelve entries the record's integrity entry
+        names, each written as JSON with its members in order and no spare
+        whitespace, joined by newlines. Nothing here reads the digest; it
+        computes one and you compare.</p>
+
+      <pre class="snip">python3 -c '
+import hashlib, json, sys
+e = [json.loads(l) for l in open("record.jsonl") if l.strip()]
+b = [x for x in e if x["type"] != "integrity"]
+c = [json.dumps(x, sort_keys=True, separators=(",", ":")) for x in b]
+print(hashlib.sha256("\n".join(c).encode()).hexdigest())'</pre>
+
+      <h3>Two: read what the authority signed</h3>
+      <pre class="snip">openssl ts -reply -in anchor.tsr -text</pre>
+
+      <p>The <code>Message data</code> it prints is the same digest. That is
+        the binding: the authority signed this record and not another one.</p>
+
+      <h3>Three: check the signature against your own roots</h3>
+      <p>Use your system's certificate store, not one we supply. On Debian or
+        Ubuntu it is the path below; on a Mac with Homebrew's OpenSSL it is
+        usually <code>/opt/homebrew/etc/openssl@3/cert.pem</code>.</p>
+
+      <pre class="snip">openssl ts -verify -in anchor.tsr \
+  -digest 34bf5a95693e32fe9bb9a8f4975ea1807d309855e9f09bbb0f3d6cb05606b6e8 \
+  -CAfile /etc/ssl/certs/ca-certificates.crt</pre>
+
+      <pre class="snip">Verification: OK</pre>
+
+      <p>At that point you have checked, without trusting this site, that a
+        third party signed this exact set of bytes at that time.</p>
+
+      <h3>What that does and does not establish</h3>
+      <p>It establishes that the record existed in exactly this form at
+        2026-09-05T14:31:54Z, and that it has not changed since.</p>
+
+      <p>It does not establish that the record is true. It does not establish
+        that it is complete. It does not establish that a different record was
+        not produced at the same time and discarded. A timestamp fixes bytes
+        and a time, and a page that let you infer more from it would be making
+        the mistake this project exists to point at.</p>
+
+      <p>The record says as much in its own integrity entry, in a
+        <code>does_not_prove</code> member, so a reader who has the file and
+        not this page is told the same thing.</p>
+
+      <h3>Anchoring your own</h3>
+      <p>The tool is one standard-library file, MIT licensed, with no
+        dependencies. It builds the request by hand rather than asking you to
+        install a certificate library to emit one entry.</p>
+
+      <pre class="snip">python3 testimony_anchor.py record.jsonl &gt;&gt; record.jsonl
+python3 testimony_validate.py record.jsonl</pre>
+
+      <p>Both are in the
+        <a href="https://github.com/troybrandonc-bit/machine-testimony">specification
+        repository</a>. You can also
+        <a href="/check/">check a record in the browser</a>, which runs the
+        same checks in a second implementation and never uploads anything.</p>
+
+      <h3>What was wrong here until today</h3>
+      <p>Until 5 September 2026 the validator did not recompute digests. It
+        checked that an integrity entry carried one. A record could reach the
+        top level with a digest of sixty-four zeros, and an anchored record
+        could carry a real, correctly signed token over some entirely different
+        record.</p>
+
+      <p>Two further things came out of fixing it. The specification had never
+        said how a digest is computed, so no independent implementer could have
+        recomputed one; that is now written down. And the two implementations
+        of the rule in this author's own repositories had never agreed with
+        each other, because one of them left the default spacing in its JSON.
+        Neither was noticed for as long as nothing checked.</p>
+
+      <p>They are recorded here rather than quietly repaired, on the same
+        reasoning the rest of this applies to everybody else: a system that
+        cannot show what it got wrong is asking to be taken on trust.</p>
+    </div>
+  </div>
+
+  <aside class="rail">
+    <h2 class="label">The files</h2>
+    <p class="cont"><a href="/anchor/record.jsonl">record.jsonl</a><br>
+      <a href="/anchor/anchor.tsr">anchor.tsr</a></p>
+
+    <h2 class="label">What each check rests on</h2>
+    <p class="cont">Recomputing the digest and reading the token are settled
+      from the files. The record's claim that its risk classes came from a
+      registry is not, and the browser validator marks it as an attestation
+      rather than counting it as proof.</p>
+
+    <hr>
+    <p class="cont"><a href="/check/">Check a record</a><br>
+      <a href="https://datatracker.ietf.org/doc/draft-clifford-testimony-record/">The specification, as an Internet-Draft</a><br>
+      <a href="/census/2026-09/">Eight systems, assessed</a></p>
+  </aside>
+</div>

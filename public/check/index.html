@@ -185,6 +185,20 @@
   table.checks .why{display:block;color:var(--muted);font-size:14px;
     margin-top:3px}
   table.checks td.m.no{color:var(--ink)}
+  /* Verified reads as ordinary metadata; attested is the one a reader has to
+     notice, so it is the one that is marked. */
+  table.checks td.b{font-family:var(--sans);font-size:11px;font-weight:700;
+    letter-spacing:.02em;color:var(--muted);white-space:nowrap;
+    padding-right:14px;vertical-align:top}
+  table.checks td.b.at{color:var(--ink)}
+  /* A fixed layout, because a width on a td is only a suggestion otherwise and
+     the three metadata columns were taking half the table between them. Under
+     table-layout:fixed the columns are sized from the header row, so the
+     widths belong on the th and the last column takes what is left. */
+  table.checks th:nth-child(1){width:4.4rem}
+  table.checks th:nth-child(2){width:3.6rem}
+  table.checks th:nth-child(3){width:5.4rem}
+  .result p.rests{margin-top:-4px}
   pre.snip{background:none;border-left:2px solid var(--rule);margin:0 0 15px;
     padding:2px 0 2px 13px;font-size:13px;overflow-x:auto}
 
@@ -196,6 +210,7 @@
     table.checks td{padding:8px 7px 8px 0}
     table.checks td.m{width:3.4rem;font-size:10.5px}
     table.checks td.l{width:2.7rem;font-size:11px}
+    table.checks td.b{font-size:10.5px;padding-right:9px}
     table.checks .why{font-size:13px}
     .result .said{font-size:15px}
     textarea{font-size:11.5px}
@@ -236,7 +251,7 @@
       <a href="/eu-ai-act/">EU AI Act</a>
       <a href="/approvals/">Approvals</a>
       <a href="/check/">Check a record</a>
-      <a href="/check/">Check a record</a>
+      
       <a href="/#taking-part">Taking part</a>
     </nav>
   </div>
@@ -334,6 +349,7 @@
       <li><a href="https://github.com/troybrandonc-bit/machine-testimony">The validator and the adapters</a></li>
       <li><a href="https://doi.org/10.5281/zenodo.22290922">Eight systems, assessed</a></li>
       <li><a href="/#conformance">What the levels are for</a></li>
+      <li><a href="/anchor/">A record you can check without us</a></li>
     </ul>
   </aside>
 
@@ -389,16 +405,32 @@ function render(text) {
 
   const rows = r.checks.map((c) =>
     '<tr><td class="m' + (c.ok ? '' : ' no') + '">' + (c.ok ? "met" : "not met") +
-    '</td><td class="l">' + esc(c.level) + "</td><td>" + esc(c.check) +
+    '</td><td class="l">' + esc(c.level) + '</td><td class="b' +
+    (c.basis === "attested" ? " at" : "") + '">' + esc(c.basis) +
+    "</td><td>" + esc(c.check) +
     (c.ok || !c.detail ? "" : '<span class="why">' + esc(c.detail) + "</span>") +
     "</td></tr>").join("");
+
+  /* A level is a number standing on a mixture of checks a reader can settle
+     and checks the record merely asserts. Showing the mixture is the point of
+     the page: a reader who takes the number and not the split has been told
+     less than the validator knows. */
+  const counted = r.level ? r.basis[r.level] : null;
+  const rests = counted
+    ? "At " + r.level + ", " + counted.verified + " of these checks were " +
+      "settled from the record itself and " + counted.attested +
+      (counted.attested === 1 ? " was taken" : " were taken") +
+      " on the emitter's word."
+    : "";
 
   out.innerHTML =
     '<div class="result">' +
       '<p class="verdict">' + esc(per) + "</p>" +
       '<p class="said">' + esc(said) + "</p>" +
+      (rests ? '<p class="said rests">' + esc(rests) + "</p>" : "") +
       '<table class="checks"><thead><tr><th></th><th>Level</th>' +
-      "<th>Check</th></tr></thead><tbody>" + rows + "</tbody></table>" +
+      "<th>Basis</th><th>Check</th></tr></thead><tbody>" + rows +
+      "</tbody></table>" +
     "</div>";
 }
 

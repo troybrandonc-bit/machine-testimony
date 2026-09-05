@@ -262,3 +262,24 @@ jobs:
             echo "::error::the anchor suite degraded to the offline checks; it has not verified that an authority signs anything"
             exit 1
           fi
+
+  pages:
+    name: the site's own instructions still work
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with: { python-version: "3.12" }
+      # /anchor/ prints commands and invites a stranger to run them against
+      # files this repository publishes. The suite extracts those commands from
+      # the page and runs them, so the page cannot come to describe a
+      # verification that no longer happens.
+      - name: The page, the record and the token still agree
+        working-directory: tests
+        run: |
+          set +e; out=$(python tests_pages.py 2>&1); rc=$?; set -e
+          echo "$out"
+          [ $rc -eq 0 ] || { echo "::error::the site suite failed"; exit 1; }
+          if echo "$out" | grep -qiE 'NOT VERIFIED'; then
+            echo "::error::the page's commands were not actually run"; exit 1
+          fi
