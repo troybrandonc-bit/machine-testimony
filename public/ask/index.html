@@ -3,23 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>A record you can check without us &ndash; Machine Testimony</title>
-<meta name="description" content="A published Testimony Record, anchored to a Time Stamp Authority. Three commands verify it, none of them ours.">
-<meta property="og:title" content="A record you can check without us">
-<meta property="og:description" content="A published Testimony Record, anchored to a Time Stamp Authority. Three commands verify it, none of them ours.">
+<title>Questions to ask your AI supplier &ndash; Machine Testimony</title>
+<meta name="description" content="Eight questions about what a system records, with what a real answer looks like and what a soft yes sounds like. Free to send as your own, and grounded in a published assessment of eight agent systems.">
+<meta property="og:title" content="Questions to ask your AI supplier">
+<meta property="og:description" content="Eight questions about what a system records, with what a real answer looks like and what a soft yes sounds like. Free to send as your own, and grounded in a published assessment of eight agent systems.">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://machinetestimony.org/anchor/">
+<meta property="og:url" content="https://machinetestimony.org/ask/">
 <meta property="og:image" content="https://machinetestimony.org/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="A record you can check without us">
-<meta name="twitter:description" content="A published Testimony Record, anchored to a Time Stamp Authority. Three commands verify it, none of them ours.">
+<meta name="twitter:title" content="Questions to ask your AI supplier">
+<meta name="twitter:description" content="Eight questions about what a system records, with what a real answer looks like and what a soft yes sounds like. Free to send as your own, and grounded in a published assessment of eight agent systems.">
 <meta name="twitter:image" content="https://machinetestimony.org/og.png">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/icon.png" type="image/png" sizes="512x512">
 <link rel="apple-touch-icon" href="/icon.png">
-<link rel="canonical" href="https://machinetestimony.org/anchor/">
+<link rel="canonical" href="https://machinetestimony.org/ask/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
@@ -243,136 +243,57 @@
   </div>
 <div class="wrap main">
   <div>
-    <p class="dateline">Reference record, 5 September 2026</p>
-    <h2 class="label">A record you can check without us</h2>
-
+    <p class="dateline">For buyers and risk teams, 5 September 2026</p>
+    <h2 class="label">Questions to ask your AI supplier</h2>
     <div class="block">
-      <p>A record's integrity digest is computed by whoever wrote the record.
-        It detects an outsider's edit, which is worth having, and it establishes
-        nothing about the writer: anybody able to change the entries can
-        recompute the digest over the changed ones and hand you a file that
-        agrees with itself.</p>
-
-      <p>The record below closes that. Its digest is signed by a Time Stamp
-        Authority, under that authority's own key, at a time nobody here
-        chose. Three commands check it. None of them is ours, and none of them
-        needs anything from this site except the two files.</p>
-
-      <h3>The files</h3>
-      <p><a href="/anchor/record.jsonl">record.jsonl</a> is thirteen entries: a
-        support agent that reads four sources, finds two systems of record
-        disagreeing about a customer's balance, refuses to close the account,
-        and issues a smaller refund that a named person approved. It is a
-        worked example rather than a real customer, and everything in it is
-        invented except the anchor.</p>
-
-      <p><a href="/anchor/anchor.tsr">anchor.tsr</a> is the timestamp token,
-        as returned by the authority.</p>
-
-      <table class="facts">
-        <tr><th>Digest</th>
-          <td>sha256:34bf5a95693e32fe9bb9a8f4975ea1807d309855e9f09bbb0f3d6cb05606b6e8</td></tr>
-        <tr><th>Authority</th><td>http://timestamp.digicert.com</td></tr>
-        <tr><th>Signed at</th><td>2026-09-05T14:31:54Z</td></tr>
-        <tr><th>Covers</th><td>12 entries, named in the record</td></tr>
+      <p>If a system acts on your behalf, somebody will eventually ask you what it did and who allowed it. These are the questions worth asking before that, in the order they usually matter.</p>
+      <p>They are not a compliance instrument and passing them is not conformity with anything. They come from a published assessment of 8 agent memory and agent framework implementations, where the counts below were measured rather than estimated, and each one is a question at least 7 of the 8 could not answer well.</p>
+      <p><b>Send them as your own.</b> No attribution, no sign-up, nothing to buy, and no need to mention where they came from. A questionnaire is more useful when the supplier answers the question rather than researching who is asking.</p>
+      <div class="scroller">
+      <table class="reg">
+        <thead><tr><th>Ask</th><th>A real answer</th><th>A soft yes</th><th>Could not</th></tr></thead>
+        <tbody>
+          <tr><td class="w">When your system takes an action on our behalf that needed a human to approve it, does the record say which person approved it?</td><td class="w">A named person or a named role holder, in the record itself, for every such action.</td><td class="w">“All high-risk actions require human approval.” That says a step exists. It does not say the record names who took it.</td><td class="n">5 of 6</td></tr>
+          <tr><td class="w">Where does that name come from?</td><td class="w">From your authentication layer: the session, the token, the directory entry the approver signed in with.</td><td class="w">“The approver is passed in the request.” A name supplied by the caller is an assertion about a person rather than a fact about one, and the caller can be the system being approved.</td><td class="n">5 of 6</td></tr>
+          <tr><td class="w">Can the agent approve its own action?</td><td class="w">No, and the system enforces it rather than the operator remembering to.</td><td class="w">“That would not happen in practice.” Ask what stops it.</td><td class="n">5 of 6</td></tr>
+          <tr><td class="w">If two of your sources disagreed about a fact, does the record keep both, or only the one the system chose?</td><td class="w">Both, with the disagreement recorded as its own thing.</td><td class="w">“The system resolves conflicts automatically.” That is the answer to a different question, and it means the losing side is gone.</td><td class="n">5 of 8</td></tr>
+          <tr><td class="w">When a disagreement was resolved, does the record say who or what resolved it, and on what basis?</td><td class="w">The method, the party, the time, and which side was kept.</td><td class="w">“We use confidence scores.” A number is not a reason, and it does not say who set the threshold.</td><td class="n">6 of 8</td></tr>
+          <tr><td class="w">Can we get from a stored fact back to the source it came from?</td><td class="w">A citation in the record that leads to the message, document or API response the fact was drawn from.</td><td class="w">“Everything is logged.” Logs elsewhere are not a citation in the record, and an auditor cannot join them for you.</td><td class="n">6 of 8</td></tr>
+          <tr><td class="w">If somebody altered a past entry, would anyone be able to tell?</td><td class="w">A published scheme under which alteration is detectable, and a way to run it.</td><td class="w">“The database is append-only.” That is a property of your code path behaving, which is the thing in question.</td><td class="n">7 of 8</td></tr>
+          <tr><td class="w">Could we check that ourselves, without your software and without your cooperation?</td><td class="w">Yes, and here is how. This is the question that separates a record from a report.</td><td class="w">“You can export it and we will verify it for you.” A verification only the supplier can perform is not one you can rely on in a dispute with the supplier.</td><td class="n">6 of 8</td></tr>
+        </tbody>
       </table>
+      </div>
+      <h3>And then the one that settles it</h3>
+      <p><b>Can you show us the record for one specific action your system took last month, end to end?</b></p>
+      <p>Every question above can be answered in good faith by somebody describing what they believe their system does. This one cannot. Either the record exists and they can show you, or the conversation has been about an intention.</p>
+      <h3>The version to paste into an email</h3>
+      <pre class="snip">Questions about your system&#x27;s record of what it did.
 
-      <h3>One: recompute the digest</h3>
-      <p>The digest is over the twelve entries the record's integrity entry
-        names, each written as JSON with its members in order and no spare
-        whitespace, joined by newlines. Nothing here reads the digest; it
-        computes one and you compare.</p>
+1. When your system takes an action on our behalf that needed a human to approve it, does the record say which person approved it?
+2. Where does that name come from?
+3. Can the agent approve its own action?
+4. If two of your sources disagreed about a fact, does the record keep both, or only the one the system chose?
+5. When a disagreement was resolved, does the record say who or what resolved it, and on what basis?
+6. Can we get from a stored fact back to the source it came from?
+7. If somebody altered a past entry, would anyone be able to tell?
+8. Could we check that ourselves, without your software and without your cooperation?
 
-      <pre class="snip">python3 -c '
-import hashlib, json, sys
-e = [json.loads(l) for l in open("record.jsonl") if l.strip()]
-b = [x for x in e if x["type"] != "integrity"]
-c = [json.dumps(x, sort_keys=True, separators=(",", ":")) for x in b]
-print(hashlib.sha256("\n".join(c).encode()).hexdigest())'</pre>
+9. Can you show us the record for one specific action your system took last month, end to end?
 
-      <h3>Two: read what the authority signed</h3>
-      <pre class="snip">openssl ts -reply -in anchor.tsr -text</pre>
-
-      <p>The <code>Message data</code> it prints is the same digest. That is
-        the binding: the authority signed this record and not another one.</p>
-
-      <h3>Three: check the signature against your own roots</h3>
-      <p>Use your system's certificate store, not one we supply. On Debian or
-        Ubuntu it is the path below; on a Mac with Homebrew's OpenSSL it is
-        usually <code>/opt/homebrew/etc/openssl@3/cert.pem</code>.</p>
-
-      <pre class="snip">openssl ts -verify -in anchor.tsr \
-  -digest 34bf5a95693e32fe9bb9a8f4975ea1807d309855e9f09bbb0f3d6cb05606b6e8 \
-  -CAfile /etc/ssl/certs/ca-certificates.crt</pre>
-
-      <pre class="snip">Verification: OK</pre>
-
-      <p>At that point you have checked, without trusting this site, that a
-        third party signed this exact set of bytes at that time.</p>
-
-      <h3>What that does and does not establish</h3>
-      <p>It establishes that the record existed in exactly this form at
-        2026-09-05T14:31:54Z, and that it has not changed since.</p>
-
-      <p>It does not establish that the record is true. It does not establish
-        that it is complete. It does not establish that a different record was
-        not produced at the same time and discarded. A timestamp fixes bytes
-        and a time, and a page that let you infer more from it would be making
-        the mistake this project exists to point at.</p>
-
-      <p>The record says as much in its own integrity entry, in a
-        <code>does_not_prove</code> member, so a reader who has the file and
-        not this page is told the same thing.</p>
-
-      <h3>Anchoring your own</h3>
-      <p>The tool is one standard-library file, MIT licensed, with no
-        dependencies. It builds the request by hand rather than asking you to
-        install a certificate library to emit one entry.</p>
-
-      <pre class="snip">python3 testimony_anchor.py record.jsonl &gt;&gt; record.jsonl
-python3 testimony_validate.py record.jsonl</pre>
-
-      <p>Both are in the
-        <a href="https://github.com/troybrandonc-bit/machine-testimony">specification
-        repository</a>. You can also
-        <a href="/check/">check a record in the browser</a>, which runs the
-        same checks in a second implementation and never uploads anything.</p>
-
-      <h3>What was wrong here until today</h3>
-      <p>Until 5 September 2026 the validator did not recompute digests. It
-        checked that an integrity entry carried one. A record could reach the
-        top level with a digest of sixty-four zeros, and an anchored record
-        could carry a real, correctly signed token over some entirely different
-        record.</p>
-
-      <p>Two further things came out of fixing it. The specification had never
-        said how a digest is computed, so no independent implementer could have
-        recomputed one; that is now written down. And the two implementations
-        of the rule in this author's own repositories had never agreed with
-        each other, because one of them left the default spacing in its JSON.
-        Neither was noticed for as long as nothing checked.</p>
-
-      <p>They are recorded here rather than quietly repaired, on the same
-        reasoning the rest of this applies to everybody else: a system that
-        cannot show what it got wrong is asking to be taken on trust.</p>
+These come from a published assessment of eight agent systems: https://machinetestimony.org/register/</pre>
+      <h3>What a good answer is worth, and what it is not</h3>
+      <p>A supplier who answers all of these well has a record you can read. That is worth a great deal and it is not the same as the record being true: a system can record precisely what it believed and be wrong. What these questions establish is whether anybody can find out.</p>
+      <p>None of this is a legal conclusion either. The EU AI Act's obligations run through Articles 12, 13 and 14, and presumption of conformity comes from the harmonised standards. A supplier is not non-compliant because they answered one of these badly, and not compliant because they answered them all well.</p>
     </div>
   </div>
-
   <aside class="rail">
-    <h2 class="label">The files</h2>
-    <p class="cont"><a href="/anchor/record.jsonl">record.jsonl</a><br>
-      <a href="/anchor/anchor.tsr">anchor.tsr</a></p>
-
-    <h2 class="label">What each check rests on</h2>
-    <p class="cont">Recomputing the digest and reading the token are settled
-      from the files. The record's claim that its risk classes came from a
-      registry is not, and the browser validator marks it as an attestation
-      rather than counting it as proof.</p>
-
+    <h2 class="label">Where the counts come from</h2>
+    <p class="cont">A published assessment of 8 systems, every verdict citing a file and a line at a pinned commit.<br><a href="/register/">The register</a><br><a href="https://doi.org/10.5281/zenodo.22290922">The dated edition, with a DOI</a></p>
+    <h2 class="label">If you are the supplier</h2>
+    <p class="cont">The questions come from a published record format. Implementing it is two files and an afternoon, and you can check yourself against the same corpus everybody else is checked against.<br><a href="/implement/">Implementing it</a></p>
     <hr>
-    <p class="cont"><a href="/check/">Check a record</a><br>
-      <a href="https://datatracker.ietf.org/doc/draft-clifford-testimony-record/">The specification, as an Internet-Draft</a><br>
-      <a href="/census/2026-09/">Eight systems, assessed</a></p>
+    <p class="cont"><a href="/assess/">Assess a system yourself</a><br><a href="/check/">Check a record</a></p>
   </aside>
 </div>
 <footer class="foot">

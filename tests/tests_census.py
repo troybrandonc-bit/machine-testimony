@@ -287,6 +287,7 @@ for name in sorted(os.listdir(SUBJ)):
 # A verdict shown on the register that is not in a subject file would be the
 # worst defect this project could ship: the register is the surface a vendor
 # would object to, and the subject file is the thing they would be pointed at.
+import re                  # noqa: E402
 import io                  # noqa: E402
 import subprocess          # noqa: E402
 import tempfile            # noqa: E402
@@ -363,6 +364,43 @@ check("each entry carries its question and the bar for present",
 check("the template does not pass as an assessment", subject.validate(_t) != [])
 check("the template is not in subjects/, where it would be read as one",
       not os.path.exists(os.path.join(SUBJ, "TEMPLATE.json")))
+
+# ── the questions a buyer sends, and the counts inside them ─────────────────
+#
+# This page is built to travel: a buyer forwards it to suppliers who have never
+# seen any of this. Every number on it is a claim about somebody else's
+# software, made to a third party, so it is generated from the subject files
+# and regenerated here rather than trusted.
+_ask_out = os.path.join(tempfile.mkdtemp(), "ask.html")
+_r = subprocess.run([sys.executable,
+                     os.path.join(ROOT, "census", "build_ask.py"),
+                     "--out", _ask_out], capture_output=True, text=True)
+print("\n== the questions page counts what the assessments say ==")
+check("it regenerates", _r.returncode == 0, _r.stderr[-200:])
+_made = io.open(_ask_out, encoding="utf-8").read() if _r.returncode == 0 else ""
+check("what is committed is what the assessments produce",
+      _made == io.open(os.path.join(ROOT, "pages", "ask.html"),
+                       encoding="utf-8").read(),
+      "run census/build_ask.py")
+
+_ask = io.open(os.path.join(ROOT, "public", "ask", "index.html"),
+               encoding="utf-8").read()
+_flat_ask = " ".join(_ask.split()).lower()
+check("it says the questions may be sent without attribution",
+      "send them as your own" in _flat_ask and "no attribution" in _flat_ask)
+check("it refuses to be read as a compliance instrument",
+      "not a compliance instrument" in _flat_ask
+      and "non-compliant because they answered" in _flat_ask)
+check("it carries the question a description cannot answer",
+      "show us the record for one specific action" in _flat_ask)
+check("it gives a version that can be pasted into an email",
+      'pre class="snip"' in _ask)
+
+_pairs = re.findall(r'<td class="n">(\d+) of (\d+)</td>', _ask)
+check("the page shows a count for every question", len(_pairs) >= 8, _pairs)
+check("no count exceeds the number of systems it applies to",
+      all(int(a) <= int(b) <= len(subject.load_all(SUBJ)) for a, b in _pairs),
+      _pairs)
 
 print("\n%d passed, %d failed" % (PASS, FAIL))
 sys.exit(1 if FAIL else 0)
