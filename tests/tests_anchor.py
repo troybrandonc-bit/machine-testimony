@@ -170,8 +170,19 @@ def main():
         with tempfile.TemporaryDirectory() as d:
             p = os.path.join(d, "t.tsr")
             io.open(p, "wb").write(base64.b64decode(a["token"]))
-            out = subprocess.run(["openssl", "ts", "-reply", "-in", p, "-text"],
-                                 capture_output=True, text=True).stdout
+            r = subprocess.run(["openssl", "ts", "-reply", "-in", p, "-text"],
+                               capture_output=True, text=True)
+            out = r.stdout
+            # A tool that did not run is not a tool that disagrees. Reporting
+            # three failures for one absent binary sends somebody hunting for a
+            # cryptographic problem that is a packaging one.
+            if r.returncode != 0 or "Status" not in out:
+                print("  NOT VERIFIED: openssl could not read the token, so the "
+                      "hand-rolled parse was not compared against a reference "
+                      "(exit %d: %s)" % (r.returncode,
+                                         (r.stderr or "no stderr").strip()[:160]))
+                print("\n%d passed, %d failed" % (PASS, FAIL))
+                return 1 if FAIL else 0
             check("openssl reports the token as granted", "Status: Granted" in out)
 
             # openssl prints the imprint as offset-prefixed hex with spacing,
