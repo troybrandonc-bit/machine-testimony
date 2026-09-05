@@ -1,0 +1,566 @@
+{
+ "acts-without-decisions": {
+  "level": "TR-2",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": false,
+   "TR-4": false
+  },
+  "note": "a record that says it acts and shows nothing",
+  "scope": "acts",
+  "spec": "testimony-record/0.2"
+ },
+ "anchor": {
+  "level": "TR-4",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": true
+  },
+  "note": "a record a third party signed, published at /anchor/",
+  "scope": "acts",
+  "spec": "testimony-record/0.2"
+ },
+ "anchor-hollow": {
+  "level": "TR-3",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "an external anchor with no authority and no token",
+  "scope": "acts",
+  "spec": "testimony-record/0.2"
+ },
+ "anchor-no-token": {
+  "level": "TR-3",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "an external anchor naming an authority and no token",
+  "scope": "acts",
+  "spec": "testimony-record/0.2"
+ },
+ "anchor-over-another-record": {
+  "level": "TR-3",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "a genuine signed token, issued over some other record",
+  "scope": "acts",
+  "spec": "testimony-record/0.2"
+ },
+ "approver-is-proposer": {
+  "level": "TR-2",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": false,
+   "TR-4": false
+  },
+  "note": "an agent approving its own action",
+  "scope": "acts",
+  "spec": "testimony-record/0.2"
+ },
+ "approver-not-a-person": {
+  "level": "TR-2",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": false,
+   "TR-4": false
+  },
+  "note": "an approval by something that is not a person",
+  "scope": "acts",
+  "spec": "testimony-record/0.2"
+ },
+ "bad-enum": {
+  "level": null,
+  "levels_met": {
+   "TR-1": false,
+   "TR-2": true,
+   "TR-3": false,
+   "TR-4": false
+  },
+  "note": "a belief state nobody defines",
+  "scope": "acts",
+  "spec": "testimony-record/0.2"
+ },
+ "bad-time": {
+  "level": null,
+  "levels_met": {
+   "TR-1": false,
+   "TR-2": true,
+   "TR-3": false,
+   "TR-4": false
+  },
+  "note": "a write time that is not RFC 3339",
+  "scope": "acts",
+  "spec": "testimony-record/0.2"
+ },
+ "conflict-one-side": {
+  "level": "TR-1",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": false,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "a conflict with a single side",
+  "scope": "record only",
+  "spec": "testimony-record/0.2"
+ },
+ "conflict-resolved": {
+  "level": "TR-3",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "a contradiction, both sides kept, resolution recorded",
+  "scope": "record only",
+  "spec": "testimony-record/0.2"
+ },
+ "conflict-side-missing": {
+  "level": "TR-1",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": false,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "a conflict naming a belief not in the record",
+  "scope": "record only",
+  "spec": "testimony-record/0.2"
+ },
+ "contradicted-no-conflict": {
+  "level": "TR-1",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": false,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "a contradicted belief nothing explains",
+  "scope": "record only",
+  "spec": "testimony-record/0.2"
+ },
+ "covers-a-ghost": {
+  "level": "TR-3",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "a digest covering an entry not in the record",
+  "scope": "acts",
+  "spec": "testimony-record/0.2"
+ },
+ "dangling-evidence": {
+  "level": "TR-1",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": false,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "a belief citing evidence not in the record",
+  "scope": "record only",
+  "spec": "testimony-record/0.2"
+ },
+ "digest-of-nothing": {
+  "level": "TR-3",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "sixty-four zeros where a digest should be",
+  "scope": "acts",
+  "spec": "testimony-record/0.2"
+ },
+ "duplicate-id": {
+  "level": null,
+  "levels_met": {
+   "TR-1": false,
+   "TR-2": true,
+   "TR-3": false,
+   "TR-4": false
+  },
+  "note": "an id used twice",
+  "scope": "acts",
+  "spec": "testimony-record/0.2"
+ },
+ "empty": {
+  "level": null,
+  "levels_met": {
+   "TR-1": false,
+   "TR-2": true,
+   "TR-3": false,
+   "TR-4": false
+  },
+  "note": "nothing at all reaches no level",
+  "scope": "acts",
+  "spec": "testimony-record/0.2"
+ },
+ "empty-evidence": {
+  "level": "TR-3",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "a belief that says plainly it has no evidence",
+  "scope": "record only",
+  "spec": "testimony-record/0.2"
+ },
+ "gated": {
+  "level": "TR-3",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "an action proposed, approved by a named person, and executed",
+  "scope": "acts",
+  "spec": "testimony-record/0.2"
+ },
+ "hash-chain": {
+  "level": "TR-4",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": true
+  },
+  "note": "a hash chain over exactly what it says it covers",
+  "scope": "acts",
+  "spec": "testimony-record/0.2"
+ },
+ "high-risk-unapproved": {
+  "level": "TR-2",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": false,
+   "TR-4": false
+  },
+  "note": "a high-risk action executed with no approval",
+  "scope": "acts",
+  "spec": "testimony-record/0.2"
+ },
+ "identity-from-the-model": {
+  "level": "TR-2",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": false,
+   "TR-4": false
+  },
+  "note": "an approver the model named",
+  "scope": "acts",
+  "spec": "testimony-record/0.2"
+ },
+ "identity-source-extension": {
+  "level": "TR-3",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "an unlisted identity source, declared as one",
+  "scope": "acts",
+  "spec": "testimony-record/0.2"
+ },
+ "identity-source-invented": {
+  "level": "TR-2",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": false,
+   "TR-4": false
+  },
+  "note": "an identity source that is not a known one",
+  "scope": "acts",
+  "spec": "testimony-record/0.2"
+ },
+ "minimal": {
+  "level": "TR-3",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "the smallest record that is well formed",
+  "scope": "record only",
+  "spec": "testimony-record/0.2"
+ },
+ "missing-required": {
+  "level": null,
+  "levels_met": {
+   "TR-1": false,
+   "TR-2": true,
+   "TR-3": false,
+   "TR-4": false
+  },
+  "note": "a belief with no proposition",
+  "scope": "acts",
+  "spec": "testimony-record/0.2"
+ },
+ "no-covers": {
+  "level": "TR-3",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "a digest that does not say what it is over",
+  "scope": "acts",
+  "spec": "testimony-record/0.2"
+ },
+ "no-evidence-member": {
+  "level": "TR-1",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": false,
+   "TR-3": false,
+   "TR-4": false
+  },
+  "note": "a belief that omits the evidence member",
+  "scope": "acts",
+  "spec": "testimony-record/0.2"
+ },
+ "no-integrity": {
+  "level": "TR-3",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "a gated record that publishes no integrity scheme",
+  "scope": "acts",
+  "spec": "testimony-record/0.2"
+ },
+ "not-an-object": {
+  "level": null,
+  "levels_met": {
+   "TR-1": false,
+   "TR-2": true,
+   "TR-3": false,
+   "TR-4": false
+  },
+  "note": "a line that is JSON and not an object",
+  "scope": "acts",
+  "spec": "testimony-record/0.2"
+ },
+ "not-json": {
+  "level": null,
+  "levels_met": {
+   "TR-1": false,
+   "TR-2": true,
+   "TR-3": false,
+   "TR-4": false
+  },
+  "note": "a line that is not JSON",
+  "scope": "acts",
+  "spec": "testimony-record/0.2"
+ },
+ "number-in-range": {
+  "level": "TR-4",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": true
+  },
+  "note": "a covered entry carrying an ordinary number",
+  "scope": "acts",
+  "spec": "testimony-record/0.2"
+ },
+ "number-out-of-range": {
+  "level": "TR-3",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "a number Python and ECMAScript do not write the same way",
+  "scope": "acts",
+  "spec": "testimony-record/0.2"
+ },
+ "out-of-order": {
+  "level": null,
+  "levels_met": {
+   "TR-1": false,
+   "TR-2": true,
+   "TR-3": false,
+   "TR-4": false
+  },
+  "note": "a record that goes backwards in time",
+  "scope": "acts",
+  "spec": "testimony-record/0.2"
+ },
+ "record-only": {
+  "level": "TR-3",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "a system that declares it does not act",
+  "scope": "record only",
+  "spec": "testimony-record/0.2"
+ },
+ "refusal-without-reason": {
+  "level": "TR-2",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": false,
+   "TR-4": false
+  },
+  "note": "a refusal that does not say why",
+  "scope": "acts",
+  "spec": "testimony-record/0.2"
+ },
+ "refused-but-executed": {
+  "level": "TR-2",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": false,
+   "TR-4": false
+  },
+  "note": "a refusal recorded as having run",
+  "scope": "acts",
+  "spec": "testimony-record/0.2"
+ },
+ "replay": {
+  "level": "TR-4",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": true
+  },
+  "note": "a replay scheme naming its engine and version",
+  "scope": "acts",
+  "spec": "testimony-record/0.2"
+ },
+ "replay-unnamed": {
+  "level": "TR-3",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "a replay scheme naming no engine",
+  "scope": "acts",
+  "spec": "testimony-record/0.2"
+ },
+ "resolution-keeps-outsider": {
+  "level": "TR-1",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": false,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "a resolution keeping a side not in the conflict",
+  "scope": "record only",
+  "spec": "testimony-record/0.2"
+ },
+ "risk-from-the-model": {
+  "level": "TR-2",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": false,
+   "TR-4": false
+  },
+  "note": "a risk class the proposing model set",
+  "scope": "acts",
+  "spec": "testimony-record/0.2"
+ },
+ "risk-source-extension": {
+  "level": "TR-3",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "an unlisted risk source, declared as one",
+  "scope": "acts",
+  "spec": "testimony-record/0.2"
+ },
+ "risk-source-invented": {
+  "level": "TR-2",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": false,
+   "TR-4": false
+  },
+  "note": "a risk source that is not a known one",
+  "scope": "acts",
+  "spec": "testimony-record/0.2"
+ },
+ "two-specs": {
+  "level": null,
+  "levels_met": {
+   "TR-1": false,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "one record, two specification versions",
+  "scope": "record only",
+  "spec": "testimony-record/0.2"
+ },
+ "unknown-spec": {
+  "level": null,
+  "levels_met": {
+   "TR-1": false,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "a specification version nobody defines",
+  "scope": "record only",
+  "spec": "testimony-record/0.2"
+ },
+ "unknown-type": {
+  "level": null,
+  "levels_met": {
+   "TR-1": false,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "an entry type nobody defines",
+  "scope": "record only",
+  "spec": "testimony-record/0.2"
+ }
+}

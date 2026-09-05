@@ -1,0 +1,4 @@
+{"spec": "testimony-record/0.2", "type": "scope", "id": "s1", "at": "2026-09-01T09:00:00Z", "acts": true}
+{"spec": "testimony-record/0.2", "type": "evidence", "id": "e1", "at": "2026-09-01T09:00:01Z", "kind": "api", "source": "crm://1"}
+{"spec": "testimony-record/0.2", "type": "belief", "id": "b1", "at": "2026-09-01T09:00:02Z", "subject": "customer:a", "proposition": "owed_refund", "polarity": "affirm", "state": "believed_true", "asserted_by": {"id": "agent", "kind": "agent"}, "evidence": ["e1"]}
+{"spec": "testimony-record/0.2", "type": "decision", "id": "d1", "at": "2026-09-01T09:00:03Z", "verdict": "refused", "executed": true, "reason": "over the limit", "approval": null, "action_type": "issue_refund", "risk_class": "high", "risk_source": "registry", "proposed_by": {"id": "agent", "kind": "agent"}}

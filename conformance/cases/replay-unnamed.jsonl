@@ -1,0 +1,6 @@
+{"spec": "testimony-record/0.2", "type": "scope", "id": "s1", "at": "2026-09-01T09:00:00Z", "acts": true}
+{"spec": "testimony-record/0.2", "type": "evidence", "id": "e1", "at": "2026-09-01T09:00:01Z", "kind": "api", "source": "crm://1"}
+{"spec": "testimony-record/0.2", "type": "belief", "id": "b1", "at": "2026-09-01T09:00:02Z", "subject": "customer:a", "proposition": "owed_refund", "polarity": "affirm", "state": "believed_true", "asserted_by": {"id": "agent", "kind": "agent"}, "evidence": ["e1"]}
+{"spec": "testimony-record/0.2", "type": "decision", "id": "d1", "at": "2026-09-01T09:00:03Z", "action_type": "issue_refund", "risk_class": "high", "risk_source": "registry", "proposed_by": {"id": "agent", "kind": "agent"}, "verdict": "permitted", "executed": true, "approval": "a1"}
+{"spec": "testimony-record/0.2", "type": "approval", "id": "a1", "at": "2026-09-01T09:00:04Z", "decision": "d1", "approver": {"id": "sam@example.com", "kind": "human"}, "identity_source": "auth-session"}
+{"spec": "testimony-record/0.2", "type": "integrity", "id": "i1", "at": "2026-09-01T09:00:05Z", "scheme": "replay", "digest": "sha256:e7068719eaeb2fe078d8a70450af091a6c90dc2ea886b7a8c1c040d181d22a79", "covers": ["s1", "e1", "b1", "d1", "a1"]}
