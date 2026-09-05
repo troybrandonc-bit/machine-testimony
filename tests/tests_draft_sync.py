@@ -141,7 +141,7 @@ def main():
         "conflict": {"resolution"},
         "decision": {"risk_source", "reason", "inputs", "approval"},
         "approval": {"identity_source", "method"},
-        "integrity": {"engine", "engine_version", "covers"},
+        "integrity": {"engine", "engine_version", "covers", "anchor"},
     }
     for t in sorted(secs):
         known = set(tv.REQUIRED.get(t, ())) | OPTIONAL.get(t, set())

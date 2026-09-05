@@ -226,3 +226,24 @@ jobs:
           if echo "$out" | grep -qE '^[[:space:]]*SKIP:'; then
             echo "::error::the cross-validator suite skipped"; exit 1
           fi
+
+  anchor:
+    name: a third party really signs the record
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with: { python-version: "3.12" }
+      # This suite talks to a real Time Stamp Authority on purpose. The claim
+      # under test is that somebody other than us will sign a digest, and a
+      # mocked authority would test the mock. It also compares the hand-rolled
+      # DER parse against `openssl ts -reply -text`, which the runner has.
+      - name: The anchor is held by somebody else
+        working-directory: tests
+        run: |
+          out=$(python tests_anchor.py)
+          echo "$out"
+          if echo "$out" | grep -qiE 'SKIP:|NOT VERIFIED'; then
+            echo "::error::the anchor suite degraded to the offline checks; it has not verified that an authority signs anything"
+            exit 1
+          fi
