@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Check a record &ndash; Machine Testimony</title>
-<meta name="description" content="Drop a Testimony Record and see which conformance level it reaches. Nothing is uploaded: the validator runs in your browser.">
+<meta name="description" content="Drop a Testimony Record and see the level it reaches and every check behind it. The validator runs in the page; nothing is uploaded.">
 <meta property="og:title" content="Check a Testimony Record">
-<meta property="og:description" content="Drop a record and see which conformance level it reaches. Nothing is uploaded: the validator runs in your browser.">
+<meta property="og:description" content="The level a record reaches, and every check behind it. The validator runs in the page; nothing is uploaded.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://machinetestimony.org/check/">
 <meta property="og:image" content="https://machinetestimony.org/og.png">
@@ -14,7 +14,7 @@
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Check a Testimony Record">
-<meta name="twitter:description" content="Drop a record and see which conformance level it reaches. Nothing is uploaded.">
+<meta name="twitter:description" content="The level a record reaches, and every check behind it. Nothing is uploaded.">
 <meta name="twitter:image" content="https://machinetestimony.org/og.png">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/icon.png" type="image/png" sizes="512x512">
@@ -24,15 +24,17 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
 <style>
-  /* The bureau shell, same tokens as the rest of the site. The only new thing
-     on this page is the verdict block, which is set as a result table rather
-     than a dashboard: no colour beyond met and unmet, no gauges, no score out
-     of ten. A conformance level is a finding, and it should look like one. */
+
+  /* Built to the NBER pattern, which is what a research bureau's site actually
+     looks like: one coloured band carrying the lockup, the utility links, the
+     navigation and the name together; the institution named large and centred
+     in a serif; outlined destination tiles; then a dense white body in two
+     columns with a rail. Serif for reading, sans for metadata, underlined
+     links, hairline rules, and far less air than a product page. */
   :root{
     --band:#123a6b; --band-2:#0e2f57; --band-ink:#ffffff; --band-dim:#b9cbe4;
     --paper:#ffffff; --ink:#111417; --body:#24292d; --muted:#5f6a72;
-    --rule:#c9cfd4; --rule-soft:#e3e7ea; --label:#8a1c1c; --link:#123a6b;
-    --met:#1c6b3a; --unmet:#8a1c1c; --wash:#f6f7f8;
+    --rule:#c9cfd4; --rule-soft:#e3e7ea; --label:#123a6b; --link:#123a6b;
     --display:"Source Serif 4",Georgia,"Times New Roman",serif;
     --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
     --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
@@ -41,26 +43,24 @@
     :root:not([data-theme="light"]){
       --band:#0c2340; --band-2:#081a2f; --band-ink:#f2f6fb; --band-dim:#9db3ce;
       --paper:#0f1214; --ink:#eef0f2; --body:#c2c8cd; --muted:#8a939a;
-      --rule:#2c3236; --rule-soft:#1f2427; --label:#d98b8b; --link:#9dc0ef;
-      --met:#6fbf8e; --unmet:#d98b8b; --wash:#151a1d;
+      --rule:#2c3236; --rule-soft:#1f2427; --label:#9dc0ef; --link:#9dc0ef;
     }
   }
   :root[data-theme="dark"]{
     --band:#0c2340; --band-2:#081a2f; --band-ink:#f2f6fb; --band-dim:#9db3ce;
     --paper:#0f1214; --ink:#eef0f2; --body:#c2c8cd; --muted:#8a939a;
-    --rule:#2c3236; --rule-soft:#1f2427; --label:#d98b8b; --link:#9dc0ef;
-    --met:#6fbf8e; --unmet:#d98b8b; --wash:#151a1d;
+    --rule:#2c3236; --rule-soft:#1f2427; --label:#9dc0ef; --link:#9dc0ef;
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--paper);color:var(--body);
-    font-family:var(--display);font-size:17px;line-height:1.62;
+    font-family:var(--display);font-size:17px;line-height:1.55;
     -webkit-font-smoothing:antialiased}
   .wrap{max-width:1180px;margin:0 auto;padding:0 30px}
   a{color:var(--link);text-decoration:underline;text-underline-offset:2px;
     text-decoration-thickness:1px}
   a:hover{text-decoration-thickness:2px}
-  code,pre{font-family:var(--mono);font-size:.86em}
 
+  /* ── the band: lockup, utility, nav and the name, all one field ─────── */
   .band{background:var(--band);color:var(--band-ink);
     background-image:linear-gradient(180deg,var(--band) 0%,var(--band-2) 100%)}
   .band a{color:var(--band-ink);text-decoration:none}
@@ -72,66 +72,129 @@
   .lockup .nm{font-family:var(--sans);font-weight:700;font-size:11.5px;
     letter-spacing:.085em;line-height:1.32;text-transform:uppercase}
   .utility{margin-left:auto;font-family:var(--sans);font-size:13.5px;
-    display:flex;gap:12px;align-items:center;color:var(--band-dim);flex-wrap:wrap}
+    display:flex;gap:12px;align-items:center;color:var(--band-dim)}
   .utility .sep{opacity:.45}
   nav.primary{border-bottom:1px solid rgba(255,255,255,.42);
     display:flex;gap:26px;flex-wrap:wrap;padding:9px 0 11px;
     font-family:var(--sans);font-size:14.5px}
-  .pad{height:26px}
 
-  .paper{padding:40px 0 10px}
-  .col{max-width:53rem}
-  h1{font-family:var(--display);font-weight:700;color:var(--ink);
-    font-size:clamp(1.9rem,4vw,2.6rem);line-height:1.12;margin:0 0 6px;
-    letter-spacing:-.01em}
-  .kicker{font-family:var(--sans);font-size:12px;letter-spacing:.11em;
-    text-transform:uppercase;color:var(--label);font-weight:700;margin:0 0 10px}
-  .strap{font-size:1.1rem;color:var(--muted);margin:0 0 30px;max-width:44rem}
-  h2{font-family:var(--display);font-weight:600;color:var(--ink);
-    font-size:1.34rem;margin:38px 0 10px;padding-bottom:6px;
+  .hero{text-align:center;padding:54px 0 46px}
+  .hero h1{font-family:var(--display);font-weight:700;color:var(--band-ink);
+    font-size:clamp(2.3rem,5.4vw,3.5rem);line-height:1.05;letter-spacing:-.012em;
+    margin:0}
+  .hero .strap{max-width:44rem;margin:20px auto 0;color:var(--band-ink);
+    font-size:clamp(1.02rem,2vw,1.24rem);line-height:1.45;opacity:.94}
+  .tiles{display:grid;gap:16px;margin:34px auto 0;max-width:52rem}
+  @media (min-width:700px){.tiles{grid-template-columns:1fr 1fr}}
+  .tile{border:1px solid rgba(255,255,255,.6);padding:17px 20px;
+    font-family:var(--sans);font-weight:600;font-size:15px;color:var(--band-ink);
+    text-decoration:none;display:block}
+  .tile:hover{background:rgba(255,255,255,.09);text-decoration:none}
+
+  /* ── the body: main column and a rail ───────────────────────────────── */
+  .main{display:grid;gap:34px;padding-top:40px;padding-bottom:10px}
+  @media (min-width:960px){
+    .main{grid-template-columns:minmax(0,1fr) 21rem;gap:52px;align-items:start}
+  }
+  h2.label{font-family:var(--display);font-weight:700;color:var(--label);
+    font-size:1.06rem;margin:0 0 12px;padding-bottom:9px;
     border-bottom:1px solid var(--rule)}
-  p{margin:0 0 14px}
-  .note{font-family:var(--sans);font-size:14px;color:var(--muted)}
+  .block{margin:0 0 40px}
+  .block p{margin:0 0 15px;max-width:46rem}
+  .block p:last-child{margin-bottom:0}
 
-  /* the drop target */
-  .drop{border:1px dashed var(--rule);background:var(--wash);
-    padding:30px 26px;text-align:center;margin:8px 0 12px}
-  .drop.over{border-color:var(--link);border-style:solid}
-  .drop p{margin:0 0 12px;font-family:var(--sans);font-size:15px;color:var(--muted)}
-  .btn{font-family:var(--sans);font-size:14px;font-weight:600;
-    background:var(--band);color:#fff;border:0;padding:9px 16px;cursor:pointer;
-    text-decoration:none;display:inline-block}
-  .btn.sec{background:transparent;color:var(--link);
-    border:1px solid var(--rule);font-weight:500}
-  .btn:hover{opacity:.92}
-  textarea{width:100%;min-height:150px;font-family:var(--mono);font-size:12.5px;
-    padding:12px;border:1px solid var(--rule);background:var(--paper);
-    color:var(--body);line-height:1.5}
-
-  /* the verdict */
-  .verdict{border-top:2px solid var(--ink);border-bottom:1px solid var(--rule);
-    margin:22px 0 0;padding:16px 0}
-  .level{font-family:var(--display);font-weight:700;font-size:2.1rem;
-    color:var(--ink);line-height:1;margin:0}
-  .scope{font-family:var(--sans);font-size:13.5px;color:var(--muted);margin:6px 0 0}
-  .levels{display:flex;gap:22px;flex-wrap:wrap;margin:16px 0 0;
-    font-family:var(--sans);font-size:14px}
-  .levels b{font-weight:600}
-  .met{color:var(--met)} .unmet{color:var(--unmet)}
-  table{border-collapse:collapse;width:100%;margin:18px 0 0;
-    font-family:var(--sans);font-size:14px}
-  th{text-align:left;font-weight:600;color:var(--ink);
-    border-bottom:1px solid var(--rule);padding:7px 10px 7px 0;
-    font-size:12px;letter-spacing:.06em;text-transform:uppercase}
-  td{border-bottom:1px solid var(--rule-soft);padding:7px 10px 7px 0;
+  table.levels{width:100%;border-collapse:collapse;font-size:16px}
+  table.levels th{text-align:left;font-family:var(--sans);font-size:11px;
+    letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+    font-weight:600;padding:0 14px 8px 0;border-bottom:1px solid var(--rule)}
+  table.levels td{padding:13px 14px 13px 0;border-bottom:1px solid var(--rule-soft);
     vertical-align:top}
-  td.mark{width:2.4rem;font-weight:700}
-  td.detail{color:var(--muted);font-size:13px}
-  .hide{display:none}
+  table.levels td.lv{font-family:var(--sans);font-weight:700;font-size:12.5px;
+    color:var(--label);white-space:nowrap;letter-spacing:.04em}
+  table.levels td.t{font-weight:600;color:var(--ink);min-width:15rem}
 
-  .foot{border-top:1px solid var(--rule);margin-top:52px;padding:22px 0 40px;
-    font-family:var(--sans);font-size:13.5px;color:var(--muted)}
-  .foot p{margin:0 0 5px}
+  .entries{list-style:none;margin:0;padding:0}
+  .entries li{padding:16px 0;border-bottom:1px solid var(--rule-soft)}
+  .entries li:first-child{padding-top:0}
+  .entries h3{font-size:1.12rem;font-weight:600;margin:0 0 4px;line-height:1.32}
+  .entries h3 a{color:var(--ink)}
+  .entries .kind{font-family:var(--sans);font-weight:700;font-size:11px;
+    letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+    display:block;margin-bottom:5px}
+  .entries p{margin:0;font-size:16px;max-width:44rem}
+  .entries .meta{margin-top:7px;font-family:var(--sans);font-size:12.5px;
+    color:var(--muted)}
+
+  /* ── the rail ───────────────────────────────────────────────────────── */
+  .rail{border-top:3px solid var(--band);padding-top:14px}
+  .rail h2{font-family:var(--display);font-weight:700;color:var(--label);
+    font-size:1.02rem;margin:0 0 10px}
+  .rail .item{padding:13px 0;border-bottom:1px solid var(--rule-soft)}
+  .rail .item:last-of-type{border-bottom:0}
+  .rail .item b{display:block;font-weight:600;color:var(--ink);font-size:1rem;
+    margin-bottom:3px}
+  .rail .item p{margin:0;font-size:15px;color:var(--body)}
+  .rail .links{list-style:none;margin:16px 0 0;padding:16px 0 0;
+    border-top:1px solid var(--rule);font-family:var(--sans);font-size:14.5px}
+  .rail .links li{margin:0 0 7px}
+
+  footer.foot{border-top:3px solid var(--band);margin-top:34px;
+    padding:20px 0 46px;font-family:var(--sans);font-size:13.5px;color:var(--muted)}
+  footer.foot p{margin:0 0 4px}
+
+  /* ── added for this page only ──────────────────────────────────────────
+     A file input, a results table, a level line. Everything above is the
+     site's stylesheet unchanged.
+
+     No colour is introduced at all. The site is blue and white, so a failure
+     is marked by weight and by the word rather than by a hue this design does
+     not have. A green tick would be a celebration a research note should not
+     perform, and a red one would be the only warm colour on the site. */
+  .io{font-family:var(--sans);font-size:13.5px;color:var(--muted);
+    margin:0 0 8px;line-height:1.9}
+  .io button{font-family:var(--sans);font-size:13.5px;color:var(--link);
+    background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;
+    text-underline-offset:2px}
+  .io button:hover{text-decoration-thickness:2px}
+  textarea{width:100%;max-width:100%;min-height:120px;font-family:var(--mono);
+    font-size:12px;padding:10px;border:1px solid var(--rule);
+    background:var(--paper);color:var(--body);line-height:1.5;resize:vertical}
+  textarea.over{border-color:var(--link)}
+  .result{margin:22px 0 0}
+  .result .verdict{font-family:var(--sans);font-size:12.5px;font-weight:700;
+    color:var(--ink);border-top:3px solid var(--band);padding:11px 0 0;
+    margin:0 0 4px;letter-spacing:.06em;text-transform:uppercase}
+  .result .said{margin:0 0 14px;font-size:16px;color:var(--body)}
+  table.checks{width:100%;border-collapse:collapse;font-size:15px;
+    table-layout:fixed}
+  table.checks th{text-align:left;font-family:var(--sans);font-size:11px;
+    letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+    font-weight:600;padding:0 10px 8px 0;border-bottom:1px solid var(--rule)}
+  table.checks td{padding:9px 10px 9px 0;
+    border-bottom:1px solid var(--rule-soft);vertical-align:top;
+    overflow-wrap:anywhere}
+  table.checks td.m{font-family:var(--sans);font-size:11px;font-weight:700;
+    letter-spacing:.06em;width:4.2rem}
+  table.checks td.l{font-family:var(--sans);font-size:12px;font-weight:700;
+    color:var(--muted);width:3.2rem}
+  table.checks .why{display:block;color:var(--muted);font-size:14px;
+    margin-top:3px}
+  table.checks td.m.no{color:var(--ink)}
+  pre.snip{background:none;border-left:2px solid var(--rule);margin:0 0 15px;
+    padding:2px 0 2px 13px;font-size:13px;overflow-x:auto}
+
+  /* Narrow screens. The check sentence needs the width, so the two marker
+     columns shrink and the whole table steps down a size rather than being
+     pushed into a horizontal scroll nobody finds. */
+  @media (max-width:620px){
+    table.checks{font-size:14px}
+    table.checks td{padding:8px 7px 8px 0}
+    table.checks td.m{width:3.4rem;font-size:10.5px}
+    table.checks td.l{width:2.7rem;font-size:11px}
+    table.checks .why{font-size:13px}
+    .result .said{font-size:15px}
+    textarea{font-size:11.5px}
+  }
 </style>
 </head>
 <body>
@@ -149,7 +212,7 @@
           </g>
         </svg>
         <div class="bar"></div>
-        <div class="nm"><a href="/">Machine<br>Testimony</a></div>
+        <div class="nm">Machine<br>Testimony</div>
       </div>
       <div class="utility">
         <a href="https://datatracker.ietf.org/doc/draft-clifford-testimony-record/">Specification</a>
@@ -164,69 +227,115 @@
       <a href="/#conformance">Conformance</a>
       <a href="/#papers">Working papers</a>
       <a href="/#census">Census</a>
+      <a href="/#publications">Publications</a>
+      <a href="/check/">Check a record</a>
       <a href="/check/">Check a record</a>
       <a href="/#taking-part">Taking part</a>
     </nav>
-    <div class="pad"></div>
   </div>
 </div>
 
-<div class="paper">
-  <div class="wrap col">
 
-    <p class="kicker">Conformance</p>
-    <h1>Check a record</h1>
-    <p class="strap">Drop a Testimony Record and see which level it reaches.
-      Nothing is uploaded. The validator runs in this page, so a record about
-      your customers never leaves your machine.</p>
+<div class="wrap main">
 
-    <div class="drop" id="drop">
-      <p>Drop a <code>.jsonl</code> record here, or paste one below.</p>
-      <input type="file" id="file" accept=".jsonl,.json,.txt" class="hide">
-      <button class="btn" id="pick">Choose a file</button>
-      <button class="btn sec" id="demo">Load an example</button>
+  <div>
+    <h2 class="label" id="check">Check a record</h2>
+    <div class="block">
+      <p>Paste or drop a Testimony Record below and this page will report the
+        level it reaches and every check behind that level. The validator runs
+        in the page. Nothing is uploaded, and nothing is stored, so a record
+        about somebody&rsquo;s customers does not leave the machine it is read
+        on.</p>
+      <p>It is the same validator the specification publishes, ported to
+        JavaScript and checked against the Python reference on a corpus of
+        records covering every level and every failure mode. If the two ever
+        disagree the build fails, because two validators that disagree are
+        worse than one.</p>
     </div>
 
+    <p class="io">
+      <button id="pick" type="button">Choose a file</button> &nbsp;&middot;&nbsp;
+      <button id="demo" type="button">Load an example</button> &nbsp;&middot;&nbsp;
+      or drop one onto the box
+      <input type="file" id="file" accept=".jsonl,.json,.txt" hidden>
+    </p>
     <textarea id="text" spellcheck="false"
-      placeholder="or paste the record here, one JSON object per line"></textarea>
+      placeholder="one JSON object per line"></textarea>
 
     <div id="out"></div>
 
-    <h2>If you do not have a record yet</h2>
-    <p>Any system can emit one and the format needs nothing of ours. If you use
-      LangGraph, this takes about five minutes:</p>
-    <pre><code>pip install testimony-langgraph</code></pre>
-    <p>Your node names the action so the operator's risk table can classify it,
-      and the identity of whoever approves comes from your authentication layer
-      rather than from anything the model wrote. The adapter will not invent an
-      approver, because there is nothing in LangGraph for it to find, so a graph
-      resumed the ordinary way produces a record that says so plainly instead of
-      claiming a human was involved.</p>
-    <p class="note">The same validator ships with that package as
-      <code>testimony-validate</code>, so a record can be checked at a terminal
-      as well as here.</p>
+    <h2 class="label" style="margin-top:44px" id="emit">If there is no record to hand</h2>
+    <div class="block">
+      <p>Any system can emit one and the format requires nothing of ours. For a
+        LangGraph graph that already pauses for a person, it is an adapter and
+        about five minutes:</p>
+      <pre class="snip"><code>pip install testimony-langgraph</code></pre>
+      <p>The node names the action so the operator&rsquo;s own risk table can
+        classify it, and the identity of whoever approves is taken from the
+        authentication layer rather than from anything the model produced. The
+        adapter will not invent an approver, because there is nothing in
+        LangGraph for it to find, so a graph resumed the ordinary way produces
+        a record that says so rather than implying a person was involved.</p>
+      <p>The same validator ships with that package as
+        <code>testimony-validate</code>, so a record can be checked at a
+        terminal as well as here.</p>
+    </div>
 
-    <h2>What the levels mean</h2>
-    <table>
-      <thead><tr><th style="width:5.5rem">Level</th><th>Property</th></tr></thead>
-      <tbody>
-        <tr><td><b>TR-1</b></td><td>Recorded. The record is well formed and append-only.</td></tr>
-        <tr><td><b>TR-2</b></td><td>Explained. Beliefs cite their evidence, or say there is none, and both sides of a disagreement are kept.</td></tr>
-        <tr><td><b>TR-3</b></td><td>Gated. Consequential actions carry a verdict, and approvals name a person whose identity came from authentication.</td></tr>
-        <tr><td><b>TR-4</b></td><td>Verifiable. The record publishes a scheme under which alteration would be detected.</td></tr>
-      </tbody>
-    </table>
-    <p class="note">The levels are cumulative, so a record can satisfy a level
-      it has not reached. Each level's own result is reported separately for
-      that reason.</p>
-
+    <h2 class="label" id="limits">What a level does not tell you</h2>
+    <div class="block">
+      <p>A level is a property of the record, not a judgement about the system
+        that wrote it. TR-3 says an approval named a person and took that name
+        from an authentication layer. It does not say the person read anything,
+        and no format can.</p>
+      <p>Below TR-4 nothing here is tamper evidence. Non-decreasing write times
+        show a record is consistent with having been appended to, not that it
+        was. And a record that declares it takes no actions is believed, which
+        is why the declaration is reported beside the level rather than hidden
+        inside it.</p>
+    </div>
   </div>
+
+  <aside class="rail">
+    <h2>The four levels</h2>
+    <div class="item">
+      <b>TR-1 Recorded</b>
+      <p>Well formed, append-only, one specification version, unique ids,
+        non-decreasing write times.</p>
+    </div>
+    <div class="item">
+      <b>TR-2 Explained</b>
+      <p>Every belief cites its evidence or says there is none, and both sides
+        of a disagreement are kept.</p>
+    </div>
+    <div class="item">
+      <b>TR-3 Gated</b>
+      <p>Consequential actions carry a verdict, refusals carry a reason, and an
+        approval names a person from authentication who is not the proposer.</p>
+    </div>
+    <div class="item">
+      <b>TR-4 Verifiable</b>
+      <p>The record publishes a scheme under which alteration would be
+        detected.</p>
+    </div>
+    <div class="item">
+      <b>Cumulative</b>
+      <p>A record can satisfy a level it has not reached, so each level is
+        reported separately as well as the level reached.</p>
+    </div>
+    <ul class="links">
+      <li><a href="https://datatracker.ietf.org/doc/draft-clifford-testimony-record/">The specification, as an Internet-Draft</a></li>
+      <li><a href="https://github.com/troybrandonc-bit/machine-testimony">The validator and the adapters</a></li>
+      <li><a href="https://doi.org/10.5281/zenodo.22290922">Eight systems, assessed</a></li>
+      <li><a href="/#conformance">What the levels are for</a></li>
+    </ul>
+  </aside>
+
 </div>
 
 <footer class="foot">
   <div class="wrap">
     <p>Editor: Troy Clifford. Operated by Garnet Taurus Ltd.</p>
-    <p>Specification text CC BY 4.0. Validator and adapters MIT.</p>
+    <p>Specification text CC BY 4.0. Schema and tools MIT.</p>
     <p>Machine Testimony is a research programme, not a registered institute or a certification body.</p>
   </div>
 </footer>
@@ -235,11 +344,10 @@
 import { validate, LEVELS } from "./testimony.js";
 
 const $ = (id) => document.getElementById(id);
-const out = $("out"), area = $("text"), drop = $("drop");
+const out = $("out"), area = $("text");
 
-/* One record, emitted by the LangGraph adapter and reaching TR-4. It is here
-   so somebody can see what a verdict looks like before installing anything,
-   which is the whole reason this page exists. */
+/* One record, emitted by the LangGraph adapter, reaching TR-4. It is here so
+   somebody can see a verdict before installing anything. */
 const EXAMPLE = [
  {spec:"testimony-record/0.2",type:"scope",id:"s_1",at:"2026-09-04T21:30:12Z",acts:true,declared_by:{id:"testimony-langgraph",kind:"system"}},
  {spec:"testimony-record/0.2",type:"evidence",id:"e_2",at:"2026-09-04T21:30:12Z",kind:"api",source:"billing://orders/8812",digest:"sha256:"+"0".repeat(64),redacted:true},
@@ -255,51 +363,50 @@ function render(text) {
   if (!text.trim()) { out.innerHTML = ""; return; }
   let r;
   try { r = validate(text); }
-  catch (err) { out.innerHTML = '<div class="verdict"><p class="level">Not a record</p>' +
-      '<p class="scope">' + esc(err.message) + "</p></div>"; return; }
+  catch (err) {
+    out.innerHTML = '<div class="result"><p class="verdict">Not a record</p>' +
+      '<p class="said">' + esc(err.message) + "</p></div>";
+    return;
+  }
 
-  /* levelsMet comes from the validator rather than being re-derived here. Two
-     answers to the same question is how a page ends up disagreeing with the
-     tool it is showing. */
-  const chips = LEVELS.map((l) =>
-    '<span><b>' + l + '</b> <span class="' + (r.levelsMet[l] ? "met" : "unmet") + '">' +
-    (r.levelsMet[l] ? "met" : "not met") + "</span></span>").join("");
+  /* levelsMet comes from the validator rather than being recomputed here. Two
+     answers to one question is how a page ends up disagreeing with the tool it
+     is showing. */
+  const per = LEVELS.map((l) => l + " " +
+    (r.levelsMet[l] ? "met" : "not met")).join(", ");
+  const said = r.level
+    ? "Reaches " + r.level + ". " + (r.scope === "acts"
+        ? "The record declares that this system takes or gates actions."
+        : "The record declares that this system does not act, so there is nothing to gate.")
+    : "No level reached. The checks below say why.";
 
   const rows = r.checks.map((c) =>
-    "<tr><td class=\"mark " + (c.ok ? "met" : "unmet") + '">' + (c.ok ? "ok" : "no") +
-    "</td><td>" + esc(c.level) + "</td><td>" + esc(c.check) +
-    (c.ok || !c.detail ? "" : '<div class="detail">' + esc(c.detail) + "</div>") +
+    '<tr><td class="m' + (c.ok ? '' : ' no') + '">' + (c.ok ? "met" : "not met") +
+    '</td><td class="l">' + esc(c.level) + "</td><td>" + esc(c.check) +
+    (c.ok || !c.detail ? "" : '<span class="why">' + esc(c.detail) + "</span>") +
     "</td></tr>").join("");
 
   out.innerHTML =
-    '<div class="verdict">' +
-      '<p class="level">' + (r.level ? esc(r.level) : "No level reached") + "</p>" +
-      '<p class="scope">' + (r.scope === "acts"
-        ? "The record declares that this system takes or gates actions."
-        : "The record declares that this system does not act, so there is nothing to gate.") +
-      "</p>" +
-      '<div class="levels">' + chips + "</div>" +
-    "</div>" +
-    "<table><thead><tr><th></th><th style=\"width:4.5rem\">Level</th><th>Check</th></tr></thead>" +
-    "<tbody>" + rows + "</tbody></table>";
+    '<div class="result">' +
+      '<p class="verdict">' + esc(per) + "</p>" +
+      '<p class="said">' + esc(said) + "</p>" +
+      '<table class="checks"><thead><tr><th></th><th>Level</th>' +
+      "<th>Check</th></tr></thead><tbody>" + rows + "</tbody></table>" +
+    "</div>";
 }
+
+const load = (f) => f.text().then((t) => { area.value = t; render(t); });
 
 area.addEventListener("input", () => render(area.value));
 $("pick").addEventListener("click", () => $("file").click());
-$("file").addEventListener("change", (e) => {
-  const f = e.target.files[0];
-  if (f) f.text().then((t) => { area.value = t; render(t); });
-});
+$("file").addEventListener("change", (e) => e.target.files[0] && load(e.target.files[0]));
 $("demo").addEventListener("click", () => { area.value = EXAMPLE; render(EXAMPLE); });
 
-["dragenter", "dragover"].forEach((n) => drop.addEventListener(n, (e) => {
-  e.preventDefault(); drop.classList.add("over"); }));
-["dragleave", "drop"].forEach((n) => drop.addEventListener(n, (e) => {
-  e.preventDefault(); drop.classList.remove("over"); }));
-drop.addEventListener("drop", (e) => {
-  const f = e.dataTransfer.files[0];
-  if (f) f.text().then((t) => { area.value = t; render(t); });
-});
+["dragenter", "dragover"].forEach((n) => area.addEventListener(n, (e) => {
+  e.preventDefault(); area.classList.add("over"); }));
+["dragleave", "drop"].forEach((n) => area.addEventListener(n, (e) => {
+  e.preventDefault(); area.classList.remove("over"); }));
+area.addEventListener("drop", (e) => e.dataTransfer.files[0] && load(e.dataTransfer.files[0]));
 </script>
 
 </body>

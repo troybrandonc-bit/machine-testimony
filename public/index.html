@@ -33,7 +33,7 @@
   :root{
     --band:#123a6b; --band-2:#0e2f57; --band-ink:#ffffff; --band-dim:#b9cbe4;
     --paper:#ffffff; --ink:#111417; --body:#24292d; --muted:#5f6a72;
-    --rule:#c9cfd4; --rule-soft:#e3e7ea; --label:#8a1c1c; --link:#123a6b;
+    --rule:#c9cfd4; --rule-soft:#e3e7ea; --label:#123a6b; --link:#123a6b;
     --display:"Source Serif 4",Georgia,"Times New Roman",serif;
     --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
     --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
@@ -42,13 +42,13 @@
     :root:not([data-theme="light"]){
       --band:#0c2340; --band-2:#081a2f; --band-ink:#f2f6fb; --band-dim:#9db3ce;
       --paper:#0f1214; --ink:#eef0f2; --body:#c2c8cd; --muted:#8a939a;
-      --rule:#2c3236; --rule-soft:#1f2427; --label:#d98b8b; --link:#9dc0ef;
+      --rule:#2c3236; --rule-soft:#1f2427; --label:#9dc0ef; --link:#9dc0ef;
     }
   }
   :root[data-theme="dark"]{
     --band:#0c2340; --band-2:#081a2f; --band-ink:#f2f6fb; --band-dim:#9db3ce;
     --paper:#0f1214; --ink:#eef0f2; --body:#c2c8cd; --muted:#8a939a;
-    --rule:#2c3236; --rule-soft:#1f2427; --label:#d98b8b; --link:#9dc0ef;
+    --rule:#2c3236; --rule-soft:#1f2427; --label:#9dc0ef; --link:#9dc0ef;
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--paper);color:var(--body);
@@ -91,7 +91,7 @@
   .tile:hover{background:rgba(255,255,255,.09);text-decoration:none}
 
   /* ── the body: main column and a rail ───────────────────────────────── */
-  .main{display:grid;gap:34px;padding:40px 0 10px}
+  .main{display:grid;gap:34px;padding-top:40px;padding-bottom:10px}
   @media (min-width:960px){
     .main{grid-template-columns:minmax(0,1fr) 21rem;gap:52px;align-items:start}
   }
@@ -173,6 +173,7 @@
       <a href="#papers">Working papers</a>
       <a href="#census">Census</a>
       <a href="#publications">Publications</a>
+      <a href="/check/">Check a record</a>
       <a href="#taking-part">Taking part</a>
     </nav>
   </div>
