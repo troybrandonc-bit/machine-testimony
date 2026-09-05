@@ -33,6 +33,16 @@ import subject     # noqa: E402
 
 OUT = os.path.join(ROOT, "pages", "register.html")
 
+# The date the next reading happens, and it is a commitment rather than a hope.
+#
+# A register that says "eight systems, read in September" is a document. One
+# that names the next date is a clock, and a vendor sitting on an `absent` row
+# has a reason to act before it. That only works if the date is kept, so
+# tests_census.py fails once it has passed: either the reading happened and the
+# date moves, or the promise is withdrawn deliberately. A page still promising a
+# reading that was due in January is worse than a page that promised nothing.
+NEXT_READING = "2027-01-15"
+
 MARK = {"present": ("yes", "y"), "partial": ("part", "p"),
         "absent": ("no", "n"), "undetermined": ("undet", "u"), None: ("n/a", "x")}
 
@@ -107,8 +117,8 @@ def main() -> int:
     w("")
     w('<div class="wrap main">')
     w("  <div>")
-    w('    <p class="dateline">Standing register, last read %s</p>'
-      % esc(dates[-1]))
+    w('    <p class="dateline">Standing register, last read %s &middot; '
+      'next reading %s</p>' % (esc(dates[-1]), esc(NEXT_READING)))
     w('    <h2 class="label">Which systems record what</h2>')
     w('    <div class="block">')
 
@@ -208,6 +218,22 @@ def main() -> int:
       '<a href="/assess/">How to do that</a>, including how to put the result '
       'here with your own name on the row, or keep it and publish it '
       'yourself.</p>')
+
+    w("      <h3>The next reading is %s</h3>" % esc(NEXT_READING))
+    w("      <p>Every row is read again on that date, against the same "
+      "requirements, at whatever commit each project is at then. A row that is "
+      "absent today is not absent permanently, and a row that passes today is "
+      "not settled: this is a reading of software, and software moves.</p>")
+    w("      <p><b>If you have changed something, you do not have to wait.</b> "
+      "Say so and it is read before the date, the same way and against the "
+      "same bar: a pull request against the subject file, or an email to "
+      "<code>troy@machinetestimony.com</code> naming the requirement and where "
+      "to look. There is no fee and no advantage to being first, beyond the "
+      "row being right sooner.</p>")
+    w("      <p>The date is not decoration. This page fails its own build once "
+      "it has passed, so it either moves because the reading happened or it is "
+      "withdrawn deliberately. A register still promising a reading that was "
+      "due months ago is worth less than one that promised nothing.</p>")
 
     w("      <h3>If your system is not here</h3>")
     w("      <p>Being absent is not a judgement. It means nobody has done the "
