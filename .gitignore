@@ -10,3 +10,4 @@ adapters/langgraph/record.jsonl
 __pycache__/
 *.pyc
 spec/draft-*-[0-9][0-9].xml
+demo/record.jsonl

@@ -26,6 +26,18 @@ tests/                                    run against a real graph, not a mock
 public/                                   the site
 ```
 
+## See what it is for, in two minutes
+
+```
+python3 demo/what_your_log_cannot_answer.py
+```
+
+Writes the log almost everyone writes, asks it four questions somebody asks
+after something goes wrong, and answers none of them. Then writes the same run
+as a record and answers all four, ending by tampering with it to show the
+difference is real rather than asserted. No install, no dependencies, and it
+names no product.
+
 ## Implementing it
 
 Two things, so that a first implementation is an afternoon rather than a

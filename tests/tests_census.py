@@ -313,6 +313,22 @@ check("the author's own row is marked as such",
 check("the register says where a wrong verdict is fixed",
       "pull request" in _page and "troy@machinetestimony.com" in _page)
 check("the register names who read each row", "Read by" in _page)
+
+# The clock only works if it is kept. A page promising a reading that was due
+# months ago is worth less than one that promised nothing, so the build fails
+# once the date passes: either the reading happened and the date moves, or the
+# promise is withdrawn on purpose.
+import datetime as _dt                                       # noqa: E402
+sys.path.insert(0, os.path.join(ROOT, "census"))
+import build_register as _br                                 # noqa: E402
+_next = _dt.date.fromisoformat(_br.NEXT_READING)
+check("the promised next reading has not already passed",
+      _next >= _dt.date.today(),
+      "NEXT_READING is %s. Do the reading and move the date, or remove the "
+      "promise." % _br.NEXT_READING)
+check("and the register states it", _br.NEXT_READING in _page)
+check("it tells a vendor how to be re-read before then",
+      "you do not have to wait" in " ".join(_page.split()).lower())
 check("the register points at the instrument", "/assess/" in _page)
 
 # ── the instrument is something somebody else can pick up ───────────────────

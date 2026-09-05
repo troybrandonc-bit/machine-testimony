@@ -219,6 +219,26 @@ def main():
                      identity_source="x-corp-sso")
     check("which is then accepted", bool(ok))
 
+    print("\nthe demonstration still demonstrates something")
+    # A demo that quietly stops working is worse than none, and this one is
+    # meant to be run by strangers who will not stay to debug it.
+    import subprocess                                        # noqa: E402
+    r = subprocess.run([sys.executable,
+                        os.path.join(ROOT, "demo",
+                                     "what_your_log_cannot_answer.py")],
+                       capture_output=True, text=True, cwd=ROOT)
+    out = r.stdout
+    check("it runs", r.returncode == 0, (r.stderr or out)[-200:])
+    check("it asks the ordinary log four questions and answers none of them",
+          out.count("unanswerable.") == 4, out.count("unanswerable."))
+    check("it answers all four from the record",
+          "r.okonkwo@example.com" in out and "auth-session" in out
+          and "close_account, refused" in out and "sha256:" in out)
+    check("it proves the last answer rather than asserting it",
+          "TR-4" in out and "TR-3" in out, out[-300:])
+    check("it makes no claim about any named product",
+          not any(v in out for v in ("LangGraph", "CrewAI", "AutoGen", "mem0")))
+
     print("\n%d passed, %d failed" % (PASS, FAIL))
     return 1 if FAIL else 0
 

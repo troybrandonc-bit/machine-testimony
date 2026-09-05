@@ -52,6 +52,20 @@ the approver is the proposer, 'agent'. An agent's own credential signing
         validator reports them as attestations rather than counting them as
         proof.</p>
 
+      <h3>Two minutes, before any of that</h3>
+      <p>If you want to see what this is for rather than read about it, there
+        is a script that writes the log almost everyone writes, asks it the four
+        questions somebody asks after something goes wrong, and answers none of
+        them. Then it writes the same run as a record and answers all four.</p>
+
+      <pre class="snip">git clone https://github.com/troybrandonc-bit/machine-testimony
+python3 demo/what_your_log_cannot_answer.py</pre>
+
+      <p>No install, no dependencies, and it names no product. Swap in your own
+        log format and if it answers all four questions, this project has
+        nothing to offer you, which is a good outcome and worth two minutes to
+        find out.</p>
+
       <h3>Knowing when you are finished</h3>
       <p>The
         <a href="https://github.com/troybrandonc-bit/machine-testimony/tree/main/conformance">conformance
