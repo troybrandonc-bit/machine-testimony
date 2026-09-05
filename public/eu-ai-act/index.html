@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Evidencing human oversight under the EU AI Act &ndash; Machine Testimony</title>
+<meta name="description" content="Articles 12, 14, 15 and 26 mapped to what a record has to contain, where prEN 18229 has reached, and how much of it current agent frameworks actually record. Not legal advice.">
+<meta property="og:title" content="Evidencing human oversight under the EU AI Act">
+<meta property="og:description" content="Articles 12, 14, 15 and 26 mapped to what a record has to contain, where prEN 18229 has reached, and how much of it current agent frameworks actually record. Not legal advice.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://machinetestimony.org/eu-ai-act/">
+<meta property="og:image" content="https://machinetestimony.org/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Evidencing human oversight under the EU AI Act">
+<meta name="twitter:description" content="Articles 12, 14, 15 and 26 mapped to what a record has to contain, where prEN 18229 has reached, and how much of it current agent frameworks actually record. Not legal advice.">
+<meta name="twitter:image" content="https://machinetestimony.org/og.png">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/icon.png" type="image/png" sizes="512x512">
+<link rel="apple-touch-icon" href="/icon.png">
+<link rel="canonical" href="https://machinetestimony.org/eu-ai-act/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+
+  /* Built to the NBER pattern, which is what a research bureau's site actually
+     looks like: one coloured band carrying the lockup, the utility links, the
+     navigation and the name together; the institution named large and centred
+     in a serif; outlined destination tiles; then a dense white body in two
+     columns with a rail. Serif for reading, sans for metadata, underlined
+     links, hairline rules, and far less air than a product page. */
+  :root{
+    --band:#123a6b; --band-2:#0e2f57; --band-ink:#ffffff; --band-dim:#b9cbe4;
+    --paper:#ffffff; --ink:#111417; --body:#24292d; --muted:#5f6a72;
+    --rule:#c9cfd4; --rule-soft:#e3e7ea; --label:#123a6b; --link:#123a6b;
+    --display:"Source Serif 4",Georgia,"Times New Roman",serif;
+    --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --band:#0c2340; --band-2:#081a2f; --band-ink:#f2f6fb; --band-dim:#9db3ce;
+      --paper:#0f1214; --ink:#eef0f2; --body:#c2c8cd; --muted:#8a939a;
+      --rule:#2c3236; --rule-soft:#1f2427; --label:#9dc0ef; --link:#9dc0ef;
+    }
+  }
+  :root[data-theme="dark"]{
+    --band:#0c2340; --band-2:#081a2f; --band-ink:#f2f6fb; --band-dim:#9db3ce;
+    --paper:#0f1214; --ink:#eef0f2; --body:#c2c8cd; --muted:#8a939a;
+    --rule:#2c3236; --rule-soft:#1f2427; --label:#9dc0ef; --link:#9dc0ef;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--body);
+    font-family:var(--display);font-size:17px;line-height:1.55;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 30px}
+  a{color:var(--link);text-decoration:underline;text-underline-offset:2px;
+    text-decoration-thickness:1px}
+  a:hover{text-decoration-thickness:2px}
+
+  /* ── the band: lockup, utility, nav and the name, all one field ─────── */
+  .band{background:var(--band);color:var(--band-ink);
+    background-image:linear-gradient(180deg,var(--band) 0%,var(--band-2) 100%)}
+  .band a{color:var(--band-ink);text-decoration:none}
+  .band a:hover{text-decoration:underline}
+  .topbar{display:flex;align-items:center;gap:26px;flex-wrap:wrap;padding:16px 0 12px}
+  .lockup{display:flex;align-items:center;gap:13px}
+  .lockup .mk{width:31px;height:31px;flex:none;color:var(--band-ink)}
+  .lockup .bar{width:2px;align-self:stretch;background:var(--band-ink);opacity:.55}
+  .lockup .nm{font-family:var(--sans);font-weight:700;font-size:11.5px;
+    letter-spacing:.085em;line-height:1.32;text-transform:uppercase}
+  .utility{margin-left:auto;font-family:var(--sans);font-size:13.5px;
+    display:flex;gap:12px;align-items:center;color:var(--band-dim)}
+  .utility .sep{opacity:.45}
+  nav.primary{border-bottom:1px solid rgba(255,255,255,.42);
+    display:flex;gap:26px;flex-wrap:wrap;padding:9px 0 11px;
+    font-family:var(--sans);font-size:14.5px}
+
+  .hero{text-align:center;padding:54px 0 46px}
+  .hero h1{font-family:var(--display);font-weight:700;color:var(--band-ink);
+    font-size:clamp(2.3rem,5.4vw,3.5rem);line-height:1.05;letter-spacing:-.012em;
+    margin:0}
+  .hero .strap{max-width:44rem;margin:20px auto 0;color:var(--band-ink);
+    font-size:clamp(1.02rem,2vw,1.24rem);line-height:1.45;opacity:.94}
+  .tiles{display:grid;gap:16px;margin:34px auto 0;max-width:52rem}
+  @media (min-width:700px){.tiles{grid-template-columns:1fr 1fr}}
+  .tile{border:1px solid rgba(255,255,255,.6);padding:17px 20px;
+    font-family:var(--sans);font-weight:600;font-size:15px;color:var(--band-ink);
+    text-decoration:none;display:block}
+  .tile:hover{background:rgba(255,255,255,.09);text-decoration:none}
+
+  /* ── the body: main column and a rail ───────────────────────────────── */
+  .main{display:grid;gap:34px;padding-top:40px;padding-bottom:10px}
+  /* Grid children default to min-width:auto and so refuse to shrink below
+     their content. On a phone this is a single column, so one wide code
+     block or table pushed the whole page past the viewport. The desktop
+     rule below says minmax(0,1fr) and was masking it above 960px. */
+  .main>*{min-width:0}
+  @media (min-width:960px){
+    .main{grid-template-columns:minmax(0,1fr) 21rem;gap:52px;align-items:start}
+  }
+  h2.label{font-family:var(--display);font-weight:700;color:var(--label);
+    font-size:1.06rem;margin:0 0 12px;padding-bottom:9px;
+    border-bottom:1px solid var(--rule)}
+  .block{margin:0 0 40px}
+  .block p{margin:0 0 15px;max-width:46rem}
+  .block p:last-child{margin-bottom:0}
+
+  table.levels{width:100%;border-collapse:collapse;font-size:16px}
+  table.levels th{text-align:left;font-family:var(--sans);font-size:11px;
+    letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+    font-weight:600;padding:0 14px 8px 0;border-bottom:1px solid var(--rule)}
+  table.levels td{padding:13px 14px 13px 0;border-bottom:1px solid var(--rule-soft);
+    vertical-align:top}
+  table.levels td.lv{font-family:var(--sans);font-weight:700;font-size:12.5px;
+    color:var(--label);white-space:nowrap;letter-spacing:.04em}
+  table.levels td.t{font-weight:600;color:var(--ink);min-width:15rem}
+
+  .entries{list-style:none;margin:0;padding:0}
+  .entries li{padding:16px 0;border-bottom:1px solid var(--rule-soft)}
+  .entries li:first-child{padding-top:0}
+  .entries h3{font-size:1.12rem;font-weight:600;margin:0 0 4px;line-height:1.32}
+  .entries h3 a{color:var(--ink)}
+  .entries .kind{font-family:var(--sans);font-weight:700;font-size:11px;
+    letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+    display:block;margin-bottom:5px}
+  .entries p{margin:0;font-size:16px;max-width:44rem}
+  .entries .meta{margin-top:7px;font-family:var(--sans);font-size:12.5px;
+    color:var(--muted)}
+
+  /* ── the rail ───────────────────────────────────────────────────────── */
+  .rail{border-top:3px solid var(--band);padding-top:14px}
+  .rail h2{font-family:var(--display);font-weight:700;color:var(--label);
+    font-size:1.02rem;margin:0 0 10px}
+  .rail .item{padding:13px 0;border-bottom:1px solid var(--rule-soft)}
+  .rail .item:last-of-type{border-bottom:0}
+  .rail .item b{display:block;font-weight:600;color:var(--ink);font-size:1rem;
+    margin-bottom:3px}
+  .rail .item p{margin:0;font-size:15px;color:var(--body)}
+  .rail .links{list-style:none;margin:16px 0 0;padding:16px 0 0;
+    border-top:1px solid var(--rule);font-family:var(--sans);font-size:14.5px}
+  .rail .links li{margin:0 0 7px}
+
+  footer.foot{border-top:3px solid var(--band);margin-top:34px;
+    padding:20px 0 46px;font-family:var(--sans);font-size:13.5px;color:var(--muted)}
+  footer.foot p{margin:0 0 4px}
+
+  .block h3{font-family:var(--display);font-weight:600;color:var(--ink);
+    font-size:1.08rem;margin:26px 0 8px}
+  .block ol,.block ul{margin:0 0 15px;padding-left:1.15rem;max-width:46rem}
+  .block li{margin:0 0 7px}
+  .dateline{font-family:var(--sans);font-size:12.5px;color:var(--muted);
+    margin:0 0 22px}
+  table.map{width:100%;border-collapse:collapse;font-size:15px;margin:6px 0 18px}
+  table.map th{text-align:left;font-family:var(--sans);font-size:11px;
+    letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+    font-weight:600;padding:0 12px 8px 0;border-bottom:1px solid var(--rule)}
+  table.map td{padding:11px 12px 11px 0;vertical-align:top;
+    border-bottom:1px solid var(--rule-soft);overflow-wrap:anywhere}
+  table.map td.a{font-family:var(--sans);font-weight:600;color:var(--ink);
+    white-space:nowrap;width:6.5rem;font-size:13.5px}
+  table.map td.lv{font-family:var(--sans);font-weight:700;font-size:12.5px;
+    color:var(--muted);white-space:nowrap;width:4.5rem}
+  @media (max-width:620px){
+    table.map{font-size:14px}
+    table.map td{padding:9px 8px 9px 0}
+    table.map td.a{width:5rem;font-size:12.5px}
+    table.map td.lv{width:3.6rem;font-size:11.5px}
+  }
+</style>
+</head>
+<body>
+
+<div class="band">
+  <div class="wrap">
+    <div class="topbar">
+      <div class="lockup">
+        <svg class="mk" viewBox="0 0 64 64" aria-hidden="true">
+          <g fill="currentColor">
+            <rect x="2" y="18" width="20" height="20"/>
+            <polygon points="2,38 22,38 2,56"/>
+            <rect x="30" y="22" width="20" height="20"/>
+            <polygon points="50,22 30,22 50,4"/>
+          </g>
+        </svg>
+        <div class="bar"></div>
+        <div class="nm">Machine<br>Testimony</div>
+      </div>
+      <div class="utility">
+        <a href="https://datatracker.ietf.org/doc/draft-clifford-testimony-record/">Specification</a>
+        <span class="sep">|</span>
+        <a href="https://github.com/troybrandonc-bit/machine-testimony">Validator and adapters</a>
+        <span class="sep">|</span>
+        <a href="/llms.txt">For machines</a>
+      </div>
+    </div>
+    <nav class="primary">
+      <a href="/#question">The question</a>
+      <a href="/#conformance">Conformance</a>
+      <a href="/#papers">Working papers</a>
+      <a href="/#census">Census</a>
+      <a href="/#publications">Publications</a>
+      <a href="/eu-ai-act/">EU AI Act</a>
+      <a href="/approvals/">Approvals</a>
+      <a href="/check/">Check a record</a>
+      <a href="/approvals/">Approvals</a>
+      <a href="/check/">Check a record</a>
+      <a href="/#taking-part">Taking part</a>
+    </nav>
+  </div>
+</div>
+
+
+<div class="wrap main">
+  <div>
+    <p class="dateline">Reference note, 5 September 2026</p>
+    <h2 class="label">Evidencing human oversight and record-keeping under the EU AI Act</h2>
+
+    <div class="block">
+      <p>Obligations for high-risk systems began applying on 2 August 2026. The
+        harmonised standards that will say what satisfies them are not finished:
+        the AI trustworthiness framework, prEN 18229, is still in draft, and
+        nothing in the series has been cited in the Official Journal, so nothing
+        yet carries a presumption of conformity.</p>
+      <p>That leaves deployers and providers being asked for evidence of
+        oversight before the document defining that evidence exists. This note
+        maps the obligations onto what a record would have to contain to answer
+        them, and says where the mapping is speculative.</p>
+      <p><b>It is not legal advice and it claims compliance with nothing.</b>
+        Whether a given deployment satisfies a legal obligation is a matter for
+        the parties to it and their regulator. What follows is about evidence,
+        which is a narrower and more answerable question.</p>
+
+      <h3>What Article 12 asks for</h3>
+      <p>Automatic recording of events over the lifetime of the system, at a
+        level enabling traceability. In practice a reader months later needs to
+        establish what the system held to be true, where that came from, and
+        that the record has not been rewritten since.</p>
+      <p>This is a logging obligation with an identifiability character. Metrics
+        and traces do not satisfy it: they record that calls happened, not what
+        was concluded.</p>
+
+      <h3>What Article 14 asks for</h3>
+      <p>That the system is designed so natural persons can oversee it,
+        understand its capacities and limits, remain alert to automation bias,
+        interpret output, decide not to use it, and intervene or halt.</p>
+      <p>Note what the Article is about and what it is not. It requires that
+        oversight be <i>possible</i>. It does not, in terms, require that you be
+        able to show afterwards that it <i>happened</i>, or by whom. That is the
+        gap this note exists to point at, because it is the first question asked
+        when an action is disputed and the one an ordinary agent log cannot
+        answer.</p>
+
+      <h3>The mapping</h3>
+      <p>Levels TR-1 to TR-4 are the conformance levels of the Testimony Record,
+        a published record format. They are used here as a vocabulary for what a
+        record contains, not as a compliance claim.</p>
+      <table class="map">
+        <thead><tr><th>Obligation</th><th>What a record has to show</th><th>Level</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="a">Art. 12</td>
+            <td>Events recorded automatically as they occur, append-only, each
+              carrying its own write time, in one stated format.</td>
+            <td class="lv">TR-1</td>
+          </tr>
+          <tr>
+            <td class="a">Art. 12</td>
+            <td>What the system concluded, and what each conclusion rested on,
+              including where it rested on nothing. Contradictions retained
+              rather than silently resolved.</td>
+            <td class="lv">TR-2</td>
+          </tr>
+          <tr>
+            <td class="a">Art. 13</td>
+            <td>Information sufficient for a deployer to operate and oversee the
+              system, including what it cannot do. Sits in instructions for use
+              rather than in the record.</td>
+            <td class="lv">outside</td>
+          </tr>
+          <tr>
+            <td class="a">Art. 14</td>
+            <td>Every consequential action carries a verdict, whether or not it
+              ran, with a risk class the proposing model could not set.</td>
+            <td class="lv">TR-3</td>
+          </tr>
+          <tr>
+            <td class="a">Art. 14</td>
+            <td>An intervention is attributable: the record names the person or
+              the named role holder, takes that identity from authentication
+              rather than from run state, and the approver is not the principal
+              that proposed the action.</td>
+            <td class="lv">TR-3</td>
+          </tr>
+          <tr>
+            <td class="a">Art. 14</td>
+            <td>Refusals recorded as faithfully as permissions, with reasons. A
+              record of only what was done cannot show oversight working.</td>
+            <td class="lv">TR-3</td>
+          </tr>
+          <tr>
+            <td class="a">Art. 15</td>
+            <td>Accuracy and robustness figures as declared, and resistance to
+              manipulation of the record itself.</td>
+            <td class="lv">TR-4</td>
+          </tr>
+          <tr>
+            <td class="a">Art. 26</td>
+            <td>Deployer duties: logs kept, competent oversight assigned,
+              affected people informed. Most tooling addresses the provider side
+              only.</td>
+            <td class="lv">TR-1 to TR-3</td>
+          </tr>
+          <tr>
+            <td class="a">Art. 72</td>
+            <td>Post-market monitoring, which is continuing rather than a single
+              assessment, so the record has to remain readable and comparable
+              over time.</td>
+            <td class="lv">TR-1, TR-4</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Where the harmonised standards are</h3>
+      <p>CEN-CENELEC JTC 21 holds the mandate. The relevant series is prEN
+        18229: Part 1 logging, Part 2 transparency, Part 3 human oversight,
+        Parts 4 and 5 accuracy and robustness. Each carries an Annex ZA mapping
+        its clauses to the Article it covers, and Annex ZA is the first thing
+        worth reading in any of them.</p>
+      <p>Two cautions. A draft prefixed prEN is not a standard. And a standard
+        not cited in the Official Journal grants no presumption of conformity
+        however finished it looks.</p>
+      <p>Part 3 reached public comment on 30 July 2026 and closed on 22
+        September 2026. Its central mechanism is the reaction timeframe: the
+        time available to a designated person to intervene between an output and
+        the harm, which determines which oversight measures apply and whether
+        real-time oversight is feasible at all.</p>
+      <p>Two technical comments were submitted on that draft from this
+        programme, both on clause 5.7. The first observes that clause 5.8.3 d)
+        requires a manual reviewer's identity to be recorded for remote
+        biometric identification systems, while clauses 5.7.1 to 5.7.5 route
+        every other intervention to logging without stating that the designated
+        person's identity forms part of the record. The second observes that
+        5.8.3 a) requires individual authentication of manual reviewers, and
+        that clause 5.7 requires nothing equivalent, so intervention functions
+        on a non-RBI system may be operated from a shared account.</p>
+
+      <h3>Where ISO/IEC 42001 fits</h3>
+      <p>An AI management system standard: governance, roles and processes. It
+        is organisational rather than a product requirement, it is not a
+        substitute for Articles 8 to 15, and certification to it is not
+        conformity with the Act. That last point is misstated often enough to be
+        worth repeating.</p>
+
+      <h3>How much of this is currently met</h3>
+      <p>Measured rather than assumed. Eight agent memory and agent framework
+        implementations were assessed in September 2026 against twenty
+        requirements, every verdict citing a file and a line at a named commit.
+        Six take or gate actions. Against whether an approval identifies a
+        person or a named role holder, four were assessed absent and one could
+        not be established either way. The assessment includes its author's own
+        implementation, the one entry that passes, and states that this entry
+        carries no evidential weight.</p>
+      <p>An organisation assembling Article 14 evidence on top of one of these
+        frameworks is, by default, assembling it on a record that cannot say who
+        decided.</p>
+
+      <h3>What to do with this</h3>
+      <p>The record format, the validator and the adapters are free and require
+        no permission. A record can be checked in a browser without installing
+        anything, and the validator is a single standard-library file that can
+        be copied into your own CI so that a conformance claim is checked by the
+        party hearing it rather than the party making it.</p>
+      <p>If this mapping is wrong, saying so is useful and there is a route for
+        it. A correction published under the name of whoever found it is worth
+        more to this programme than the original being right.</p>
+    </div>
+  </div>
+
+  <aside class="rail">
+    <h2>The dates</h2>
+    <div class="item">
+      <b>2 August 2026</b>
+      <p>Obligations began applying to Annex III high-risk systems.</p>
+    </div>
+    <div class="item">
+      <b>prEN 18229 still in draft</b>
+      <p>Nothing in the series is cited in the Official Journal, so nothing
+        carries a presumption of conformity yet.</p>
+    </div>
+    <div class="item">
+      <b>Part 3 comment closed 22 September 2026</b>
+      <p>Human oversight, Article 14. Comments reach the committee through
+        national member bodies.</p>
+    </div>
+    <div class="item">
+      <b>Not legal advice</b>
+      <p>This maps obligations to evidence. Whether a deployment satisfies a
+        legal obligation is for its parties and their regulator.</p>
+    </div>
+    <ul class="links">
+      <li><a href="/approvals/">Recording who approved</a></li>
+      <li><a href="/check/">Check a record in the browser</a></li>
+      <li><a href="https://doi.org/10.5281/zenodo.22290922">Eight systems, assessed</a></li>
+      <li><a href="https://datatracker.ietf.org/doc/draft-clifford-testimony-record/">The record format</a></li>
+      <li><a href="/changes/">If this mapping is wrong</a></li>
+    </ul>
+  </aside>
+</div>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>Editor: Troy Clifford. Operated by Garnet Taurus Ltd.</p>
+    <p>Specification text CC BY 4.0. Schema and tools MIT.</p>
+    <p>Machine Testimony is a research programme, not a registered institute or a certification body.</p>
+  </div>
+</footer>
+
+</body>
+</html>
