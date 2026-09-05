@@ -1,0 +1,171 @@
+<!--title: Proving a log was not altered
+    desc: What append-only storage, hash chains, signatures, timestamps and transparency logs each actually prove about an AI system's records, what none of them prove, and the one that costs nothing and works today.
+    slug: tamper-evidence-->
+
+<div class="wrap main">
+  <div>
+    <p class="dateline">Technical note, 5 September 2026</p>
+    <h2 class="label">Proving a log was not altered</h2>
+
+    <div class="block">
+      <p>An automated system did something consequential, and somebody now
+        wants to know that the record of it is the record that was written at
+        the time. This is the part of AI record-keeping that is easiest to
+        claim and hardest to check, and most of what is written about it
+        answers a narrower question than the one being asked.</p>
+
+      <p>Nothing here is specific to any format or product. The distinctions
+        apply to whatever you already log.</p>
+
+      <h3>First, the question underneath the question</h3>
+      <p><b>Altered by whom?</b> Almost every scheme in use protects against a
+        different party than the one people assume, and the difference decides
+        whether the record is worth anything in a dispute.</p>
+      <ul>
+        <li><b>Against accident and outsiders.</b> A hash of the record detects
+          corruption and detects somebody else editing it afterwards. This is
+          what most systems have and it is worth having.</li>
+        <li><b>Against the operator.</b> The party that wrote the record can
+          rewrite it and recompute any digest it computed itself. If the
+          question is "did the vendor change this", a digest the vendor
+          calculated answers nothing, however strong the hash.</li>
+      </ul>
+      <p>Internal audit asking about a team's own system, or a customer asking
+        about a supplier's, is always asking the second question. So is a court.</p>
+
+      <h3>What each mechanism actually proves</h3>
+      <div class="scroller">
+      <table class="reg">
+        <thead><tr><th>Mechanism</th><th>Detects an outsider's edit</th>
+          <th>Detects the operator's edit</th><th>Cost</th></tr></thead>
+        <tbody>
+          <tr><td class="s">Append-only storage</td><td class="v">partly</td>
+            <td class="v n">no</td><td class="d">free</td></tr>
+          <tr><td class="s">Hash of each entry</td><td class="v">yes</td>
+            <td class="v n">no</td><td class="d">free</td></tr>
+          <tr><td class="s">Hash chain</td><td class="v">yes</td>
+            <td class="v n">no</td><td class="d">free</td></tr>
+          <tr><td class="s">Digital signature</td><td class="v">yes</td>
+            <td class="v n">no, the key holder re-signs</td>
+            <td class="d">key management</td></tr>
+          <tr><td class="s">RFC 3161 timestamp</td><td class="v">yes</td>
+            <td class="v">yes, for time and content</td>
+            <td class="d">free, one HTTP call</td></tr>
+          <tr><td class="s">Transparency log</td><td class="v">yes</td>
+            <td class="v">yes, and detects omission</td>
+            <td class="d">infrastructure</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <p><b>Append-only storage</b> is a property of your code path behaving.
+        It is a real control against the ordinary case and it is not evidence,
+        because whoever administers the database can still write to it.</p>
+
+      <p><b>A hash chain</b> makes each entry commit to the one before it, so
+        an edit in the middle breaks everything after. Strong against an
+        outsider and worth nothing against the party that can recompute the
+        whole chain, which is the party that wrote it.</p>
+
+      <p><b>A signature</b> binds the record to a key. Better, and it moves the
+        question rather than settling it: whoever holds the key can sign a
+        different record just as validly. It helps when the key is held
+        somewhere the operator cannot reach.</p>
+
+      <p><b>An RFC 3161 timestamp</b> is the cheapest thing that changes the
+        answer. A Time Stamp Authority signs the pair of your digest and the
+        current time, with its own key. The operator cannot forge that
+        signature, cannot backdate it, and cannot alter the record without the
+        digest ceasing to match. Free authorities operate it, it underpins
+        qualified electronic timestamps under eIDAS, and a verifier checks it
+        with openssl rather than with anything of yours.</p>
+
+      <p><b>A transparency log</b> in the style of <a href="https://www.rfc-editor.org/rfc/rfc9162.html">RFC 9162</a> is stronger
+        again, because it also detects <i>omission</i>: a record that was never
+        submitted is visible as a gap. It is the right answer at scale and it
+        needs infrastructure somebody has to run.</p>
+
+      <h3>The cheap one, in full</h3>
+      <p>Hash the records you want to fix, ask an authority to sign the digest,
+        and keep the token beside them.</p>
+
+      <pre class="snip"># the digest of whatever you are fixing in time
+sha256sum records.jsonl
+
+# ask an authority to sign it
+openssl ts -query -data records.jsonl -sha256 -cert -out request.tsq
+curl -s -H "Content-Type: application/timestamp-query" \
+  --data-binary @request.tsq http://timestamp.digicert.com > token.tsr
+
+# what it says
+openssl ts -reply -in token.tsr -text</pre>
+
+      <p>Anybody you later hand the records and the token to checks them
+        against their own certificate store, with no cooperation from you:</p>
+
+      <pre class="snip">openssl ts -verify -in token.tsr -data records.jsonl \
+  -CAfile /etc/ssl/certs/ca-certificates.crt
+
+Verification: OK</pre>
+
+      <p>And what a failure looks like, which is the half nobody prints. One
+        byte changed anywhere in the file:</p>
+
+      <pre class="snip">error:17800067:time stamp routines:ts_check_imprints:message imprint mismatch
+Verification: FAILED</pre>
+
+      <p>Note what that does and does not tell you. It says the file is not the
+        one the authority signed. It does not say who changed it, when, or
+        which byte, and it cannot distinguish a malicious edit from a trailing
+        newline an editor added on save. Hash a canonical form rather than the
+        file as it happens to sit on disk, or you will spend a morning
+        investigating whitespace.</p>
+
+      <p>That is the whole mechanism. The common mistakes are worth knowing
+        because they are silent: a DER integer that is not minimally encoded
+        produces a token strict parsers reject, and roughly half of hand-built
+        requests hit it depending on one random byte. If you build the request
+        yourself rather than with <code>openssl ts -query</code>, check your
+        output parses before you rely on it.</p>
+
+      <h3>What none of this proves</h3>
+      <p>That the record is true. A system can record precisely what it
+        believed, sign it, timestamp it, and be wrong about all of it. Integrity
+        protects the entry, not the claim inside it.</p>
+      <p>That the record is complete. Everything above fixes what you submitted.
+        Only a transparency log makes what you did <i>not</i> submit visible,
+        and even then only for records that were meant to be there.</p>
+      <p>That a different record was not produced and discarded. A timestamp
+        proves this one existed at that time, not that it was the only one.</p>
+      <p>Anyone selling you integrity as an answer to accuracy is selling you
+        the wrong thing, and the distinction is the first one an auditor will
+        make.</p>
+
+      <h3>A worked example you can check</h3>
+      <p>There is a record published at
+        <a href="/anchor/">a record you can check without us</a>, with its
+        token, its digest, and the three commands above run against real files.
+        It is in the Testimony Record format, which is one way to write these
+        things down and not the only one. The mechanism on this page works with
+        whatever you already log.</p>
+    </div>
+  </div>
+
+  <aside class="rail">
+    <h2 class="label">If you have to answer for a system</h2>
+    <p class="cont">These are the questions worth asking a supplier about what
+      their system records, with what a real answer looks like.<br>
+      <a href="/ask/">Questions to ask your AI supplier</a></p>
+
+    <h2 class="label">Where this comes from</h2>
+    <p class="cont">An assessment of eight agent systems against twenty
+      requirements. Seven of the eight could not tell you whether a past entry
+      had been altered.<br>
+      <a href="/register/">The register</a></p>
+
+    <hr>
+    <p class="cont"><a href="/anchor/">A record you can check without us</a><br>
+      <a href="/implement/">Implementing the format</a><br>
+      <a href="https://datatracker.ietf.org/doc/draft-clifford-testimony-record/">The specification</a></p>
+  </aside>
+</div>
