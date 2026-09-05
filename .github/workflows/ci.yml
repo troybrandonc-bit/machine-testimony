@@ -159,6 +159,16 @@ jobs:
       - name: The draft and the validator agree about every field
         working-directory: tests
         run: python tests_draft_sync.py
+      - name: Find the draft source
+        run: |
+          # Named by pattern, not by version, so bumping -00 to -01 is a rename
+          # and not an edit to this file. Exactly one, because two would mean
+          # an old revision was left behind and the artifact would be a lottery.
+          d=$(ls spec/draft-*-[0-9][0-9].md)
+          test "$(echo "$d" | wc -l)" -eq 1 || {
+            echo "::error::expected one draft source in spec/, found: $d"; exit 1; }
+          echo "DRAFT_MD=$d" >> "$GITHUB_ENV"
+          echo "DRAFT_XML=${d%.md}.xml" >> "$GITHUB_ENV"
       - name: Markdown to xml2rfc v3
         run: |
           # Every reference is committed under .refcache, so the usual run needs
@@ -166,17 +176,17 @@ jobs:
           # commit and failed on a connection reset, which is a job that teaches
           # people to ignore it.
           for i in 1 2 3; do
-            kdrfc --v3 --xml spec/draft-clifford-testimony-record-00.md 2>&1               | tee /tmp/kdrfc.log && break
+            kdrfc --v3 --xml "$DRAFT_MD" 2>&1               | tee /tmp/kdrfc.log && break
             echo "attempt $i failed, retrying"; sleep 5
           done
           if grep -qE '^\*\*' /tmp/kdrfc.log; then
             echo "::error::kramdown-rfc warned"; cat /tmp/kdrfc.log; exit 1
           fi
-          test -f spec/draft-clifford-testimony-record-00.xml || {
+          test -f "$DRAFT_XML" || {
             echo "::error::no XML produced"; exit 1; }
       - name: xml2rfc v3 to text
         run: |
-          xml2rfc --text --v3 spec/draft-clifford-testimony-record-00.xml             --out /tmp/draft.txt 2>&1 | tee /tmp/x2r.log
+          xml2rfc --text --v3 "$DRAFT_XML"             --out /tmp/draft.txt 2>&1 | tee /tmp/x2r.log
           if grep -qiE "^.*(Error|undefined|unused)" /tmp/x2r.log; then
             echo "::error::xml2rfc reported problems"; cat /tmp/x2r.log; exit 1
           fi
@@ -185,7 +195,7 @@ jobs:
         with:
           name: internet-draft
           path: |
-            spec/draft-clifford-testimony-record-00.xml
+            ${{ env.DRAFT_XML }}
             /tmp/draft.txt
 
   browser-validator:
