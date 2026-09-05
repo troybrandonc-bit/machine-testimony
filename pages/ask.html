@@ -1,0 +1,59 @@
+<!--title: Questions to ask your AI supplier
+    desc: Eight questions about what a system records, with what a real answer looks like and what a soft yes sounds like. Free to send as your own, and grounded in a published assessment of eight agent systems.
+    slug: ask-->
+
+<div class="wrap main">
+  <div>
+    <p class="dateline">For buyers and risk teams, 5 September 2026</p>
+    <h2 class="label">Questions to ask your AI supplier</h2>
+    <div class="block">
+      <p>If a system acts on your behalf, somebody will eventually ask you what it did and who allowed it. These are the questions worth asking before that, in the order they usually matter.</p>
+      <p>They are not a compliance instrument and passing them is not conformity with anything. They come from a published assessment of 8 agent memory and agent framework implementations, where the counts below were measured rather than estimated, and each one is a question at least 7 of the 8 could not answer well.</p>
+      <p><b>Send them as your own.</b> No attribution, no sign-up, nothing to buy, and no need to mention where they came from. A questionnaire is more useful when the supplier answers the question rather than researching who is asking.</p>
+      <div class="scroller">
+      <table class="reg">
+        <thead><tr><th>Ask</th><th>A real answer</th><th>A soft yes</th><th>Could not</th></tr></thead>
+        <tbody>
+          <tr><td class="w">When your system takes an action on our behalf that needed a human to approve it, does the record say which person approved it?</td><td class="w">A named person or a named role holder, in the record itself, for every such action.</td><td class="w">“All high-risk actions require human approval.” That says a step exists. It does not say the record names who took it.</td><td class="n">5 of 6</td></tr>
+          <tr><td class="w">Where does that name come from?</td><td class="w">From your authentication layer: the session, the token, the directory entry the approver signed in with.</td><td class="w">“The approver is passed in the request.” A name supplied by the caller is an assertion about a person rather than a fact about one, and the caller can be the system being approved.</td><td class="n">5 of 6</td></tr>
+          <tr><td class="w">Can the agent approve its own action?</td><td class="w">No, and the system enforces it rather than the operator remembering to.</td><td class="w">“That would not happen in practice.” Ask what stops it.</td><td class="n">5 of 6</td></tr>
+          <tr><td class="w">If two of your sources disagreed about a fact, does the record keep both, or only the one the system chose?</td><td class="w">Both, with the disagreement recorded as its own thing.</td><td class="w">“The system resolves conflicts automatically.” That is the answer to a different question, and it means the losing side is gone.</td><td class="n">5 of 8</td></tr>
+          <tr><td class="w">When a disagreement was resolved, does the record say who or what resolved it, and on what basis?</td><td class="w">The method, the party, the time, and which side was kept.</td><td class="w">“We use confidence scores.” A number is not a reason, and it does not say who set the threshold.</td><td class="n">6 of 8</td></tr>
+          <tr><td class="w">Can we get from a stored fact back to the source it came from?</td><td class="w">A citation in the record that leads to the message, document or API response the fact was drawn from.</td><td class="w">“Everything is logged.” Logs elsewhere are not a citation in the record, and an auditor cannot join them for you.</td><td class="n">6 of 8</td></tr>
+          <tr><td class="w">If somebody altered a past entry, would anyone be able to tell?</td><td class="w">A published scheme under which alteration is detectable, and a way to run it.</td><td class="w">“The database is append-only.” That is a property of your code path behaving, which is the thing in question.</td><td class="n">7 of 8</td></tr>
+          <tr><td class="w">Could we check that ourselves, without your software and without your cooperation?</td><td class="w">Yes, and here is how. This is the question that separates a record from a report.</td><td class="w">“You can export it and we will verify it for you.” A verification only the supplier can perform is not one you can rely on in a dispute with the supplier.</td><td class="n">6 of 8</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <h3>And then the one that settles it</h3>
+      <p><b>Can you show us the record for one specific action your system took last month, end to end?</b></p>
+      <p>Every question above can be answered in good faith by somebody describing what they believe their system does. This one cannot. Either the record exists and they can show you, or the conversation has been about an intention.</p>
+      <h3>The version to paste into an email</h3>
+      <pre class="snip">Questions about your system&#x27;s record of what it did.
+
+1. When your system takes an action on our behalf that needed a human to approve it, does the record say which person approved it?
+2. Where does that name come from?
+3. Can the agent approve its own action?
+4. If two of your sources disagreed about a fact, does the record keep both, or only the one the system chose?
+5. When a disagreement was resolved, does the record say who or what resolved it, and on what basis?
+6. Can we get from a stored fact back to the source it came from?
+7. If somebody altered a past entry, would anyone be able to tell?
+8. Could we check that ourselves, without your software and without your cooperation?
+
+9. Can you show us the record for one specific action your system took last month, end to end?
+
+These come from a published assessment of eight agent systems: https://machinetestimony.org/register/</pre>
+      <h3>What a good answer is worth, and what it is not</h3>
+      <p>A supplier who answers all of these well has a record you can read. That is worth a great deal and it is not the same as the record being true: a system can record precisely what it believed and be wrong. What these questions establish is whether anybody can find out.</p>
+      <p>None of this is a legal conclusion either. The EU AI Act's obligations run through Articles 12, 13 and 14, and presumption of conformity comes from the harmonised standards. A supplier is not non-compliant because they answered one of these badly, and not compliant because they answered them all well.</p>
+    </div>
+  </div>
+  <aside class="rail">
+    <h2 class="label">Where the counts come from</h2>
+    <p class="cont">A published assessment of 8 systems, every verdict citing a file and a line at a pinned commit.<br><a href="/register/">The register</a><br><a href="https://doi.org/10.5281/zenodo.22290922">The dated edition, with a DOI</a></p>
+    <h2 class="label">If you are the supplier</h2>
+    <p class="cont">The questions come from a published record format. Implementing it is two files and an afternoon, and you can check yourself against the same corpus everybody else is checked against.<br><a href="/implement/">Implementing it</a></p>
+    <hr>
+    <p class="cont"><a href="/assess/">Assess a system yourself</a><br><a href="/check/">Check a record</a></p>
+  </aside>
+</div>
