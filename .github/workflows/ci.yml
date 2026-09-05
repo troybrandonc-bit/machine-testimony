@@ -333,9 +333,9 @@ jobs:
           [ $rc -eq 0 ] || { echo "::error::the census suite failed"; exit 1; }
       - name: The shipped manifest is the manifest of the shipped files
         run: |
-          before=$(python -c "import json,io;print(json.load(io.open('census/MANIFEST.json',encoding='utf-8'))['digest'])")
+          before=$(python -c "import json,io;print(json.load(io.open('census/MANIFEST.json',encoding='utf-8'))['census_digest'])")
           python census/manifest.py >/dev/null
-          after=$(python -c "import json,io;print(json.load(io.open('census/MANIFEST.json',encoding='utf-8'))['digest'])")
+          after=$(python -c "import json,io;print(json.load(io.open('census/MANIFEST.json',encoding='utf-8'))['census_digest'])")
           echo "digest $after"
           if [ "$before" != "$after" ]; then
             echo "::error::MANIFEST.json is stale; run census/manifest.py"; exit 1
