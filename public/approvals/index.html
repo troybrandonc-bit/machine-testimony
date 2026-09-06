@@ -265,6 +265,55 @@
       <p>Nothing above is specific to any framework, and none of it needs any
         particular software. It is the shape of the problem.</p>
 
+      <h3>The approval nobody came back to</h3>
+      <p>An approval that is never answered is the case every design forgets,
+        and it is the common one. The person was on leave, the queue was not
+        monitored, the run that raised the pause died. What the record says
+        afterwards decides whether the gap is a fact or a hole.</p>
+
+      <p>The usual answer is a deadline: give the request an expiry, and treat
+        it as lapsed once the deadline passes. That is right and it is not
+        enough, because it leaves two questions open.</p>
+      <ul>
+        <li><b>Who notices?</b> If the deadline is only evaluated when
+          something reads the row, and the thing that would read it is the run
+          that died, nothing ever evaluates it. The request sits in a state
+          that is neither approved nor refused, indefinitely, and the record
+          shows a proposal followed by silence.</li>
+        <li><b>What is written?</b> A request that quietly disappears at its
+          deadline leaves the same evidence as one that was never made. A
+          reader afterwards cannot tell an action nobody got to from an action
+          nobody proposed.</li>
+      </ul>
+
+      <p><b>Both close the same way: expiry is a refusal, and it is evaluated
+        at the door.</b></p>
+      <ul>
+        <li><b>An expired request is refused, with a reason, in the
+          record.</b> Not dropped, not left pending. "Nobody answered before
+          the deadline" is a fact about what happened and it belongs beside the
+          approvals, carrying the same weight. A system that records only the
+          requests somebody got to is describing its own attentiveness rather
+          than its behaviour.</li>
+        <li><b>Expiry is settled before any read and before any decision,</b>
+          rather than by something that has to still be alive to run. Then it
+          does not matter that the originating run is gone: nobody can act on
+          an expired request, because the act of looking settles it first. The
+          liveness problem becomes a property of whoever reads next, and
+          somebody always reads eventually, or the record was never going to
+          be examined at all.</li>
+        <li><b>There is no option for never.</b> A request that can wait
+          forever is a pending state that can outlive the system that made it,
+          and a policy of "expires: null" is how a queue silently becomes a
+          list of things nobody has to answer for.</li>
+      </ul>
+
+      <p>The test is a question a reader can put to any queue: pick a request
+        from six months ago that nobody answered. What does the record say
+        about it now? If the answer is "it is still pending", the record cannot
+        distinguish a decision that was never taken from one that was never
+        needed.</p>
+
       <h3>What this looks like in practice</h3>
       <p>Agent frameworks generally pause and resume by passing a value back
         into a paused run. The value says what was decided. Most of them model
