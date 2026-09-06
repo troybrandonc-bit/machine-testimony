@@ -109,10 +109,14 @@ def main() -> int:
 
     b = []
     w = b.append
-    w("<!--title: The register")
-    w("    desc: Which agent systems record what, with every verdict citing a "
-      "file and a line at a pinned commit. Updated rather than dated, and a "
-      "wrong verdict is fixed by a pull request.")
+    # The title and description are metadata: they exist to match a query,
+    # not to be read on the page, which takes its heading from the body below.
+    w("<!--title: AI agent audit trail comparison: eight systems, "
+      "twenty requirements")
+    w("    desc: An audit trail comparison of eight AI agent systems: which "
+      "record what, with every verdict citing a file and a line at a pinned "
+      "commit. Updated rather than dated, and a wrong verdict is fixed by a "
+      "pull request.")
     w("    slug: register-->")
     w("")
     w('<div class="wrap main">')
