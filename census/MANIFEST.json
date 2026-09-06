@@ -16,7 +16,8 @@
     "priority": "The digest below fixes the content of these findings at the assessed date. The deposit at doi:10.5281/zenodo.22290923, held by CERN and dated 4 September 2026, is the third-party record of when each observation was first made. Cite the concept DOI, 10.5281/zenodo.22290922, which resolves to the latest version; cite the version DOI to point at this one specifically."
   },
   "assessed_on": [
-    "2026-09-04"
+    "2026-09-04",
+    "2026-09-06"
   ],
   "subjects": [
     {
@@ -114,13 +115,25 @@
       "level_reached": null,
       "assessed_by": "Troy Brandon Clifford",
       "digest": "sha256:8e6e9b0216885b0bdeadf8853fe2c6012fb8c07fef480afc6cb71606a445547b"
+    },
+    {
+      "file": "subjects/pydantic-ai.json",
+      "subject": "pydantic-ai",
+      "name": "Pydantic AI",
+      "version": "2.40.0+ (c0e4d82)",
+      "url": "https://github.com/pydantic/pydantic-ai",
+      "commit": "c0e4d824eaa0401d4481d401e5b3894ab32ab59d",
+      "assessed_on": "2026-09-06",
+      "level_reached": null,
+      "assessed_by": "Troy Brandon Clifford",
+      "digest": "sha256:4746643e8c184e99fce2d6b2a45e59418528ff1c005ed0b94e3a935938aa31c9"
     }
   ],
   "scored_against": {
     "rubric.py": "sha256:716880b1bf0a8c5152b871559e6e641a0e6822af91c9d9446053644174832518",
     "subject.py": "sha256:46032f4a40827aba0bf72497442bf8c9a7922ecd55539d711287dea13b4a7f35"
   },
-  "census_digest": "sha256:2092e7c9aaa74148e09afab79cf94fbe5ac6cb840ac6d3ce05586611cbef9165",
+  "census_digest": "sha256:45bb3ffe9c848d4c54a6f231be1faffdfd151085b1a0f62c504e2480e8eba6e8",
   "recompute": "python3 benchmarks/census/manifest.py --check",
   "note": "Each subject names the exact commit its citations refer to. A system that later gains a capability recorded here as absent has not made this document wrong: the assessment was of that commit, which still exists and still reads the same way. A later assessment is a new entry with a new date, never an edit to this one."
 }

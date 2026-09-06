@@ -1,0 +1,397 @@
+{
+ "subject": "pydantic-ai",
+ "name": "Pydantic AI",
+ "version": "2.40.0+ (c0e4d82)",
+ "url": "https://github.com/pydantic/pydantic-ai",
+ "commit": "c0e4d824eaa0401d4481d401e5b3894ab32ab59d",
+ "license": "MIT",
+ "claims": [
+  "stores",
+  "acts"
+ ],
+ "assessed_on": "2026-09-06",
+ "assessed_by": "Troy Brandon Clifford",
+ "method": "Read of pydantic_ai_slim/pydantic_ai/messages.py, _tool_execution.py, _deferred.py, tools.py, toolsets/approval_required.py and docs/message-history.md at c0e4d824eaa0401d4481d401e5b3894ab32ab59d. The source archive for that commit was downloaded from the public repository rather than an installed release, so every line number refers to the pinned commit and every search below was run over all 305 modules of the package rather than over the handful of files that were read closely. That commit is main, dated 5 September 2026, one day after the v2.40.0 release, which is why the version is written as 2.40.0+ rather than as a release. Documentation was read only where it states a behaviour the source does not settle on its own, which here is what happens to history when a processor runs.",
+ "notes": "Pydantic AI is assessed as storing and acting but not deriving. It keeps a typed message history across turns and it gates tool calls that have effects, but the framework makes no claims about the world beyond what the model produced, so R2.2 does not apply and is not scored. The same reading was applied to LangGraph.\n\nThis subject scores better on TR-1, and on the recording half of TR-3, than anything else assessed so far. Entries are typed with a discriminator the parser depends on, every part carries its own timestamp, and how a tool call ended is a closed literal in which denied sits beside success, so a refusal is a record of the same standing as a permission rather than an exception or a log line. Compaction inserts a marker and retains what it summarises. In-place mutation of history is detected and warned about, which no other subject does.\n\nIt stops in the same place as the rest. An approval is typed as a mapping to bool or DeferredToolApprovalResult, so a bare True approves, and a boolean has nowhere to put a person. Everything in TR-3 that concerns who authorised an action is therefore absent, and TR-4 is absent as it is everywhere.\n\nOne thing here does not fit the pattern and is worth saying plainly. ToolApproved carries override_args, which means the design already understands that what a person approved and what the model proposed can differ, a distinction most systems with an approval gate have not drawn. The gap is not that this framework has thought about approval carelessly. It is that it has thought about the action carefully and about the approver not at all.",
+ "assessments": {
+  "R1.1": {
+   "verdict": "present",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "pydantic_ai_slim/pydantic_ai/messages.py:219",
+     "note": "SystemPromptPart.timestamp is datetime = field(default_factory=_now_utc), set at construction rather than by a caller who might forget"
+    },
+    {
+     "kind": "source",
+     "locator": "pydantic_ai_slim/pydantic_ai/messages.py:1123",
+     "note": "the same on UserPromptPart, and at 1385 on BaseToolReturnPart, 1726 on RetryPromptPart and 2742 on ModelResponse, so every kind of entry carries its own time"
+    },
+    {
+     "kind": "source",
+     "locator": "pydantic_ai_slim/pydantic_ai/messages.py:2951",
+     "note": "ModelMessagesTypeAdapter serialises the message list including those timestamps, so the write time survives being persisted and reloaded rather than living only in a process"
+    }
+   ],
+   "note": "The strongest R1.1 in the census so far. The time is a field on the entry itself, defaulted at construction, and it round-trips through the framework's own serialiser. Nothing here depends on an application remembering to stamp anything."
+  },
+  "R1.2": {
+   "verdict": "partial",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "pydantic_ai_slim/pydantic_ai/messages.py:2172",
+     "note": "CompactionPart is a typed part that summarises earlier history. Compaction inserts a marker into the list rather than deleting what came before it"
+    },
+    {
+     "kind": "source",
+     "locator": "pydantic_ai_slim/pydantic_ai/messages.py:2957-2962",
+     "note": "post_compaction_window returns the messages from the latest CompactionPart onward: the summary replaces everything before it, so that window is what the model sees. The earlier parts remain in the full history, so both the compacted view and the original are readable"
+    },
+    {
+     "kind": "docs",
+     "locator": "docs/message-history.md:722-724",
+     "note": "the other documented mechanism does the opposite. History processors replace the message history in the state with the processed messages, and if you want to keep the original you need to make a copy of it"
+    }
+   ],
+   "note": "Two documented mechanisms that change history, behaving in opposite ways. Compaction is done the way this requirement asks: a typed marker, the prior parts retained, and a function for reading either view. History processors replace outright and the docs put keeping the original on the caller. Partial because which answer a deployment gets depends on which of the two it uses."
+  },
+  "R1.3": {
+   "verdict": "present",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "pydantic_ai_slim/pydantic_ai/messages.py:1729",
+     "note": "a correction is a new entry: RetryPromptPart is appended as its own part rather than editing the tool call it corrects"
+    },
+    {
+     "kind": "source",
+     "locator": "pydantic_ai_slim/pydantic_ai/messages.py:2172",
+     "note": "compaction likewise appends a CompactionPart instead of removing the messages it summarises"
+    },
+    {
+     "kind": "docs",
+     "locator": "docs/message-history.md:590",
+     "note": "in-place mutation of an existing message is not supported, and when it is detected at the end of a run a MessageHistoryMutatedWarning is emitted"
+    }
+   ],
+   "note": "The ordinary path only appends. Worth recording that the framework actively detects in-place mutation and warns, which no other subject here does, though the stated motive is serialisation caching rather than integrity: the warning exists because instrumentation serialises each message once and a field mutated in place would not be picked up. Detection as a side effect of a performance decision is still detection, but it is not a guarantee, and nothing makes the objects immutable."
+  },
+  "R1.4": {
+   "verdict": "present",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "pydantic_ai_slim/pydantic_ai/messages.py:228",
+     "note": "part_kind is a closed Literal discriminator on every part: system-prompt here, and user-prompt (1126), tool-call (2464), tool-return (1633), retry-prompt (1729), thinking (2152), compaction (2212), text (2100)"
+    },
+    {
+     "kind": "source",
+     "locator": "pydantic_ai_slim/pydantic_ai/messages.py:1388",
+     "note": "BaseToolReturnPart.outcome is a closed Literal of success, failed, denied and interrupted, so how a call ended is typed rather than inferred from the text of the result"
+    },
+    {
+     "kind": "source",
+     "locator": "pydantic_ai_slim/pydantic_ai/messages.py:2713",
+     "note": "the parts union is a pydantic discriminated union tagged on part_kind, so the type is load-bearing for parsing and cannot drift into free-form advisory text"
+    }
+   ],
+   "note": "An instruction, a tool call and a tool result are separate types with a discriminator the parser depends on, which is what this requirement asks for. The outcome literal is a genuine refinement over the rest of the census: most systems record that a call returned, not how it ended."
+  },
+  "R1.5": {
+   "verdict": "absent",
+   "evidence": [
+    {
+     "kind": "docs",
+     "locator": "docs/message-history.md:707-708",
+     "note": "history processors are the documented answer to erasure: modifying history could be for privacy reasons, filtering out sensitive information"
+    },
+    {
+     "kind": "docs",
+     "locator": "docs/message-history.md:722-724",
+     "note": "and that mechanism replaces the history in state with the processed messages, leaving nothing behind to say a removal happened or what was removed"
+    },
+    {
+     "kind": "searched",
+     "locator": "grep -rniE 'def (delete|purge|redact|forget|erase)' pydantic_ai_slim/pydantic_ai",
+     "note": "one hit across 305 modules, and it is not an erasure API: _instrumentation.py:142 redact_binary_content strips binary data out of OpenTelemetry span attributes before they are exported. It never touches the message history, so no privileged operation exists that could leave a trace of a deletion even in principle"
+    }
+   ],
+   "note": "The documented route to removing sensitive data leaves no mark that anything was removed. A reader of the resulting history cannot tell a conversation that was always short from one that was filtered. This is the ordinary shape of the finding across the census rather than anything unusual to this framework."
+  },
+  "R2.1": {
+   "verdict": "partial",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "pydantic_ai_slim/pydantic_ai/messages.py:2356",
+     "note": "BaseToolCallPart.tool_call_id, and at 1361 the matching field on BaseToolReturnPart, so a result resolves to the call that produced it by following an id rather than by position"
+    },
+    {
+     "kind": "source",
+     "locator": "pydantic_ai_slim/pydantic_ai/messages.py:1720",
+     "note": "RetryPromptPart carries the same id, so a correction also resolves to what it corrects"
+    },
+    {
+     "kind": "searched",
+     "locator": "grep -nE '^ *(source|provenance|derived_from)' pydantic_ai_slim/pydantic_ai/messages.py",
+     "note": "no field links an assertion in a TextPart to the tool result or document it came from; within a response, model text and the tool returns that informed it are adjacent parts with nothing joining them"
+    }
+   ],
+   "note": "Provenance is good exactly where the framework has structure to hang it on, and absent where it does not. A tool result names its call. A sentence the model wrote names nothing, so what a claim in the output rests on is recoverable only by reading the surrounding history and inferring."
+  },
+  "R2.3": {
+   "verdict": "partial",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "pydantic_ai_slim/pydantic_ai/messages.py:2172",
+     "note": "nothing is overwritten on the ordinary path and compaction retains what it summarises, so two messages that contradict each other both remain in the history"
+    },
+    {
+     "kind": "docs",
+     "locator": "docs/message-history.md:707-708",
+     "note": "a history processor configured to save costs on tokens or to give less context to the model can drop either of them, and the docs present that as a normal use"
+    },
+    {
+     "kind": "searched",
+     "locator": "grep -rniE 'conflict|contradict|disagree' pydantic_ai_slim/pydantic_ai/messages.py",
+     "note": "the framework has no notion of a proposition, so two messages disagreeing is not a state it can represent; their survival is a property of the log, not a decision about the disagreement"
+    }
+   ],
+   "note": "Both survive, but incidentally. The same verdict and the same reasoning as LangGraph: an append-only log preserves contradictions without knowing that is what it is doing, and a summarisation step configured by the deployment can end that."
+  },
+  "R2.4": {
+   "verdict": "absent",
+   "evidence": [
+    {
+     "kind": "searched",
+     "locator": "grep -rniE '\\bconflict|contradict' pydantic_ai_slim/pydantic_ai",
+     "note": "57 hits across 18 modules and not one is about stored facts disagreeing. They are collisions between tool definitions sharing a unique_id (agent/__init__.py:4381, 4400), overlapping toolset names and ordering clashes between capabilities. The word is used for name collisions throughout; no conflict type, conflict record or query surface for a disagreement exists"
+    },
+    {
+     "kind": "source",
+     "locator": "pydantic_ai_slim/pydantic_ai/messages.py:2713",
+     "note": "the part union enumerates every kind of entry the framework models, and a disagreement between entries is not among them"
+    }
+   ],
+   "note": "A reader has to notice a contradiction by reading the transcript. That is not a criticism of a message history, which is what this is; it is the fact the requirement is asking for."
+  },
+  "R2.5": {
+   "verdict": "absent",
+   "evidence": [
+    {
+     "kind": "searched",
+     "locator": "grep -rniE 'resolv' pydantic_ai_slim/pydantic_ai/messages.py",
+     "note": "no resolution is recorded because no conflict is represented, so there is no actor and no method to record"
+    },
+    {
+     "kind": "docs",
+     "locator": "docs/message-history.md:722-724",
+     "note": "where a disagreement does get settled it is settled silently: a processor that drops one side leaves the surviving side looking uncontested"
+    }
+   ],
+   "note": "Scored absent rather than present under the clause that credits a system which never resolves conflicts, because that clause is for a system that leaves a contradiction standing as a visible unresolved state. Here nothing is standing, because nothing was ever represented as a contradiction."
+  },
+  "R3.1": {
+   "verdict": "present",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "pydantic_ai_slim/pydantic_ai/messages.py:2464",
+     "note": "the ToolCallPart the model proposed is in the history whether or not the call ran, because it is part of the response that requested it"
+    },
+    {
+     "kind": "source",
+     "locator": "pydantic_ai_slim/pydantic_ai/_tool_execution.py:129-138",
+     "note": "a call that was refused still produces a ToolReturnPart, carrying outcome='denied', so a stopped attempt leaves an entry of the same kind as one that executed"
+    },
+    {
+     "kind": "source",
+     "locator": "pydantic_ai_slim/pydantic_ai/_tool_execution.py:1027-1031",
+     "note": "DeferredToolRequests carries the calls that are waiting, so an action pending a person is a state the record can show rather than a gap"
+    }
+   ],
+   "note": "The clearest yes in the census on this requirement. Proposed, refused and executed calls are all entries, and which of the three happened is readable from a typed field rather than from whether a row is missing."
+  },
+  "R3.2": {
+   "verdict": "present",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "pydantic_ai_slim/pydantic_ai/tools.py:311",
+     "note": "requires_approval is a bool field on the tool, set at registration (338, default False; assigned at 437), so the classification is developer configuration"
+    },
+    {
+     "kind": "source",
+     "locator": "pydantic_ai_slim/pydantic_ai/tools.py:512",
+     "note": "kind is set to unapproved when requires_approval is true and to function otherwise, so what the model receives is a consequence of the config and not a channel into it"
+    },
+    {
+     "kind": "source",
+     "locator": "pydantic_ai_slim/pydantic_ai/toolsets/approval_required.py:22-30",
+     "note": "ApprovalRequiredToolset takes approval_required_func(ctx, tool_def, tool_args) returning bool, and raises ApprovalRequired when it returns true and the call is not already approved"
+    }
+   ],
+   "note": "Present, with one honest qualification. The default and the primary mechanism put risk entirely outside model output. The optional predicate is handed tool_args, which the model wrote, so a deployment can choose to classify on model-produced values. The framework neither does that nor encourages it, and a requirement about where risk comes from should score what the framework establishes, not what a caller can opt into. Binary rather than graded, as everywhere else in this census."
+  },
+  "R3.3": {
+   "verdict": "present",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "pydantic_ai_slim/pydantic_ai/messages.py:1388",
+     "note": "outcome is a closed Literal of success, failed, denied and interrupted, so a refusal is a value in the same vocabulary as a success, on the same part type"
+    },
+    {
+     "kind": "source",
+     "locator": "pydantic_ai_slim/pydantic_ai/_tool_execution.py:129-138",
+     "note": "a ToolDenied is translated into a ToolReturnPart with outcome='denied' and the same tool_name and tool_call_id a successful return would carry"
+    }
+   ],
+   "note": "The best answer to this requirement in the census. Elsewhere a refusal is a state change, an exception or a line in application logging; here it is the same record type as a permission, distinguished by a typed field, and it goes back to the model as well as into the history."
+  },
+  "R3.4": {
+   "verdict": "partial",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "pydantic_ai_slim/pydantic_ai/_tool_execution.py:129-138",
+     "note": "the denial's message becomes the content of the ToolReturnPart, so a reason travels with the refusal and reaches both the history and the model"
+    },
+    {
+     "kind": "source",
+     "locator": "pydantic_ai_slim/pydantic_ai/messages.py:1388",
+     "note": "what is structured is the outcome, not the reason: denied is a typed value, while why it was denied is free text in content alongside ordinary tool output"
+    },
+    {
+     "kind": "source",
+     "locator": "pydantic_ai_slim/pydantic_ai/_deferred.py:116",
+     "note": "ToolDenied.message defaults to the string 'The tool call was denied.', so a refusal that nobody wrote a reason for still looks like a refusal that carries one"
+    },
+    {
+     "kind": "searched",
+     "locator": "grep -rniE 'reason|rejection|denial_code' pydantic_ai_slim/pydantic_ai/messages.py pydantic_ai_slim/pydantic_ai/_deferred.py",
+     "note": "no reason, code or category field exists on the return part or on ToolDenied, so two refusals for different causes are distinguishable only by reading their prose"
+    }
+   ],
+   "note": "Ahead of most of the census, which records no reason at all, and short of the requirement, which asks for a machine-readable one. A deployment can tell that a call was refused by testing a field, and can tell why only by parsing English, which may be a default string nobody chose."
+  },
+  "R3.5": {
+   "verdict": "absent",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "pydantic_ai_slim/pydantic_ai/_deferred.py:47",
+     "note": "build_results takes approvals as dict[str, bool | DeferredToolApprovalResult], so a bare True is a complete approval and there is nowhere in that shape to put a person"
+    },
+    {
+     "kind": "source",
+     "locator": "pydantic_ai_slim/pydantic_ai/_deferred.py:103-109",
+     "note": "ToolApproved carries override_args and a kind discriminator and nothing else. The type that represents an approval has no field for who gave it"
+    },
+    {
+     "kind": "source",
+     "locator": "pydantic_ai_slim/pydantic_ai/_deferred.py:82-84",
+     "note": "build_results(approve_all=True) fills every unanswered pending call with a default ToolApproved(). It is explicit opt-in and defaults to False, so it is not a fail-open default, but the approvals it produces are indistinguishable in the record from ones a person considered one at a time"
+    },
+    {
+     "kind": "searched",
+     "locator": "grep -rniE 'approver|principal|approved_by' pydantic_ai_slim/pydantic_ai",
+     "note": "zero hits across all 305 modules. No approver, principal or approved_by field exists anywhere in the framework, not merely on the approval path"
+    }
+   ],
+   "note": "The same finding as almost every subject that has an approval gate, and the reason the adapter for this framework exists. ToolApproved is a richer object than most, carrying override_args so that what was approved can differ from what was proposed, which shows the design already takes the approval seriously as an object. It simply has no field for the person. The consequence is visible in approve_all: a deployment that approves a batch produces records identical to one where somebody read every call, and no reader of the history can tell the two apart."
+  },
+  "R3.6": {
+   "verdict": "absent",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "pydantic_ai_slim/pydantic_ai/_tool_execution.py:1027-1031",
+     "note": "the pause hands DeferredToolRequests to the caller and the caller hands back DeferredToolResults; the framework does not participate in whatever happens between, and has no session or authentication layer to take an identity from"
+    },
+    {
+     "kind": "searched",
+     "locator": "grep -rniE 'auth|session|identity|credential' pydantic_ai_slim/pydantic_ai/_tool_execution.py",
+     "note": "nothing on the approval path reads an authenticated identity, which follows from there being no identity captured at all"
+    }
+   ],
+   "note": "Not reachable while R3.5 is absent: an identity that is never recorded cannot be sourced from anywhere. Recorded separately because the two failures come apart in systems that do capture an approver and then take the name from the request body."
+  },
+  "R3.7": {
+   "verdict": "absent",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "pydantic_ai_slim/pydantic_ai/toolsets/approval_required.py:29",
+     "note": "the gate tests ctx.tool_call_approved, a boolean on the run context, so any code that can set it satisfies the gate, including the process running the agent"
+    },
+    {
+     "kind": "source",
+     "locator": "pydantic_ai_slim/pydantic_ai/_tool_execution.py:669-675",
+     "note": "the approval is consumed with no comparison between an approving principal and the proposing one, because neither is represented"
+    },
+    {
+     "kind": "searched",
+     "locator": "grep -rniE 'separation|segregat|self.approv|same principal|four.eyes' pydantic_ai_slim/pydantic_ai",
+     "note": "six hits across 305 modules, all of them ordinary approval plumbing in approval_required.py and _deferred.py matching on the substring approv. Nothing in the framework expresses a separation between the party that proposes an action and the party that allows it"
+    }
+   ],
+   "note": "No separation is enforced or claimed. With no principals on either side there is nothing to compare, so an agent loop that supplies its own DeferredToolResults approves its own actions and the record cannot show that this is what happened."
+  },
+  "R4.1": {
+   "verdict": "absent",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "pydantic_ai_slim/pydantic_ai/messages.py:2951",
+     "note": "ModelMessagesTypeAdapter is the published persistence scheme: messages serialise to JSON and load back. It carries no digest, no chain field and no signature"
+    },
+    {
+     "kind": "searched",
+     "locator": "grep -rniE 'hmac|sha256|blake2|merkle|tamper|checksum|hashlib' pydantic_ai_slim/pydantic_ai",
+     "note": "ten hits, and every one is an identifier or a cache key rather than an integrity check. messages.py:241 hashes multi-modal content to a six character handle so a model can refer to a file, explicitly passing usedforsecurity=False; models/__init__.py:2582 takes a blake2s digest to fabricate tool call ids that cannot collide; prefect/_cache_policies.py digests a payload for caching. The library reaches for a digest four times and never over a record"
+    }
+   ],
+   "note": "There is a documented way to persist a record and no documented way to verify one. That is the census-wide pattern rather than a fault peculiar to this framework: TR-4 is the level nothing assessed has reached."
+  },
+  "R4.2": {
+   "verdict": "absent",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "pydantic_ai_slim/pydantic_ai/messages.py:2951",
+     "note": "the round trip validates that JSON parses into the message types, which is schema validation and not evidence about a past state"
+    },
+    {
+     "kind": "searched",
+     "locator": "grep -rniE 'verify|verification' pydantic_ai_slim/pydantic_ai",
+     "note": "no verification entry point exists, so there is nothing an independent party could run"
+    }
+   ],
+   "note": "Nothing here needs the vendor's cooperation, because there is no verification to withhold. Scored absent on the same basis as every other subject: absence of a scheme, not a restriction on access to one."
+  },
+  "R4.3": {
+   "verdict": "absent",
+   "evidence": [
+    {
+     "kind": "docs",
+     "locator": "docs/message-history.md:590",
+     "note": "the one detection mechanism is MessageHistoryMutatedWarning, emitted at the end of a run when a message was mutated in place"
+    },
+    {
+     "kind": "source",
+     "locator": "pydantic_ai_slim/pydantic_ai/messages.py:2951",
+     "note": "it does not survive persistence: once a history has been serialised and reloaded there is no digest or chain against which an altered part could be compared, so a change made to the stored JSON is indistinguishable from the original"
+    },
+    {
+     "kind": "searched",
+     "locator": "grep -rniE 'tamper|verify_integrity|checksum|digest' pydantic_ai_slim/pydantic_ai",
+     "note": "ten hits, none of them over stored messages: the digests are for synthesising unique tool call ids and for a Prefect cache key. No code path recomputes anything over a past entry, so there is nothing that could disagree if that entry changed"
+    }
+   ],
+   "note": "The closest thing to alteration detection in the census, and still absent under the requirement. The warning fires inside a live run, is driven by a serialisation cache rather than by an integrity scheme, and says nothing about a record at rest, which is where the requirement is aimed. A stored history can be edited freely and nothing would show it."
+  }
+ }
+}
