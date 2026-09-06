@@ -3,23 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The register &ndash; Machine Testimony</title>
-<meta name="description" content="Which agent systems record what, with every verdict citing a file and a line at a pinned commit. Updated rather than dated, and a wrong verdict is fixed by a pull request.">
-<meta property="og:title" content="The register">
-<meta property="og:description" content="Which agent systems record what, with every verdict citing a file and a line at a pinned commit. Updated rather than dated, and a wrong verdict is fixed by a pull request.">
+<title>Who asked, and what happened to them &ndash; Machine Testimony</title>
+<meta name="description" content="The conformance census measured that agent systems cannot say who approved an action. This measures whether anybody asked them to. Eighty-four issues across seven agent frameworks, separated into people asking and vendors promoting, with the data published so the split can be disputed.">
+<meta property="og:title" content="Who asked, and what happened to them">
+<meta property="og:description" content="The conformance census measured that agent systems cannot say who approved an action. This measures whether anybody asked them to. Eighty-four issues across seven agent frameworks, separated into people asking and vendors promoting, with the data published so the split can be disputed.">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://machinetestimony.org/register/">
+<meta property="og:url" content="https://machinetestimony.org/demand/">
 <meta property="og:image" content="https://machinetestimony.org/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="The register">
-<meta name="twitter:description" content="Which agent systems record what, with every verdict citing a file and a line at a pinned commit. Updated rather than dated, and a wrong verdict is fixed by a pull request.">
+<meta name="twitter:title" content="Who asked, and what happened to them">
+<meta name="twitter:description" content="The conformance census measured that agent systems cannot say who approved an action. This measures whether anybody asked them to. Eighty-four issues across seven agent frameworks, separated into people asking and vendors promoting, with the data published so the split can be disputed.">
 <meta name="twitter:image" content="https://machinetestimony.org/og.png">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/icon.png" type="image/png" sizes="512x512">
 <link rel="apple-touch-icon" href="/icon.png">
-<link rel="canonical" href="https://machinetestimony.org/register/">
+<link rel="canonical" href="https://machinetestimony.org/demand/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
@@ -251,71 +251,128 @@
 </div>
 <div class="wrap main">
   <div>
-    <p class="dateline">Standing register, last read 2026-09-05 &middot; next reading 2027-01-15</p>
-    <h2 class="label">Which systems record what</h2>
+    <p class="dateline">Reading, 6 September 2026</p>
+    <h2 class="label">Who asked, and what happened to them</h2>
+
     <div class="block">
-      <p>8 systems, read against 20 requirements drawn from the four conformance levels. Every verdict cites a file and a line at a pinned commit, and an <b>absent</b> verdict cites where the assessor looked and did not find it, which is the difference between a measurement and an accusation.</p>
-      <p>This is not a certification and nobody applied for it. It is a reading of published source, and it is wrong in the ordinary way that readings are wrong. The remedy is below and it does not involve persuading anybody.</p>
+      <p>The <a href="/register/">conformance census</a> measured what eight
+        agent systems can record. Of the six that take or gate actions, one can
+        name the person who approved one. That is a capability gap, and a
+        capability gap is not the same as a need. A system can lack something
+        nobody ever wanted.</p>
+
+      <p>So this is the other half, and it is the half more easily faked. It
+        asks who has requested this capability, in public, where the request
+        and its outcome can both be read.</p>
+
+      <h3>The distinction that decides the answer</h3>
+      <p>A naive count is worthless here, because two different things are
+        happening in these issue trackers and they look identical from a
+        distance.</p>
+      <ul>
+        <li><b>Somebody with the problem</b> opens an issue on the framework
+          they use, once, describing what they cannot do.</li>
+        <li><b>Somebody selling a solution</b> opens issues on several
+          frameworks, often naming their product, describing what their layer
+          provides.</li>
+      </ul>
+      <p>The second is evidence about suppliers. Only the first is evidence
+        about demand, and counting them together produces a number that says
+        the market is asking when what it is really doing is selling.</p>
+
+      <p>The rule used here is mechanical, so it can be argued with: an issue
+        is <b>promoting</b> if its author filed on two or more of these
+        repositories, or if its title names a governance product. Otherwise it
+        is <b>asking</b>. It is a proxy for intent and it will be wrong in
+        individual cases. The data is published so that any individual case can
+        be checked.</p>
+
+      <h3>What the split looks like</h3>
       <div class="scroller">
       <table class="reg">
-        <thead><tr><th>System</th><th>TR-1</th><th>TR-2</th><th>TR-3</th><th>TR-4</th><th>Reaches</th><th>Read by</th><th>Last read</th></tr></thead>
+        <thead><tr><th></th><th>Issues</th><th>Authors filing across
+          2+ repos</th><th>Median comments</th></tr></thead>
         <tbody>
-          <tr><td class="s">AutoGen</td><td class="n">1/5</td><td class="n">2/4</td><td class="n">1/7</td><td class="n">0/3</td><td class="lv">none yet</td><td class="d">Troy Brandon Clifford</td><td class="d">2026-09-04</td></tr>
-          <tr><td class="s">CrewAI</td><td class="n">1/5</td><td class="n">0/5</td><td class="n">1/7</td><td class="n">0/3</td><td class="lv">none yet</td><td class="d">Troy Brandon Clifford</td><td class="d">2026-09-04</td></tr>
-          <tr><td class="s">Graphiti</td><td class="n">4/5</td><td class="n">3/5</td><td class="n">n/a</td><td class="n">0/3</td><td class="lv">none yet</td><td class="d">Troy Brandon Clifford</td><td class="d">2026-09-04</td></tr>
-          <tr><td class="s">LangGraph</td><td class="n">4/5</td><td class="n">0/4</td><td class="n">2/7</td><td class="n">0/3</td><td class="lv">none yet</td><td class="d">Troy Brandon Clifford</td><td class="d">2026-09-04</td></tr>
-          <tr><td class="s">Letta Code</td><td class="n">3/5</td><td class="n">0/4</td><td class="n">3/7</td><td class="n">1/3</td><td class="lv">none yet</td><td class="d">Troy Brandon Clifford</td><td class="d">2026-09-04</td></tr>
-          <tr><td class="s">mem0</td><td class="n">3/5</td><td class="n">0/5</td><td class="n">n/a</td><td class="n">0/3</td><td class="lv">none yet</td><td class="d">Troy Brandon Clifford</td><td class="d">2026-09-04</td></tr>
-          <tr class="own"><td class="s">OMEM <span class="tag">the author's own</span></td><td class="n">5/5</td><td class="n">5/5</td><td class="n">7/7</td><td class="n">3/3</td><td class="lv">TR-4</td><td class="d">Troy Brandon Clifford</td><td class="d">2026-09-05</td></tr>
-          <tr><td class="s">OpenAI Agents SDK</td><td class="n">2/5</td><td class="n">1/5</td><td class="n">2/7</td><td class="n">0/3</td><td class="lv">none yet</td><td class="d">Troy Brandon Clifford</td><td class="d">2026-09-04</td></tr>
+          <tr><td class="s">Asking</td><td class="v">32</td>
+            <td class="v">0</td><td class="v">9</td></tr>
+          <tr><td class="s">Promoting</td><td class="v">52</td>
+            <td class="v">13</td><td class="v">3</td></tr>
         </tbody>
       </table>
       </div>
-      <p class="cont">A count is met out of applicable. A system that does not act is not marked down for having no gate, and the requirements that do not apply to it are not counted against it.</p>
-      <h3>The question this started from</h3>
-      <p><i>Does a consequential action produce a durable entry whether or not it ran?</i></p>
-      <div class="scroller">
-      <table class="reg">
-        <thead><tr><th>System</th><th>R3.1</th><th>Where it was read</th></tr></thead>
-        <tbody>
-          <tr><td class="s">AutoGen</td><td class="v p">part</td><td class="w">python/packages/autogen-agentchat/src/autogen_agentchat/agents/_code_executor_agent.py:69-73 ApprovalRequest</td></tr>
-          <tr><td class="s">CrewAI</td><td class="v p">part</td><td class="w">lib/crewai/src/crewai/agents/crew_agent_executor.py:984-989</td></tr>
-          <tr><td class="s">Graphiti</td><td class="v x">n/a</td><td class="w"></td></tr>
-          <tr><td class="s">LangGraph</td><td class="v y">yes</td><td class="w">libs/langgraph/langgraph/types.py:851 interrupt</td></tr>
-          <tr><td class="s">Letta Code</td><td class="v y">yes</td><td class="w">src/agent/check-approval.ts:26-34</td></tr>
-          <tr><td class="s">mem0</td><td class="v x">n/a</td><td class="w"></td></tr>
-          <tr><td class="s">OMEM</td><td class="v y">yes</td><td class="w">server/tests_testimony_export.py</td></tr>
-          <tr><td class="s">OpenAI Agents SDK</td><td class="v p">part</td><td class="w">src/agents/run_state.py:1356-1370 _serialize_tool_invocations</td></tr>
-        </tbody>
-      </table>
-      </div>
-      <h3>If a verdict here is wrong</h3>
-      <p>It is a file. Open a pull request against the subject file naming the requirement and where to look, or write to <code>troy@machinetestimony.com</code> with the same. A correction that lands changes the file, this page, and the date on the row. There is no fee, no membership, and no requirement to use any software of mine.</p>
-      <p>Arguing with me is not the remedy and does not work. Pointing at code is, and has: this register carries corrections that came from being told I had read something wrong.</p>
-      <h3>Who read these</h3>
-      <p>All of them, Troy Brandon Clifford, which is the weakest thing about this register. A reading nobody has repeated is one person's reading, however carefully it cites its sources.</p>
-      <p>The instrument is not reserved. The rubric is CC BY 4.0 and the tooling is MIT, commercial use included and expected: if you audit AI systems, or advise on Article 12 or Article 14, or have to answer a procurement question about what a supplier's agent records, you can run these questions yourself and bill for it without asking anybody. <a href="/assess/">How to do that</a>, including how to put the result here with your own name on the row, or keep it and publish it yourself.</p>
-      <h3>The next reading is 2027-01-15</h3>
-      <p>Every row is read again on that date, against the same requirements, at whatever commit each project is at then. A row that is absent today is not absent permanently, and a row that passes today is not settled: this is a reading of software, and software moves.</p>
-      <p><b>If you have changed something, you do not have to wait.</b> Say so and it is read before the date, the same way and against the same bar: a pull request against the subject file, or an email to <code>troy@machinetestimony.com</code> naming the requirement and where to look. There is no fee and no advantage to being first, beyond the row being right sooner.</p>
-      <p>The date is not decoration. This page fails its own build once it has passed, so it either moves because the reading happened or it is withdrawn deliberately. A register still promising a reading that was due months ago is worth less than one that promised nothing.</p>
-      <h3>If your system is not here</h3>
-      <p>Being absent is not a judgement. It means nobody has done the reading yet. The rubric and the harness are in the repository, so you can run the questions against your own system before anybody else does, and the answer will be the same one I would get.</p>
-      <h3>The conflict of interest</h3>
-      <p>One row is the author's own implementation, of the format the questions derive from. It scores well here the way a dictionary's author spells well, and it carries no evidential weight. It is included so the questions are applied to the system that produced them before they are applied to anybody else's.</p>
-      <p>That has not been costless. Five findings so far are recorded against this assessment, three of them against its author, including one after publication: on 5 September 2026 the top conformance level was found not to be checking what it claimed, and the author's own passing row was the one affected. It is written up in full rather than quietly repaired.</p>
-      <h3>What a verdict rests on</h3>
-      <p>Some of these questions a reader can settle from a record alone: whether cited evidence exists, whether a refused action is also recorded as executed, whether a digest is the digest of what it covers. Others are attestations, and no reading of source can confirm them: that a risk class really came from a registry, that an approver's name really came from the session it names. The specification marks the difference and the validator reports it, and a conformance claim that does not distinguish them is weaker than it looks.</p>
+
+      <p>Eighty-four issues with the subject in the title, across seven agent
+        frameworks, from fifty-one distinct authors. <b>Most of the traffic is
+        supply, not demand.</b> Fifty-two of the eighty-four come from people
+        with something to sell, and thirteen authors account for the bulk of
+        them by filing the same case on several frameworks at once.</p>
+
+      <p>The genuine requests are outnumbered and better attended. Each one
+        draws three times the discussion of a promotional issue, which is what
+        you would expect if the people replying can tell the difference.</p>
+
+      <h3>The finding</h3>
+      <p class="callout"><b>Thirty-two people asked for this capability without
+        having one to sell. Twenty-two of them got no resolution.</b> Fourteen
+        of those issues are still open and eight were closed as not planned.</p>
+
+      <p>The most discussed of those thirty-two, an RFC for tamper-evident
+        audit trails carrying ninety-eight comments, was closed as not planned.
+        The two after it, at sixty and forty-six comments, are still open: a
+        cryptographic governance layer, and guidance on auditable completion
+        receipts.</p>
+
+      <p>The two busiest threads in the whole set are larger still, at three
+        hundred and eighty-three comments and a hundred and twenty-nine, and
+        both are counted here as promoting. They are worth reading anyway. A
+        vendor thread that draws that much argument is not evidence that
+        nobody wants the thing.</p>
+
+      <p>Set against the census, the two readings say the same thing from
+        opposite ends. The systems cannot record who approved an action. People
+        have asked them to. Most of those requests are unanswered.</p>
+
+      <h3>The frameworks are not planning to close it</h3>
+      <p>This is the part that makes the gap structural rather than a backlog.
+        Closing an issue about compliance hooks, a maintainer of one of these
+        projects wrote:</p>
+      <p class="callout">&ldquo;we don&rsquo;t plan to have some examples
+        within this repo. Please feel free to share examples in your repos or
+        docs.&rdquo;</p>
+      <p>That is a reasonable position for a framework to take. Orchestration
+        libraries are not authorisation layers and never claimed to be. But it
+        means the capability is being pushed outward rather than scheduled, and
+        a deployer waiting for their framework to grow it is waiting for
+        something nobody upstream has undertaken to build.</p>
+
+      <h3>What this does not show</h3>
+      <p>It does not measure demand. It measures <i>public requests on seven
+        repositories</i>, which is a small and unrepresentative window on it. A
+        search finds what it is spelled to find. Anybody who needed this and
+        solved it privately, asked in a support channel, or never asked at all
+        is invisible here, and that is most people.</p>
+
+      <p>Nor does an unanswered issue prove a maintainer was wrong. Projects
+        decline things for good reasons every day, and several of these were
+        declined with one.</p>
+
+      <p>The claim is narrower than eighty-four looks: <b>most of the traffic
+        is vendors, a real minority is not, and the majority of that minority
+        went unresolved.</b> Thirty-two is the number that means anything here,
+        and twenty-two is the one worth arguing about.</p>
+
+      <h3>Check it</h3>
+      <p>Every issue, its author, its state, the number of repositories that
+        author filed on, and the classification this reading gave it are in
+        <a href="https://github.com/troybrandonc-bit/machine-testimony/blob/main/census/demand/issues.json">census/demand/issues.json</a>.
+        The counts on this page are recomputed from that file by the test suite
+        rather than typed, so a disagreement is settled by reading the data.</p>
+
+      <p>If a classification is wrong, it is wrong in a way a pull request can
+        fix, which is the same standing every verdict in the
+        <a href="/register/">register</a> has.</p>
     </div>
   </div>
-  <aside class="rail">
-    <h2 class="label">This reading</h2>
-    <p class="cont">8 systems, 20 requirements.<br>Last read 2026-09-05.<br>Digest <code>...</code></p>
-    <h2 class="label">The dated edition</h2>
-    <p class="cont">The September 2026 census is the same evidence as a document, with a DOI, for citing.<br><a href="/census/2026-09/">Read it</a><br><a href="https://doi.org/10.5281/zenodo.22290922">10.5281/zenodo.22290922</a></p>
-    <hr>
-    <p class="cont"><a href="/implement/">Implementing it</a><br><a href="/check/">Check a record</a><br><a href="https://github.com/troybrandonc-bit/machine-testimony/tree/main/census">The rubric and every subject file</a></p>
-  </aside>
 </div>
 <footer class="foot">
   <div class="wrap">

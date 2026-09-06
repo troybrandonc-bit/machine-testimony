@@ -315,6 +315,67 @@ def main():
         check("%s's README says it needs nothing of ours" % d,
               "nothing" in rd.lower())
 
+    print("\nthe demand reading counts what its own data says")
+    # Every number on /demand/ is a claim about eighty-four issues belonging to
+    # other people. They are recomputed from the published file rather than
+    # trusted, because the page's whole argument is that a disagreement should
+    # be settled by reading the data.
+    dm = io.open(os.path.join(PUB, "demand", "index.html"),
+                 encoding="utf-8").read()
+    data = json.load(io.open(os.path.join(ROOT, "census", "demand",
+                                          "issues.json"), encoding="utf-8"))
+    iss = data["issues"]
+    ask = [i for i in iss if i["kind"] == "asking"]
+    promo = [i for i in iss if i["kind"] == "promoting"]
+
+    check("the data is there to check", len(iss) == 84, len(iss))
+    check("and names seven frameworks",
+          len(data["method"]["repositories"]) == 7,
+          data["method"]["repositories"])
+    check("32 asking, as the page says", len(ask) == 32, len(ask))
+    check("52 promoting, as the page says", len(promo) == 52, len(promo))
+    check("51 distinct authors", len({i["opened_by"] for i in iss}) == 51,
+          len({i["opened_by"] for i in iss}))
+    across = {i["opened_by"] for i in iss if i["author_repos"] >= 2}
+    check("13 authors filed across two or more repositories",
+          len(across) == 13, len(across))
+    check("and none of them is counted as asking",
+          not [i for i in ask if i["author_repos"] >= 2])
+
+    unresolved = [i for i in ask
+                  if i["state"] == "open" or i["state_reason"] == "not_planned"]
+    check("22 of the 32 got no resolution", len(unresolved) == 22,
+          len(unresolved))
+    check("of which 14 are still open",
+          sum(1 for i in unresolved if i["state"] == "open") == 14)
+    check("and 8 were closed as not planned",
+          sum(1 for i in unresolved if i["state_reason"] == "not_planned") == 8)
+
+    def median(xs):
+        xs = sorted(xs)
+        return xs[len(xs) // 2]
+    check("asking draws a median of 9 comments",
+          median(i["comments"] for i in ask) == 9,
+          median(i["comments"] for i in ask))
+    check("promoting draws 3", median(i["comments"] for i in promo) == 3,
+          median(i["comments"] for i in promo))
+    # The first version of this claimed the most discussed issue overall was
+    # closed as not planned. It was not: the two busiest threads in the set are
+    # both promoting and both open. The 98-comment RFC is the busiest of the
+    # thirty-two, which is the claim the page now makes.
+    top_ask = max(ask, key=lambda i: i["comments"])
+    check("the busiest of the 32 was closed as not planned",
+          top_ask["state_reason"] == "not_planned" and top_ask["comments"] == 98,
+          top_ask)
+    check("and the page does not claim it led the whole set",
+          "most discussed of those thirty-two" in dm)
+
+    check("the page says what it does not show",
+          "What this does not show" in dm and "invisible here" in dm)
+    check("and links the data rather than asking to be believed",
+          "census/demand/issues.json" in dm)
+    check("and sells nothing", "OMEM" not in dm and "omem" not in dm.lower())
+
     print("\nthe site does not link at things that are not there")
     dead = []
     for page in pages():
