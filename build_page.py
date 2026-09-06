@@ -91,9 +91,25 @@ EXTRA = """
 def shell() -> tuple[str, str, str]:
     src = io.open(HOME, encoding="utf-8").read()
     css = re.search(r"<style>(.*?)</style>", src, re.S).group(1).rstrip()
+    # The homepage nests the navigation and the hero inside one <div class=
+    # "band">, and a sub-page wants the navigation without the hero. Slicing to
+    # the hero gets that, and drops the </div> that closed the band, because
+    # that tag sits after the hero rather than before it.
+    #
+    # An unclosed div is not a parse error. The browser closes it at </body>,
+    # so .band -- which is navy with near-white text -- wrapped the whole of
+    # every generated page. Every sub-page on this site rendered white text on
+    # navy from the day the generator was written until 6 September 2026.
+    #
+    # Nothing caught it. The suite checked that each page matched what the
+    # generator produced, which it did: the generator was consistently wrong.
+    # tests_pages now parses the built pages and asserts the band closes before
+    # the content starts, which is a claim about the result rather than about
+    # agreement between two things that can be wrong together.
     band = src[src.index('<div class="band">'):src.index('<div class="wrap hero">')]
+    band = band.rstrip() + "\n</div>"
     foot = src[src.index('<footer class="foot">'):src.index("</body>")]
-    return css, band.rstrip(), foot.rstrip()
+    return css, band, foot.rstrip()
 
 
 def meta(body: str) -> tuple[dict, str]:
