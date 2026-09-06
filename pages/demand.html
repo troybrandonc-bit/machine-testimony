@@ -1,0 +1,129 @@
+<!--title: Who asked, and what happened to them
+    desc: The conformance census measured that agent systems cannot say who approved an action. This measures whether anybody asked them to. Eighty-four issues across seven agent frameworks, separated into people asking and vendors promoting, with the data published so the split can be disputed.
+    slug: demand-->
+
+<div class="wrap main">
+  <div>
+    <p class="dateline">Reading, 6 September 2026</p>
+    <h2 class="label">Who asked, and what happened to them</h2>
+
+    <div class="block">
+      <p>The <a href="/register/">conformance census</a> measured what eight
+        agent systems can record. Of the six that take or gate actions, one can
+        name the person who approved one. That is a capability gap, and a
+        capability gap is not the same as a need. A system can lack something
+        nobody ever wanted.</p>
+
+      <p>So this is the other half, and it is the half more easily faked. It
+        asks who has requested this capability, in public, where the request
+        and its outcome can both be read.</p>
+
+      <h3>The distinction that decides the answer</h3>
+      <p>A naive count is worthless here, because two different things are
+        happening in these issue trackers and they look identical from a
+        distance.</p>
+      <ul>
+        <li><b>Somebody with the problem</b> opens an issue on the framework
+          they use, once, describing what they cannot do.</li>
+        <li><b>Somebody selling a solution</b> opens issues on several
+          frameworks, often naming their product, describing what their layer
+          provides.</li>
+      </ul>
+      <p>The second is evidence about suppliers. Only the first is evidence
+        about demand, and counting them together produces a number that says
+        the market is asking when what it is really doing is selling.</p>
+
+      <p>The rule used here is mechanical, so it can be argued with: an issue
+        is <b>promoting</b> if its author filed on two or more of these
+        repositories, or if its title names a governance product. Otherwise it
+        is <b>asking</b>. It is a proxy for intent and it will be wrong in
+        individual cases. The data is published so that any individual case can
+        be checked.</p>
+
+      <h3>What the split looks like</h3>
+      <div class="scroller">
+      <table class="reg">
+        <thead><tr><th></th><th>Issues</th><th>Authors filing across
+          2+ repos</th><th>Median comments</th></tr></thead>
+        <tbody>
+          <tr><td class="s">Asking</td><td class="v">32</td>
+            <td class="v">0</td><td class="v">9</td></tr>
+          <tr><td class="s">Promoting</td><td class="v">52</td>
+            <td class="v">13</td><td class="v">3</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <p>Eighty-four issues with the subject in the title, across seven agent
+        frameworks, from fifty-one distinct authors. <b>Most of the traffic is
+        supply, not demand.</b> Fifty-two of the eighty-four come from people
+        with something to sell, and thirteen authors account for the bulk of
+        them by filing the same case on several frameworks at once.</p>
+
+      <p>The genuine requests are outnumbered and better attended. Each one
+        draws three times the discussion of a promotional issue, which is what
+        you would expect if the people replying can tell the difference.</p>
+
+      <h3>The finding</h3>
+      <p class="callout"><b>Thirty-two people asked for this capability without
+        having one to sell. Twenty-two of them got no resolution.</b> Fourteen
+        of those issues are still open and eight were closed as not planned.</p>
+
+      <p>The most discussed of those thirty-two, an RFC for tamper-evident
+        audit trails carrying ninety-eight comments, was closed as not planned.
+        The two after it, at sixty and forty-six comments, are still open: a
+        cryptographic governance layer, and guidance on auditable completion
+        receipts.</p>
+
+      <p>The two busiest threads in the whole set are larger still, at three
+        hundred and eighty-three comments and a hundred and twenty-nine, and
+        both are counted here as promoting. They are worth reading anyway. A
+        vendor thread that draws that much argument is not evidence that
+        nobody wants the thing.</p>
+
+      <p>Set against the census, the two readings say the same thing from
+        opposite ends. The systems cannot record who approved an action. People
+        have asked them to. Most of those requests are unanswered.</p>
+
+      <h3>The frameworks are not planning to close it</h3>
+      <p>This is the part that makes the gap structural rather than a backlog.
+        Closing an issue about compliance hooks, a maintainer of one of these
+        projects wrote:</p>
+      <p class="callout">&ldquo;we don&rsquo;t plan to have some examples
+        within this repo. Please feel free to share examples in your repos or
+        docs.&rdquo;</p>
+      <p>That is a reasonable position for a framework to take. Orchestration
+        libraries are not authorisation layers and never claimed to be. But it
+        means the capability is being pushed outward rather than scheduled, and
+        a deployer waiting for their framework to grow it is waiting for
+        something nobody upstream has undertaken to build.</p>
+
+      <h3>What this does not show</h3>
+      <p>It does not measure demand. It measures <i>public requests on seven
+        repositories</i>, which is a small and unrepresentative window on it. A
+        search finds what it is spelled to find. Anybody who needed this and
+        solved it privately, asked in a support channel, or never asked at all
+        is invisible here, and that is most people.</p>
+
+      <p>Nor does an unanswered issue prove a maintainer was wrong. Projects
+        decline things for good reasons every day, and several of these were
+        declined with one.</p>
+
+      <p>The claim is narrower than eighty-four looks: <b>most of the traffic
+        is vendors, a real minority is not, and the majority of that minority
+        went unresolved.</b> Thirty-two is the number that means anything here,
+        and twenty-two is the one worth arguing about.</p>
+
+      <h3>Check it</h3>
+      <p>Every issue, its author, its state, the number of repositories that
+        author filed on, and the classification this reading gave it are in
+        <a href="https://github.com/troybrandonc-bit/machine-testimony/blob/main/census/demand/issues.json">census/demand/issues.json</a>.
+        The counts on this page are recomputed from that file by the test suite
+        rather than typed, so a disagreement is settled by reading the data.</p>
+
+      <p>If a classification is wrong, it is wrong in a way a pull request can
+        fix, which is the same standing every verdict in the
+        <a href="/register/">register</a> has.</p>
+    </div>
+  </div>
+</div>
