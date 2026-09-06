@@ -346,8 +346,13 @@ def main():
             check("%s's wheel carries the emitter it imports" % d,
                   proj.count("testimony_emit.py") >= 2, proj.count("testimony_emit.py"))
         rd_pkg = io.open(os.path.join(here, "README.md"), encoding="utf-8").read()
-        check("%s's README opens with the install line" % d,
-              "pip install testimony-" in rd_pkg)
+        # How to obtain it, which is the install line once the package is
+        # published and the copy instruction until then. Demanding the install
+        # line unconditionally is how four READMEs came to promise a command
+        # that failed: the check asserted the claim rather than the truth.
+        check("%s's README says how to obtain it" % d,
+              "pip install testimony-" in rd_pkg
+              or "copy" in rd_pkg.lower()[:400])
 
     print("\nthe demand reading counts what its own data says")
     # Every number on /demand/ is a claim about eighty-four issues belonging to
@@ -493,6 +498,45 @@ def main():
     check("no page's visible heading was replaced by its search title",
           not leaked, sorted(set(leaked)))
 
+
+    print("\nno page tells somebody to install a package that does not exist")
+    # /implement/ and four READMEs told readers to run `pip install
+    # testimony-crewai` and three siblings. None of the four was on PyPI, so
+    # every one of those commands failed. It is the same defect the pricing
+    # page in the other repository was built to avoid: an instruction that
+    # cannot be followed is worse than no instruction.
+    import urllib.error                                        # noqa: E402
+    import urllib.request                                      # noqa: E402
+
+    claimed = set()
+    for page in pages():
+        claimed |= set(re.findall(r"pip install (testimony-[a-z0-9-]+)",
+                                  io.open(page, encoding="utf-8").read()))
+    for d in sorted(os.listdir(os.path.join(ROOT, "adapters"))):
+        rd = os.path.join(ROOT, "adapters", d, "README.md")
+        if os.path.exists(rd):
+            claimed |= set(re.findall(r"pip install (testimony-[a-z0-9-]+)",
+                                      io.open(rd, encoding="utf-8").read()))
+    check("something claims an install, so this checked something", claimed,
+          claimed)
+
+    unreachable, missing = [], []
+    for dist in sorted(claimed):
+        try:
+            urllib.request.urlopen(
+                "https://pypi.org/pypi/%s/json" % dist, timeout=15).read(1)
+        except urllib.error.HTTPError as e:
+            if e.code == 404:
+                missing.append(dist)
+            else:
+                unreachable.append(dist)
+        except OSError:
+            unreachable.append(dist)
+    if unreachable:
+        # A network failure is not a finding. Say so rather than pass quietly.
+        print("  NOT VERIFIED: PyPI unreachable for %s" % unreachable)
+    check("every package the site says to install is published",
+          not missing, "not on PyPI: %s" % missing)
 
     print("\nthe site does not link at things that are not there")
     dead = []
