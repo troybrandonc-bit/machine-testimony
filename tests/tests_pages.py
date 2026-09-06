@@ -311,6 +311,57 @@ def main():
                             % (rel.replace(os.sep, "/"), found, want_total))
     check("every page agrees on how many systems were assessed",
           not bad2, bad2)
+    print("")
+    print("every page that counts the corpus counts it correctly")
+    # The fifth hand-typed count in this repository, and the first one caught
+    # before it shipped rather than after. The corpus size appeared nine times
+    # across the implement page, the conformance readme and llms.txt, and
+    # nothing compared any of them to the corpus.
+    expected = json.load(io.open(
+        os.path.join(ROOT, "conformance", "expected.json"), encoding="utf-8"))
+    n = len(expected)
+    cases = len([f for f in os.listdir(
+        os.path.join(ROOT, "conformance", "cases")) if f.endswith(".jsonl")])
+    check("the corpus has one case file per expected verdict", n == cases,
+          "%d verdicts, %d files" % (n, cases))
+
+    import re as _re
+    # Only the total, and only where a page states it as the size of the
+    # corpus. The readme also breaks the corpus down by level, and those are
+    # checked separately below rather than swept up as wrong totals.
+    stale = []
+    for where in (os.path.join(PUB, "implement", "index.html"),
+                  os.path.join(PUB, "llms.txt")):
+        if not os.path.exists(where):
+            continue
+        text = io.open(where, encoding="utf-8").read()
+        for found in _re.findall(r"(\d+)\s+(?:records?|cases)", text):
+            if int(found) != n:
+                stale.append("%s says %s, corpus has %d"
+                             % (os.path.basename(where), found, n))
+    check("no page states a corpus size the corpus does not have",
+          not stale, stale)
+
+    # The readme's per-level table, recomputed. A breakdown that no longer sums
+    # to the corpus is the same defect one level down.
+    import collections as _c
+    by_level = _c.Counter(v["level"] for v in expected.values())
+    readme = io.open(os.path.join(ROOT, "conformance", "README.md"),
+                     encoding="utf-8").read()
+    wrong = []
+    for level, want in (("no level", by_level[None]), ("TR-1", by_level["TR-1"]),
+                        ("TR-2", by_level["TR-2"]), ("TR-3", by_level["TR-3"]),
+                        ("TR-4", by_level["TR-4"])):
+        m = _re.search(r"\|\s*%s\s*\|\s*(\d+) cases" % _re.escape(level),
+                       readme)
+        if not m:
+            wrong.append("%s: no row" % level)
+        elif int(m.group(1)) != want:
+            wrong.append("%s says %s, corpus has %d"
+                         % (level, m.group(1), want))
+    check("the corpus readme's breakdown by level is what the corpus holds",
+          not wrong, wrong)
+
 
 
 

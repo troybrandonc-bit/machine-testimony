@@ -89,6 +89,13 @@ RISK_SOURCES = {"registry", "policy", "catalogue", "catalog", "configuration",
 IDENTITY_SOURCES = {"auth-session", "session", "api-key", "jwt", "oidc",
                     "oauth", "saml", "mtls", "webauthn", "passkey",
                     "signed-token", "directory", "sso", "ldap", "kerberos"}
+# What the record claims about the effect, as opposed to what the system
+# observed. `unconfirmed` is the one that had nowhere to go before: the action
+# was dispatched and the acknowledgement never came back, so the record can say
+# neither that it happened nor that it did not. Writing `executed: false` there
+# is a claim the system cannot support, and a caller who retries on it repeats
+# an action that may already have run.
+OUTCOMES = {"confirmed", "not_attempted", "unconfirmed"}
 
 NUM_MIN, NUM_MAX, SAFE_INT = 1e-4, 1e21, 2 ** 53
 
@@ -206,7 +213,7 @@ class Record:
 
     def decision(self, action_type: str, risk_class: str, proposed_by: dict,
                  verdict: str, executed: bool, risk_source: str = "",
-                 reason: str = "", **kw) -> str:
+                 reason: str = "", outcome: str = "", **kw) -> str:
         if verdict == "refused" and executed:
             raise Refused("a refused action cannot also have executed")
         if verdict == "refused" and not reason:
@@ -215,6 +222,22 @@ class Record:
         why = _source_problem(risk_source, RISK_SOURCES)
         if why:
             raise Refused("risk_source: " + why)
+        # `executed` says what the system observed. `outcome` says what the
+        # record claims about the effect, and exists because a dispatched
+        # action whose acknowledgement was lost cannot be described by a
+        # boolean: `executed: false` reads as "it did not happen", and a caller
+        # who retries on that repeats an action that already ran.
+        if outcome:
+            if outcome not in OUTCOMES:
+                raise Refused("outcome: %r is not one of %s"
+                              % (outcome, ", ".join(sorted(OUTCOMES))))
+            if executed and outcome != "confirmed":
+                raise Refused("an executed action cannot also record an "
+                              "outcome of %r" % outcome)
+            if verdict == "refused" and outcome != "not_attempted":
+                raise Refused("a refused action was not attempted, so it "
+                              "cannot record an outcome of %r" % outcome)
+            kw["outcome"] = outcome
         if reason:
             kw["reason"] = reason
         return self._add("decision", action_type=action_type,

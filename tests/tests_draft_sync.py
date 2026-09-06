@@ -31,9 +31,14 @@ sys.path.insert(0, os.path.join(ROOT, "spec"))
 import testimony_validate as tv  # noqa: E402
 
 _drafts = sorted(glob.glob(os.path.join(ROOT, "spec", "draft-*-[0-9][0-9].md")))
-if len(_drafts) != 1:
-    raise SystemExit("expected one draft source in spec/, found %d" % len(_drafts))
-DRAFT = _drafts[0]
+if not _drafts:
+    raise SystemExit("no draft source in spec/")
+# The highest-numbered draft is the working one. It was _drafts[0], the lowest,
+# which was the same file while only one existed and would have pinned this
+# suite to a published document the moment a second appeared: the validator
+# would move, -02 would document the move, and the sync check would keep
+# comparing against -01 and passing.
+DRAFT = _drafts[-1]
 
 PASS = FAIL = 0
 
@@ -103,10 +108,39 @@ def defs(section):
     return out
 
 
+PUBLISHED = {
+    # A draft on the datatracker is a fixed document, and the copy here is the
+    # record of what was submitted. Editing it to match a later validator would
+    # make this repository disagree with what the IETF is serving, which is the
+    # exact failure the specification exists to prevent. A new field goes in a
+    # new draft. If this fails, check whether you meant to open the next one.
+    "draft-clifford-testimony-record-01.md":
+        "20848cedfaeadf44f4a664e907ba3119d2d830658cc8453abf98cdd0cd3ac24a",
+}
+
+
+def check_published() -> None:
+    import hashlib
+    for name, want in sorted(PUBLISHED.items()):
+        path = os.path.join(ROOT, "spec", name)
+        if not os.path.exists(path):
+            check("%s is still here" % name, False, "missing")
+            continue
+        with open(path, encoding="utf-8") as fh:
+            got = hashlib.sha256(fh.read().encode("utf-8")).hexdigest()
+        check("%s is unchanged since it was published" % name, got == want,
+              "sha256 %s, expected %s" % (got[:16], want[:16]))
+
+
 def main():
+    print("published drafts are fixed documents")
+    check_published()
+
     if not os.path.exists(DRAFT):
-        print("SKIP: no draft at " + DRAFT)
+        print("\nSKIP: no draft at " + DRAFT)
         return 0
+
+    print("\nthe working draft is %s" % os.path.basename(DRAFT))
 
     with open(DRAFT, encoding="utf-8") as f:
         text = f.read()
@@ -143,7 +177,8 @@ def main():
         "belief": {"evidence"},
         "evidence": {"digest", "excerpt", "redacted"},
         "conflict": {"resolution"},
-        "decision": {"risk_source", "reason", "inputs", "approval"},
+        "decision": {"risk_source", "reason", "inputs", "approval",
+                     "outcome"},
         "approval": {"identity_source", "method"},
         "integrity": {"engine", "engine_version", "covers", "anchor"},
     }

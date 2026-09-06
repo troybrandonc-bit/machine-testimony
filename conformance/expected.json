@@ -419,6 +419,66 @@
   "scope": "acts",
   "spec": "testimony-record/0.2"
  },
+ "outcome-contradicts-executed": {
+  "level": "TR-2",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": false,
+   "TR-4": false
+  },
+  "note": "a record saying the action ran and that it was never attempted",
+  "scope": "acts",
+  "spec": "testimony-record/0.2"
+ },
+ "outcome-contradicts-refusal": {
+  "level": "TR-2",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": false,
+   "TR-4": false
+  },
+  "note": "a refusal recording that the effect was confirmed",
+  "scope": "acts",
+  "spec": "testimony-record/0.2"
+ },
+ "outcome-invented": {
+  "level": null,
+  "levels_met": {
+   "TR-1": false,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "an outcome nobody defines",
+  "scope": "acts",
+  "spec": "testimony-record/0.2"
+ },
+ "outcome-not-attempted": {
+  "level": "TR-3",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "an action that was permitted and definitely never dispatched",
+  "scope": "acts",
+  "spec": "testimony-record/0.2"
+ },
+ "outcome-unconfirmed": {
+  "level": "TR-3",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "an action dispatched whose acknowledgement never came back",
+  "scope": "acts",
+  "spec": "testimony-record/0.2"
+ },
  "record-only": {
   "level": "TR-3",
   "levels_met": {
