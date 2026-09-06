@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AI liability insurance and the approval records a policy requires &ndash; Machine Testimony</title>
-<meta name="description" content="Agentic AI policies are being written with approval records as a condition precedent to indemnity. Nine widely deployed agent systems were assessed against that requirement. One of the seven that take actions can name the person who approved one. Seven of the nine cannot be verified without the vendor.">
+<meta name="description" content="Agentic AI policies are being written with approval records as a condition precedent to indemnity. Ten widely deployed agent systems were assessed against that requirement. One of the eight that take actions can name the person who approved one. Eight of the ten cannot be verified without the vendor.">
 <meta property="og:title" content="AI liability insurance and the approval records a policy requires">
-<meta property="og:description" content="Agentic AI policies are being written with approval records as a condition precedent to indemnity. Nine widely deployed agent systems were assessed against that requirement. One of the seven that take actions can name the person who approved one. Seven of the nine cannot be verified without the vendor.">
+<meta property="og:description" content="Agentic AI policies are being written with approval records as a condition precedent to indemnity. Ten widely deployed agent systems were assessed against that requirement. One of the eight that take actions can name the person who approved one. Eight of the ten cannot be verified without the vendor.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://machinetestimony.org/underwriting/">
 <meta property="og:image" content="https://machinetestimony.org/og.png">
@@ -14,7 +14,7 @@
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="AI liability insurance and the approval records a policy requires">
-<meta name="twitter:description" content="Agentic AI policies are being written with approval records as a condition precedent to indemnity. Nine widely deployed agent systems were assessed against that requirement. One of the seven that take actions can name the person who approved one. Seven of the nine cannot be verified without the vendor.">
+<meta name="twitter:description" content="Agentic AI policies are being written with approval records as a condition precedent to indemnity. Ten widely deployed agent systems were assessed against that requirement. One of the eight that take actions can name the person who approved one. Eight of the ten cannot be verified without the vendor.">
 <meta name="twitter:image" content="https://machinetestimony.org/og.png">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/icon.png" type="image/png" sizes="512x512">
@@ -265,14 +265,14 @@
         allocation become nearly impossible"</i>.</p>
 
       <p>That clause assumes the records exist. This note is about whether they
-        do. Nine widely deployed agent systems were read against a published
+        do. Ten widely deployed agent systems were read against a published
         rubric in August and September 2026, and the finding an
         underwriter should care about is narrow and unambiguous.</p>
 
-      <p class="callout"><b>Of the seven assessed systems that take or gate
-        actions, one can name the person who approved an action.</b> Five
+      <p class="callout"><b>Of the eight assessed systems that take or gate
+        actions, one can name the person who approved an action.</b> Six
         cannot, because approval is stored as a boolean and the identity was
-        never written down. In the seventh it could not be determined from
+        never written down. In the eighth it could not be determined from
         outside the vendor.</p>
 
       <p>This is not negligence by the deployers. It is that the software has
@@ -284,8 +284,8 @@
       <p>A policy requirement is a sentence. An assessment needs a question with
         an artifact for an answer. These are the questions behind the clause.
         The three approval and three tool-trace questions apply only to the
-        <b>seven</b> systems that take or gate actions; the last two apply to all
-        <b>nine</b>, because anything that stores a fact can lose it.</p>
+        <b>eight</b> systems that take or gate actions; the last two apply to all
+        <b>ten</b>, because anything that stores a fact can lose it.</p>
 
       <div class="scroller">
       <table class="reg">
@@ -294,35 +294,35 @@
         <tbody>
           <tr><td class="s">Approval records</td>
             <td class="d">Does an approval identify a person or a named role holder?</td>
-            <td class="v">7</td><td class="v">1</td><td class="v">0</td>
-            <td class="v n">5, and 1 undetermined</td></tr>
+            <td class="v">8</td><td class="v">1</td><td class="v">0</td>
+            <td class="v n">6, and 1 undetermined</td></tr>
           <tr><td class="s">Approval records</td>
             <td class="d">Does the approver's identity come from the authentication
               layer rather than from something the model wrote?</td>
-            <td class="v">7</td><td class="v">1</td><td class="v">0</td>
-            <td class="v n">5, and 1 undetermined</td></tr>
+            <td class="v">8</td><td class="v">1</td><td class="v">0</td>
+            <td class="v n">6, and 1 undetermined</td></tr>
           <tr><td class="s">Approval records</td>
             <td class="d">Is the acting agent prevented from approving its own action?</td>
-            <td class="v">7</td><td class="v">1</td><td class="v">0</td>
-            <td class="v n">5, and 1 undetermined</td></tr>
+            <td class="v">8</td><td class="v">1</td><td class="v">0</td>
+            <td class="v n">6, and 1 undetermined</td></tr>
           <tr><td class="s">Tool traces</td>
             <td class="d">Does a consequential action produce a durable entry
               whether or not it ran?</td>
-            <td class="v">7</td><td class="v">4</td><td class="v">3</td><td class="v">0</td></tr>
+            <td class="v">8</td><td class="v">5</td><td class="v">3</td><td class="v">0</td></tr>
           <tr><td class="s">Tool traces</td>
             <td class="d">Are refusals recorded as faithfully as permissions?</td>
-            <td class="v">7</td><td class="v">3</td><td class="v">4</td><td class="v">0</td></tr>
+            <td class="v">8</td><td class="v">4</td><td class="v">4</td><td class="v">0</td></tr>
           <tr><td class="s">Tool traces</td>
             <td class="d">Does a refusal record why it was refused?</td>
-            <td class="v">7</td><td class="v">2</td><td class="v">3</td><td class="v n">2</td></tr>
+            <td class="v">8</td><td class="v">2</td><td class="v">4</td><td class="v n">2</td></tr>
           <tr><td class="s">Rollback history</td>
             <td class="d">When a stored fact changes, is the previous version
               still readable?</td>
-            <td class="v">9</td><td class="v">5</td><td class="v">3</td><td class="v n">1</td></tr>
+            <td class="v">10</td><td class="v">5</td><td class="v">3</td><td class="v n">2</td></tr>
           <tr><td class="s">Causation</td>
             <td class="d">Can the source a stored fact came from be recovered
               by following a link rather than by inference?</td>
-            <td class="v">9</td><td class="v">2</td><td class="v">5</td><td class="v n">2</td></tr>
+            <td class="v">10</td><td class="v">2</td><td class="v">6</td><td class="v n">2</td></tr>
         </tbody>
       </table>
       </div>
@@ -332,7 +332,7 @@
         clause obliges the insured to keep approval records; it says nothing
         about who can interpret them afterwards.</p>
 
-      <p class="callout"><b>Of the nine systems assessed, seven produce records
+      <p class="callout"><b>Of the ten systems assessed, eight produce records
         that cannot be verified without the vendor's cooperation.</b></p>
 
       <p>At the moment that matters, the vendor may be insolvent, uncooperative,

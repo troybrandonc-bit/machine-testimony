@@ -1,0 +1,419 @@
+{
+ "subject": "haystack",
+ "name": "Haystack",
+ "version": "3.1.1+ (82da3ad)",
+ "url": "https://github.com/deepset-ai/haystack",
+ "commit": "82da3adc2fac4675b80ff5573b790ec07113697b",
+ "license": "Apache-2.0",
+ "claims": [
+  "stores",
+  "derives",
+  "acts"
+ ],
+ "assessed_on": "2026-09-06",
+ "assessed_by": "Troy Brandon Clifford",
+ "method": "Read of haystack/dataclasses/document.py and chat_message.py, haystack/document_stores/in_memory/document_store.py, haystack/hooks/human_in_the_loop/ (dataclasses.py, hooks.py, policies.py, strategies.py) and haystack/components/extractors/llm_metadata_extractor.py at 82da3adc2fac4675b80ff5573b790ec07113697b, the commit the approval binding reading already pins, so the two agree on which source they describe. The source archive for that commit was downloaded rather than an installed release, so every line number refers to the pinned commit and every search recorded below was run over all 286 modules of the package. That commit is main, dated 4 September 2026, one day after the v3.1.1 release, which is why the version is written as 3.1.1+ rather than as a release.",
+ "notes": "Haystack is the first subject assessed as storing, deriving and acting, so all twenty requirements apply. It stores documents in a document store and messages in a chat history, it infers metadata about documents with a language model through LLMMetadataExtractor, and it gates tool calls through a human-in-the-loop hook.\n\nIt has the best developed approval object in the census and the weakest storage guarantees. ToolExecutionDecision carries the verdict, the tool call id, a feedback field meant for the reason and the final parameters, it serialises, and _classify_decision returns a closed literal of confirm, modify and reject. Nothing else assessed distinguishes an approver who changed the arguments from one who accepted them. A rejected call leaves the same two message types in the chat history that a permitted call leaves.\n\nThe storage side is the opposite. Neither a Document nor a ChatMessage carries a timestamp. Writing at an existing id under DuplicatePolicy.OVERWRITE deletes the previous document before writing the new one, delete_documents removes a document with no trace, and the approval path rebuilds the chat history rather than appending to it, which means an approver who modifies a tool call leaves a record in which their arguments are the only ones present.\n\nThis is the first subject to score nothing at TR-1, and that number needs reading carefully. A Haystack document store is a search index, and an index is built to answer what is true now rather than to say what was true in March. Overwriting in place and carrying no write time are reasonable properties for what it is. The census records them because a deployer who reaches for that store as the place their agent remembers things has acquired a retention obligation the store was never built to carry, and nothing in the library will tell them so. The same reasoning is why frameworks with no approval pause are not marked down for lacking one.\n\nTwo findings are worth separating from the scores. The first is that LLMMetadataExtractor merges what a model inferred into the same meta dict that holds what the document was told, by plain dict assignment, so an inferred value can overwrite a told one and nothing marks either. That is the requirement the derives claim exists to test. The second is that a Document's id is a sha256 over its own content, which is the closest thing to tamper evidence anywhere in this census, and the framework's own enrichment path routinely produces documents whose id no longer matches their content. A mismatch therefore proves nothing, and the distance to a real answer is a decision about what the id is for rather than a new mechanism.",
+ "assessments": {
+  "R1.1": {
+   "verdict": "absent",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "haystack/dataclasses/document.py:48-54",
+     "note": "a Document is id, content, blob, meta, score, embedding and sparse_embedding. There is no field for when it was written"
+    },
+    {
+     "kind": "source",
+     "locator": "haystack/dataclasses/chat_message.py:291-294",
+     "note": "a ChatMessage is _role, _content, _name and _meta. No timestamp either, so neither the document store nor the conversation records when anything happened"
+    },
+    {
+     "kind": "searched",
+     "locator": "grep -rniE 'timestamp|created_at|written_at' haystack/dataclasses/*.py",
+     "note": "six hits, all in breakpoints.py, where PipelineSnapshot.timestamp is datetime | None = None and is set at breakpoint.py:261 when a pipeline is paused for debugging. That is a debugging artefact of a run, not a write time stored with a fact"
+    }
+   ],
+   "note": "The clearest absent on R1.1 in the census. A time can always be put in the meta dict by an application that thinks to, but nothing in the framework does it, so two documents written a year apart are indistinguishable once stored."
+  },
+  "R1.2": {
+   "verdict": "absent",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "haystack/document_stores/in_memory/document_store.py:491-498",
+     "note": "under DuplicatePolicy.OVERWRITE the store calls delete_documents on the existing id and then assigns the new document to the same key. The previous version is gone before the new one is written"
+    },
+    {
+     "kind": "source",
+     "locator": "haystack/hooks/human_in_the_loop/strategies.py:663",
+     "note": "on the conversation side _update_chat_history returns chat_history[:insertion_point + 1] plus the new messages, so the assistant message carrying what the model originally proposed is dropped rather than kept beside its replacement"
+    },
+    {
+     "kind": "searched",
+     "locator": "grep -rniE 'def .*(version|history|revision|previous|supersed)' haystack/document_stores/",
+     "note": "zero hits. No document store exposes a previous version, a revision or any way to ask what a document said before it was overwritten"
+    }
+   ],
+   "note": "Both storage surfaces answer this the same way. The document store overwrites by deleting first, and the approval path rebuilds the chat history rather than appending to it. In neither case does the framework retain what was there before."
+  },
+  "R1.3": {
+   "verdict": "absent",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "haystack/document_stores/in_memory/document_store.py:491-492",
+     "note": "the routine write path destroys: if document.id in self.storage, delete_documents([document.id]) runs before the write. This is the ordinary call, not a maintenance operation"
+    },
+    {
+     "kind": "source",
+     "locator": "haystack/hooks/human_in_the_loop/strategies.py:619",
+     "note": "a modified tool call is written as replace(tc, arguments=final_args) into a rebuilt history, so the arguments the model proposed are replaced in place by the ones the approver allowed. A user message explaining the change is added, in prose, but the original arguments are not kept"
+    },
+    {
+     "kind": "source",
+     "locator": "haystack/document_stores/in_memory/document_store.py:507-516",
+     "note": "delete_documents is a routine public method that does del self.storage[doc_id], with no soft delete and no marker left behind"
+    },
+    {
+     "kind": "searched",
+     "locator": "grep -rniE 'append_only|soft.delete|immutable|is_deleted|deleted_at' haystack",
+     "note": "zero hits across all 286 modules. The DocumentStore protocol at document_stores/types/protocol.py:109, 127 has exactly two mutating methods, write_documents and delete_documents, and neither has a non-destructive mode"
+    }
+   ],
+   "note": "This is the requirement Haystack is furthest from, and the approval path is the sharpest instance. An approver who changes a tool call leaves a record in which their arguments are the only ones present. A reader six months later sees a proposal that matches what ran, because the proposal was rewritten to match."
+  },
+  "R1.4": {
+   "verdict": "partial",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "haystack/dataclasses/chat_message.py:204",
+     "note": "ChatMessageContentT is a union of TextContent, ToolCall, ToolCallResult, ImageContent, ReasoningContent and FileContent, so on the conversation side an assertion, an action and a result are genuinely separate types"
+    },
+    {
+     "kind": "source",
+     "locator": "haystack/dataclasses/chat_message.py:19-34",
+     "note": "ChatRole is a closed enum of user, system, assistant and tool"
+    },
+    {
+     "kind": "source",
+     "locator": "haystack/dataclasses/document.py:48-54",
+     "note": "the storage side has one type. Everything a document knows beyond its content lives in meta, an untyped dict[str, Any] in which a value the system was told and a value it inferred sit together"
+    }
+   ],
+   "note": "Typed where the conversation is, untyped where the facts are stored. The split matters because this subject claims to store, and the store is the half with one type and a free-form dict."
+  },
+  "R1.5": {
+   "verdict": "absent",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "haystack/document_stores/in_memory/document_store.py:513-516",
+     "note": "delete_documents iterates the ids and does del self.storage[doc_id]. Nothing is written to say a deletion happened, and an id that was never present is skipped silently"
+    },
+    {
+     "kind": "searched",
+     "locator": "grep -rniE 'audit|deletion_log|erasure|tombstone' haystack",
+     "note": "zero hits across all 286 modules. There is no audit surface of any kind, so an erasure carried out for a legal reason leaves the store identical to one where the document never existed"
+    }
+   ],
+   "note": "The ordinary shape of this finding across the census. Worth stating plainly because a deployer answering an erasure request has nothing to show a regulator except the absence itself."
+  },
+  "R2.1": {
+   "verdict": "partial",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "haystack/dataclasses/document.py:48-54",
+     "note": "a Document has no source field. Provenance is a convention in the meta dict rather than something the type requires"
+    },
+    {
+     "kind": "source",
+     "locator": "haystack/components/converters/csv.py:135-138",
+     "note": "converters put file_path into meta, which is the convention that makes the link work in practice"
+    },
+    {
+     "kind": "source",
+     "locator": "haystack/components/converters/csv.py:48",
+     "note": "store_full_path defaults to False, so what is kept by default is os.path.basename(file_path). Two files of the same name in different directories become the same provenance string"
+    },
+    {
+     "kind": "source",
+     "locator": "haystack/dataclasses/chat_message.py:118-129",
+     "note": "on the conversation side the link is real: ToolCallResult carries origin: ToolCall, so a result resolves to the call that produced it by object reference rather than by position"
+    }
+   ],
+   "note": "Two different answers again. A tool result names its call properly. A stored document names its source by a convention the type does not enforce, and the default converter setting reduces that name to a basename."
+  },
+  "R2.2": {
+   "verdict": "absent",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "haystack/components/extractors/llm_metadata_extractor.py:379",
+     "note": "new_meta[key] = parsed_metadata[key] merges what a language model inferred about a document straight into the same meta dict that holds what the document was given, with no prefix, namespace or marker"
+    },
+    {
+     "kind": "source",
+     "locator": "haystack/components/extractors/llm_metadata_extractor.py:380-382",
+     "note": "the only markers it does write, metadata_extraction_error and metadata_extraction_response, are set on failure and removed on success, so a successful extraction leaves nothing at all to say it happened"
+    },
+    {
+     "kind": "searched",
+     "locator": "grep -rniE 'derived|inferred|provenance|is_generated' haystack/dataclasses/ haystack/components/extractors/",
+     "note": "zero hits. No field anywhere marks a value as inferred rather than told"
+    }
+   ],
+   "note": "An inferred key also silently overwrites a told key of the same name, because the merge is plain dict assignment. This is the requirement the derives claim exists to test, and the answer is that once extraction has run, the two kinds of fact are the same kind of fact."
+  },
+  "R2.3": {
+   "verdict": "partial",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "haystack/dataclasses/document.py:103-116",
+     "note": "the id is a sha256 over content, meta and embeddings, so two documents that disagree have different ids and both can be written and both survive"
+    },
+    {
+     "kind": "source",
+     "locator": "haystack/document_stores/in_memory/document_store.py:491-498",
+     "note": "unless one is written under DuplicatePolicy.OVERWRITE at the same id, in which case the earlier one is deleted first"
+    },
+    {
+     "kind": "searched",
+     "locator": "grep -rniE '\\bconflict|contradict|disagree' haystack",
+     "note": "ten hits across two modules and none is about stored facts. They are prompt variables clashing with state schema names in agent.py and input and output name collisions in super_component.py"
+    }
+   ],
+   "note": "Both survive incidentally, in the same way an append-only log preserves a contradiction: because nothing looked. The framework has no notion of two documents being about the same proposition, so it cannot be said to have kept them deliberately."
+  },
+  "R2.4": {
+   "verdict": "absent",
+   "evidence": [
+    {
+     "kind": "searched",
+     "locator": "grep -rniE '\\bconflict|contradict|disagree' haystack",
+     "note": "ten hits, all of them pipeline wiring: variable name clashes in agent.py:580-585 and type or output name collisions in super_component.py:248, 344. Nothing models a disagreement between stored facts"
+    },
+    {
+     "kind": "source",
+     "locator": "haystack/dataclasses/document.py:48-54",
+     "note": "there is no conflict type and no field on a document that could point at another document it contradicts, so a disagreement is not something the store can be asked about"
+    }
+   ],
+   "note": "A reader has to find contradictions by reading. That is expected of a document store and is recorded because the requirement asks."
+  },
+  "R2.5": {
+   "verdict": "absent",
+   "evidence": [
+    {
+     "kind": "searched",
+     "locator": "grep -rniE '\\bconflict|contradict|disagree' haystack",
+     "note": "the same ten wiring hits. No resolution is recorded because no conflict is represented, so there is no actor and no method to record"
+    },
+    {
+     "kind": "source",
+     "locator": "haystack/document_stores/in_memory/document_store.py:491-498",
+     "note": "where a disagreement is settled it is settled silently and by recency: writing at the same id under OVERWRITE deletes the earlier document and leaves the later one looking uncontested"
+    }
+   ],
+   "note": "Scored absent rather than under the clause that credits a system for never resolving conflicts, because that clause is for a system which leaves a contradiction standing as a visible unresolved state. Nothing here is standing, because nothing was represented as a contradiction in the first place."
+  },
+  "R3.1": {
+   "verdict": "present",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "haystack/hooks/human_in_the_loop/strategies.py:601-607",
+     "note": "a rejected call produces two durable messages: an assistant message carrying the tool call that was proposed, and ChatMessage.from_tool(tool_result=..., origin=tc, error=True). The attempt and its refusal both go into the chat history"
+    },
+    {
+     "kind": "source",
+     "locator": "haystack/hooks/human_in_the_loop/dataclasses.py:30-54",
+     "note": "ToolExecutionDecision carries tool_name, execute, tool_call_id, feedback and final_tool_params, and serialises through to_dict, so the decision itself is a first-class object rather than a branch"
+    },
+    {
+     "kind": "source",
+     "locator": "haystack/hooks/human_in_the_loop/strategies.py:248-253",
+     "note": "_classify_decision returns Literal['confirm', 'modify', 'reject'], a closed vocabulary in which the middle value has no equivalent anywhere else in this census"
+    }
+   ],
+   "note": "Among the strongest answers here. An action that was stopped leaves the same kinds of message an action that ran leaves, in the history rather than in a log. Haystack is also the only subject that distinguishes an approver who changed the arguments from one who accepted them, which is precisely the distinction the approval binding reading was asking about."
+  },
+  "R3.2": {
+   "verdict": "present",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "haystack/hooks/human_in_the_loop/hooks.py:19-50",
+     "note": "ConfirmationHook takes confirmation_strategies keyed by tool name, with a wildcard entry and more specific keys winning. Which tools need a person is developer configuration written at construction"
+    },
+    {
+     "kind": "source",
+     "locator": "haystack/hooks/human_in_the_loop/policies.py:11-48",
+     "note": "the policies are classes the developer picks: AlwaysAskPolicy, NeverAskPolicy and AskOncePolicy, not values the model can produce"
+    },
+    {
+     "kind": "source",
+     "locator": "haystack/hooks/human_in_the_loop/policies.py:14",
+     "note": "should_ask(tool_name, tool_description, tool_params) does receive tool_params, which the model wrote, so a custom policy can be written that classifies on model output"
+    }
+   ],
+   "note": "Present with the same qualification recorded for Pydantic AI. The supplied policies ignore the model entirely and route on the tool name. A deployment can write a policy that reads the arguments, and the framework neither does that nor recommends it."
+  },
+  "R3.3": {
+   "verdict": "present",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "haystack/hooks/human_in_the_loop/strategies.py:601-607",
+     "note": "the rejection is recorded as an assistant message plus a tool message, the same two message types a permitted call produces, and it is placed in the chat history by _update_chat_history rather than emitted to a logger"
+    },
+    {
+     "kind": "source",
+     "locator": "haystack/hooks/human_in_the_loop/strategies.py:298-304",
+     "note": "the decision is additionally written to a tracing span as haystack.agent.hook.human_in_the_loop.strategy.decision with the whole decision as a content tag, which is observability rather than record, but it means a refusal is visible in two places"
+    }
+   ],
+   "note": "A refusal has the same standing as a permission because it is made of the same message types. What it does not have is a distinguishing mark of its own, which is R3.4's problem rather than this one."
+  },
+  "R3.4": {
+   "verdict": "partial",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "haystack/hooks/human_in_the_loop/dataclasses.py:53",
+     "note": "ToolExecutionDecision.feedback is a dedicated field for the reason, documented as carrying it when execution is rejected. Most of the census has no such field at all"
+    },
+    {
+     "kind": "source",
+     "locator": "haystack/hooks/human_in_the_loop/strategies.py:601",
+     "note": "tool_result_text = ted.feedback or REJECTION_FEEDBACK_TEMPLATE.format(tool_name=tc.tool_name), so a refusal with no reason still produces prose, and the reason reaches the record as free text in a tool result"
+    },
+    {
+     "kind": "searched",
+     "locator": "grep -rniE 'reason|rejection_code|denial' haystack/hooks/human_in_the_loop/dataclasses.py",
+     "note": "the only structured marker on the resulting message is error=True, which a tool that raised also sets, so the record cannot distinguish a call a person refused from one that crashed"
+    }
+   ],
+   "note": "Ahead of most of the census for having a field meant for the reason, and short of the requirement because the field is free text and the machine-readable part, error=True, conflates refusal with failure."
+  },
+  "R3.5": {
+   "verdict": "absent",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "haystack/hooks/human_in_the_loop/dataclasses.py:9-27",
+     "note": "ConfirmationUIResult is action, feedback and new_tool_params. The object that carries what a person decided has no field for which person decided it"
+    },
+    {
+     "kind": "source",
+     "locator": "haystack/hooks/human_in_the_loop/dataclasses.py:30-54",
+     "note": "ToolExecutionDecision, which is what survives the interaction, has tool_name, execute, tool_call_id, feedback and final_tool_params, and no approver either"
+    },
+    {
+     "kind": "searched",
+     "locator": "grep -rniE 'approver|principal|user_id|approved_by|authenticat' haystack/hooks/",
+     "note": "two hits, and both are false positives on the substring user_id: last_user_idx and insertion_point in strategies.py:658 and 661. No identity of any kind appears on the approval path"
+    }
+   ],
+   "note": "The same stopping point as every other subject with a gate. The decision object is the most detailed in this census and still has nowhere to put the person, so an approval that a console user typed and one a NeverAskPolicy produced are the same record."
+  },
+  "R3.6": {
+   "verdict": "absent",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "haystack/hooks/human_in_the_loop/user_interfaces.py:22,124",
+     "note": "the supplied interfaces are console based, RichConsoleUI at 22 and SimpleConsoleUI at 124, and read a decision from whoever is at the terminal. There is no session, token or authenticated caller in the picture"
+    },
+    {
+     "kind": "searched",
+     "locator": "grep -rniE 'approver|principal|user_id|approved_by|authenticat' haystack/hooks/",
+     "note": "two hits, both the last_user_idx false positive. Nothing on the approval path reads an identity from anywhere, authenticated or not"
+    }
+   ],
+   "note": "Not reachable while R3.5 is absent: an identity that is never captured cannot be sourced from an authentication layer. Recorded separately because the two come apart in systems that do capture an approver and then trust the request body for the name."
+  },
+  "R3.7": {
+   "verdict": "absent",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "haystack/hooks/human_in_the_loop/policies.py:26-33",
+     "note": "NeverAskPolicy is a supplied policy whose should_ask returns false, so a configuration in which nothing is ever put to a person is a first-class option rather than a misuse"
+    },
+    {
+     "kind": "source",
+     "locator": "haystack/hooks/human_in_the_loop/strategies.py:232-245",
+     "note": "_passthrough_tool_call builds a decision with execute=True and the model's own arguments for calls that do not resolve to a known tool, so some calls are approved by the framework itself"
+    },
+    {
+     "kind": "searched",
+     "locator": "grep -rniE 'separation|segregat|self.approv|four.eyes' haystack",
+     "note": "nothing expresses a separation between the party proposing an action and the party allowing it, which follows from neither party being represented"
+    }
+   ],
+   "note": "With no principals on either side there is nothing to compare. The passthrough case is recorded because it is a decision the framework makes on its own behalf, and it is a defensible design choice: it lets the tool resolution layer report an unknown tool uniformly instead of failing inside the hook."
+  },
+  "R4.1": {
+   "verdict": "absent",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "haystack/dataclasses/document.py:103-116",
+     "note": "the primitive exists. _create_id builds a sha256 over content, blob, mime type, sorted meta and embeddings, and the algorithm is in published source, so anybody can recompute it"
+    },
+    {
+     "kind": "source",
+     "locator": "haystack/dataclasses/document.py:68",
+     "note": "but it is identity, not integrity: self.id = self.id or self._create_id() means a caller-supplied id is kept as given, and the hash is only computed when one is absent"
+    },
+    {
+     "kind": "searched",
+     "locator": "grep -rniE 'hmac|merkle|tamper|signature|verify_integrity' haystack",
+     "note": "85 hits and not one is an integrity mechanism: 84 are inspect.signature and the single tamper match is the substring inside structlog's TimeStamper at logging.py:386. hmac, merkle and verify_integrity return nothing"
+    }
+   ],
+   "note": "Closer to the shape of TR-4 than most subjects and still absent, because a content hash used as a primary key is not a published scheme for verifying a past state. It is the same observation recorded against LangGraph: the structure is most of the way there and nothing is built on it."
+  },
+  "R4.2": {
+   "verdict": "absent",
+   "evidence": [
+    {
+     "kind": "searched",
+     "locator": "grep -rn '_create_id' haystack",
+     "note": "two hits: the definition and the single call at document.py:68. The hash is never recomputed and never compared, so there is no verification for an independent party to run"
+    },
+    {
+     "kind": "source",
+     "locator": "haystack/document_stores/in_memory/document_store.py:462",
+     "note": "the store's public surface is write, delete, filter and count. It offers no verify operation, so the question of whether one needs the vendor does not arise"
+    }
+   ],
+   "note": "Nothing here needs deepset's cooperation, because there is nothing to withhold. Scored absent on the same basis as every other subject: absence of a scheme rather than a restriction on access to one."
+  },
+  "R4.3": {
+   "verdict": "absent",
+   "evidence": [
+    {
+     "kind": "source",
+     "locator": "haystack/dataclasses/document.py:103-116",
+     "note": "in principle an altered document would no longer hash to its id, which is the closest any subject in this census comes to alteration being detectable at rest"
+    },
+    {
+     "kind": "source",
+     "locator": "haystack/components/extractors/llm_metadata_extractor.py:379-383",
+     "note": "in practice the framework breaks that relationship itself. replace(document, meta=new_meta) keeps the original id while changing the meta the id was computed over, so a document whose id does not match its content is the normal result of enrichment"
+    },
+    {
+     "kind": "searched",
+     "locator": "grep -rn '_create_id' haystack",
+     "note": "and nothing recomputes it, so no code path would notice either the legitimate mismatch or a malicious one"
+    }
+   ],
+   "note": "The most interesting negative in this assessment. A digest over the content exists, and the ordinary enrichment path produces documents that fail it, which means a mismatch cannot be read as evidence of tampering even by somebody who thought to check. The distance to a real answer here is not a new mechanism but a decision about what the id is for."
+  }
+ }
+}
