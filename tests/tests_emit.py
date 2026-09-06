@@ -10,7 +10,7 @@ The rest is about refusing at the point of the mistake. A validator tells you
 after the record is on disk and the run is over; an emitter can tell you on the
 line that got it wrong, and which line that was is most of the value.
 
-Copyright 2026 Michael Brandon Clifford. MIT licensed.
+Copyright 2026 Garnet Taurus Ltd. MIT licensed.
 """
 import io
 import json

@@ -26,7 +26,7 @@ being unable to demonstrate the same about itself.
 Applying the standard to the standard is not a flourish. It is the only version
 of this exercise that is not hypocritical.
 
-Copyright 2026 Michael Brandon Clifford. MIT licensed.
+Copyright 2026 Garnet Taurus Ltd. MIT licensed.
 """
 from __future__ import annotations
 

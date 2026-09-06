@@ -11,7 +11,7 @@
   "acts"
  ],
  "assessed_on": "2026-09-04",
- "assessed_by": "Michael Brandon Clifford",
+ "assessed_by": "Troy Brandon Clifford",
  "method": "Read of the server source at 9a77c20, plus the assertions made by server/tests_testimony_export.py, which drives a real server rather than a fixture. This is the author assessing his own software against his own specification, and the result should be read as carrying no evidential weight whatever. It is here so the rubric is applied to the system that wrote it before it is applied to anybody else's, and so that the questions can be checked against a system whose source the reader can also open.",
  "notes": "OMEM is the reference implementation of the specification this rubric derives from, so a high score is a tautology rather than a finding. Two of the verdicts below were reached only after the rubric itself was corrected: an earlier draft scored OMEM's GDPR erasure path as a TR-1 failure, and scored its deliberate refusal to resolve contradictions as a TR-2 failure. Both were defects in the questions.",
  "assessments": {

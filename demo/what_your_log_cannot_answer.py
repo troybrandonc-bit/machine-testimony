@@ -17,7 +17,7 @@ Run it against your own log format by replacing `ordinary_log` with yours. If
 your log answers all four, this project has nothing to offer you and that is a
 good outcome.
 
-Copyright 2026 Michael Brandon Clifford. MIT licensed.
+Copyright 2026 Garnet Taurus Ltd. MIT licensed.
 """
 from __future__ import annotations
 

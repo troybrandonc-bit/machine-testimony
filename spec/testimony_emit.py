@@ -47,7 +47,7 @@ the specification defines, checked against the reference over the whole
 conformance corpus by tests/tests_emit.py. A specification exists precisely so
 that the same rule can be written twice and come out the same.
 
-Copyright 2026 Michael Brandon Clifford. MIT licensed.
+Copyright 2026 Garnet Taurus Ltd. MIT licensed.
 """
 from __future__ import annotations
 

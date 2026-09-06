@@ -20,7 +20,7 @@ questionnaire hosted by a vendor, asking about capabilities that vendor
 happens to have, is a sales tool wearing a lab coat, and any procurement team
 worth having would read it that way.
 
-Copyright 2026 Michael Brandon Clifford. MIT licensed.
+Copyright 2026 Garnet Taurus Ltd. MIT licensed.
 """
 from __future__ import annotations
 

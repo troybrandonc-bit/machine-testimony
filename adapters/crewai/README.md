@@ -75,5 +75,5 @@ not an account of itself.
 `tests/tests_crewai_testimony.py`, 30 checks, run against real CrewAI. CI
 installs the library and fails if the suite skips.
 
-MIT. Copyright 2026 Michael Brandon Clifford.
+MIT. Copyright 2026 Garnet Taurus Ltd.
 The specification: <https://datatracker.ietf.org/doc/draft-clifford-testimony-record/>

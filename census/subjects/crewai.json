@@ -11,7 +11,7 @@
     "acts"
   ],
   "assessed_on": "2026-09-04",
-  "assessed_by": "Michael Brandon Clifford",
+  "assessed_by": "Troy Brandon Clifford",
   "method": "Read of lib/crewai/src/crewai/memory/types.py, memory/encoding_flow.py, memory/analyze.py, memory/storage/lancedb_storage.py, hooks/decorators.py, hooks/tool_hooks.py, hooks/llm_hooks.py and agents/crew_agent_executor.py at 92eb5f9, cloned from the public repository. Line numbers are that commit's. The project versions from SCM and the clone carries no tag, so the commit is the identifier.",
   "notes": "CrewAI has a real gate and a real consolidation step, and both are worth understanding before deploying it where a record matters. The gate is the before_tool_call hook: developer code, filtered by tool name, that can block a call, which satisfies the requirement that risk not be decided by the model. What it does with a block is the problem. HookAborted carries a reason, run_before_tool_call_hooks discards it, and the executor substitutes the fixed string 'Tool execution blocked by hook', which goes back to the model as an ordinary tool result. The refusal survives as narration in a transcript rather than as a decision anybody can query. On the memory side, an LLM emits a keep/update/delete plan over existing records and updates overwrite content in place while preserving the record id and created_at, with no history kept anywhere. Both behaviours are reasonable for a framework optimising for agents that work; neither leaves a record.",
   "assessments": {

@@ -357,4 +357,4 @@ small, and for two it is the same one.
 | `verify/` | scripts that demonstrate a finding by running the assessed system |
 | `subjects/*.json` | one assessed system each, pinned to a full commit id |
 
-Copyright 2026 Michael Brandon Clifford. MIT licensed.
+Copyright 2026 Garnet Taurus Ltd. MIT licensed.

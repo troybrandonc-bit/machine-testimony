@@ -13,7 +13,7 @@ implementation conforms when it reaches the same verdict, not when it prints
 the same sentences. See conformance/README.md for why that line is drawn where
 it is.
 
-Copyright 2026 Michael Brandon Clifford. MIT licensed.
+Copyright 2026 Garnet Taurus Ltd. MIT licensed.
 """
 from __future__ import annotations
 
