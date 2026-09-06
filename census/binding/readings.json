@@ -1,0 +1,100 @@
+{
+ "read_on": "2026-09-06",
+ "read_by": "Troy Brandon Clifford",
+ "question": "Between the moment a human approver is shown a tool call and the moment that tool runs, can the arguments change?",
+ "why": "An approval is worth what it was an approval of. If the arguments a person saw are not the arguments that execute, the person approved something that did not happen, and the record of their approval describes an action nobody agreed to. This is the failure mode approval exists to prevent.",
+ "verdicts": {
+  "bound": "The arguments shown to the approver are the arguments executed. Nothing between the two can change them.",
+  "partial": "They can differ, and the framework provides a way for the approver to fix what executes.",
+  "unbound": "They can differ, and there is no supplied mechanism that binds one to the other.",
+  "no_boundary": "The framework has no approval pause of its own, so the question does not arise. Assessing it as a failure would be dishonest.",
+  "undetermined": "Not established from published source."
+ },
+ "method": {
+  "how": "The approval path was read in published source at a pinned commit. Two points were located in each: where the pending call is handed to the approver, and where the tool is invoked. The verdict turns on whether anything between them can rewrite the arguments.",
+  "limits": "One question, not a conformance assessment. It says nothing about whether a framework is well built, and a framework that scores badly here may be excellent at what it was made for. Only paths reachable from the documented approval feature were read; a deployment that builds its own gate is outside it.",
+  "disputing": "Every verdict cites a file and a line at a commit. A wrong one is wrong in a way a pull request can fix."
+ },
+ "subjects": [
+  {
+   "name": "OpenAI Agents SDK",
+   "repo": "openai/openai-agents-python",
+   "commit": "1d471a4775bf",
+   "verdict": "bound",
+   "shown_to_approver": {
+    "locator": "src/agents/run_internal/tool_execution.py:1175",
+    "note": "ToolApprovalItem(raw_item=raw_item, ...) carries the model's ResponseFunctionToolCall unchanged."
+   },
+   "executed": {
+    "locator": "src/agents/run_internal/tool_execution.py:2062-2065",
+    "note": "_invoke_function_tool_with_metadata(..., arguments=tool_call.arguments) reads the same call object."
+   },
+   "note": "Both sides read one ResponseFunctionToolCall and nothing between them rewrites it. The SDK also carries a pre_approval_tool_input_guardrails setting, which is evidence that the ordering of guardrails against approval was considered rather than left to chance."
+  },
+  {
+   "name": "Pydantic AI",
+   "repo": "pydantic/pydantic-ai",
+   "commit": "c0e4d824eaa0",
+   "verdict": "partial",
+   "shown_to_approver": {
+    "locator": "pydantic_ai_slim/pydantic_ai/_tool_execution.py:1027-1031",
+    "note": "DeferredToolRequests(approvals=self.deferred_calls['unapproved'], ...) hands over the model's ToolCallParts, before validation."
+   },
+   "executed": {
+    "locator": "pydantic_ai_slim/pydantic_ai/_tool_execution.py:669-675",
+    "note": "_validate_approved_call applies ToolApproved.override_args if given, then calls validate_tool_call(...), which runs after the approver has seen the call and can transform its arguments."
+   },
+   "mechanism": "ToolApproved(override_args=...) lets the approver state exactly what should run, which binds the two when it is used.",
+   "note": "Partial rather than unbound because the framework supplies the binding mechanism. Their AI lead has this open as pydantic-ai#6968, describing it in those terms: the human approves one thing and the system executes another.",
+   "issue": "https://github.com/pydantic/pydantic-ai/issues/6968"
+  },
+  {
+   "name": "Haystack",
+   "repo": "deepset-ai/haystack",
+   "commit": "82da3adc2fac",
+   "verdict": "unbound",
+   "shown_to_approver": {
+    "locator": "haystack/hooks/human_in_the_loop/hooks.py:21-23",
+    "note": "The confirmation strategy runs as a before_tool hook, over the tool calls the model requested."
+   },
+   "executed": {
+    "locator": "haystack/components/agents/tool_calling.py:300-311",
+    "note": "final_args starts as dict(llm_args), then values named by tool.inputs_from_state are injected, then the live State object for any parameter annotated as State. All of it after the before_tool hook has run."
+   },
+   "note": "A tool that reads from state executes with arguments the confirming person never saw. The before_tool hook can modify a call, but only the half the model produced.",
+   "issue": "https://github.com/deepset-ai/haystack/issues/12060"
+  },
+  {
+   "name": "LangGraph",
+   "repo": "langchain-ai/langgraph",
+   "commit": "81bf17b23123",
+   "verdict": "unbound",
+   "documented": true,
+   "shown_to_approver": {
+    "locator": "libs/langgraph/langgraph/types.py:856-864",
+    "note": "interrupt(value) halts the node and sends value to the client; whatever the node computed before that call is what the approver is shown."
+   },
+   "executed": {
+    "locator": "libs/langgraph/langgraph/types.py:864",
+    "note": "\"The graph resumes from the start of the node, re-executing all logic.\" Anything computed before the interrupt is computed again on resume, so a value derived from live state can legitimately differ the second time."
+   },
+   "note": "Unbound, and documented as such in the framework's own docstring rather than discovered. That is a materially different thing from a silent divergence: a reader who checks is told. It is still the caller's problem to solve, and nothing in the framework solves it for them."
+  },
+  {
+   "name": "AutoGen",
+   "repo": "microsoft/autogen",
+   "commit": "027ecf0a379b",
+   "verdict": "no_boundary",
+   "note": "No approval pause in core. Its maintainers have that open as two issues: microsoft/autogen#5891, opened by a Microsoft Research engineer, proposing an approval function on BaseTool, and microsoft/autogen#4894, opened by the lead maintainer. The design discussion in #5891 independently specifies the binding this reading asks about, requiring a canonical digest of the validated arguments with a changed digest invalidating the decision.",
+   "issue": "https://github.com/microsoft/autogen/issues/5891"
+  },
+  {
+   "name": "CrewAI",
+   "repo": "crewAIInc/crewAI",
+   "commit": "143e902178a0",
+   "verdict": "no_boundary",
+   "note": "No approval pause in core, and no before-tool hook: step_callback fires after a step. Open as crewAIInc/crewAI#5888, which states that the only way to enforce this is to wrap each tool individually.",
+   "issue": "https://github.com/crewAIInc/crewAI/issues/5888"
+  }
+ ]
+}
