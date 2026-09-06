@@ -1,0 +1,128 @@
+<!--title: Proposing a change to the Testimony Record specification
+    desc: How somebody other than the editor gets a defect fixed or a change into the Testimony Record, what is accepted, what is not, and the honest limits.
+    slug: changes-->
+
+<div class="wrap main">
+  <div>
+    <p class="dateline">Governance, 5 September 2026</p>
+    <h2 class="label">Proposing a change to the specification</h2>
+
+    <div class="block">
+      <p>The Testimony Record is edited by one person. That is a real limitation
+        and this page exists because pretending otherwise is how a format gets
+        forked.</p>
+      <p>Formats do not fragment over their content. They fragment over
+        governance: somebody could not get a change in, or the terms moved under
+        them, and the cheapest response was to start again. Markdown was forked
+        because its author declined to standardise it. RSS split over a
+        governance dispute. Neither fork was about the syntax.</p>
+      <p>So the route in is written down, before anyone needs it.</p>
+
+      <h3>What gets accepted</h3>
+      <ul>
+        <li><b>A defect.</b> The validator refuses something the specification
+          permits, or accepts something it forbids. These are fixed fastest and
+          the person who reported it is named in the erratum.</li>
+        <li><b>An internal inconsistency.</b> Two clauses that cannot both be
+          satisfied, or a requirement stated in one place and contradicted in
+          another.</li>
+        <li><b>A case the format cannot express</b> that it plainly should. The
+          strongest form of this is a real record from a real system that has to
+          be distorted to fit.</li>
+        <li><b>A requirement that cannot be checked.</b> Anything the validator
+          cannot decide is a defect in the specification, not in the validator.
+          A conformance claim nobody can check is an adjective.</li>
+      </ul>
+
+      <h3>What does not</h3>
+      <ul>
+        <li>A field for a use case with no implementation behind it. The format
+          stays small on purpose and every addition is a thing every future
+          reader must understand.</li>
+        <li>Anything that requires particular software to satisfy. If a
+          competitor could not implement it, it does not go in.</li>
+        <li>Loosening a refusal because a system fails it. That the format
+          refuses something is usually the point.</li>
+      </ul>
+
+      <h3>How to raise one</h3>
+      <p>Open an issue on the repository, or write to the editor. Both are read
+        by the same person, and neither is a form.</p>
+      <pre class="snip addr"><code>https://github.com/troybrandonc-bit/machine-testimony/issues
+troy@machinetestimony.com</code></pre>
+      <p>A report is strongest with a record that demonstrates it. The validator
+        is one standard-library file with no network access, so the smallest
+        useful bug report is a few lines of JSON and the level you expected.</p>
+
+      <h3>What happens then</h3>
+      <ol>
+        <li>A defect that can be shown gets a fix and an erratum on the
+          specification page, <b>naming the person who found it</b>. This has
+          happened: the <code>scope</code> entry in version 0.2 exists because
+          Phill Clapham reported that the validator refused TR-3 to any record
+          containing no decisions, a requirement that appeared nowhere in the
+          specification text.</li>
+        <li>A change to the format itself waits for the next version. Within a
+          major version, entry types and required fields are only added, never
+          removed or repurposed, so a reader written against 0.1 keeps working.
+          Breaking changes get a new major version and both stay published.
+          This has also happened. The optional <span class="mono">outcome</span>
+          member on a decision, in <span class="mono">-02</span>, exists because
+          a reader on somebody else's issue tracker pointed out that an expired
+          evidence deadline and a failed action are different facts, and the
+          format could express neither: <span class="mono">executed</span> was a
+          required boolean, so a system whose acknowledgement never came back had
+          to assert something it did not know. That is the third category above,
+          a case the format could not express that it plainly should, and it was
+          raised by somebody who had not read the specification.</li>
+        <li>A rejection comes with a reason. If the reason is wrong, say so;
+          being argued out of a position in public is a better outcome for the
+          format than being right quietly.</li>
+      </ol>
+
+      <h3>The honest limits</h3>
+      <p>There is no committee, no vote, and no appeal to anybody other than the
+        editor. A single editor is faster than a process and you can see exactly
+        who to argue with, which is worth saying plainly rather than dressing
+        up.</p>
+      <p>The counterweight is that nothing here is held back. The specification
+        text is CC BY 4.0 and the validator is MIT, so anyone who disagrees
+        strongly enough can take the format and go, with no permission needed
+        and nothing to negotiate. That option existing is what makes the
+        arrangement fair, and using it is not a hostile act.</p>
+      <p>The specification is also deposited as an IETF Internet-Draft, which is
+        archived independently of this site and of its editor. It confers no
+        formal standing and the datatracker says so on the page. What it means
+        is that the document survives whether or not anything here does.</p>
+    </div>
+  </div>
+
+  <aside class="rail">
+    <h2>The short version</h2>
+    <div class="item">
+      <b>Defects are fixed and credited</b>
+      <p>The reporter is named in the erratum. Version 0.2's scope entry came in
+        this way.</p>
+    </div>
+    <div class="item">
+      <b>Additions are rare</b>
+      <p>Nothing goes in without an implementation behind it, and nothing that
+        only one vendor could satisfy.</p>
+    </div>
+    <div class="item">
+      <b>One editor, said out loud</b>
+      <p>No committee and no appeal. Faster, and you can see who to argue
+        with.</p>
+    </div>
+    <div class="item">
+      <b>Forking is permitted</b>
+      <p>CC BY on the text, MIT on the validator. Nobody needs permission to
+        leave, which is what makes staying meaningful.</p>
+    </div>
+    <ul class="links">
+      <li><a href="https://github.com/troybrandonc-bit/machine-testimony/issues">Open an issue</a></li>
+      <li><a href="https://datatracker.ietf.org/doc/draft-clifford-testimony-record/">The Internet-Draft</a></li>
+      <li><a href="/check/">Check a record</a></li>
+    </ul>
+  </aside>
+</div>
