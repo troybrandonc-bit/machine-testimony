@@ -829,6 +829,51 @@ def main():
     check("no page has drifted from the homepage's navigation", not odd,
           "; ".join(odd[:4]))
     print("")
+    print("no page reintroduces the ornament")
+    # Uppercase micro-labels with letter-spacing are the eyebrow pattern, and
+    # they are the first thing on the list of tells this project already
+    # reacted to once on the product UI. They had spread to column heads,
+    # verdict cells, entry kinds and the validator's badges: nine rules across
+    # the shared stylesheet and the pages that carry their own copy.
+    #
+    # Negative tracking on large display type is ordinary typography and is not
+    # what this is about, so only positive values are refused.
+    import re as _re
+    UPPER = _re.compile(r"text-transform\s*:\s*uppercase")
+    TRACK = _re.compile(r"letter-spacing\s*:\s*\.\d")
+    WORDMARK = ".lockup .nm"          # the only place either belongs
+
+    def stylesheets(text):
+        return "\n".join(_re.findall(r"<style>(.*?)</style>", text, _re.S))
+
+    def offenders(css):
+        out = []
+        for sel, body in _re.findall(r"([^{}\n][^{}]*)\{([^}]*)\}", css):
+            sel = sel.strip()
+            if WORDMARK in sel:
+                continue
+            if UPPER.search(body) or TRACK.search(body):
+                out.append(sel[:40])
+        return out
+
+    bad = {}
+    for page in pages():
+        found = offenders(stylesheets(
+            io.open(page, encoding="utf-8").read()))
+        if found:
+            bad[os.path.relpath(page, PUB)] = found
+    check("no published page sets uppercase or positive tracking outside the "
+          "wordmark", not bad, dict(list(bad.items())[:3]))
+
+    # And the generator itself, so a rebuild cannot put it back.
+    gen = io.open(os.path.join(ROOT, "build_page.py"), encoding="utf-8").read()
+    i = gen.find('EXTRA = """')
+    extra = gen[i:gen.find('"""', i + 12)] if i >= 0 else ""
+    check("the shared page stylesheet sets neither",
+          not UPPER.search(extra) and not TRACK.search(extra),
+          "build_page.py EXTRA")
+
+    print("")
     print("every published page has a source that produces it")
     # /changes/ was published with no source in pages/, so the rebuild check
     # above never saw it, and it drifted: the live copy had been built by an
@@ -839,9 +884,11 @@ def main():
     # named here rather than left to be discovered, so the debt is visible and
     # a fourth cannot appear quietly.
     UNCONVERTED = {
-        "check",       # carries the browser validator, generated separately
-        "approvals",
-        "eu-ai-act",
+        # The last one. It carries the browser validator and a script the page
+        # generator does not produce, so converting it is not the same job as
+        # the prose pages were. Its stylesheet is kept in step by hand until
+        # then, which is the reason this list exists rather than a comment.
+        "check",
     }
     # A different case, and the distinction matters. These are deposited
     # documents with DOIs, frozen to match what Zenodo serves. They must never
