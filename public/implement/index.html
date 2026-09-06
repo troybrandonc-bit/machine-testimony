@@ -392,9 +392,19 @@ python3 demo/what_your_log_cannot_answer.py</pre>
       <a href="https://github.com/troybrandonc-bit/machine-testimony/tree/main/conformance">the conformance corpus</a></p>
 
     <h2 class="label">Already in a framework</h2>
-    <p class="cont"><code>pip install testimony-langgraph</code> emits a record
-      from a LangGraph run, and depends on LangGraph and on nothing of
-      ours.</p>
+    <p class="cont">One file each, depending on that framework and on nothing
+      of ours. Each names the seam it found, because the four are not
+      alike.</p>
+    <p class="cont"><a href="https://github.com/troybrandonc-bit/machine-testimony/tree/main/adapters/langgraph">LangGraph</a>,
+      on interrupt and resume<br>
+      <a href="https://github.com/troybrandonc-bit/machine-testimony/tree/main/adapters/crewai">CrewAI</a>,
+      wrapping tools, because there is no before-tool hook<br>
+      <a href="https://github.com/troybrandonc-bit/machine-testimony/tree/main/adapters/autogen">AutoGen</a>,
+      a workbench wrapping a workbench<br>
+      <a href="https://github.com/troybrandonc-bit/machine-testimony/tree/main/adapters/openai-agents">OpenAI Agents</a>,
+      which has the gate already and cannot say who opened it</p>
+    <p class="cont"><code>pip install testimony-langgraph</code> for the first.
+      The other three are a file to copy until their packaging is written.</p>
 
     <hr>
     <p class="cont"><a href="/check/">Check a record in the browser</a><br>
