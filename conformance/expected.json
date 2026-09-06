@@ -479,6 +479,18 @@
   "scope": "acts",
   "spec": "testimony-record/0.2"
  },
+ "outcome-unconfirmed-after-running": {
+  "level": "TR-3",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "an action observed to run whose effect is not established",
+  "scope": "acts",
+  "spec": "testimony-record/0.2"
+ },
  "record-only": {
   "level": "TR-3",
   "levels_met": {

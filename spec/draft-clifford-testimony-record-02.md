@@ -306,7 +306,9 @@ outcome:
   already ran. This member is the same distinction a belief entry draws when
   its state is unknown, applied to actions. A record MUST NOT contradict
   itself. Where the system observed the action run, this member if present MUST
-  be `confirmed`. Where the action was refused, it MUST be `not_attempted`.
+  NOT be `not_attempted`; it may be `confirmed` or `unconfirmed`, because an
+  action can be observed to run while its effect remains unestablished. Where
+  the action was refused, it MUST be `not_attempted`.
 
 reason:
 : REQUIRED where the verdict is `refused`.
@@ -716,7 +718,9 @@ always modelled that uncertainty for beliefs, where `state` carries `unknown`,
 and did not model it for actions, so a system whose acknowledgement was lost had
 to assert something it did not know. The optional `outcome` member carries the
 distinction, and a decision that contradicts itself between `executed`,
-`verdict` and `outcome` no longer reaches TR-3.
+`verdict` and `outcome` no longer reaches TR-3. Observing an action run and
+being unable to confirm its effect is not a contradiction: a call that returned
+while settlement is pending is both.
 
 # Acknowledgements
 {:numbered="false"}

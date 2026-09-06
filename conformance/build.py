@@ -205,6 +205,15 @@ def cases():
         "an action that was permitted and definitely never dispatched",
         [scope(), ev(), bel(), dec(executed=False, outcome="not_attempted"),
          app()])
+    # Observed to run, effect not established. A provider returning 200 with
+    # settlement pending is both, and the first version of the contradiction
+    # check refused this record, which forced the honest answer into
+    # `executed: false`. Reported by impartshadow on 6 September 2026 after
+    # running the corpus. The case exists so the refusal cannot come back.
+    add("outcome-unconfirmed-after-running",
+        "an action observed to run whose effect is not established",
+        [scope(), ev(), bel(), dec(executed=True, outcome="unconfirmed"),
+         app()])
     add("outcome-contradicts-executed",
         "a record saying the action ran and that it was never attempted",
         [scope(), ev(), bel(), dec(executed=True, outcome="not_attempted"),

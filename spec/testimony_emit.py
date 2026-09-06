@@ -231,7 +231,7 @@ class Record:
             if outcome not in OUTCOMES:
                 raise Refused("outcome: %r is not one of %s"
                               % (outcome, ", ".join(sorted(OUTCOMES))))
-            if executed and outcome != "confirmed":
+            if executed and outcome == "not_attempted":
                 raise Refused("an executed action cannot also record an "
                               "outcome of %r" % outcome)
             if verdict == "refused" and outcome != "not_attempted":
