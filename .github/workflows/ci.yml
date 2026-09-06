@@ -44,6 +44,45 @@ jobs:
           python adapters/langgraph/example.py /tmp/record.jsonl
           python spec/testimony_validate.py /tmp/record.jsonl --require TR-4
 
+  crewai-adapter:
+    name: the CrewAI adapter, against real CrewAI tools
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with: { python-version: "3.12" }
+      # Real crewai, not a stand-in. The subject is what CrewAI's tool boundary
+      # carries and how its pydantic model builds args_schema, and a mock of
+      # that boundary would be a mock of the finding. crewai is a heavy install
+      # and that is the price of the suite meaning anything.
+      - run: pip install crewai
+      - name: The gate cannot fail open
+        working-directory: tests
+        run: |
+          set +e; out=$(python tests_crewai_testimony.py 2>&1); rc=$?; set -e
+          echo "$out"
+          [ $rc -eq 0 ] || { echo "::error::CrewAI adapter suite failed"; exit 1; }
+          if echo "$out" | grep -qE '^[[:space:]]*SKIP:'; then
+            echo "::error::the CrewAI suite skipped where crewai is installed"; exit 1
+          fi
+
+  autogen-adapter:
+    name: the AutoGen adapter, against a real workbench
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with: { python-version: "3.12" }
+      - run: pip install autogen-core
+      - name: The gate cannot fail open
+        working-directory: tests
+        run: |
+          set +e; out=$(python tests_autogen_testimony.py 2>&1); rc=$?; set -e
+          echo "$out"
+          [ $rc -eq 0 ] || { echo "::error::AutoGen adapter suite failed"; exit 1; }
+          if echo "$out" | grep -qE '^[[:space:]]*SKIP:'; then
+            echo "::error::the AutoGen suite skipped where autogen-core is installed"; exit 1
+          fi
   package:
     name: pip install, emit, check, with no checkout in sight
     runs-on: ubuntu-latest
