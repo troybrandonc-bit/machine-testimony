@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Haystack audit trail and approval records, assessed &ndash; Machine Testimony</title>
+<meta name="description" content="Haystack read against 20 record-keeping requirements at commit 82da3ad. 3 present, 4 partial, 13 absent. Every verdict cites a file and a line, and a wrong one is fixed by a pull request.">
+<meta property="og:title" content="Haystack audit trail and approval records, assessed">
+<meta property="og:description" content="Haystack read against 20 record-keeping requirements at commit 82da3ad. 3 present, 4 partial, 13 absent. Every verdict cites a file and a line, and a wrong one is fixed by a pull request.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://machinetestimony.org/register/haystack/">
+<meta property="og:image" content="https://machinetestimony.org/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Haystack audit trail and approval records, assessed">
+<meta name="twitter:description" content="Haystack read against 20 record-keeping requirements at commit 82da3ad. 3 present, 4 partial, 13 absent. Every verdict cites a file and a line, and a wrong one is fixed by a pull request.">
+<meta name="twitter:image" content="https://machinetestimony.org/og.png">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/icon.png" type="image/png" sizes="512x512">
+<link rel="apple-touch-icon" href="/icon.png">
+<link rel="canonical" href="https://machinetestimony.org/register/haystack/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+
+  /* Built to the NBER pattern, which is what a research bureau's site actually
+     looks like: one coloured band carrying the lockup, the utility links, the
+     navigation and the name together; the institution named large and centred
+     in a serif; outlined destination tiles; then a dense white body in two
+     columns with a rail. Serif for reading, sans for metadata, underlined
+     links, hairline rules, and far less air than a product page. */
+  :root{
+    --band:#123a6b; --band-2:#0e2f57; --band-ink:#ffffff; --band-dim:#b9cbe4;
+    --paper:#ffffff; --ink:#111417; --body:#24292d; --muted:#5f6a72;
+    --rule:#c9cfd4; --rule-soft:#e3e7ea; --label:#123a6b; --link:#123a6b;
+    --display:"Source Serif 4",Georgia,"Times New Roman",serif;
+    --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --band:#0c2340; --band-2:#081a2f; --band-ink:#f2f6fb; --band-dim:#9db3ce;
+      --paper:#0f1214; --ink:#eef0f2; --body:#c2c8cd; --muted:#8a939a;
+      --rule:#2c3236; --rule-soft:#1f2427; --label:#9dc0ef; --link:#9dc0ef;
+    }
+  }
+  :root[data-theme="dark"]{
+    --band:#0c2340; --band-2:#081a2f; --band-ink:#f2f6fb; --band-dim:#9db3ce;
+    --paper:#0f1214; --ink:#eef0f2; --body:#c2c8cd; --muted:#8a939a;
+    --rule:#2c3236; --rule-soft:#1f2427; --label:#9dc0ef; --link:#9dc0ef;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--body);
+    font-family:var(--display);font-size:17px;line-height:1.55;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 30px}
+  a{color:var(--link);text-decoration:underline;text-underline-offset:2px;
+    text-decoration-thickness:1px}
+  a:hover{text-decoration-thickness:2px}
+
+  /* ── the band: lockup, utility, nav and the name, all one field ─────── */
+  .band{background:var(--band);color:var(--band-ink);
+    background-image:linear-gradient(180deg,var(--band) 0%,var(--band-2) 100%)}
+  .band a{color:var(--band-ink);text-decoration:none}
+  .band a:hover{text-decoration:underline}
+  .topbar{display:flex;align-items:center;gap:26px;flex-wrap:wrap;padding:16px 0 12px}
+  .lockup{display:flex;align-items:center;gap:13px}
+  .lockup .mk{width:31px;height:31px;flex:none;color:var(--band-ink)}
+  .lockup .bar{width:2px;align-self:stretch;background:var(--band-ink);opacity:.55}
+  .lockup .nm{font-family:var(--sans);font-weight:700;font-size:11.5px;
+    letter-spacing:.085em;line-height:1.32;text-transform:uppercase}
+  .utility{margin-left:auto;font-family:var(--sans);font-size:13.5px;
+    display:flex;gap:12px;align-items:center;color:var(--band-dim)}
+  .utility .sep{opacity:.45}
+  nav.primary{border-bottom:1px solid rgba(255,255,255,.42);
+    display:flex;gap:26px;flex-wrap:wrap;padding:9px 0 11px;
+    font-family:var(--sans);font-size:14.5px}
+
+  .hero{text-align:center;padding:54px 0 46px}
+  .hero h1{font-family:var(--display);font-weight:700;color:var(--band-ink);
+    font-size:clamp(2.3rem,5.4vw,3.5rem);line-height:1.05;letter-spacing:-.012em;
+    margin:0}
+  .hero .strap{max-width:44rem;margin:20px auto 0;color:var(--band-ink);
+    font-size:clamp(1.02rem,2vw,1.24rem);line-height:1.45;opacity:.94}
+  .tiles{display:grid;gap:16px;margin:34px auto 0;max-width:52rem}
+  @media (min-width:700px){.tiles{grid-template-columns:1fr 1fr}}
+  .tile{border:1px solid rgba(255,255,255,.6);padding:17px 20px;
+    font-family:var(--sans);font-weight:600;font-size:15px;color:var(--band-ink);
+    text-decoration:none;display:block}
+  .tile:hover{background:rgba(255,255,255,.09);text-decoration:none}
+
+  /* ── the body: main column and a rail ───────────────────────────────── */
+  .main{display:grid;gap:34px;padding-top:40px;padding-bottom:10px}
+  /* Grid children default to min-width:auto and so refuse to shrink below
+     their content. On a phone this is a single column, so one wide code
+     block or table pushed the whole page past the viewport. The desktop
+     rule below says minmax(0,1fr) and was masking it above 960px. */
+  .main>*{min-width:0}
+  @media (min-width:960px){
+    .main{grid-template-columns:minmax(0,1fr) 21rem;gap:52px;align-items:start}
+  }
+  h2.label{font-family:var(--display);font-weight:700;color:var(--label);
+    font-size:1.06rem;margin:0 0 12px;padding-bottom:9px;
+    border-bottom:1px solid var(--rule)}
+  .block{margin:0 0 40px}
+  .block p{margin:0 0 15px;max-width:46rem}
+  .block p:last-child{margin-bottom:0}
+
+  table.levels{width:100%;border-collapse:collapse;font-size:16px}
+  table.levels th{text-align:left;font-family:var(--sans);font-size:11px;
+    letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+    font-weight:600;padding:0 14px 8px 0;border-bottom:1px solid var(--rule)}
+  table.levels td{padding:13px 14px 13px 0;border-bottom:1px solid var(--rule-soft);
+    vertical-align:top}
+  table.levels td.lv{font-family:var(--sans);font-weight:700;font-size:12.5px;
+    color:var(--label);white-space:nowrap;letter-spacing:.04em}
+  table.levels td.t{font-weight:600;color:var(--ink);min-width:15rem}
+
+  .entries{list-style:none;margin:0;padding:0}
+  .entries li{padding:16px 0;border-bottom:1px solid var(--rule-soft)}
+  .entries li:first-child{padding-top:0}
+  .entries h3{font-size:1.12rem;font-weight:600;margin:0 0 4px;line-height:1.32}
+  .entries h3 a{color:var(--ink)}
+  .entries .kind{font-family:var(--sans);font-weight:700;font-size:11px;
+    letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+    display:block;margin-bottom:5px}
+  .entries p{margin:0;font-size:16px;max-width:44rem}
+  .entries .meta{margin-top:7px;font-family:var(--sans);font-size:12.5px;
+    color:var(--muted)}
+
+  /* ── the rail ───────────────────────────────────────────────────────── */
+  .rail{border-top:3px solid var(--band);padding-top:14px}
+  .rail h2{font-family:var(--display);font-weight:700;color:var(--label);
+    font-size:1.02rem;margin:0 0 10px}
+  .rail .item{padding:13px 0;border-bottom:1px solid var(--rule-soft)}
+  .rail .item:last-of-type{border-bottom:0}
+  .rail .item b{display:block;font-weight:600;color:var(--ink);font-size:1rem;
+    margin-bottom:3px}
+  .rail .item p{margin:0;font-size:15px;color:var(--body)}
+  .rail .links{list-style:none;margin:16px 0 0;padding:16px 0 0;
+    border-top:1px solid var(--rule);font-family:var(--sans);font-size:14.5px}
+  .rail .links li{margin:0 0 7px}
+
+  footer.foot{border-top:3px solid var(--band);margin-top:34px;
+    padding:20px 0 46px;font-family:var(--sans);font-size:13.5px;color:var(--muted)}
+  footer.foot p{margin:0 0 4px}
+
+  /* Only what a prose page needs beyond the shared stylesheet. */
+  pre.snip{background:none;border-left:2px solid var(--rule);margin:0 0 16px;
+    padding:2px 0 2px 13px;font-size:13px;overflow-x:auto;max-width:100%;
+    font-family:var(--mono);line-height:1.55}
+  pre.snip.addr{overflow-x:visible;white-space:pre-wrap;overflow-wrap:anywhere}
+  .block h3{font-family:var(--display);font-weight:600;color:var(--ink);
+    font-size:1.08rem;margin:26px 0 8px}
+  .block ol,.block ul{margin:0 0 15px;padding-left:1.15rem;max-width:46rem}
+  .block li{margin:0 0 7px}
+  .dateline{font-family:var(--sans);font-size:12.5px;color:var(--muted);
+    margin:0 0 22px}
+  /* The one sentence a page is allowed to insist on. For a measured number the
+     rest of the page exists to explain, never for emphasis on an opinion. */
+  p.callout{border-left:2px solid var(--band);padding:10px 0 10px 14px;
+    margin:0 0 17px;max-width:46rem}
+  table.facts{width:100%;border-collapse:collapse;font-size:14px;margin:0 0 20px}
+  table.facts th{text-align:left;font-family:var(--sans);font-size:11px;
+    font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--muted);padding:0 12px 6px 0;white-space:nowrap;
+    vertical-align:top;width:8.5rem}
+  table.facts td{padding:0 0 6px;font-family:var(--mono);font-size:12.5px;
+    overflow-wrap:anywhere;border-bottom:1px solid var(--rule-soft)}
+  table.facts th{border-bottom:1px solid var(--rule-soft)}
+  /* The register's tables. A wide table scrolls inside its own box rather
+     than pushing the page sideways, which is the thing that made the site
+     unreadable on a phone the first time. */
+  .scroller{overflow-x:auto;max-width:100%;margin:0 0 16px}
+  table.reg{border-collapse:collapse;font-size:14px;min-width:34rem}
+  table.reg th{text-align:left;font-family:var(--sans);font-size:11px;
+    font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--muted);padding:0 14px 7px 0;white-space:nowrap;
+    border-bottom:1px solid var(--rule)}
+  table.reg td{padding:8px 14px 8px 0;border-bottom:1px solid var(--rule-soft);
+    vertical-align:top}
+  table.reg td.s{font-weight:600;white-space:nowrap}
+  table.reg td.n,table.reg td.lv,table.reg td.d{font-family:var(--sans);
+    font-size:12.5px;white-space:nowrap;color:var(--body)}
+  table.reg td.lv{font-weight:700}
+  table.reg td.v{font-family:var(--sans);font-size:11px;font-weight:700;
+    letter-spacing:.02em;white-space:nowrap;color:var(--muted)}
+  /* Absent is the finding, so it is the one that is not muted. */
+  table.reg td.v.n{color:var(--ink)}
+  table.reg td.w{font-family:var(--mono);font-size:12px;color:var(--muted);
+    overflow-wrap:anywhere}
+  table.reg tr.own td{background:#f4f7fb}
+  .tag{font-family:var(--sans);font-size:10.5px;font-weight:700;
+    letter-spacing:.04em;text-transform:uppercase;color:var(--muted);
+    white-space:nowrap}
+  @media (max-width:620px){
+    table.reg{font-size:13px}
+    table.reg td.w{font-size:11px}
+    pre.snip{font-size:12px}
+    table.facts th{width:6.6rem;font-size:10px}
+    table.facts td{font-size:11.5px}
+  }
+</style>
+</head>
+<body>
+
+<div class="band">
+  <div class="wrap">
+    <div class="topbar">
+      <div class="lockup">
+        <svg class="mk" viewBox="0 0 64 64" aria-hidden="true">
+          <g fill="currentColor">
+            <rect x="2" y="18" width="20" height="20"/>
+            <polygon points="2,38 22,38 2,56"/>
+            <rect x="30" y="22" width="20" height="20"/>
+            <polygon points="50,22 30,22 50,4"/>
+          </g>
+        </svg>
+        <div class="bar"></div>
+        <div class="nm">Machine<br>Testimony</div>
+      </div>
+      <div class="utility">
+        <a href="https://datatracker.ietf.org/doc/draft-clifford-testimony-record/">Specification</a>
+        <span class="sep">|</span>
+        <a href="https://github.com/troybrandonc-bit/machine-testimony">Validator and adapters</a>
+        <span class="sep">|</span>
+        <a href="/llms.txt">For machines</a>
+      </div>
+    </div>
+    <nav class="primary">
+      <a href="/#question">The question</a>
+      <a href="/#conformance">Conformance</a>
+      <a href="/#papers">Working papers</a>
+      <a href="/#census">Census</a>
+      <a href="/register/">The register</a>
+      <a href="/ask/">Ask your supplier</a>
+      <a href="/tamper-evidence/">Tamper evidence</a>
+      <a href="/assess/">Assess a system</a>
+      <a href="/#publications">Publications</a>
+      <a href="/eu-ai-act/">EU AI Act</a>
+      <a href="/underwriting/">Underwriting</a>
+      <a href="/demand/">Who asked</a>
+      <a href="/approval-binding/">Approval binding</a>
+      <a href="/approvals/">Approvals</a>
+      <a href="/check/">Check a record</a>
+      <a href="/implement/">Implementing it</a>
+      <a href="/#taking-part">Taking part</a>
+    </nav>
+  </div>
+</div>
+<div class="wrap main">
+  <div>
+    <p class="dateline">Assessment, 2026-09-06 &middot; 3.1.1+ (82da3ad)</p>
+    <h2 class="label">What Haystack records, and what it does not</h2>
+    <div class="block">
+      <table class="facts">
+        <tr><th>Read at</th><td><a href="https://github.com/deepset-ai/haystack/tree/82da3adc2fac4675b80ff5573b790ec07113697b">82da3ad</a></td></tr>
+        <tr><th>Repository</th><td><a href="https://github.com/deepset-ai/haystack">github.com/deepset-ai/haystack</a></td></tr>
+        <tr><th>Licence</th><td>Apache-2.0</td></tr>
+        <tr><th>Assessed as</th><td>stores, derives, acts</td></tr>
+        <tr><th>Reaches</th><td>no level yet</td></tr>
+        <tr><th>Read by</th><td>Troy Brandon Clifford</td></tr>
+      </table>
+      <div class="scroller">
+      <table class="reg">
+        <thead><tr><th>Level</th><th>Meets</th><th>What the level asks</th></tr></thead>
+        <tbody>
+          <tr><td class="s">TR-1 Recorded</td><td class="n">0/5</td><td class="w">The record exists and is append-only.</td></tr>
+          <tr><td class="s">TR-2 Explained</td><td class="n">0/5</td><td class="w">Every belief resolves to its evidence, and disagreements survive.</td></tr>
+          <tr><td class="s">TR-3 Gated</td><td class="n">3/7</td><td class="w">Actions carry a verdict, and approvals carry a name.</td></tr>
+          <tr><td class="s">TR-4 Verifiable</td><td class="n">0/3</td><td class="w">The record can be shown not to have changed.</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p>A count is requirements fully met out of those that apply. This system is assessed as <b>stores, derives, acts</b>, and requirements outside that are not counted against it.</p>
+      <p class="callout">Haystack is the first subject assessed as storing, deriving and acting, so all twenty requirements apply. It stores documents in a document store and messages in a chat history, it infers metadata about documents with a language model through LLMMetadataExtractor, and it gates tool calls through a human-in-the-loop hook.</p>
+      <p>It has the best developed approval object in the census and the weakest storage guarantees. ToolExecutionDecision carries the verdict, the tool call id, a feedback field meant for the reason and the final parameters, it serialises, and _classify_decision returns a closed literal of confirm, modify and reject. Nothing else assessed distinguishes an approver who changed the arguments from one who accepted them. A rejected call leaves the same two message types in the chat history that a permitted call leaves.</p>
+      <p>The storage side is the opposite. Neither a Document nor a ChatMessage carries a timestamp. Writing at an existing id under DuplicatePolicy.OVERWRITE deletes the previous document before writing the new one, delete_documents removes a document with no trace, and the approval path rebuilds the chat history rather than appending to it, which means an approver who modifies a tool call leaves a record in which their arguments are the only ones present.</p>
+      <p>This is the first subject to score nothing at TR-1, and that number needs reading carefully. A Haystack document store is a search index, and an index is built to answer what is true now rather than to say what was true in March. Overwriting in place and carrying no write time are reasonable properties for what it is. The census records them because a deployer who reaches for that store as the place their agent remembers things has acquired a retention obligation the store was never built to carry, and nothing in the library will tell them so. The same reasoning is why frameworks with no approval pause are not marked down for lacking one.</p>
+      <p>Two findings are worth separating from the scores. The first is that LLMMetadataExtractor merges what a model inferred into the same meta dict that holds what the document was told, by plain dict assignment, so an inferred value can overwrite a told one and nothing marks either. That is the requirement the derives claim exists to test. The second is that a Document&#x27;s id is a sha256 over its own content, which is the closest thing to tamper evidence anywhere in this census, and the framework&#x27;s own enrichment path routinely produces documents whose id no longer matches their content. A mismatch therefore proves nothing, and the distance to a real answer is a decision about what the id is for rather than a new mechanism.</p>
+      <h3>Every verdict, and what it rests on</h3>
+      <p>Twenty requirements, each stated as a capability rather than a format, so a system that holds the information in its own shape counts as having it. An <b>absent</b> verdict cites where the assessor looked and did not find it, which is the difference between a measurement and an accusation.</p>
+      <h3>TR-1 Recorded</h3>
+      <p><i>The record exists and is append-only.</i></p>
+      <p><b>R1.1 &middot; absent.</b> When the system stores a fact, does it durably record when that happened?</p>
+      <p>The clearest absent on R1.1 in the census. A time can always be put in the meta dict by an application that thinks to, but nothing in the framework does it, so two documents written a year apart are indistinguishable once stored.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/deepset-ai/haystack/blob/82da3adc2fac4675b80ff5573b790ec07113697b/haystack/dataclasses/document.py#L48-L54">haystack/dataclasses/document.py:48-54</a><br>a Document is id, content, blob, meta, score, embedding and sparse_embedding. There is no field for when it was written</li>
+        <li><b>source</b> <a href="https://github.com/deepset-ai/haystack/blob/82da3adc2fac4675b80ff5573b790ec07113697b/haystack/dataclasses/chat_message.py#L291-L294">haystack/dataclasses/chat_message.py:291-294</a><br>a ChatMessage is _role, _content, _name and _meta. No timestamp either, so neither the document store nor the conversation records when anything happened</li>
+        <li><b>searched</b> grep -rniE &#x27;timestamp|created_at|written_at&#x27; haystack/dataclasses/*.py<br>six hits, all in breakpoints.py, where PipelineSnapshot.timestamp is datetime | None = None and is set at breakpoint.py:261 when a pipeline is paused for debugging. That is a debugging artefact of a run, not a write time stored with a fact</li>
+      </ul>
+      <p><b>R1.2 &middot; absent.</b> When a stored fact changes, is the previous version still readable?</p>
+      <p>Both storage surfaces answer this the same way. The document store overwrites by deleting first, and the approval path rebuilds the chat history rather than appending to it. In neither case does the framework retain what was there before.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/deepset-ai/haystack/blob/82da3adc2fac4675b80ff5573b790ec07113697b/haystack/document_stores/in_memory/document_store.py#L491-L498">haystack/document_stores/in_memory/document_store.py:491-498</a><br>under DuplicatePolicy.OVERWRITE the store calls delete_documents on the existing id and then assigns the new document to the same key. The previous version is gone before the new one is written</li>
+        <li><b>source</b> <a href="https://github.com/deepset-ai/haystack/blob/82da3adc2fac4675b80ff5573b790ec07113697b/haystack/hooks/human_in_the_loop/strategies.py#L663">haystack/hooks/human_in_the_loop/strategies.py:663</a><br>on the conversation side _update_chat_history returns chat_history[:insertion_point + 1] plus the new messages, so the assistant message carrying what the model originally proposed is dropped rather than kept beside its replacement</li>
+        <li><b>searched</b> grep -rniE &#x27;def .*(version|history|revision|previous|supersed)&#x27; haystack/document_stores/<br>zero hits. No document store exposes a previous version, a revision or any way to ask what a document said before it was overwritten</li>
+      </ul>
+      <p><b>R1.3 &middot; absent.</b> Does the ordinary write path ever destroy what was previously recorded?</p>
+      <p>This is the requirement Haystack is furthest from, and the approval path is the sharpest instance. An approver who changes a tool call leaves a record in which their arguments are the only ones present. A reader six months later sees a proposal that matches what ran, because the proposal was rewritten to match.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/deepset-ai/haystack/blob/82da3adc2fac4675b80ff5573b790ec07113697b/haystack/document_stores/in_memory/document_store.py#L491-L492">haystack/document_stores/in_memory/document_store.py:491-492</a><br>the routine write path destroys: if document.id in self.storage, delete_documents([document.id]) runs before the write. This is the ordinary call, not a maintenance operation</li>
+        <li><b>source</b> <a href="https://github.com/deepset-ai/haystack/blob/82da3adc2fac4675b80ff5573b790ec07113697b/haystack/hooks/human_in_the_loop/strategies.py#L619">haystack/hooks/human_in_the_loop/strategies.py:619</a><br>a modified tool call is written as replace(tc, arguments=final_args) into a rebuilt history, so the arguments the model proposed are replaced in place by the ones the approver allowed. A user message explaining the change is added, in prose, but the original arguments are not kept</li>
+        <li><b>source</b> <a href="https://github.com/deepset-ai/haystack/blob/82da3adc2fac4675b80ff5573b790ec07113697b/haystack/document_stores/in_memory/document_store.py#L507-L516">haystack/document_stores/in_memory/document_store.py:507-516</a><br>delete_documents is a routine public method that does del self.storage[doc_id], with no soft delete and no marker left behind</li>
+        <li><b>searched</b> grep -rniE &#x27;append_only|soft.delete|immutable|is_deleted|deleted_at&#x27; haystack<br>zero hits across all 286 modules. The DocumentStore protocol at document_stores/types/protocol.py:109, 127 has exactly two mutating methods, write_documents and delete_documents, and neither has a non-destructive mode</li>
+      </ul>
+      <p><b>R1.4 &middot; partial.</b> Are entries distinguishable by kind, or is everything one undifferentiated blob of text?</p>
+      <p>Typed where the conversation is, untyped where the facts are stored. The split matters because this subject claims to store, and the store is the half with one type and a free-form dict.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/deepset-ai/haystack/blob/82da3adc2fac4675b80ff5573b790ec07113697b/haystack/dataclasses/chat_message.py#L204">haystack/dataclasses/chat_message.py:204</a><br>ChatMessageContentT is a union of TextContent, ToolCall, ToolCallResult, ImageContent, ReasoningContent and FileContent, so on the conversation side an assertion, an action and a result are genuinely separate types</li>
+        <li><b>source</b> <a href="https://github.com/deepset-ai/haystack/blob/82da3adc2fac4675b80ff5573b790ec07113697b/haystack/dataclasses/chat_message.py#L19-L34">haystack/dataclasses/chat_message.py:19-34</a><br>ChatRole is a closed enum of user, system, assistant and tool</li>
+        <li><b>source</b> <a href="https://github.com/deepset-ai/haystack/blob/82da3adc2fac4675b80ff5573b790ec07113697b/haystack/dataclasses/document.py#L48-L54">haystack/dataclasses/document.py:48-54</a><br>the storage side has one type. Everything a document knows beyond its content lives in meta, an untyped dict[str, Any] in which a value the system was told and a value it inferred sit together</li>
+      </ul>
+      <p><b>R1.5 &middot; absent.</b> When data must be destroyed for a legal reason, is the destruction itself recorded?</p>
+      <p>The ordinary shape of this finding across the census. Worth stating plainly because a deployer answering an erasure request has nothing to show a regulator except the absence itself.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/deepset-ai/haystack/blob/82da3adc2fac4675b80ff5573b790ec07113697b/haystack/document_stores/in_memory/document_store.py#L513-L516">haystack/document_stores/in_memory/document_store.py:513-516</a><br>delete_documents iterates the ids and does del self.storage[doc_id]. Nothing is written to say a deletion happened, and an id that was never present is skipped silently</li>
+        <li><b>searched</b> grep -rniE &#x27;audit|deletion_log|erasure|tombstone&#x27; haystack<br>zero hits across all 286 modules. There is no audit surface of any kind, so an erasure carried out for a legal reason leaves the store identical to one where the document never existed</li>
+      </ul>
+      <h3>TR-2 Explained</h3>
+      <p><i>Every belief resolves to its evidence, and disagreements survive.</i></p>
+      <p><b>R2.1 &middot; partial.</b> Can the source a stored fact came from be recovered from the store, by following a link rather than by guessing?</p>
+      <p>Two different answers again. A tool result names its call properly. A stored document names its source by a convention the type does not enforce, and the default converter setting reduces that name to a basename.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/deepset-ai/haystack/blob/82da3adc2fac4675b80ff5573b790ec07113697b/haystack/dataclasses/document.py#L48-L54">haystack/dataclasses/document.py:48-54</a><br>a Document has no source field. Provenance is a convention in the meta dict rather than something the type requires</li>
+        <li><b>source</b> <a href="https://github.com/deepset-ai/haystack/blob/82da3adc2fac4675b80ff5573b790ec07113697b/haystack/components/converters/csv.py#L135-L138">haystack/components/converters/csv.py:135-138</a><br>converters put file_path into meta, which is the convention that makes the link work in practice</li>
+        <li><b>source</b> <a href="https://github.com/deepset-ai/haystack/blob/82da3adc2fac4675b80ff5573b790ec07113697b/haystack/components/converters/csv.py#L48">haystack/components/converters/csv.py:48</a><br>store_full_path defaults to False, so what is kept by default is os.path.basename(file_path). Two files of the same name in different directories become the same provenance string</li>
+        <li><b>source</b> <a href="https://github.com/deepset-ai/haystack/blob/82da3adc2fac4675b80ff5573b790ec07113697b/haystack/dataclasses/chat_message.py#L118-L129">haystack/dataclasses/chat_message.py:118-129</a><br>on the conversation side the link is real: ToolCallResult carries origin: ToolCall, so a result resolves to the call that produced it by object reference rather than by position</li>
+      </ul>
+      <p><b>R2.2 &middot; absent.</b> Can a fact the system inferred be told apart from one it was told?</p>
+      <p>An inferred key also silently overwrites a told key of the same name, because the merge is plain dict assignment. This is the requirement the derives claim exists to test, and the answer is that once extraction has run, the two kinds of fact are the same kind of fact.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/deepset-ai/haystack/blob/82da3adc2fac4675b80ff5573b790ec07113697b/haystack/components/extractors/llm_metadata_extractor.py#L379">haystack/components/extractors/llm_metadata_extractor.py:379</a><br>new_meta[key] = parsed_metadata[key] merges what a language model inferred about a document straight into the same meta dict that holds what the document was given, with no prefix, namespace or marker</li>
+        <li><b>source</b> <a href="https://github.com/deepset-ai/haystack/blob/82da3adc2fac4675b80ff5573b790ec07113697b/haystack/components/extractors/llm_metadata_extractor.py#L380-L382">haystack/components/extractors/llm_metadata_extractor.py:380-382</a><br>the only markers it does write, metadata_extraction_error and metadata_extraction_response, are set on failure and removed on success, so a successful extraction leaves nothing at all to say it happened</li>
+        <li><b>searched</b> grep -rniE &#x27;derived|inferred|provenance|is_generated&#x27; haystack/dataclasses/ haystack/components/extractors/<br>zero hits. No field anywhere marks a value as inferred rather than told</li>
+      </ul>
+      <p><b>R2.3 &middot; partial.</b> When two stored facts about the same proposition disagree, do both survive?</p>
+      <p>Both survive incidentally, in the same way an append-only log preserves a contradiction: because nothing looked. The framework has no notion of two documents being about the same proposition, so it cannot be said to have kept them deliberately.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/deepset-ai/haystack/blob/82da3adc2fac4675b80ff5573b790ec07113697b/haystack/dataclasses/document.py#L103-L116">haystack/dataclasses/document.py:103-116</a><br>the id is a sha256 over content, meta and embeddings, so two documents that disagree have different ids and both can be written and both survive</li>
+        <li><b>source</b> <a href="https://github.com/deepset-ai/haystack/blob/82da3adc2fac4675b80ff5573b790ec07113697b/haystack/document_stores/in_memory/document_store.py#L491-L498">haystack/document_stores/in_memory/document_store.py:491-498</a><br>unless one is written under DuplicatePolicy.OVERWRITE at the same id, in which case the earlier one is deleted first</li>
+        <li><b>searched</b> grep -rniE &#x27;\bconflict|contradict|disagree&#x27; haystack<br>ten hits across two modules and none is about stored facts. They are prompt variables clashing with state schema names in agent.py and input and output name collisions in super_component.py</li>
+      </ul>
+      <p><b>R2.4 &middot; absent.</b> Is the disagreement itself queryable, or must a reader diff rows to notice it?</p>
+      <p>A reader has to find contradictions by reading. That is expected of a document store and is recorded because the requirement asks.</p>
+      <ul>
+        <li><b>searched</b> grep -rniE &#x27;\bconflict|contradict|disagree&#x27; haystack<br>ten hits, all of them pipeline wiring: variable name clashes in agent.py:580-585 and type or output name collisions in super_component.py:248, 344. Nothing models a disagreement between stored facts</li>
+        <li><b>source</b> <a href="https://github.com/deepset-ai/haystack/blob/82da3adc2fac4675b80ff5573b790ec07113697b/haystack/dataclasses/document.py#L48-L54">haystack/dataclasses/document.py:48-54</a><br>there is no conflict type and no field on a document that could point at another document it contradicts, so a disagreement is not something the store can be asked about</li>
+      </ul>
+      <p><b>R2.5 &middot; absent.</b> When a conflict is resolved, does the record say who resolved it and by what method?</p>
+      <p>Scored absent rather than under the clause that credits a system for never resolving conflicts, because that clause is for a system which leaves a contradiction standing as a visible unresolved state. Nothing here is standing, because nothing was represented as a contradiction in the first place.</p>
+      <ul>
+        <li><b>searched</b> grep -rniE &#x27;\bconflict|contradict|disagree&#x27; haystack<br>the same ten wiring hits. No resolution is recorded because no conflict is represented, so there is no actor and no method to record</li>
+        <li><b>source</b> <a href="https://github.com/deepset-ai/haystack/blob/82da3adc2fac4675b80ff5573b790ec07113697b/haystack/document_stores/in_memory/document_store.py#L491-L498">haystack/document_stores/in_memory/document_store.py:491-498</a><br>where a disagreement is settled it is settled silently and by recency: writing at the same id under OVERWRITE deletes the earlier document and leaves the later one looking uncontested</li>
+      </ul>
+      <h3>TR-3 Gated</h3>
+      <p><i>Actions carry a verdict, and approvals carry a name.</i></p>
+      <p><b>R3.1 &middot; present.</b> Does a consequential action produce a durable entry whether or not it ran?</p>
+      <p>Among the strongest answers here. An action that was stopped leaves the same kinds of message an action that ran leaves, in the history rather than in a log. Haystack is also the only subject that distinguishes an approver who changed the arguments from one who accepted them, which is precisely the distinction the approval binding reading was asking about.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/deepset-ai/haystack/blob/82da3adc2fac4675b80ff5573b790ec07113697b/haystack/hooks/human_in_the_loop/strategies.py#L601-L607">haystack/hooks/human_in_the_loop/strategies.py:601-607</a><br>a rejected call produces two durable messages: an assistant message carrying the tool call that was proposed, and ChatMessage.from_tool(tool_result=..., origin=tc, error=True). The attempt and its refusal both go into the chat history</li>
+        <li><b>source</b> <a href="https://github.com/deepset-ai/haystack/blob/82da3adc2fac4675b80ff5573b790ec07113697b/haystack/hooks/human_in_the_loop/dataclasses.py#L30-L54">haystack/hooks/human_in_the_loop/dataclasses.py:30-54</a><br>ToolExecutionDecision carries tool_name, execute, tool_call_id, feedback and final_tool_params, and serialises through to_dict, so the decision itself is a first-class object rather than a branch</li>
+        <li><b>source</b> <a href="https://github.com/deepset-ai/haystack/blob/82da3adc2fac4675b80ff5573b790ec07113697b/haystack/hooks/human_in_the_loop/strategies.py#L248-L253">haystack/hooks/human_in_the_loop/strategies.py:248-253</a><br>_classify_decision returns Literal[&#x27;confirm&#x27;, &#x27;modify&#x27;, &#x27;reject&#x27;], a closed vocabulary in which the middle value has no equivalent anywhere else in this census</li>
+      </ul>
+      <p><b>R3.2 &middot; present.</b> Does an action&#x27;s risk class come from somewhere the proposing model cannot write to?</p>
+      <p>Present with the same qualification recorded for Pydantic AI. The supplied policies ignore the model entirely and route on the tool name. A deployment can write a policy that reads the arguments, and the framework neither does that nor recommends it.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/deepset-ai/haystack/blob/82da3adc2fac4675b80ff5573b790ec07113697b/haystack/hooks/human_in_the_loop/hooks.py#L19-L50">haystack/hooks/human_in_the_loop/hooks.py:19-50</a><br>ConfirmationHook takes confirmation_strategies keyed by tool name, with a wildcard entry and more specific keys winning. Which tools need a person is developer configuration written at construction</li>
+        <li><b>source</b> <a href="https://github.com/deepset-ai/haystack/blob/82da3adc2fac4675b80ff5573b790ec07113697b/haystack/hooks/human_in_the_loop/policies.py#L11-L48">haystack/hooks/human_in_the_loop/policies.py:11-48</a><br>the policies are classes the developer picks: AlwaysAskPolicy, NeverAskPolicy and AskOncePolicy, not values the model can produce</li>
+        <li><b>source</b> <a href="https://github.com/deepset-ai/haystack/blob/82da3adc2fac4675b80ff5573b790ec07113697b/haystack/hooks/human_in_the_loop/policies.py#L14">haystack/hooks/human_in_the_loop/policies.py:14</a><br>should_ask(tool_name, tool_description, tool_params) does receive tool_params, which the model wrote, so a custom policy can be written that classifies on model output</li>
+      </ul>
+      <p><b>R3.3 &middot; present.</b> Are refusals recorded as faithfully as permissions?</p>
+      <p>A refusal has the same standing as a permission because it is made of the same message types. What it does not have is a distinguishing mark of its own, which is R3.4&#x27;s problem rather than this one.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/deepset-ai/haystack/blob/82da3adc2fac4675b80ff5573b790ec07113697b/haystack/hooks/human_in_the_loop/strategies.py#L601-L607">haystack/hooks/human_in_the_loop/strategies.py:601-607</a><br>the rejection is recorded as an assistant message plus a tool message, the same two message types a permitted call produces, and it is placed in the chat history by _update_chat_history rather than emitted to a logger</li>
+        <li><b>source</b> <a href="https://github.com/deepset-ai/haystack/blob/82da3adc2fac4675b80ff5573b790ec07113697b/haystack/hooks/human_in_the_loop/strategies.py#L298-L304">haystack/hooks/human_in_the_loop/strategies.py:298-304</a><br>the decision is additionally written to a tracing span as haystack.agent.hook.human_in_the_loop.strategy.decision with the whole decision as a content tag, which is observability rather than record, but it means a refusal is visible in two places</li>
+      </ul>
+      <p><b>R3.4 &middot; partial.</b> Does a refusal record why it was refused?</p>
+      <p>Ahead of most of the census for having a field meant for the reason, and short of the requirement because the field is free text and the machine-readable part, error=True, conflates refusal with failure.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/deepset-ai/haystack/blob/82da3adc2fac4675b80ff5573b790ec07113697b/haystack/hooks/human_in_the_loop/dataclasses.py#L53">haystack/hooks/human_in_the_loop/dataclasses.py:53</a><br>ToolExecutionDecision.feedback is a dedicated field for the reason, documented as carrying it when execution is rejected. Most of the census has no such field at all</li>
+        <li><b>source</b> <a href="https://github.com/deepset-ai/haystack/blob/82da3adc2fac4675b80ff5573b790ec07113697b/haystack/hooks/human_in_the_loop/strategies.py#L601">haystack/hooks/human_in_the_loop/strategies.py:601</a><br>tool_result_text = ted.feedback or REJECTION_FEEDBACK_TEMPLATE.format(tool_name=tc.tool_name), so a refusal with no reason still produces prose, and the reason reaches the record as free text in a tool result</li>
+        <li><b>searched</b> grep -rniE &#x27;reason|rejection_code|denial&#x27; haystack/hooks/human_in_the_loop/dataclasses.py<br>the only structured marker on the resulting message is error=True, which a tool that raised also sets, so the record cannot distinguish a call a person refused from one that crashed</li>
+      </ul>
+      <p><b>R3.5 &middot; absent.</b> Does an approval identify a person or a named role holder?</p>
+      <p>The same stopping point as every other subject with a gate. The decision object is the most detailed in this census and still has nowhere to put the person, so an approval that a console user typed and one a NeverAskPolicy produced are the same record.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/deepset-ai/haystack/blob/82da3adc2fac4675b80ff5573b790ec07113697b/haystack/hooks/human_in_the_loop/dataclasses.py#L9-L27">haystack/hooks/human_in_the_loop/dataclasses.py:9-27</a><br>ConfirmationUIResult is action, feedback and new_tool_params. The object that carries what a person decided has no field for which person decided it</li>
+        <li><b>source</b> <a href="https://github.com/deepset-ai/haystack/blob/82da3adc2fac4675b80ff5573b790ec07113697b/haystack/hooks/human_in_the_loop/dataclasses.py#L30-L54">haystack/hooks/human_in_the_loop/dataclasses.py:30-54</a><br>ToolExecutionDecision, which is what survives the interaction, has tool_name, execute, tool_call_id, feedback and final_tool_params, and no approver either</li>
+        <li><b>searched</b> grep -rniE &#x27;approver|principal|user_id|approved_by|authenticat&#x27; haystack/hooks/<br>two hits, and both are false positives on the substring user_id: last_user_idx and insertion_point in strategies.py:658 and 661. No identity of any kind appears on the approval path</li>
+      </ul>
+      <p><b>R3.6 &middot; absent.</b> Does the approver&#x27;s identity come from the authentication layer rather than from something the model can write?</p>
+      <p>Not reachable while R3.5 is absent: an identity that is never captured cannot be sourced from an authentication layer. Recorded separately because the two come apart in systems that do capture an approver and then trust the request body for the name.</p>
+      <ul>
+        <li><b>source</b> haystack/hooks/human_in_the_loop/user_interfaces.py:22,124<br>the supplied interfaces are console based, RichConsoleUI at 22 and SimpleConsoleUI at 124, and read a decision from whoever is at the terminal. There is no session, token or authenticated caller in the picture</li>
+        <li><b>searched</b> grep -rniE &#x27;approver|principal|user_id|approved_by|authenticat&#x27; haystack/hooks/<br>two hits, both the last_user_idx false positive. Nothing on the approval path reads an identity from anywhere, authenticated or not</li>
+      </ul>
+      <p><b>R3.7 &middot; absent.</b> Is the acting agent prevented from approving its own action?</p>
+      <p>With no principals on either side there is nothing to compare. The passthrough case is recorded because it is a decision the framework makes on its own behalf, and it is a defensible design choice: it lets the tool resolution layer report an unknown tool uniformly instead of failing inside the hook.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/deepset-ai/haystack/blob/82da3adc2fac4675b80ff5573b790ec07113697b/haystack/hooks/human_in_the_loop/policies.py#L26-L33">haystack/hooks/human_in_the_loop/policies.py:26-33</a><br>NeverAskPolicy is a supplied policy whose should_ask returns false, so a configuration in which nothing is ever put to a person is a first-class option rather than a misuse</li>
+        <li><b>source</b> <a href="https://github.com/deepset-ai/haystack/blob/82da3adc2fac4675b80ff5573b790ec07113697b/haystack/hooks/human_in_the_loop/strategies.py#L232-L245">haystack/hooks/human_in_the_loop/strategies.py:232-245</a><br>_passthrough_tool_call builds a decision with execute=True and the model&#x27;s own arguments for calls that do not resolve to a known tool, so some calls are approved by the framework itself</li>
+        <li><b>searched</b> grep -rniE &#x27;separation|segregat|self.approv|four.eyes&#x27; haystack<br>nothing expresses a separation between the party proposing an action and the party allowing it, which follows from neither party being represented</li>
+      </ul>
+      <h3>TR-4 Verifiable</h3>
+      <p><i>The record can be shown not to have changed.</i></p>
+      <p><b>R4.1 &middot; absent.</b> Does the system publish a scheme under which the record&#x27;s past state can be verified?</p>
+      <p>Closer to the shape of TR-4 than most subjects and still absent, because a content hash used as a primary key is not a published scheme for verifying a past state. It is the same observation recorded against LangGraph: the structure is most of the way there and nothing is built on it.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/deepset-ai/haystack/blob/82da3adc2fac4675b80ff5573b790ec07113697b/haystack/dataclasses/document.py#L103-L116">haystack/dataclasses/document.py:103-116</a><br>the primitive exists. _create_id builds a sha256 over content, blob, mime type, sorted meta and embeddings, and the algorithm is in published source, so anybody can recompute it</li>
+        <li><b>source</b> <a href="https://github.com/deepset-ai/haystack/blob/82da3adc2fac4675b80ff5573b790ec07113697b/haystack/dataclasses/document.py#L68">haystack/dataclasses/document.py:68</a><br>but it is identity, not integrity: self.id = self.id or self._create_id() means a caller-supplied id is kept as given, and the hash is only computed when one is absent</li>
+        <li><b>searched</b> grep -rniE &#x27;hmac|merkle|tamper|signature|verify_integrity&#x27; haystack<br>85 hits and not one is an integrity mechanism: 84 are inspect.signature and the single tamper match is the substring inside structlog&#x27;s TimeStamper at logging.py:386. hmac, merkle and verify_integrity return nothing</li>
+      </ul>
+      <p><b>R4.2 &middot; absent.</b> Can an independent party run that verification without the vendor&#x27;s cooperation?</p>
+      <p>Nothing here needs deepset&#x27;s cooperation, because there is nothing to withhold. Scored absent on the same basis as every other subject: absence of a scheme rather than a restriction on access to one.</p>
+      <ul>
+        <li><b>searched</b> grep -rn &#x27;_create_id&#x27; haystack<br>two hits: the definition and the single call at document.py:68. The hash is never recomputed and never compared, so there is no verification for an independent party to run</li>
+        <li><b>source</b> <a href="https://github.com/deepset-ai/haystack/blob/82da3adc2fac4675b80ff5573b790ec07113697b/haystack/document_stores/in_memory/document_store.py#L462">haystack/document_stores/in_memory/document_store.py:462</a><br>the store&#x27;s public surface is write, delete, filter and count. It offers no verify operation, so the question of whether one needs the vendor does not arise</li>
+      </ul>
+      <p><b>R4.3 &middot; absent.</b> Would alteration of a past entry be detectable after the fact?</p>
+      <p>The most interesting negative in this assessment. A digest over the content exists, and the ordinary enrichment path produces documents that fail it, which means a mismatch cannot be read as evidence of tampering even by somebody who thought to check. The distance to a real answer here is not a new mechanism but a decision about what the id is for.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/deepset-ai/haystack/blob/82da3adc2fac4675b80ff5573b790ec07113697b/haystack/dataclasses/document.py#L103-L116">haystack/dataclasses/document.py:103-116</a><br>in principle an altered document would no longer hash to its id, which is the closest any subject in this census comes to alteration being detectable at rest</li>
+        <li><b>source</b> <a href="https://github.com/deepset-ai/haystack/blob/82da3adc2fac4675b80ff5573b790ec07113697b/haystack/components/extractors/llm_metadata_extractor.py#L379-L383">haystack/components/extractors/llm_metadata_extractor.py:379-383</a><br>in practice the framework breaks that relationship itself. replace(document, meta=new_meta) keeps the original id while changing the meta the id was computed over, so a document whose id does not match its content is the normal result of enrichment</li>
+        <li><b>searched</b> grep -rn &#x27;_create_id&#x27; haystack<br>and nothing recomputes it, so no code path would notice either the legitimate mismatch or a malicious one</li>
+      </ul>
+      <h3>How this was read</h3>
+      <p>Read of haystack/dataclasses/document.py and chat_message.py, haystack/document_stores/in_memory/document_store.py, haystack/hooks/human_in_the_loop/ (dataclasses.py, hooks.py, policies.py, strategies.py) and haystack/components/extractors/llm_metadata_extractor.py at 82da3adc2fac4675b80ff5573b790ec07113697b, the commit the approval binding reading already pins, so the two agree on which source they describe. The source archive for that commit was downloaded rather than an installed release, so every line number refers to the pinned commit and every search recorded below was run over all 286 modules of the package. That commit is main, dated 4 September 2026, one day after the v3.1.1 release, which is why the version is written as 3.1.1+ rather than as a release.</p>
+      <h3>If a verdict here is wrong</h3>
+      <p>Then it is wrong in the ordinary way readings are wrong, and every verdict cites a file and a line at a pinned commit precisely so that being wrong is cheap to demonstrate. The remedy is a pull request against <a href="https://github.com/troybrandonc-bit/machine-testimony/blob/main/census/subjects/haystack.json">the subject file</a>, and it does not involve persuading anybody. Nobody applied for this and it is not a certification.</p>
+      <p>The <a href="/register/">standing register</a> carries every system side by side, and <a href="/assess/">the rubric</a> is the twenty requirements in full, free to apply to anything, including to this assessment.</p>
+    </div>
+  </div>
+</div>
+<footer class="foot">
+  <div class="wrap">
+    <p>Editor: Troy Clifford. Operated by Garnet Taurus Ltd.</p>
+    <p>Specification text CC BY 4.0. Schema and tools MIT.</p>
+    <p>Machine Testimony is a research programme, not a registered institute or a certification body.</p>
+  </div>
+</footer>
+
+</body>
+</html>

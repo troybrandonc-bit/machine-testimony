@@ -1,0 +1,158 @@
+<!--title: OpenAI Agents SDK audit trail and approval records, assessed
+    desc: OpenAI Agents SDK read against 20 record-keeping requirements at commit 89c02c8. 5 present, 6 partial, 9 absent. Every verdict cites a file and a line, and a wrong one is fixed by a pull request.
+    slug: register/openai-agents-->
+
+<div class="wrap main">
+  <div>
+    <p class="dateline">Assessment, 2026-09-04 &middot; 0.22.0 (89c02c8)</p>
+    <h2 class="label">What OpenAI Agents SDK records, and what it does not</h2>
+    <div class="block">
+      <table class="facts">
+        <tr><th>Read at</th><td><a href="https://github.com/openai/openai-agents-python/tree/89c02c828ee8510fe9a84ee6675608193aa13b02">89c02c8</a></td></tr>
+        <tr><th>Repository</th><td><a href="https://github.com/openai/openai-agents-python">github.com/openai/openai-agents-python</a></td></tr>
+        <tr><th>Licence</th><td>MIT</td></tr>
+        <tr><th>Assessed as</th><td>stores, derives, acts</td></tr>
+        <tr><th>Reaches</th><td>no level yet</td></tr>
+        <tr><th>Read by</th><td>Troy Brandon Clifford</td></tr>
+      </table>
+      <div class="scroller">
+      <table class="reg">
+        <thead><tr><th>Level</th><th>Meets</th><th>What the level asks</th></tr></thead>
+        <tbody>
+          <tr><td class="s">TR-1 Recorded</td><td class="n">2/5</td><td class="w">The record exists and is append-only.</td></tr>
+          <tr><td class="s">TR-2 Explained</td><td class="n">1/5</td><td class="w">Every belief resolves to its evidence, and disagreements survive.</td></tr>
+          <tr><td class="s">TR-3 Gated</td><td class="n">2/7</td><td class="w">Actions carry a verdict, and approvals carry a name.</td></tr>
+          <tr><td class="s">TR-4 Verifiable</td><td class="n">0/3</td><td class="w">The record can be shown not to have changed.</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p>A count is requirements fully met out of those that apply. This system is assessed as <b>stores, derives, acts</b>, and requirements outside that are not counted against it.</p>
+      <p class="callout">This is the first system assessed here that gates actions, so it is the first with anything to say at TR-3, and the shape of the answer is consistent: the SDK knows a great deal about WHAT was proposed and almost nothing about WHO allowed it. Tools carry needs_approval set in developer code, a run keeps a canonical ledger of tool invocations recording whether each executed, and a rejection can carry a reason. But approve() takes no approver, and the only thing called an identity in the approval path identifies the tool call rather than a person. The other half of the picture is the session layer, where the default store is append-only but the optional compaction session clears the whole history and writes back a model-written summary in its place. Both observations describe an SDK doing its job: it is a framework for building agents, not a record of what they did, and it does not claim otherwise.</p>
+      <h3>Every verdict, and what it rests on</h3>
+      <p>Twenty requirements, each stated as a capability rather than a format, so a system that holds the information in its own shape counts as having it. An <b>absent</b> verdict cites where the assessor looked and did not find it, which is the difference between a measurement and an accusation.</p>
+      <h3>TR-1 Recorded</h3>
+      <p><i>The record exists and is append-only.</i></p>
+      <p><b>R1.1 &middot; present.</b> When the system stores a fact, does it durably record when that happened?</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/openai/openai-agents-python/blob/89c02c828ee8510fe9a84ee6675608193aa13b02/src/agents/memory/sqlite_session.py#L245-L253">src/agents/memory/sqlite_session.py:245-253</a><br>the messages table stores created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP alongside message_data, so the write time is held with the item</li>
+      </ul>
+      <p><b>R1.2 &middot; partial.</b> When a stored fact changes, is the previous version still readable?</p>
+      <p>In the default session there is nothing to preserve, because nothing changes. Where a session does change, in compaction, the prior state is destroyed rather than superseded.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/openai/openai-agents-python/blob/89c02c828ee8510fe9a84ee6675608193aa13b02/src/agents/memory/sqlite_session.py#L245-L253">src/agents/memory/sqlite_session.py:245-253</a><br>the default session only appends items, so there is no in-place change for a previous version to survive</li>
+        <li><b>source</b> <a href="https://github.com/openai/openai-agents-python/blob/89c02c828ee8510fe9a84ee6675608193aa13b02/src/agents/memory/openai_responses_compaction_session.py#L271-L286">src/agents/memory/openai_responses_compaction_session.py:271-286 _replace_underlying_session_items</a><br>the compaction session calls underlying_session.clear_session() and then add_items(output_items), so the turns that were summarised are no longer readable afterwards</li>
+      </ul>
+      <p><b>R1.3 &middot; partial.</b> Does the ordinary write path ever destroy what was previously recorded?</p>
+      <p>The default path appends and is clean. What makes this partial is that a supported and automatic path destroys: with the compaction session, reaching the item threshold clears the session and replaces it with a summary, so the conversation an auditor would want to read is gone by design rather than by accident.</p>
+      <ul>
+        <li><b>source</b> src/agents/memory/sqlite_session.py add_items<br>the ordinary write is an append; nothing is edited in place</li>
+        <li><b>source</b> <a href="https://github.com/openai/openai-agents-python/blob/89c02c828ee8510fe9a84ee6675608193aa13b02/src/agents/memory/sqlite_session.py#L381">src/agents/memory/sqlite_session.py:381 pop_item and :435 clear_session</a><br>both issue DELETE FROM against the messages table</li>
+        <li><b>source</b> <a href="https://github.com/openai/openai-agents-python/blob/89c02c828ee8510fe9a84ee6675608193aa13b02/src/agents/memory/openai_responses_compaction_session.py#L250-L286">src/agents/memory/openai_responses_compaction_session.py:250-286</a><br>compaction triggers automatically once enough candidate items exist and performs a clear-then-add as one replacement transaction</li>
+      </ul>
+      <p><b>R1.4 &middot; present.</b> Are entries distinguishable by kind, or is everything one undifferentiated blob of text?</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/openai/openai-agents-python/blob/89c02c828ee8510fe9a84ee6675608193aa13b02/src/agents/memory/openai_responses_compaction_session.py#L53">src/agents/memory/openai_responses_compaction_session.py:53</a><br>items are discriminated by type, and compaction items are recognised as such when selecting candidates</li>
+        <li><b>source</b> <a href="https://github.com/openai/openai-agents-python/blob/89c02c828ee8510fe9a84ee6675608193aa13b02/src/agents/memory/sqlite_session.py#L245-L253">src/agents/memory/sqlite_session.py:245-253</a><br>message_data holds a Responses API item, which is a typed union covering messages, function calls and tool outputs</li>
+      </ul>
+      <p><b>R1.5 &middot; absent.</b> When data must be destroyed for a legal reason, is the destruction itself recorded?</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/openai/openai-agents-python/blob/89c02c828ee8510fe9a84ee6675608193aa13b02/src/agents/memory/sqlite_session.py#L435-L446">src/agents/memory/sqlite_session.py:435-446 clear_session</a><br>deletes the session&#x27;s messages and the session row itself, with ON DELETE CASCADE on the foreign key</li>
+        <li><b>searched</b> grep -rniE &#x27;tombstone|deleted_at|erasure|audit&#x27; src/agents/memory/ --include=*.py<br>no match; nothing survives a cleared session to record that it existed</li>
+      </ul>
+      <h3>TR-2 Explained</h3>
+      <p><i>Every belief resolves to its evidence, and disagreements survive.</i></p>
+      <p><b>R2.1 &middot; partial.</b> Can the source a stored fact came from be recovered from the store, by following a link rather than by guessing?</p>
+      <p>For verbatim items the question barely applies, which is a fair pass. For the one kind of item the SDK generates itself, the sources are neither cited nor retained.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/openai/openai-agents-python/blob/89c02c828ee8510fe9a84ee6675608193aa13b02/src/agents/memory/sqlite_session.py#L245-L253">src/agents/memory/sqlite_session.py:245-253</a><br>session items are stored verbatim, so an ordinary message is its own source and needs no link</li>
+        <li><b>source</b> <a href="https://github.com/openai/openai-agents-python/blob/89c02c828ee8510fe9a84ee6675608193aa13b02/src/agents/memory/openai_responses_compaction_session.py#L271-L286">src/agents/memory/openai_responses_compaction_session.py:271-286</a><br>a compaction item does not carry references to the items it replaced, and those items have been deleted by the same transaction</li>
+      </ul>
+      <p><b>R2.2 &middot; present.</b> Can a fact the system inferred be told apart from one it was told?</p>
+      <p>Model-written content in the history is labelled as model-written. That is the whole of what this requirement asks, and the SDK does it.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/openai/openai-agents-python/blob/89c02c828ee8510fe9a84ee6675608193aa13b02/src/agents/memory/openai_responses_compaction_session.py#L53">src/agents/memory/openai_responses_compaction_session.py:53</a><br>a generated summary is written as an item of type &#x27;compaction&#x27; and is excluded from later compaction candidate selection on that basis</li>
+      </ul>
+      <p><b>R2.3 &middot; absent.</b> When two stored facts about the same proposition disagree, do both survive?</p>
+      <p>This is a consequence of the SDK storing conversation rather than belief. Both statements survive as text, but nothing in the system can tell that they are about the same thing, so nothing is retained as a disagreement.</p>
+      <ul>
+        <li><b>searched</b> grep -rniE &#x27;class Conflict|contradiction|disagree&#x27; src/agents/ --include=*.py<br>the single match is an unrelated code comment at run_state.py:2514; there is no notion of a proposition, so there is nothing that could disagree</li>
+        <li><b>source</b> <a href="https://github.com/openai/openai-agents-python/blob/89c02c828ee8510fe9a84ee6675608193aa13b02/src/agents/memory/sqlite_session.py#L245-L253">src/agents/memory/sqlite_session.py:245-253</a><br>the session is an ordered list of conversation items; two statements that contradict each other are simply two items</li>
+      </ul>
+      <p><b>R2.4 &middot; absent.</b> Is the disagreement itself queryable, or must a reader diff rows to notice it?</p>
+      <ul>
+        <li><b>searched</b> grep -rniE &#x27;class Conflict|contradiction|disagree&#x27; src/agents/ --include=*.py<br>no conflict type, record or query surface exists anywhere in the package</li>
+      </ul>
+      <p><b>R2.5 &middot; partial.</b> When a conflict is resolved, does the record say who resolved it and by what method?</p>
+      <p>Never resolving would be a pass. Compaction is the exception: it is the one place where an earlier statement can quietly stop being part of the record, decided by a model, with nothing written down about the decision.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/openai/openai-agents-python/blob/89c02c828ee8510fe9a84ee6675608193aa13b02/src/agents/memory/sqlite_session.py#L245-L253">src/agents/memory/sqlite_session.py:245-253</a><br>the default session never resolves anything: both statements stay in the log and neither is preferred, which is the conservative behaviour this requirement allows</li>
+        <li><b>source</b> <a href="https://github.com/openai/openai-agents-python/blob/89c02c828ee8510fe9a84ee6675608193aa13b02/src/agents/memory/openai_responses_compaction_session.py#L271-L286">src/agents/memory/openai_responses_compaction_session.py:271-286</a><br>compaction replaces a stretch of history with a model-written summary, which can silently reconcile or drop a disagreement, and records neither that it did so nor what it dropped</li>
+      </ul>
+      <h3>TR-3 Gated</h3>
+      <p><i>Actions carry a verdict, and approvals carry a name.</i></p>
+      <p><b>R3.1 &middot; partial.</b> Does a consequential action produce a durable entry whether or not it ran?</p>
+      <p>The information exists and is well modelled, which is most of the work. What it is not is durable: the ledger lives in a run object, and whether it survives the process is a decision the SDK leaves to whoever embeds it.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/openai/openai-agents-python/blob/89c02c828ee8510fe9a84ee6675608193aa13b02/src/agents/run_state.py#L1356-L1370">src/agents/run_state.py:1356-1370 _serialize_tool_invocations</a><br>a canonical per-run ledger records each call id with its type, approval scope, fingerprint, and whether it executed and completed. An attempted call that never ran is present in it</li>
+        <li><b>source</b> <a href="https://github.com/openai/openai-agents-python/blob/89c02c828ee8510fe9a84ee6675608193aa13b02/src/agents/run_state.py#L1330-L1354">src/agents/run_state.py:1330-1354 _serialize_approvals</a><br>approvals and rejections serialise alongside, including rejection messages</li>
+        <li><b>searched</b> grep -rniE &#x27;tombstone|deleted_at|erasure|audit&#x27; src/agents/memory/ --include=*.py<br>no persistence layer writes the ledger anywhere; RunState serialises to JSON on request and it is the application&#x27;s job to keep it</li>
+      </ul>
+      <p><b>R3.2 &middot; present.</b> Does an action&#x27;s risk class come from somewhere the proposing model cannot write to?</p>
+      <p>This is a boolean gate rather than a graded risk class, but the substance the requirement asks for is met: whether an action needs approval is decided outside anything the model writes, and the model cannot clear its own gate.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/openai/openai-agents-python/blob/89c02c828ee8510fe9a84ee6675608193aa13b02/src/agents/tool.py#L486-L494">src/agents/tool.py:486-494</a><br>needs_approval is declared on the tool, as a bool or a callable, and the docstring states the call must be approved via RunState.approve() or rejected via RunState.reject() before continuing</li>
+        <li><b>source</b> <a href="https://github.com/openai/openai-agents-python/blob/89c02c828ee8510fe9a84ee6675608193aa13b02/src/agents/tool.py#L707-L743">src/agents/tool.py:707-743</a><br>the function_tool decorator takes needs_approval and passes it into the constructed tool, so it is fixed in developer code at definition time</li>
+      </ul>
+      <p><b>R3.3 &middot; partial.</b> Are refusals recorded as faithfully as permissions?</p>
+      <p>Refusals are modelled as faithfully as permissions, and the same caveat applies as at R3.1: this lives in the run state, not in a record that outlives it.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/openai/openai-agents-python/blob/89c02c828ee8510fe9a84ee6675608193aa13b02/src/agents/run_state.py#L1330-L1354">src/agents/run_state.py:1330-1354</a><br>the approvals record carries rejected alongside approved, per tool, with the same standing</li>
+        <li><b>source</b> <a href="https://github.com/openai/openai-agents-python/blob/89c02c828ee8510fe9a84ee6675608193aa13b02/src/agents/run_state.py#L1356-L1370">src/agents/run_state.py:1356-1370</a><br>the invocation ledger separates executed from completed, so a call stopped before execution is distinguishable from one that ran</li>
+      </ul>
+      <p><b>R3.4 &middot; present.</b> Does a refusal record why it was refused?</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/openai/openai-agents-python/blob/89c02c828ee8510fe9a84ee6675608193aa13b02/src/agents/run_state.py#L1300-L1312">src/agents/run_state.py:1300-1312 reject</a><br>reject takes rejection_message, and the docstring says that exact text is sent back to the model when the run resumes</li>
+        <li><b>source</b> <a href="https://github.com/openai/openai-agents-python/blob/89c02c828ee8510fe9a84ee6675608193aa13b02/src/agents/run_state.py#L1345-L1352">src/agents/run_state.py:1345-1352</a><br>rejection_messages and sticky_rejection_message are serialised with the approval record</li>
+        <li><b>source</b> <a href="https://github.com/openai/openai-agents-python/blob/89c02c828ee8510fe9a84ee6675608193aa13b02/src/agents/tool.py#L194">src/agents/tool.py:194</a><br>DEFAULT_APPROVAL_REJECTION_MESSAGE gives a refusal a reason even when the caller supplies none</li>
+      </ul>
+      <p><b>R3.5 &middot; absent.</b> Does an approval identify a person or a named role holder?</p>
+      <p>The SDK pauses the run and hands the decision to the embedding application. Who that application asked, and whether it asked anybody, is not part of what it records.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/openai/openai-agents-python/blob/89c02c828ee8510fe9a84ee6675608193aa13b02/src/agents/run_state.py#L1285">src/agents/run_state.py:1285 approve</a><br>the signature is approve(self, approval_item, always_approve=False). There is no parameter for who is approving</li>
+        <li><b>source</b> <a href="https://github.com/openai/openai-agents-python/blob/89c02c828ee8510fe9a84ee6675608193aa13b02/src/agents/run_context.py#L1043">src/agents/run_context.py:1043 approve_tool</a><br>the underlying context call takes the same arguments and records approved/rejected as booleans or call-id lists, with no actor</li>
+        <li><b>searched</b> grep -rniE &#x27;approver|approved_by|principal&#x27; src/agents/run_state.py src/agents/run_context.py src/agents/tool.py<br>the matches are approval_identity at run_state.py:1080 and :1190, which come from _tool_invocation.py:135 tool_invocation_identity and identify WHICH TOOL CALL an approval belongs to, by server label, tool name and request id. Nothing in the approval path identifies a person</li>
+      </ul>
+      <p><b>R3.6 &middot; absent.</b> Does the approver&#x27;s identity come from the authentication layer rather than from something the model can write?</p>
+      <ul>
+        <li><b>searched</b> grep -rniE &#x27;approver|approved_by|principal&#x27; src/agents/run_state.py src/agents/run_context.py src/agents/tool.py<br>no human identity is captured at any point, so there is no identity for an authentication layer to be the source of</li>
+        <li><b>source</b> <a href="https://github.com/openai/openai-agents-python/blob/89c02c828ee8510fe9a84ee6675608193aa13b02/src/agents/run_state.py#L1285-L1298">src/agents/run_state.py:1285-1298</a><br>approve resolves the approval item and calls through to the context; nothing about the caller is examined or stored</li>
+      </ul>
+      <p><b>R3.7 &middot; absent.</b> Is the acting agent prevented from approving its own action?</p>
+      <p>This is the requirement most likely to be assumed satisfied by anyone who sees a human-in-the-loop feature and stops reading. The pause is real; the attribution is not.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/openai/openai-agents-python/blob/89c02c828ee8510fe9a84ee6675608193aa13b02/src/agents/run_state.py#L1285">src/agents/run_state.py:1285 approve</a><br>always_approve=True marks a tool approved for the remainder of the run, so a program can clear the gate for every subsequent call in one statement</li>
+        <li><b>searched</b> grep -rniE &#x27;approver|approved_by|principal&#x27; src/agents/run_state.py src/agents/run_context.py src/agents/tool.py<br>with no principals in the model, there is nothing to compare, so a proposer and an approver cannot be told apart even in principle</li>
+      </ul>
+      <h3>TR-4 Verifiable</h3>
+      <p><i>The record can be shown not to have changed.</i></p>
+      <p><b>R4.1 &middot; absent.</b> Does the system publish a scheme under which the record&#x27;s past state can be verified?</p>
+      <ul>
+        <li><b>searched</b> grep -rniE &#x27;hash_chain|merkle|tamper|checksum|signature&#x27; src/agents/ --include=*.py<br>matches are Python introspection (inspect.signature) and a ToolCallSignature tuple used to index tool calls; nothing relates to record integrity</li>
+      </ul>
+      <p><b>R4.2 &middot; absent.</b> Can an independent party run that verification without the vendor&#x27;s cooperation?</p>
+      <ul>
+        <li><b>searched</b> grep -rniE &#x27;hash_chain|merkle|tamper|checksum|signature&#x27; src/agents/ --include=*.py<br>no verification surface exists, so there is nothing for an independent party to run</li>
+      </ul>
+      <p><b>R4.3 &middot; absent.</b> Would alteration of a past entry be detectable after the fact?</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/openai/openai-agents-python/blob/89c02c828ee8510fe9a84ee6675608193aa13b02/src/agents/memory/sqlite_session.py#L245-L253">src/agents/memory/sqlite_session.py:245-253</a><br>session rows carry an autoincrement id and a timestamp, and nothing binding one row to the next; an UPDATE against the table would leave no evidence</li>
+        <li><b>searched</b> grep -rniE &#x27;hash_chain|merkle|tamper|checksum&#x27; src/agents/ --include=*.py<br>no match</li>
+      </ul>
+      <h3>How this was read</h3>
+      <p>Read of src/agents/tool.py, src/agents/run_state.py, src/agents/_tool_invocation.py, src/agents/memory/sqlite_session.py and src/agents/memory/openai_responses_compaction_session.py at 89c02c8, cloned from the public repository. Line numbers are that commit&#x27;s.</p>
+      <h3>If a verdict here is wrong</h3>
+      <p>Then it is wrong in the ordinary way readings are wrong, and every verdict cites a file and a line at a pinned commit precisely so that being wrong is cheap to demonstrate. The remedy is a pull request against <a href="https://github.com/troybrandonc-bit/machine-testimony/blob/main/census/subjects/openai-agents.json">the subject file</a>, and it does not involve persuading anybody. Nobody applied for this and it is not a certification.</p>
+      <p>The <a href="/register/">standing register</a> carries every system side by side, and <a href="/assess/">the rubric</a> is the twenty requirements in full, free to apply to anything, including to this assessment.</p>
+    </div>
+  </div>
+</div>
