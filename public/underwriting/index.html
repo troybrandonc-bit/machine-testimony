@@ -3,23 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Proving a log was not altered &ndash; Machine Testimony</title>
-<meta name="description" content="What append-only storage, hash chains, signatures, timestamps and transparency logs each actually prove about an AI system's records, what none of them prove, and the one that costs nothing and works today.">
-<meta property="og:title" content="Proving a log was not altered">
-<meta property="og:description" content="What append-only storage, hash chains, signatures, timestamps and transparency logs each actually prove about an AI system's records, what none of them prove, and the one that costs nothing and works today.">
+<title>The evidence an AI policy asks for, and who can produce it &ndash; Machine Testimony</title>
+<meta name="description" content="Agentic AI policies are being written with approval records as a condition precedent to indemnity. Eight widely deployed agent systems were assessed against that requirement. One of the six that take actions can name the person who approved one. Six of the eight cannot be verified without the vendor.">
+<meta property="og:title" content="The evidence an AI policy asks for, and who can produce it">
+<meta property="og:description" content="Agentic AI policies are being written with approval records as a condition precedent to indemnity. Eight widely deployed agent systems were assessed against that requirement. One of the six that take actions can name the person who approved one. Six of the eight cannot be verified without the vendor.">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://machinetestimony.org/tamper-evidence/">
+<meta property="og:url" content="https://machinetestimony.org/underwriting/">
 <meta property="og:image" content="https://machinetestimony.org/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Proving a log was not altered">
-<meta name="twitter:description" content="What append-only storage, hash chains, signatures, timestamps and transparency logs each actually prove about an AI system's records, what none of them prove, and the one that costs nothing and works today.">
+<meta name="twitter:title" content="The evidence an AI policy asks for, and who can produce it">
+<meta name="twitter:description" content="Agentic AI policies are being written with approval records as a condition precedent to indemnity. Eight widely deployed agent systems were assessed against that requirement. One of the six that take actions can name the person who approved one. Six of the eight cannot be verified without the vendor.">
 <meta name="twitter:image" content="https://machinetestimony.org/og.png">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/icon.png" type="image/png" sizes="512x512">
 <link rel="apple-touch-icon" href="/icon.png">
-<link rel="canonical" href="https://machinetestimony.org/tamper-evidence/">
+<link rel="canonical" href="https://machinetestimony.org/underwriting/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
@@ -249,170 +249,166 @@
   </div>
 <div class="wrap main">
   <div>
-    <p class="dateline">Technical note, 5 September 2026</p>
-    <h2 class="label">Proving a log was not altered</h2>
+    <p class="dateline">Technical note, 6 September 2026</p>
+    <h2 class="label">The evidence an AI policy asks for, and who can produce it</h2>
 
     <div class="block">
-      <p>An automated system did something consequential, and somebody now
-        wants to know that the record of it is the record that was written at
-        the time. This is the part of AI record-keeping that is easiest to
-        claim and hardest to check, and most of what is written about it
-        answers a narrower question than the one being asked.</p>
+      <p>Policies covering autonomous agents are being written now, and the
+        drafting has converged on a condition precedent: the insured must
+        preserve the records that show what the agent did and who allowed it.
+        One published model clause requires the insured to keep <i>"prompts,
+        tool traces, access logs, model/version records, approval records, and
+        rollback history"</i>, and observes that <i>"without logs, causation and
+        allocation become nearly impossible"</i>.</p>
 
-      <p>Nothing here is specific to any format or product. The distinctions
-        apply to whatever you already log.</p>
+      <p>That clause assumes the records exist. This note is about whether they
+        do. Eight widely deployed agent systems were read against a published
+        rubric between August and September 2026, and the finding an
+        underwriter should care about is narrow and unambiguous.</p>
 
-      <h3>First, the question underneath the question</h3>
-      <p><b>Altered by whom?</b> Almost every scheme in use protects against a
-        different party than the one people assume, and the difference decides
-        whether the record is worth anything in a dispute.</p>
-      <ul>
-        <li><b>Against accident and outsiders.</b> A hash of the record detects
-          corruption and detects somebody else editing it afterwards. This is
-          what most systems have and it is worth having.</li>
-        <li><b>Against the operator.</b> The party that wrote the record can
-          rewrite it and recompute any digest it computed itself. If the
-          question is "did the vendor change this", a digest the vendor
-          calculated answers nothing, however strong the hash.</li>
-      </ul>
-      <p>Internal audit asking about a team's own system, or a customer asking
-        about a supplier's, is always asking the second question. So is a court.</p>
+      <p class="callout"><b>Of the six assessed systems that take or gate
+        actions, one can name the person who approved an action.</b> Four
+        cannot, because approval is stored as a boolean and the identity was
+        never written down. In the sixth it could not be determined from
+        outside the vendor.</p>
 
-      <h3>What each mechanism actually proves</h3>
+      <p>This is not negligence by the deployers. It is that the software has
+        nowhere to put the information. A deployer running one of those systems
+        cannot satisfy the condition precedent at any price, and will not find
+        out until a claim.</p>
+
+      <h3>The requirement, restated as something checkable</h3>
+      <p>A policy requirement is a sentence. An assessment needs a question with
+        an artifact for an answer. These are the questions behind the clause.
+        The three approval and three tool-trace questions apply only to the
+        <b>six</b> systems that take or gate actions; the last two apply to all
+        <b>eight</b>, because anything that stores a fact can lose it.</p>
+
       <div class="scroller">
       <table class="reg">
-        <thead><tr><th>Mechanism</th><th>Detects an outsider's edit</th>
-          <th>Detects the operator's edit</th><th>Cost</th></tr></thead>
+        <thead><tr><th>What the policy asks for</th><th>The checkable question</th>
+          <th>Of</th><th>Can</th><th>Partly</th><th>Cannot</th></tr></thead>
         <tbody>
-          <tr><td class="s">Append-only storage</td><td class="v">partly</td>
-            <td class="v n">no</td><td class="d">free</td></tr>
-          <tr><td class="s">Hash of each entry</td><td class="v">yes</td>
-            <td class="v n">no</td><td class="d">free</td></tr>
-          <tr><td class="s">Hash chain</td><td class="v">yes</td>
-            <td class="v n">no</td><td class="d">free</td></tr>
-          <tr><td class="s">Digital signature</td><td class="v">yes</td>
-            <td class="v n">no, the key holder re-signs</td>
-            <td class="d">key management</td></tr>
-          <tr><td class="s">RFC 3161 timestamp</td><td class="v">yes</td>
-            <td class="v">yes, for time and content</td>
-            <td class="d">free, one HTTP call</td></tr>
-          <tr><td class="s">Transparency log</td><td class="v">yes</td>
-            <td class="v">yes, and detects omission</td>
-            <td class="d">infrastructure</td></tr>
+          <tr><td class="s">Approval records</td>
+            <td class="d">Does an approval identify a person or a named role holder?</td>
+            <td class="v">6</td><td class="v">1</td><td class="v">0</td>
+            <td class="v n">4, and 1 undetermined</td></tr>
+          <tr><td class="s">Approval records</td>
+            <td class="d">Does the approver's identity come from the authentication
+              layer rather than from something the model wrote?</td>
+            <td class="v">6</td><td class="v">1</td><td class="v">0</td>
+            <td class="v n">4, and 1 undetermined</td></tr>
+          <tr><td class="s">Approval records</td>
+            <td class="d">Is the acting agent prevented from approving its own action?</td>
+            <td class="v">6</td><td class="v">1</td><td class="v">0</td>
+            <td class="v n">4, and 1 undetermined</td></tr>
+          <tr><td class="s">Tool traces</td>
+            <td class="d">Does a consequential action produce a durable entry
+              whether or not it ran?</td>
+            <td class="v">6</td><td class="v">3</td><td class="v">3</td><td class="v">0</td></tr>
+          <tr><td class="s">Tool traces</td>
+            <td class="d">Are refusals recorded as faithfully as permissions?</td>
+            <td class="v">6</td><td class="v">2</td><td class="v">4</td><td class="v">0</td></tr>
+          <tr><td class="s">Tool traces</td>
+            <td class="d">Does a refusal record why it was refused?</td>
+            <td class="v">6</td><td class="v">2</td><td class="v">2</td><td class="v n">2</td></tr>
+          <tr><td class="s">Rollback history</td>
+            <td class="d">When a stored fact changes, is the previous version
+              still readable?</td>
+            <td class="v">8</td><td class="v">5</td><td class="v">2</td><td class="v n">1</td></tr>
+          <tr><td class="s">Causation</td>
+            <td class="d">Can the source a stored fact came from be recovered
+              by following a link rather than by inference?</td>
+            <td class="v">8</td><td class="v">2</td><td class="v">4</td><td class="v n">2</td></tr>
         </tbody>
       </table>
       </div>
 
-      <p><b>Append-only storage</b> is a property of your code path behaving.
-        It is a real control against the ordinary case and it is not evidence,
-        because whoever administers the database can still write to it.</p>
+      <h3>The requirement the clause does not contain, and should</h3>
+      <p>Preserving a record is not the same as being able to read it. The
+        clause obliges the insured to keep approval records; it says nothing
+        about who can interpret them afterwards.</p>
 
-      <p><b>A hash chain</b> makes each entry commit to the one before it, so
-        an edit in the middle breaks everything after. Strong against an
-        outsider and worth nothing against the party that can recompute the
-        whole chain, which is the party that wrote it.</p>
+      <p class="callout"><b>Of the eight systems assessed, six produce records
+        that cannot be verified without the vendor's cooperation.</b></p>
 
-      <p><b>A signature</b> binds the record to a key. Better, and it moves the
-        question rather than settling it: whoever holds the key can sign a
-        different record just as validly. It helps when the key is held
-        somewhere the operator cannot reach.</p>
+      <p>At the moment that matters, the vendor may be insolvent, uncooperative,
+        or the adverse party. A condition precedent satisfied only while a third
+        company chooses to help is a condition precedent that fails exactly when
+        it is invoked. This is the difference between a log and evidence, and it
+        is the question a loss adjuster will ask second and an opposing expert
+        will ask first.</p>
 
-      <p><b>An RFC 3161 timestamp</b> is the cheapest thing that changes the
-        answer. A Time Stamp Authority signs the pair of your digest and the
-        current time, with its own key. The operator cannot forge that
-        signature, cannot backdate it, and cannot alter the record without the
-        digest ceasing to match. Free authorities operate it, it underpins
-        qualified electronic timestamps under eIDAS, and a verifier checks it
-        with openssl rather than with anything of yours.</p>
+      <p>It is also cheap to test, which is the point of putting it on a
+        proposal form rather than discovering it during a claim.</p>
 
-      <p><b>A transparency log</b> in the style of <a href="https://www.rfc-editor.org/rfc/rfc9162.html">RFC 9162</a> is stronger
-        again, because it also detects <i>omission</i>: a record that was never
-        submitted is visible as a gap. It is the right answer at scale and it
-        needs infrastructure somebody has to run.</p>
+      <h3>Six questions for a proposal form</h3>
+      <p>Each is answerable from an artifact rather than an assurance. A
+        deployer who can answer them can satisfy the clause; one who cannot,
+        cannot, whatever their policies say. Nothing here requires any
+        particular software, and no answer is improved by naming a vendor.</p>
+      <ol>
+        <li><b>Show one approval from last month.</b> Who approved it, and where
+          did that name come from: a session, a token, an operator console?</li>
+        <li><b>Show one action that was refused.</b> If refusals are not on the
+          record, the record cannot distinguish a system that declined from one
+          that was never asked.</li>
+        <li><b>Who set the risk class</b> that decided the action needed
+          approval, and can the model that proposed the action write to it?</li>
+        <li><b>Can the agent approve its own action?</b> Answer from the code
+          path, not the policy document.</li>
+        <li><b>Hand the record to somebody with none of your software.</b> Can
+          they confirm it has not changed since it was written?</li>
+        <li><b>What was believed at the time,</b> and on what evidence? A
+          decision that looks wrong afterwards may have been right on what was
+          known, and only the record can carry that difference.</li>
+      </ol>
+      <p>Question five is the one that most often changes an answer, because
+        almost every system passes questions one to four on paper and fails five
+        in practice.</p>
 
-      <h3>The cheap one, in full</h3>
-      <p>Hash the records you want to fix, ask an authority to sign the digest,
-        and keep the token beside them.</p>
+      <h3>The method, and what it does not show</h3>
+      <p>Twenty requirements, published, each stated as a capability rather than
+        a format. A system that holds the information in its own shape counts as
+        having it; translation into any particular format is a separate and
+        smaller problem. Systems are assessed only against capabilities they
+        claim: a vector store is not failing at approval gates, it is not an
+        approval gate, and requirements outside a subject's declared scope
+        resolve to not applicable.</p>
 
-      <pre class="snip"># the digest of whatever you are fixing in time
-sha256sum records.jsonl
+      <p><b>What this is not.</b> It is not a security review, a benchmark, or a
+        ranking. It says nothing about whether a system is well built or fit for
+        a purpose, and a system that scores badly here may be excellent at what
+        it was made for. It measures one thing: whether a record exists that
+        somebody outside the vendor could rely on afterwards.</p>
 
-# ask an authority to sign it
-openssl ts -query -data records.jsonl -sha256 -cert -out request.tsq
-curl -s -H "Content-Type: application/timestamp-query" \
-  --data-binary @request.tsq http://timestamp.digicert.com > token.tsr
+      <p><b>Where it can be wrong.</b> Every verdict was reached by reading
+        published source and documentation at a named commit. A capability held
+        in a component that cannot be read from outside is recorded as
+        undetermined rather than guessed, which happened once. Versions move;
+        each assessment carries the version and the date it was read, and the
+        register is re-read on a published schedule so a stale finding fails the
+        build rather than sitting there.</p>
 
-# what it says
-openssl ts -reply -in token.tsr -text</pre>
+      <p>The assessments, the rubric, the evidence behind every verdict and the
+        re-reading date are at <a href="/register/">the register</a>. They are
+        free, they name their sources, and they can be disputed with a commit
+        reference.</p>
 
-      <p>Anybody you later hand the records and the token to checks them
-        against their own certificate store, with no cooperation from you:</p>
+      <h3>If you are pricing this risk</h3>
+      <p>The useful thing is not a rating. It is that the six questions above
+        can go on a proposal form tomorrow, cost nothing to ask, and separate a
+        deployer whose evidence will survive a claim from one whose will not.
+        The rubric behind them is public so that a broker, a deployer or a
+        competing assessor can apply it without asking anyone's permission,
+        which is the only way a test of this kind stays worth anything.</p>
 
-      <pre class="snip">openssl ts -verify -in token.tsr -data records.jsonl \
-  -CAfile /etc/ssl/certs/ca-certificates.crt
-
-Verification: OK</pre>
-
-      <p>And what a failure looks like, which is the half nobody prints. One
-        byte changed anywhere in the file:</p>
-
-      <pre class="snip">error:17800067:time stamp routines:ts_check_imprints:message imprint mismatch
-Verification: FAILED</pre>
-
-      <p>Note what that does and does not tell you. It says the file is not the
-        one the authority signed. It does not say who changed it, when, or
-        which byte, and it cannot distinguish a malicious edit from a trailing
-        newline an editor added on save. Hash a canonical form rather than the
-        file as it happens to sit on disk, or you will spend a morning
-        investigating whitespace.</p>
-
-      <p>That is the whole mechanism. The common mistakes are worth knowing
-        because they are silent: a DER integer that is not minimally encoded
-        produces a token strict parsers reject, and roughly half of hand-built
-        requests hit it depending on one random byte. If you build the request
-        yourself rather than with <code>openssl ts -query</code>, check your
-        output parses before you rely on it.</p>
-
-      <h3>What none of this proves</h3>
-      <p>That the record is true. A system can record precisely what it
-        believed, sign it, timestamp it, and be wrong about all of it. Integrity
-        protects the entry, not the claim inside it.</p>
-      <p>That the record is complete. Everything above fixes what you submitted.
-        Only a transparency log makes what you did <i>not</i> submit visible,
-        and even then only for records that were meant to be there.</p>
-      <p>That a different record was not produced and discarded. A timestamp
-        proves this one existed at that time, not that it was the only one.</p>
-      <p>Anyone selling you integrity as an answer to accuracy is selling you
-        the wrong thing, and the distinction is the first one an auditor will
-        make.</p>
-
-      <h3>A worked example you can check</h3>
-      <p>There is a record published at
-        <a href="/anchor/">a record you can check without us</a>, with its
-        token, its digest, and the three commands above run against real files.
-        It is in the Testimony Record format, which is one way to write these
-        things down and not the only one. The mechanism on this page works with
-        whatever you already log.</p>
+      <p>If a question is wrong, or a verdict is out of date, that is worth more
+        to me than agreement: the correction is public and dated like everything
+        else. <a href="/assess/">How to assess a system yourself</a> is written
+        down, and nothing in it needs my software.</p>
     </div>
   </div>
-
-  <aside class="rail">
-    <h2 class="label">If you have to answer for a system</h2>
-    <p class="cont">These are the questions worth asking a supplier about what
-      their system records, with what a real answer looks like.<br>
-      <a href="/ask/">Questions to ask your AI supplier</a></p>
-
-    <h2 class="label">Where this comes from</h2>
-    <p class="cont">An assessment of eight agent systems against twenty
-      requirements. Seven of the eight could not tell you whether a past entry
-      had been altered.<br>
-      <a href="/register/">The register</a></p>
-
-    <hr>
-    <p class="cont"><a href="/anchor/">A record you can check without us</a><br>
-      <a href="/implement/">Implementing the format</a><br>
-      <a href="https://datatracker.ietf.org/doc/draft-clifford-testimony-record/">The specification</a></p>
-  </aside>
 </div>
 <footer class="foot">
   <div class="wrap">
