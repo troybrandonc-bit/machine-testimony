@@ -884,10 +884,14 @@ def main():
     # named here rather than left to be discovered, so the debt is visible and
     # a fourth cannot appear quietly.
     UNCONVERTED = {
-        # The last one. It carries the browser validator and a script the page
-        # generator does not produce, so converting it is not the same job as
-        # the prose pages were. Its stylesheet is kept in step by hand until
-        # then, which is the reason this list exists rather than a comment.
+        # Tried and reverted. /check/ keeps a page-specific stylesheet inside
+        # the same <style> block the generator writes: tr.refused, the checks
+        # table, the verdict panel and the reader's own table, 39 declarations
+        # the shared sheet knows nothing about. build_page.py emits the shared
+        # CSS and EXTRA and has nowhere to put a third part, so converting the
+        # page silently dropped all of it and the results table rendered
+        # unstyled. Converting it means teaching the generator about
+        # page-scoped CSS, which is a change to every page, not to this one.
         "check",
     }
     # A different case, and the distinction matters. These are deposited
