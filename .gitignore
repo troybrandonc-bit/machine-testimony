@@ -23,3 +23,6 @@ adapters/autogen/dist/
 adapters/openai-agents/testimony_validate.py
 adapters/openai-agents/testimony_emit.py
 adapters/openai-agents/dist/
+adapters/pydantic-ai/testimony_validate.py
+adapters/pydantic-ai/testimony_emit.py
+adapters/pydantic-ai/dist/

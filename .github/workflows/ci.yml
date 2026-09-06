@@ -103,6 +103,26 @@ jobs:
           if echo "$out" | grep -qE '^[[:space:]]*SKIP:'; then
             echo "::error::the suite skipped where openai-agents is installed"; exit 1
           fi
+  pydantic-ai-adapter:
+    name: the Pydantic AI adapter, against a real Agent
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with: { python-version: "3.12" }
+      # No API key and no network: only the model is scripted, with the
+      # framework's own FunctionModel. The Agent, requires_approval, the pause
+      # and the resume are the real ones.
+      - run: pip install pydantic-ai-slim
+      - name: An approval that names nobody cannot be written
+        working-directory: tests
+        run: |
+          set +e; out=$(python tests_pydantic_ai_testimony.py 2>&1); rc=$?; set -e
+          echo "$out"
+          [ $rc -eq 0 ] || { echo "::error::Pydantic AI adapter suite failed"; exit 1; }
+          if echo "$out" | grep -qE '^[[:space:]]*SKIP:'; then
+            echo "::error::the suite skipped where pydantic-ai is installed"; exit 1
+          fi
   package:
     name: pip install, emit, check, with no checkout in sight
     runs-on: ubuntu-latest
@@ -121,7 +141,8 @@ jobs:
           MODS = {"langgraph": "testimony_langgraph.py",
                   "crewai": "testimony_crewai.py",
                   "autogen": "testimony_autogen.py",
-                  "openai-agents": "testimony_openai_agents.py"}
+                  "openai-agents": "testimony_openai_agents.py",
+                  "pydantic-ai": "testimony_pydantic_ai.py"}
           bad = []
           for slug, mod in MODS.items():
               d = os.path.join("adapters", slug)
