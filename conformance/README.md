@@ -1,6 +1,6 @@
 # The conformance corpus
 
-47 records and the verdict each one should get. If you are implementing the
+52 records and the verdict each one should get. If you are implementing the
 Testimony Record, this is how you find out whether you have finished.
 
 ```
@@ -24,7 +24,7 @@ a conformance claim you can only check with our software is worth nothing.
 
 ## What conformance means here
 
-Your implementation reaches the same verdict as the reference on all 47 cases.
+Your implementation reaches the same verdict as the reference on all 52 cases.
 
 It does not mean the same check names, the same wording, the same number of
 checks, or the same explanations. Those are this project's prose. A corpus that
@@ -33,8 +33,8 @@ file rather than whether you had implemented a specification, and an
 independent implementation is the entire point. The comparison is deliberately
 blind to everything except the answer.
 
-It is also not a certificate. It is a statement about 47 cases, and the
-specification is larger than any 47 cases.
+It is also not a certificate. It is a statement about 52 cases, and the
+specification is larger than any 52 cases.
 
 ## When you disagree
 
@@ -48,10 +48,10 @@ checks here exist because somebody said so.
 
 | | |
 |---|---|
-| no level | 11 cases: malformed JSON, unknown types, missing required members, invented enum values, reused ids, times that go backwards |
+| no level | 12 cases: malformed JSON, unknown types, missing required members, invented enum values, reused ids, times that go backwards |
 | TR-1 | 6 cases: well formed, and failing something at TR-2 |
-| TR-2 | 10 cases: evidence that resolves, conflicts that keep both sides, resolutions that name what was kept |
-| TR-3 | 16 cases: gates, refusals that did not execute, approvals that name a person other than the proposer, provenance declared from somewhere the model cannot write |
+| TR-2 | 12 cases: evidence that resolves, conflicts that keep both sides, resolutions that name what was kept |
+| TR-3 | 18 cases: gates, refusals that did not execute, approvals that name a person other than the proposer, provenance declared from somewhere the model cannot write, and actions whose effect the record cannot confirm |
 | TR-4 | 4 cases: a hash chain, a replay that names its engine, a number that serialises portably, and a record a Time Stamp Authority actually signed |
 
 The TR-4 cases are the ones worth reading first if you are short of time.

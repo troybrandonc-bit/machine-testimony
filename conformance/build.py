@@ -191,6 +191,31 @@ def cases():
         [scope(), ev(), bel(), dec(), app(identity_source="trust-me")])
     add("identity-source-extension", "an unlisted identity source, declared as one",
         [scope(), ev(), bel(), dec(), app(identity_source="x-corp-sso")])
+    # `executed` says what the system observed. `outcome` says what the record
+    # claims about the effect, and exists because a dispatched action whose
+    # acknowledgement was lost cannot be described by a boolean: `executed:
+    # false` reads as "it did not happen", and a caller who retries on that
+    # repeats an action that may already have run. Raised by HarperZ9 on
+    # langchain-ai/langgraph#7844, 6 September 2026.
+    add("outcome-unconfirmed",
+        "an action dispatched whose acknowledgement never came back",
+        [scope(), ev(), bel(), dec(executed=False, outcome="unconfirmed"),
+         app()])
+    add("outcome-not-attempted",
+        "an action that was permitted and definitely never dispatched",
+        [scope(), ev(), bel(), dec(executed=False, outcome="not_attempted"),
+         app()])
+    add("outcome-contradicts-executed",
+        "a record saying the action ran and that it was never attempted",
+        [scope(), ev(), bel(), dec(executed=True, outcome="not_attempted"),
+         app()])
+    add("outcome-contradicts-refusal",
+        "a refusal recording that the effect was confirmed",
+        [scope(), ev(), bel(), dec(verdict="refused", executed=False,
+                                   reason="over the limit", approval=None,
+                                   outcome="confirmed")])
+    add("outcome-invented", "an outcome nobody defines",
+        [scope(), ev(), bel(), dec(executed=False, outcome="probably"), app()])
     add("gated", "an action proposed, approved by a named person, and executed",
         gated())
 

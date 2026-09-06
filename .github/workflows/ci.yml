@@ -337,12 +337,14 @@ jobs:
         run: python tests_draft_sync.py
       - name: Find the draft source
         run: |
-          # Named by pattern, not by version, so bumping -00 to -01 is a rename
-          # and not an edit to this file. Exactly one, because two would mean
-          # an old revision was left behind and the artifact would be a lottery.
-          d=$(ls spec/draft-*-[0-9][0-9].md)
-          test "$(echo "$d" | wc -l)" -eq 1 || {
-            echo "::error::expected one draft source in spec/, found: $d"; exit 1; }
+          # Named by pattern, not by version, so opening the next revision is
+          # a new file and not an edit to this one. The highest number is the
+          # working draft; the ones below it are published documents kept as
+          # the record of what was submitted, and tests_draft_sync.py fails if
+          # one of them changes.
+          d=$(ls spec/draft-*-[0-9][0-9].md | sort | tail -1)
+          test -n "$d" || { echo "::error::no draft source in spec/"; exit 1; }
+          echo "building $d"
           echo "DRAFT_MD=$d" >> "$GITHUB_ENV"
           echo "DRAFT_XML=${d%.md}.xml" >> "$GITHUB_ENV"
       - name: Markdown to xml2rfc v3
