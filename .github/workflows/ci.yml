@@ -83,6 +83,26 @@ jobs:
           if echo "$out" | grep -qE '^[[:space:]]*SKIP:'; then
             echo "::error::the AutoGen suite skipped where autogen-core is installed"; exit 1
           fi
+  openai-agents-adapter:
+    name: the OpenAI Agents adapter, against a real Runner
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with: { python-version: "3.12" }
+      # No API key and no network call: only the model is scripted, against the
+      # SDK's public Model interface. The Runner, the tool, the interruption
+      # and state.approve are the real ones, which is the whole point.
+      - run: pip install openai-agents
+      - name: An approval that names nobody cannot be written
+        working-directory: tests
+        run: |
+          set +e; out=$(python tests_openai_agents_testimony.py 2>&1); rc=$?; set -e
+          echo "$out"
+          [ $rc -eq 0 ] || { echo "::error::OpenAI Agents adapter suite failed"; exit 1; }
+          if echo "$out" | grep -qE '^[[:space:]]*SKIP:'; then
+            echo "::error::the suite skipped where openai-agents is installed"; exit 1
+          fi
   package:
     name: pip install, emit, check, with no checkout in sight
     runs-on: ubuntu-latest
