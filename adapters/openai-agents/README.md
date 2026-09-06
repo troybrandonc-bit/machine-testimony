@@ -1,10 +1,7 @@
 # Testimony Records from the OpenAI Agents SDK
 
-```
-pip install testimony-openai-agents
-```
-
-Or one file: copy `testimony_openai_agents.py` and
+_Packaged and tested; the first publish to PyPI is pending, so for
+now it is one file._ Copy `testimony_openai_agents.py` and
 [`testimony_emit.py`](../../spec/testimony_emit.py) next to your agent. There is
 nothing else to install and nothing here depends on OMEM.
 
