@@ -538,6 +538,58 @@ def main():
     check("every package the site says to install is published",
           not missing, "not on PyPI: %s" % missing)
 
+    print("\nthe approval-binding reading says what its data says")
+    # Six verdicts about other people's code, each citing a file and a line at
+    # a commit. Recomputed here rather than trusted, on the same terms as the
+    # register: a wrong verdict should be fixable by a pull request, which only
+    # works if the page and the data cannot drift apart.
+    ab = io.open(os.path.join(PUB, "approval-binding", "index.html"),
+                 encoding="utf-8").read()
+    bd = json.load(io.open(os.path.join(ROOT, "census", "binding",
+                                        "readings.json"), encoding="utf-8"))
+    subs = bd["subjects"]
+    check("six frameworks were read", len(subs) == 6, len(subs))
+    verds = collections.Counter(s["verdict"] for s in subs)
+    check("one is bound", verds["bound"] == 1, dict(verds))
+    check("one is partial", verds["partial"] == 1, dict(verds))
+    check("two are unbound", verds["unbound"] == 2, dict(verds))
+    check("two have no approval boundary at all",
+          verds["no_boundary"] == 2, dict(verds))
+    check("every verdict is one the method defines",
+          all(s["verdict"] in bd["verdicts"] for s in subs),
+          [s["verdict"] for s in subs if s["verdict"] not in bd["verdicts"]])
+
+    # A verdict about somebody's code that does not say where it was read is an
+    # accusation. The two that have no boundary cite an issue instead, because
+    # there is no path to point at.
+    for s in subs:
+        if s["verdict"] == "no_boundary":
+            check("%s cites where the absence is discussed" % s["name"],
+                  s.get("issue", "").startswith("https://"), s.get("issue"))
+        else:
+            for side in ("shown_to_approver", "executed"):
+                loc = s.get(side, {}).get("locator", "")
+                check("%s cites a file and a line for what is %s"
+                      % (s["name"], side.replace("_", " ")),
+                      re.search(r"\.py:\d+", loc), loc)
+        check("%s is pinned to a commit" % s["name"],
+              re.fullmatch(r"[0-9a-f]{12}", s.get("commit", "")), s.get("commit"))
+
+    check("the page names every framework it read",
+          all(s["name"] in ab for s in subs),
+          [s["name"] for s in subs if s["name"] not in ab])
+    check("it says a framework without a pause is not failing",
+          "not failing this" in ab)
+    # Collapsed, because the source wraps prose and a phrase that straddles a
+    # line break is present on the page and absent from a substring search.
+    flat_ab = " ".join(ab.split())
+    check("and what the reading does not show",
+          "What this does not show" in flat_ab
+          and "not a conformance assessment" in flat_ab)
+    check("it links the data rather than asking to be believed",
+          "census/binding/readings.json" in ab)
+    check("and sells nothing", "OMEM" not in ab and "omem" not in ab.lower())
+
     print("\nthe site does not link at things that are not there")
     dead = []
     for page in pages():

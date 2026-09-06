@@ -1,0 +1,127 @@
+<!--title: Human in the loop approval: does the approver see the arguments that execute
+    desc: Six agent frameworks read at pinned commits against one question. Between the moment a person is shown a tool call and the moment it runs, can the arguments change? One binds them. One supplies a mechanism. Two do not, and two have no approval pause at all.
+    slug: approval-binding-->
+
+<div class="wrap main">
+  <div>
+    <p class="dateline">Reading, 6 September 2026</p>
+    <h2 class="label">Does the approver see the arguments that execute?</h2>
+
+    <div class="block">
+      <p>An approval is worth what it was an approval <i>of</i>. If the
+        arguments a person was shown are not the arguments that run, then they
+        approved something that did not happen, and the record of their
+        approval describes an action nobody agreed to.</p>
+
+      <p>That is the failure mode approval exists to prevent, so it is worth
+        knowing which frameworks prevent it. Six were read in published source
+        at a pinned commit, against one question.</p>
+
+      <p class="callout"><b>Between the moment a human approver is shown a tool
+        call and the moment that tool runs, can the arguments change?</b></p>
+
+      <h3>What the reading found</h3>
+      <div class="scroller">
+      <table class="reg">
+        <thead><tr><th>Framework</th><th>Verdict</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td class="s">OpenAI Agents SDK</td><td class="v">bound</td>
+            <td class="d">The approval item and the invocation read the same
+              tool call. Nothing between them rewrites it.</td></tr>
+          <tr><td class="s">Pydantic AI</td><td class="v">partial</td>
+            <td class="d">Validation runs after approval and can transform the
+              arguments, but the approver can state exactly what should run.</td></tr>
+          <tr><td class="s">Haystack</td><td class="v n">unbound</td>
+            <td class="d">Values named by <span class="mono">inputs_from_state</span>
+              are injected after the confirmation hook has run.</td></tr>
+          <tr><td class="s">LangGraph</td><td class="v n">unbound</td>
+            <td class="d">Resuming re-executes the whole node, so a value
+              derived from live state can differ the second time. Documented.</td></tr>
+          <tr><td class="s">AutoGen</td><td class="v">no boundary</td>
+            <td class="d">No approval pause in core. Its maintainers have it
+              open as two issues.</td></tr>
+          <tr><td class="s">CrewAI</td><td class="v">no boundary</td>
+            <td class="d">No approval pause and no before-tool hook.</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <p><b>A framework with no approval pause is not failing this.</b> It is
+        not an approval gate, and marking it down for lacking one would be the
+        same error as marking a vector store down for not authorising actions.
+        Both are recorded because the absence is the relevant fact, and in both
+        cases their own maintainers have it open as a request.</p>
+
+      <h3>The three shapes this takes</h3>
+
+      <p><b>Bound.</b> The OpenAI Agents SDK builds its approval item from the
+        model's tool call and invokes the tool with the arguments off that same
+        object. There is no hook in between that could rewrite them. It also
+        carries a setting for whether input guardrails run before approval,
+        which is evidence that the ordering was considered rather than left to
+        fall out.</p>
+
+      <p><b>A mechanism, not a default.</b> Pydantic AI hands the approver the
+        model's call and then validates it after approval, and validation can
+        transform. What saves it from the third category is that an approver
+        can supply the arguments that should run, which binds the two when it
+        is used. Their AI lead has this open, and describes it exactly:
+        <i>the human approves one thing and the system executes another</i>.</p>
+
+      <p><b>Unbound.</b> In Haystack, a tool that reads from state executes with
+        arguments the confirming person never saw: the confirmation runs as a
+        before-tool hook over what the model produced, and the state values are
+        injected afterwards. In LangGraph the mechanism is different and the
+        result is the same. Resuming an interrupt re-runs the node from the
+        start, so anything computed before the pause is computed again, and a
+        value that reads live state can legitimately differ.</p>
+
+      <p>The LangGraph case deserves its distinction. It is unbound, and it is
+        <i>documented</i> as unbound, in the framework's own docstring. A reader
+        who checks is told. That is a materially different thing from a silent
+        divergence, even though it leaves the same problem on the caller's
+        desk.</p>
+
+      <h3>Nobody has been comparing notes</h3>
+      <p>Three of these are open issues right now, filed by three different
+        people who do not cite each other. One is a maintainer describing it as
+        a bug. One is a user who found it through
+        <span class="mono">inputs_from_state</span>. The third is a design
+        thread that arrived at the requirement from the other direction, asking
+        for a canonical digest of the validated arguments so that a changed
+        digest invalidates the decision.</p>
+
+      <p>That is the same defect being discovered separately in three places,
+        which is usually what a missing shared idea looks like. The idea here is
+        small: <b>an approval is a claim about a specific action, so the record
+        of it has to fix which action, not merely that permission was
+        given.</b></p>
+
+      <h3>What this does not show</h3>
+      <p>One question, read once, in one direction. It is not a conformance
+        assessment and it says nothing about whether any of these is well built.
+        A framework that comes out badly here may be excellent at what it was
+        made for, and none of them claims to be an authorisation layer.</p>
+
+      <p>Only paths reachable from each framework's documented approval feature
+        were read. A deployment that builds its own gate is outside this
+        entirely, and may be bound or unbound regardless of what its framework
+        does.</p>
+
+      <p>And a reading is wrong in the ordinary way readings are wrong. Every
+        verdict cites a file and a line at a commit precisely so that being
+        wrong is cheap to demonstrate.</p>
+
+      <h3>Check it</h3>
+      <p>The commit, the two locators and the reasoning for each subject are in
+        <a href="https://github.com/troybrandonc-bit/machine-testimony/blob/main/census/binding/readings.json">census/binding/readings.json</a>.
+        The counts on this page are recomputed from that file by the test suite
+        rather than typed.</p>
+
+      <p>The related question of whether a system can say <i>who</i> approved,
+        rather than what they approved, is the
+        <a href="/register/">conformance census</a>. Of the six systems there
+        that take or gate actions, one can name the person.</p>
+    </div>
+  </div>
+</div>
