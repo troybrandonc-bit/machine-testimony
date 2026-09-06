@@ -376,6 +376,29 @@ def main():
           "census/demand/issues.json" in dm)
     check("and sells nothing", "OMEM" not in dm and "omem" not in dm.lower())
 
+    print("\nthe EU AI Act page has the dates the law actually has")
+    # This page said Annex III high-risk obligations began applying on 2 August
+    # 2026 for six weeks after they did not. Regulation (EU) 2026/1744 entered
+    # into force on 27 July 2026, six days before, and deferred them to 2
+    # December 2027. It is the most checkable claim on the most
+    # compliance-relevant page here, it was wrong in the direction that
+    # overstates urgency, and most commentary still carries the old date, so
+    # being right is worth pinning.
+    act = io.open(os.path.join(PUB, "eu-ai-act", "index.html"),
+                  encoding="utf-8").read()
+    check("Annex III high-risk is dated 2 December 2027",
+          "2 December 2027" in act)
+    check("and the deferral names the regulation that made it",
+          "2026/1744" in act)
+    check("Annex I embedded products are dated 2 August 2028",
+          "2 August 2028" in act)
+    check("it does not still say the obligations began in August 2026",
+          "began applying on 2 August 2026" not in act)
+    check("and it says what was NOT deferred, since that is the live half",
+          "Article 5" in act and "Article 50" in act)
+    check("the correction is dated rather than quietly made",
+          "Corrected 6 September 2026" in act)
+
     print("\nthe site does not link at things that are not there")
     dead = []
     for page in pages():
