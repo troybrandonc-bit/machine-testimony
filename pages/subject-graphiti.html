@@ -1,0 +1,122 @@
+<!--title: Graphiti audit trail and approval records, assessed
+    desc: Graphiti read against 20 record-keeping requirements at commit a6e026f. 7 present, 2 partial, 4 absent. Every verdict cites a file and a line, and a wrong one is fixed by a pull request.
+    slug: register/graphiti-->
+
+<div class="wrap main">
+  <div>
+    <p class="dateline">Assessment, 2026-09-04 &middot; 0.30.1 (a6e026f)</p>
+    <h2 class="label">What Graphiti records, and what it does not</h2>
+    <div class="block">
+      <table class="facts">
+        <tr><th>Read at</th><td><a href="https://github.com/getzep/graphiti/tree/a6e026f8fca27af9c1fc4cfe359c3834dc9655bb">a6e026f</a></td></tr>
+        <tr><th>Repository</th><td><a href="https://github.com/getzep/graphiti">github.com/getzep/graphiti</a></td></tr>
+        <tr><th>Licence</th><td>Apache-2.0</td></tr>
+        <tr><th>Assessed as</th><td>stores, derives</td></tr>
+        <tr><th>Reaches</th><td>no level yet</td></tr>
+        <tr><th>Read by</th><td>Troy Brandon Clifford</td></tr>
+      </table>
+      <div class="scroller">
+      <table class="reg">
+        <thead><tr><th>Level</th><th>Meets</th><th>What the level asks</th></tr></thead>
+        <tbody>
+          <tr><td class="s">TR-1 Recorded</td><td class="n">4/5</td><td class="w">The record exists and is append-only.</td></tr>
+          <tr><td class="s">TR-2 Explained</td><td class="n">3/5</td><td class="w">Every belief resolves to its evidence, and disagreements survive.</td></tr>
+          <tr><td class="s">TR-3 Gated</td><td class="n">n/a</td><td class="w">Actions carry a verdict, and approvals carry a name.</td></tr>
+          <tr><td class="s">TR-4 Verifiable</td><td class="n">0/3</td><td class="w">The record can be shown not to have changed.</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p>A count is requirements fully met out of those that apply. This system is assessed as <b>stores, derives</b>, and requirements outside that are not counted against it.</p>
+      <p class="callout">Graphiti is bi-temporal by design and it shows in almost every answer here. A fact that stops being true is not removed: resolve_edge_contradictions stamps invalid_at and expired_at on the existing edge and keeps it, so both sides of a disagreement remain in the graph and a query about a past moment can still be answered. Facts also point at the episodes they were extracted from, and the raw episode content is retained as a separate node type, which means the told and the inferred can never be confused for one another. This is the strongest showing of the systems assessed so far and it was arrived at independently of this specification, which is the most useful kind of agreement. The single thing standing between it and TR-1 is that deletion, when it does happen, leaves no record that it happened.</p>
+      <h3>Every verdict, and what it rests on</h3>
+      <p>Twenty requirements, each stated as a capability rather than a format, so a system that holds the information in its own shape counts as having it. An <b>absent</b> verdict cites where the assessor looked and did not find it, which is the difference between a measurement and an accusation.</p>
+      <h3>TR-1 Recorded</h3>
+      <p><i>The record exists and is append-only.</i></p>
+      <p><b>R1.1 &middot; present.</b> When the system stores a fact, does it durably record when that happened?</p>
+      <p>The separation of transaction time from valid time is exactly the distinction the specification draws between when an entry was written and when the fact held, and graphiti keeps both.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/getzep/graphiti/blob/a6e026f8fca27af9c1fc4cfe359c3834dc9655bb/graphiti_core/edges.py#L54">graphiti_core/edges.py:54</a><br>created_at is a required field on the base Edge, stored with the edge itself</li>
+        <li><b>source</b> <a href="https://github.com/getzep/graphiti/blob/a6e026f8fca27af9c1fc4cfe359c3834dc9655bb/graphiti_core/edges.py#L271">graphiti_core/edges.py:271</a><br>expired_at records when the system learned a fact was no longer valid, which is transaction time kept separately from valid_at and invalid_at, the world time</li>
+      </ul>
+      <p><b>R1.2 &middot; present.</b> When a stored fact changes, is the previous version still readable?</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/getzep/graphiti/blob/a6e026f8fca27af9c1fc4cfe359c3834dc9655bb/graphiti_core/utils/maintenance/edge_operations.py#L538">graphiti_core/utils/maintenance/edge_operations.py:538 resolve_edge_contradictions</a><br>a superseded edge has invalid_at and expired_at set and is appended to invalidated_edges; it is never removed from the graph</li>
+        <li><b>source</b> <a href="https://github.com/getzep/graphiti/blob/a6e026f8fca27af9c1fc4cfe359c3834dc9655bb/graphiti_core/edges.py#L274-L279">graphiti_core/edges.py:274-279</a><br>valid_at and invalid_at bound the interval over which the fact held, so the prior state is still queryable as history</li>
+      </ul>
+      <p><b>R1.3 &middot; present.</b> Does the ordinary write path ever destroy what was previously recorded?</p>
+      <p>A correction is a new edge plus a closed interval on the old one, which is what the specification asks for. Hard deletion exists but is an explicit administrative call rather than part of this path, and is assessed at R1.5.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/getzep/graphiti/blob/a6e026f8fca27af9c1fc4cfe359c3834dc9655bb/graphiti_core/utils/maintenance/edge_operations.py#L538-L572">graphiti_core/utils/maintenance/edge_operations.py:538-572</a><br>the ordinary ingestion path closes an interval on the old edge and creates a new one; nothing recorded is overwritten or discarded</li>
+        <li><b>source</b> <a href="https://github.com/getzep/graphiti/blob/a6e026f8fca27af9c1fc4cfe359c3834dc9655bb/graphiti_core/edges.py#L263-L286">graphiti_core/edges.py:263-286</a><br>the fact text on an invalidated edge is left intact; only the temporal bounds are stamped</li>
+      </ul>
+      <p><b>R1.4 &middot; present.</b> Are entries distinguishable by kind, or is everything one undifferentiated blob of text?</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/getzep/graphiti/blob/a6e026f8fca27af9c1fc4cfe359c3834dc9655bb/graphiti_core/nodes.py#L318">graphiti_core/nodes.py:318 EpisodicNode, and EntityNode in the same module</a><br>raw source material and extracted entities are different node types</li>
+        <li><b>source</b> <a href="https://github.com/getzep/graphiti/blob/a6e026f8fca27af9c1fc4cfe359c3834dc9655bb/graphiti_core/edges.py#L263">graphiti_core/edges.py:263 EntityEdge</a><br>an extracted fact is an edge type distinct from both node types, carrying fact, episodes and its temporal bounds</li>
+      </ul>
+      <p><b>R1.5 &middot; absent.</b> When data must be destroyed for a legal reason, is the destruction itself recorded?</p>
+      <p>This is the one requirement keeping graphiti below TR-1, and it is narrow. Everything about the ordinary write path is append-only and bi-temporal. What is missing is that when a deletion does occur, whether for privacy or housekeeping, the graph afterwards is indistinguishable from one where the data never existed. A tombstone carrying the deleted uuid, the time and the requester, without the content, would close it.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/getzep/graphiti/blob/a6e026f8fca27af9c1fc4cfe359c3834dc9655bb/graphiti_core/nodes.py#L111">graphiti_core/nodes.py:111 Node.delete</a><br>issues DETACH DELETE against the node and its edges</li>
+        <li><b>source</b> <a href="https://github.com/getzep/graphiti/blob/a6e026f8fca27af9c1fc4cfe359c3834dc9655bb/graphiti_core/nodes.py#L178">graphiti_core/nodes.py:178 delete_by_group_id</a><br>removes an entire partition in batches, which is the natural call for a per-tenant or per-subject erasure request</li>
+        <li><b>searched</b> grep -rniE &#x27;erasure|deletion_log|tombstone|deleted_at&#x27; graphiti_core/ --include=*.py<br>no match; there is no record type, column or table that survives a delete to say one happened</li>
+      </ul>
+      <h3>TR-2 Explained</h3>
+      <p><i>Every belief resolves to its evidence, and disagreements survive.</i></p>
+      <p><b>R2.1 &middot; present.</b> Can the source a stored fact came from be recovered from the store, by following a link rather than by guessing?</p>
+      <p>The link is bidirectional and followable, and the raw material is retained rather than discarded after extraction. This is the requirement most systems miss and it is the one graphiti answers best.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/getzep/graphiti/blob/a6e026f8fca27af9c1fc4cfe359c3834dc9655bb/graphiti_core/edges.py#L267-L270">graphiti_core/edges.py:267-270</a><br>EntityEdge.episodes is a list of the episode ids the fact was extracted from</li>
+        <li><b>source</b> <a href="https://github.com/getzep/graphiti/blob/a6e026f8fca27af9c1fc4cfe359c3834dc9655bb/graphiti_core/nodes.py#L318-L328">graphiti_core/nodes.py:318-328</a><br>EpisodicNode retains content, the raw episode data, along with source, source_description and valid_at; entity_edges points back at the facts drawn from it</li>
+      </ul>
+      <p><b>R2.2 &middot; present.</b> Can a fact the system inferred be told apart from one it was told?</p>
+      <p>The distinction is structural rather than a flag, which is stronger: a consumer cannot accidentally read an extracted fact as something a person said, because the two are not the same kind of object.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/getzep/graphiti/blob/a6e026f8fca27af9c1fc4cfe359c3834dc9655bb/graphiti_core/nodes.py#L318-L321">graphiti_core/nodes.py:318-321</a><br>an EpisodicNode holds content, described as &#x27;raw episode data&#x27;, with a source of EpisodeType and a source_description</li>
+        <li><b>source</b> <a href="https://github.com/getzep/graphiti/blob/a6e026f8fca27af9c1fc4cfe359c3834dc9655bb/graphiti_core/edges.py#L264-L266">graphiti_core/edges.py:264-266</a><br>an EntityEdge holds fact, produced by LLM extraction. It is a different type in a different part of the schema</li>
+      </ul>
+      <p><b>R2.3 &middot; present.</b> When two stored facts about the same proposition disagree, do both survive?</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/getzep/graphiti/blob/a6e026f8fca27af9c1fc4cfe359c3834dc9655bb/graphiti_core/utils/maintenance/edge_operations.py#L562-L570">graphiti_core/utils/maintenance/edge_operations.py:562-570</a><br>the contradicted edge has invalid_at set to the new edge&#x27;s valid_at and expired_at stamped, then is returned in invalidated_edges. Both edges remain in the graph</li>
+        <li><b>source</b> <a href="https://github.com/getzep/graphiti/blob/a6e026f8fca27af9c1fc4cfe359c3834dc9655bb/graphiti_core/utils/maintenance/edge_operations.py#L531-L534">graphiti_core/utils/maintenance/edge_operations.py:531-534</a><br>embeddings are generated for the invalidated edges as well as the resolved ones, so a superseded fact stays retrievable rather than becoming inert</li>
+      </ul>
+      <p><b>R2.4 &middot; partial.</b> Is the disagreement itself queryable, or must a reader diff rows to notice it?</p>
+      <p>A disagreement is discoverable: query the edges between one pair of nodes and look for a closed interval. It is not recorded as such, so an edge invalidated by a contradiction and one invalidated because the fact simply lapsed look identical, and nothing points from the loser to the winner.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/getzep/graphiti/blob/a6e026f8fca27af9c1fc4cfe359c3834dc9655bb/graphiti_core/utils/maintenance/edge_operations.py#L538">graphiti_core/utils/maintenance/edge_operations.py:538</a><br>resolve_edge_contradictions returns the invalidated edges to its caller but writes no record that a contradiction was the cause</li>
+        <li><b>searched</b> grep -rniE &#x27;class Conflict|conflict_id|contradiction&#x27; graphiti_core/ --include=*.py<br>matches are function names and prompt text only; there is no conflict object, and no field on an edge naming what invalidated it</li>
+      </ul>
+      <p><b>R2.5 &middot; partial.</b> When a conflict is resolved, does the record say who resolved it and by what method?</p>
+      <p>That the conflict was resolved is recorded. Who resolved it is not. The decision runs through an LLM extraction step and then the temporal comparison in this function, and the graph afterwards carries neither the model, the prompt version nor the reason.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/getzep/graphiti/blob/a6e026f8fca27af9c1fc4cfe359c3834dc9655bb/graphiti_core/utils/maintenance/edge_operations.py#L562-L570">graphiti_core/utils/maintenance/edge_operations.py:562-570</a><br>the invalidation is written down as a temporal bound</li>
+        <li><b>searched</b> grep -rn &#x27;invalidated_by\|resolved_by\|decided_by\|model_name&#x27; graphiti_core/edges.py graphiti_core/utils/maintenance/edge_operations.py<br>no match; neither the model that extracted the contradicting fact nor the reason is recorded on either edge</li>
+      </ul>
+      <h3>TR-3 Gated</h3>
+      <p><i>Actions carry a verdict, and approvals carry a name.</i></p>
+      <p>R3.1, R3.2, R3.3, R3.4, R3.5, R3.6, R3.7 are not assessed here, because this system is not in that business and marking it down for that would be dishonest.</p>
+      <h3>TR-4 Verifiable</h3>
+      <p><i>The record can be shown not to have changed.</i></p>
+      <p><b>R4.1 &middot; absent.</b> Does the system publish a scheme under which the record&#x27;s past state can be verified?</p>
+      <ul>
+        <li><b>searched</b> grep -rniE &#x27;hash_chain|merkle|signature|tamper|checksum|digest&#x27; graphiti_core/ --include=*.py<br>the only hash is an md5 used to key the LLM response cache at llm_client/client.py:157; nothing relates to record integrity</li>
+        <li><b>docs</b> graphiti README.md<br>no integrity, verification or tamper-evidence claim is made</li>
+      </ul>
+      <p><b>R4.2 &middot; absent.</b> Can an independent party run that verification without the vendor&#x27;s cooperation?</p>
+      <ul>
+        <li><b>searched</b> grep -rniE &#x27;def verify|verification&#x27; graphiti_core/ --include=*.py<br>no verification surface exists, so there is nothing for an independent party to run</li>
+      </ul>
+      <p><b>R4.3 &middot; absent.</b> Would alteration of a past entry be detectable after the fact?</p>
+      <p>The bi-temporal design means the ordinary code path does not lose history, which is a different and weaker property than being able to show that nobody went around the code path.</p>
+      <ul>
+        <li><b>searched</b> grep -rniE &#x27;hash_chain|merkle|signature|tamper|checksum|digest&#x27; graphiti_core/ --include=*.py<br>no match; nothing binds one record to the next, so an edit made directly against the graph database leaves no evidence</li>
+        <li><b>source</b> <a href="https://github.com/getzep/graphiti/blob/a6e026f8fca27af9c1fc4cfe359c3834dc9655bb/graphiti_core/edges.py#L49-L54">graphiti_core/edges.py:49-54</a><br>an edge carries a uuid and timestamps but no digest of itself or of anything preceding it</li>
+      </ul>
+      <h3>How this was read</h3>
+      <p>Read of graphiti_core/edges.py, graphiti_core/nodes.py and graphiti_core/utils/maintenance/edge_operations.py at a6e026f, cloned from the public repository. Line numbers are that commit&#x27;s.</p>
+      <h3>If a verdict here is wrong</h3>
+      <p>Then it is wrong in the ordinary way readings are wrong, and every verdict cites a file and a line at a pinned commit precisely so that being wrong is cheap to demonstrate. The remedy is a pull request against <a href="https://github.com/troybrandonc-bit/machine-testimony/blob/main/census/subjects/graphiti.json">the subject file</a>, and it does not involve persuading anybody. Nobody applied for this and it is not a certification.</p>
+      <p>The <a href="/register/">standing register</a> carries every system side by side, and <a href="/assess/">the rubric</a> is the twenty requirements in full, free to apply to anything, including to this assessment.</p>
+    </div>
+  </div>
+</div>

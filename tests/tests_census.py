@@ -310,6 +310,41 @@ for _d in subject.load_all(SUBJ):
     check("%s appears on the register" % _d["name"], _d["name"] in _page)
 check("the author's own row is marked as such",
       "the author's own" in _page and 'class="own"' in _page)
+
+print("")
+print("== the per-system pages render the subject files and nothing else ==")
+# Same rule as the register, for the same reason. These pages carry the
+# citations a maintainer would dispute, so a page that has drifted from the
+# subject file it claims to render is worse than no page.
+_sdir = os.path.join(tempfile.mkdtemp(), "subjects")
+os.makedirs(_sdir, exist_ok=True)
+_r = subprocess.run([sys.executable,
+                     os.path.join(ROOT, "census", "build_subject_pages.py"),
+                     "--outdir", _sdir], capture_output=True, text=True)
+check("they regenerate", _r.returncode == 0, _r.stderr[-200:])
+_stale = []
+_orphans = []
+for _d in subject.load_all(SUBJ):
+    _name = "subject-%s.html" % _d["subject"]
+    _fresh = os.path.join(_sdir, _name)
+    _committed = os.path.join(ROOT, "pages", _name)
+    if not os.path.exists(_committed):
+        _orphans.append(_d["subject"])
+        continue
+    if io.open(_fresh, encoding="utf-8").read() != \
+            io.open(_committed, encoding="utf-8").read():
+        _stale.append(_d["subject"])
+check("every assessed system has a committed page", not _orphans, _orphans)
+check("what is committed is what the assessments produce", not _stale,
+      "run census/build_subject_pages.py for: %s" % _stale)
+
+# A page for a system that is no longer assessed would keep asserting verdicts
+# nobody stands behind.
+_known = {"subject-%s.html" % _d["subject"] for _d in subject.load_all(SUBJ)}
+_extra = sorted(f for f in os.listdir(os.path.join(ROOT, "pages"))
+                if f.startswith("subject-") and f not in _known)
+check("no page survives a subject being withdrawn", not _extra, _extra)
+
 check("the register says where a wrong verdict is fixed",
       "pull request" in _page and "troy@machinetestimony.com" in _page)
 check("the register names who read each row", "Read by" in _page)

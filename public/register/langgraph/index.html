@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LangGraph audit trail and approval records, assessed &ndash; Machine Testimony</title>
+<meta name="description" content="LangGraph read against 20 record-keeping requirements at commit 81bf17b. 6 present, 4 partial, 9 absent. Every verdict cites a file and a line, and a wrong one is fixed by a pull request.">
+<meta property="og:title" content="LangGraph audit trail and approval records, assessed">
+<meta property="og:description" content="LangGraph read against 20 record-keeping requirements at commit 81bf17b. 6 present, 4 partial, 9 absent. Every verdict cites a file and a line, and a wrong one is fixed by a pull request.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://machinetestimony.org/register/langgraph/">
+<meta property="og:image" content="https://machinetestimony.org/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="LangGraph audit trail and approval records, assessed">
+<meta name="twitter:description" content="LangGraph read against 20 record-keeping requirements at commit 81bf17b. 6 present, 4 partial, 9 absent. Every verdict cites a file and a line, and a wrong one is fixed by a pull request.">
+<meta name="twitter:image" content="https://machinetestimony.org/og.png">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/icon.png" type="image/png" sizes="512x512">
+<link rel="apple-touch-icon" href="/icon.png">
+<link rel="canonical" href="https://machinetestimony.org/register/langgraph/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+
+  /* Built to the NBER pattern, which is what a research bureau's site actually
+     looks like: one coloured band carrying the lockup, the utility links, the
+     navigation and the name together; the institution named large and centred
+     in a serif; outlined destination tiles; then a dense white body in two
+     columns with a rail. Serif for reading, sans for metadata, underlined
+     links, hairline rules, and far less air than a product page. */
+  :root{
+    --band:#123a6b; --band-2:#0e2f57; --band-ink:#ffffff; --band-dim:#b9cbe4;
+    --paper:#ffffff; --ink:#111417; --body:#24292d; --muted:#5f6a72;
+    --rule:#c9cfd4; --rule-soft:#e3e7ea; --label:#123a6b; --link:#123a6b;
+    --display:"Source Serif 4",Georgia,"Times New Roman",serif;
+    --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --band:#0c2340; --band-2:#081a2f; --band-ink:#f2f6fb; --band-dim:#9db3ce;
+      --paper:#0f1214; --ink:#eef0f2; --body:#c2c8cd; --muted:#8a939a;
+      --rule:#2c3236; --rule-soft:#1f2427; --label:#9dc0ef; --link:#9dc0ef;
+    }
+  }
+  :root[data-theme="dark"]{
+    --band:#0c2340; --band-2:#081a2f; --band-ink:#f2f6fb; --band-dim:#9db3ce;
+    --paper:#0f1214; --ink:#eef0f2; --body:#c2c8cd; --muted:#8a939a;
+    --rule:#2c3236; --rule-soft:#1f2427; --label:#9dc0ef; --link:#9dc0ef;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--body);
+    font-family:var(--display);font-size:17px;line-height:1.55;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 30px}
+  a{color:var(--link);text-decoration:underline;text-underline-offset:2px;
+    text-decoration-thickness:1px}
+  a:hover{text-decoration-thickness:2px}
+
+  /* ── the band: lockup, utility, nav and the name, all one field ─────── */
+  .band{background:var(--band);color:var(--band-ink);
+    background-image:linear-gradient(180deg,var(--band) 0%,var(--band-2) 100%)}
+  .band a{color:var(--band-ink);text-decoration:none}
+  .band a:hover{text-decoration:underline}
+  .topbar{display:flex;align-items:center;gap:26px;flex-wrap:wrap;padding:16px 0 12px}
+  .lockup{display:flex;align-items:center;gap:13px}
+  .lockup .mk{width:31px;height:31px;flex:none;color:var(--band-ink)}
+  .lockup .bar{width:2px;align-self:stretch;background:var(--band-ink);opacity:.55}
+  .lockup .nm{font-family:var(--sans);font-weight:700;font-size:11.5px;
+    letter-spacing:.085em;line-height:1.32;text-transform:uppercase}
+  .utility{margin-left:auto;font-family:var(--sans);font-size:13.5px;
+    display:flex;gap:12px;align-items:center;color:var(--band-dim)}
+  .utility .sep{opacity:.45}
+  nav.primary{border-bottom:1px solid rgba(255,255,255,.42);
+    display:flex;gap:26px;flex-wrap:wrap;padding:9px 0 11px;
+    font-family:var(--sans);font-size:14.5px}
+
+  .hero{text-align:center;padding:54px 0 46px}
+  .hero h1{font-family:var(--display);font-weight:700;color:var(--band-ink);
+    font-size:clamp(2.3rem,5.4vw,3.5rem);line-height:1.05;letter-spacing:-.012em;
+    margin:0}
+  .hero .strap{max-width:44rem;margin:20px auto 0;color:var(--band-ink);
+    font-size:clamp(1.02rem,2vw,1.24rem);line-height:1.45;opacity:.94}
+  .tiles{display:grid;gap:16px;margin:34px auto 0;max-width:52rem}
+  @media (min-width:700px){.tiles{grid-template-columns:1fr 1fr}}
+  .tile{border:1px solid rgba(255,255,255,.6);padding:17px 20px;
+    font-family:var(--sans);font-weight:600;font-size:15px;color:var(--band-ink);
+    text-decoration:none;display:block}
+  .tile:hover{background:rgba(255,255,255,.09);text-decoration:none}
+
+  /* ── the body: main column and a rail ───────────────────────────────── */
+  .main{display:grid;gap:34px;padding-top:40px;padding-bottom:10px}
+  /* Grid children default to min-width:auto and so refuse to shrink below
+     their content. On a phone this is a single column, so one wide code
+     block or table pushed the whole page past the viewport. The desktop
+     rule below says minmax(0,1fr) and was masking it above 960px. */
+  .main>*{min-width:0}
+  @media (min-width:960px){
+    .main{grid-template-columns:minmax(0,1fr) 21rem;gap:52px;align-items:start}
+  }
+  h2.label{font-family:var(--display);font-weight:700;color:var(--label);
+    font-size:1.06rem;margin:0 0 12px;padding-bottom:9px;
+    border-bottom:1px solid var(--rule)}
+  .block{margin:0 0 40px}
+  .block p{margin:0 0 15px;max-width:46rem}
+  .block p:last-child{margin-bottom:0}
+
+  table.levels{width:100%;border-collapse:collapse;font-size:16px}
+  table.levels th{text-align:left;font-family:var(--sans);font-size:11px;
+    letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+    font-weight:600;padding:0 14px 8px 0;border-bottom:1px solid var(--rule)}
+  table.levels td{padding:13px 14px 13px 0;border-bottom:1px solid var(--rule-soft);
+    vertical-align:top}
+  table.levels td.lv{font-family:var(--sans);font-weight:700;font-size:12.5px;
+    color:var(--label);white-space:nowrap;letter-spacing:.04em}
+  table.levels td.t{font-weight:600;color:var(--ink);min-width:15rem}
+
+  .entries{list-style:none;margin:0;padding:0}
+  .entries li{padding:16px 0;border-bottom:1px solid var(--rule-soft)}
+  .entries li:first-child{padding-top:0}
+  .entries h3{font-size:1.12rem;font-weight:600;margin:0 0 4px;line-height:1.32}
+  .entries h3 a{color:var(--ink)}
+  .entries .kind{font-family:var(--sans);font-weight:700;font-size:11px;
+    letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+    display:block;margin-bottom:5px}
+  .entries p{margin:0;font-size:16px;max-width:44rem}
+  .entries .meta{margin-top:7px;font-family:var(--sans);font-size:12.5px;
+    color:var(--muted)}
+
+  /* ── the rail ───────────────────────────────────────────────────────── */
+  .rail{border-top:3px solid var(--band);padding-top:14px}
+  .rail h2{font-family:var(--display);font-weight:700;color:var(--label);
+    font-size:1.02rem;margin:0 0 10px}
+  .rail .item{padding:13px 0;border-bottom:1px solid var(--rule-soft)}
+  .rail .item:last-of-type{border-bottom:0}
+  .rail .item b{display:block;font-weight:600;color:var(--ink);font-size:1rem;
+    margin-bottom:3px}
+  .rail .item p{margin:0;font-size:15px;color:var(--body)}
+  .rail .links{list-style:none;margin:16px 0 0;padding:16px 0 0;
+    border-top:1px solid var(--rule);font-family:var(--sans);font-size:14.5px}
+  .rail .links li{margin:0 0 7px}
+
+  footer.foot{border-top:3px solid var(--band);margin-top:34px;
+    padding:20px 0 46px;font-family:var(--sans);font-size:13.5px;color:var(--muted)}
+  footer.foot p{margin:0 0 4px}
+
+  /* Only what a prose page needs beyond the shared stylesheet. */
+  pre.snip{background:none;border-left:2px solid var(--rule);margin:0 0 16px;
+    padding:2px 0 2px 13px;font-size:13px;overflow-x:auto;max-width:100%;
+    font-family:var(--mono);line-height:1.55}
+  pre.snip.addr{overflow-x:visible;white-space:pre-wrap;overflow-wrap:anywhere}
+  .block h3{font-family:var(--display);font-weight:600;color:var(--ink);
+    font-size:1.08rem;margin:26px 0 8px}
+  .block ol,.block ul{margin:0 0 15px;padding-left:1.15rem;max-width:46rem}
+  .block li{margin:0 0 7px}
+  .dateline{font-family:var(--sans);font-size:12.5px;color:var(--muted);
+    margin:0 0 22px}
+  /* The one sentence a page is allowed to insist on. For a measured number the
+     rest of the page exists to explain, never for emphasis on an opinion. */
+  p.callout{border-left:2px solid var(--band);padding:10px 0 10px 14px;
+    margin:0 0 17px;max-width:46rem}
+  table.facts{width:100%;border-collapse:collapse;font-size:14px;margin:0 0 20px}
+  table.facts th{text-align:left;font-family:var(--sans);font-size:11px;
+    font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--muted);padding:0 12px 6px 0;white-space:nowrap;
+    vertical-align:top;width:8.5rem}
+  table.facts td{padding:0 0 6px;font-family:var(--mono);font-size:12.5px;
+    overflow-wrap:anywhere;border-bottom:1px solid var(--rule-soft)}
+  table.facts th{border-bottom:1px solid var(--rule-soft)}
+  /* The register's tables. A wide table scrolls inside its own box rather
+     than pushing the page sideways, which is the thing that made the site
+     unreadable on a phone the first time. */
+  .scroller{overflow-x:auto;max-width:100%;margin:0 0 16px}
+  table.reg{border-collapse:collapse;font-size:14px;min-width:34rem}
+  table.reg th{text-align:left;font-family:var(--sans);font-size:11px;
+    font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--muted);padding:0 14px 7px 0;white-space:nowrap;
+    border-bottom:1px solid var(--rule)}
+  table.reg td{padding:8px 14px 8px 0;border-bottom:1px solid var(--rule-soft);
+    vertical-align:top}
+  table.reg td.s{font-weight:600;white-space:nowrap}
+  table.reg td.n,table.reg td.lv,table.reg td.d{font-family:var(--sans);
+    font-size:12.5px;white-space:nowrap;color:var(--body)}
+  table.reg td.lv{font-weight:700}
+  table.reg td.v{font-family:var(--sans);font-size:11px;font-weight:700;
+    letter-spacing:.02em;white-space:nowrap;color:var(--muted)}
+  /* Absent is the finding, so it is the one that is not muted. */
+  table.reg td.v.n{color:var(--ink)}
+  table.reg td.w{font-family:var(--mono);font-size:12px;color:var(--muted);
+    overflow-wrap:anywhere}
+  table.reg tr.own td{background:#f4f7fb}
+  .tag{font-family:var(--sans);font-size:10.5px;font-weight:700;
+    letter-spacing:.04em;text-transform:uppercase;color:var(--muted);
+    white-space:nowrap}
+  @media (max-width:620px){
+    table.reg{font-size:13px}
+    table.reg td.w{font-size:11px}
+    pre.snip{font-size:12px}
+    table.facts th{width:6.6rem;font-size:10px}
+    table.facts td{font-size:11.5px}
+  }
+</style>
+</head>
+<body>
+
+<div class="band">
+  <div class="wrap">
+    <div class="topbar">
+      <div class="lockup">
+        <svg class="mk" viewBox="0 0 64 64" aria-hidden="true">
+          <g fill="currentColor">
+            <rect x="2" y="18" width="20" height="20"/>
+            <polygon points="2,38 22,38 2,56"/>
+            <rect x="30" y="22" width="20" height="20"/>
+            <polygon points="50,22 30,22 50,4"/>
+          </g>
+        </svg>
+        <div class="bar"></div>
+        <div class="nm">Machine<br>Testimony</div>
+      </div>
+      <div class="utility">
+        <a href="https://datatracker.ietf.org/doc/draft-clifford-testimony-record/">Specification</a>
+        <span class="sep">|</span>
+        <a href="https://github.com/troybrandonc-bit/machine-testimony">Validator and adapters</a>
+        <span class="sep">|</span>
+        <a href="/llms.txt">For machines</a>
+      </div>
+    </div>
+    <nav class="primary">
+      <a href="/#question">The question</a>
+      <a href="/#conformance">Conformance</a>
+      <a href="/#papers">Working papers</a>
+      <a href="/#census">Census</a>
+      <a href="/register/">The register</a>
+      <a href="/ask/">Ask your supplier</a>
+      <a href="/tamper-evidence/">Tamper evidence</a>
+      <a href="/assess/">Assess a system</a>
+      <a href="/#publications">Publications</a>
+      <a href="/eu-ai-act/">EU AI Act</a>
+      <a href="/underwriting/">Underwriting</a>
+      <a href="/demand/">Who asked</a>
+      <a href="/approval-binding/">Approval binding</a>
+      <a href="/approvals/">Approvals</a>
+      <a href="/check/">Check a record</a>
+      <a href="/implement/">Implementing it</a>
+      <a href="/#taking-part">Taking part</a>
+    </nav>
+  </div>
+</div>
+<div class="wrap main">
+  <div>
+    <p class="dateline">Assessment, 2026-09-04 &middot; 1.2.11 (81bf17b)</p>
+    <h2 class="label">What LangGraph records, and what it does not</h2>
+    <div class="block">
+      <table class="facts">
+        <tr><th>Read at</th><td><a href="https://github.com/langchain-ai/langgraph/tree/81bf17b23123e4ef8b9d5f49fa09a0122fc2edd1">81bf17b</a></td></tr>
+        <tr><th>Repository</th><td><a href="https://github.com/langchain-ai/langgraph">github.com/langchain-ai/langgraph</a></td></tr>
+        <tr><th>Licence</th><td>MIT</td></tr>
+        <tr><th>Assessed as</th><td>stores, acts</td></tr>
+        <tr><th>Reaches</th><td>no level yet</td></tr>
+        <tr><th>Read by</th><td>Troy Brandon Clifford</td></tr>
+      </table>
+      <div class="scroller">
+      <table class="reg">
+        <thead><tr><th>Level</th><th>Meets</th><th>What the level asks</th></tr></thead>
+        <tbody>
+          <tr><td class="s">TR-1 Recorded</td><td class="n">4/5</td><td class="w">The record exists and is append-only.</td></tr>
+          <tr><td class="s">TR-2 Explained</td><td class="n">0/4</td><td class="w">Every belief resolves to its evidence, and disagreements survive.</td></tr>
+          <tr><td class="s">TR-3 Gated</td><td class="n">2/7</td><td class="w">Actions carry a verdict, and approvals carry a name.</td></tr>
+          <tr><td class="s">TR-4 Verifiable</td><td class="n">0/3</td><td class="w">The record can be shown not to have changed.</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p>A count is requirements fully met out of those that apply. This system is assessed as <b>stores, acts</b>, and requirements outside that are not counted against it.</p>
+      <p class="callout">LangGraph is assessed as storing and acting but not deriving. It persists state the graph computed and executes nodes with effects, but the framework itself makes no claims about the world beyond what its user&#x27;s nodes put into a channel, so scoring it on the told-versus-inferred requirement would be scoring the user&#x27;s code rather than the framework. Its checkpointer is the most append-only structure in this census: every checkpoint is a new row keyed by its own id, carrying parent_checkpoint_id, so the history of a thread is a chain nothing overwrites. The gap is the same one every other system here has, in the same place. interrupt() genuinely pauses before a consequential step, and the value that resumes it is an arbitrary payload with nobody&#x27;s name on it.</p>
+      <h3>Every verdict, and what it rests on</h3>
+      <p>Twenty requirements, each stated as a capability rather than a format, so a system that holds the information in its own shape counts as having it. An <b>absent</b> verdict cites where the assessor looked and did not find it, which is the difference between a measurement and an accusation.</p>
+      <h3>TR-1 Recorded</h3>
+      <p><i>The record exists and is append-only.</i></p>
+      <p><b>R1.1 &middot; present.</b> When the system stores a fact, does it durably record when that happened?</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/langchain-ai/langgraph/blob/81bf17b23123e4ef8b9d5f49fa09a0122fc2edd1/libs/checkpoint/langgraph/checkpoint/base/__init__.py#L103-L104">libs/checkpoint/langgraph/checkpoint/base/__init__.py:103-104</a><br>Checkpoint.ts is the checkpoint timestamp in ISO 8601, held inside the checkpoint rather than in a log beside it</li>
+        <li><b>source</b> <a href="https://github.com/langchain-ai/langgraph/blob/81bf17b23123e4ef8b9d5f49fa09a0122fc2edd1/libs/checkpoint/langgraph/checkpoint/base/__init__.py#L50">libs/checkpoint/langgraph/checkpoint/base/__init__.py:50</a><br>CheckpointMetadata.step records the position in the run, so ordering survives even where clocks do not</li>
+      </ul>
+      <p><b>R1.2 &middot; present.</b> When a stored fact changes, is the previous version still readable?</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/langchain-ai/langgraph/blob/81bf17b23123e4ef8b9d5f49fa09a0122fc2edd1/libs/checkpoint-sqlite/langgraph/checkpoint/sqlite/__init__.py#L142-L151">libs/checkpoint-sqlite/langgraph/checkpoint/sqlite/__init__.py:142-151</a><br>the checkpoints table&#x27;s primary key is (thread_id, checkpoint_ns, checkpoint_id), so a new state is a new row and earlier checkpoints remain readable</li>
+        <li><b>source</b> <a href="https://github.com/langchain-ai/langgraph/blob/81bf17b23123e4ef8b9d5f49fa09a0122fc2edd1/libs/checkpoint-sqlite/langgraph/checkpoint/sqlite/__init__.py#L146">libs/checkpoint-sqlite/langgraph/checkpoint/sqlite/__init__.py:146</a><br>parent_checkpoint_id links each checkpoint to the one it came from, making the history of a thread a walkable chain</li>
+        <li><b>source</b> <a href="https://github.com/langchain-ai/langgraph/blob/81bf17b23123e4ef8b9d5f49fa09a0122fc2edd1/libs/checkpoint/langgraph/checkpoint/base/__init__.py#L42-L48">libs/checkpoint/langgraph/checkpoint/base/__init__.py:42-48</a><br>CheckpointMetadata.source distinguishes input, loop, update and fork, so a state produced by a manual update is distinguishable from one the graph computed</li>
+      </ul>
+      <p><b>R1.3 &middot; present.</b> Does the ordinary write path ever destroy what was previously recorded?</p>
+      <p>This is what the requirement asks for, arrived at because time travel and resumption need it rather than because a specification asked. The design goal differs and the property is the same.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/langchain-ai/langgraph/blob/81bf17b23123e4ef8b9d5f49fa09a0122fc2edd1/libs/checkpoint-sqlite/langgraph/checkpoint/sqlite/__init__.py#L142-L162">libs/checkpoint-sqlite/langgraph/checkpoint/sqlite/__init__.py:142-162</a><br>the ordinary write path inserts a checkpoint row and per-task rows into writes; neither is an update of an existing row</li>
+        <li><b>source</b> <a href="https://github.com/langchain-ai/langgraph/blob/81bf17b23123e4ef8b9d5f49fa09a0122fc2edd1/libs/checkpoint/langgraph/checkpoint/base/__init__.py#L42-L48">libs/checkpoint/langgraph/checkpoint/base/__init__.py:42-48</a><br>a correction is a checkpoint with source &#x27;update&#x27;, which is a new entry rather than an edit to an old one</li>
+      </ul>
+      <p><b>R1.4 &middot; present.</b> Are entries distinguishable by kind, or is everything one undifferentiated blob of text?</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/langchain-ai/langgraph/blob/81bf17b23123e4ef8b9d5f49fa09a0122fc2edd1/libs/checkpoint-sqlite/langgraph/checkpoint/sqlite/__init__.py#L142-L162">libs/checkpoint-sqlite/langgraph/checkpoint/sqlite/__init__.py:142-162</a><br>checkpoints and writes are separate tables: a state snapshot and the individual channel writes that produced it are different record kinds</li>
+        <li><b>source</b> <a href="https://github.com/langchain-ai/langgraph/blob/81bf17b23123e4ef8b9d5f49fa09a0122fc2edd1/libs/checkpoint/langgraph/checkpoint/base/__init__.py#L39-L58">libs/checkpoint/langgraph/checkpoint/base/__init__.py:39-58</a><br>checkpoint metadata is a typed structure with a closed source enum rather than a free-form dict</li>
+      </ul>
+      <p><b>R1.5 &middot; absent.</b> When data must be destroyed for a legal reason, is the destruction itself recorded?</p>
+      <p>delete_thread is the obvious call to reach for on a subject-erasure request, and it is the one place the otherwise append-only design gives way completely. A row recording the thread id, the time and the requester, with no state in it, would close this without retaining anything that was erased.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/langchain-ai/langgraph/blob/81bf17b23123e4ef8b9d5f49fa09a0122fc2edd1/libs/checkpoint-sqlite/langgraph/checkpoint/sqlite/__init__.py#L484-L496">libs/checkpoint-sqlite/langgraph/checkpoint/sqlite/__init__.py:484-496 delete_thread</a><br>issues DELETE FROM checkpoints WHERE thread_id = ?, and the same for the writes table</li>
+        <li><b>searched</b> grep -rniE &#x27;tombstone|deleted_at|erasure|audit&#x27; libs/checkpoint/ libs/checkpoint-sqlite/ --include=*.py<br>no match; after delete_thread the store is indistinguishable from one where the thread never ran</li>
+      </ul>
+      <h3>TR-2 Explained</h3>
+      <p><i>Every belief resolves to its evidence, and disagreements survive.</i></p>
+      <p><b>R2.1 &middot; partial.</b> Can the source a stored fact came from be recovered from the store, by following a link rather than by guessing?</p>
+      <p>Provenance within the run is genuinely good: which node wrote which channel at which step is recoverable. Provenance beyond the run is out of scope for the framework, so a value that came from a customer email is just a string in a channel.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/langchain-ai/langgraph/blob/81bf17b23123e4ef8b9d5f49fa09a0122fc2edd1/libs/checkpoint-sqlite/langgraph/checkpoint/sqlite/__init__.py#L152-L162">libs/checkpoint-sqlite/langgraph/checkpoint/sqlite/__init__.py:152-162</a><br>the writes table records thread_id, checkpoint_id, task_id, idx and channel for every write, so a value in state can be traced to the task and step that produced it</li>
+        <li><b>source</b> <a href="https://github.com/langchain-ai/langgraph/blob/81bf17b23123e4ef8b9d5f49fa09a0122fc2edd1/libs/checkpoint/langgraph/checkpoint/base/__init__.py#L105-L111">libs/checkpoint/langgraph/checkpoint/base/__init__.py:105-111</a><br>channel_values holds the values themselves with no reference to any external document, message or event they may represent</li>
+      </ul>
+      <p><b>R2.3 &middot; partial.</b> When two stored facts about the same proposition disagree, do both survive?</p>
+      <p>Both survive as history because nothing is deleted, which is more than most systems here manage. Neither survives as a live claim: reading the current state gives the winner, and finding the loser means walking back through checkpoints.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/langchain-ai/langgraph/blob/81bf17b23123e4ef8b9d5f49fa09a0122fc2edd1/libs/checkpoint-sqlite/langgraph/checkpoint/sqlite/__init__.py#L142-L151">libs/checkpoint-sqlite/langgraph/checkpoint/sqlite/__init__.py:142-151</a><br>an earlier checkpoint is never removed, so a value and a later value that disagrees with it both remain in the chain</li>
+        <li><b>source</b> <a href="https://github.com/langchain-ai/langgraph/blob/81bf17b23123e4ef8b9d5f49fa09a0122fc2edd1/libs/checkpoint/langgraph/checkpoint/base/__init__.py#L105-L111">libs/checkpoint/langgraph/checkpoint/base/__init__.py:105-111</a><br>channel_values is the state at that checkpoint; a channel holds one value, so the current state shows only the later of two disagreeing values</li>
+      </ul>
+      <p><b>R2.4 &middot; absent.</b> Is the disagreement itself queryable, or must a reader diff rows to notice it?</p>
+      <ul>
+        <li><b>searched</b> grep -rniE &#x27;class Conflict|contradict|disagree&#x27; libs/langgraph/langgraph/ libs/checkpoint/ --include=*.py<br>no conflict type, record or query surface. The framework has channels and reducers, not propositions, so there is nothing that could be in conflict</li>
+      </ul>
+      <p><b>R2.5 &middot; partial.</b> When a conflict is resolved, does the record say who resolved it and by what method?</p>
+      <p>A channel reducer resolving two writes is a resolution of sorts, decided by developer code, and that is a reasonable place for the decision to live. What is missing is attribution on the manual path: &#x27;update&#x27; says a person intervened without saying which person.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/langchain-ai/langgraph/blob/81bf17b23123e4ef8b9d5f49fa09a0122fc2edd1/libs/checkpoint/langgraph/checkpoint/base/__init__.py#L42-L48">libs/checkpoint/langgraph/checkpoint/base/__init__.py:42-48</a><br>a checkpoint created by a manual state update is labelled source &#x27;update&#x27;, so the fact that a value was overridden by hand is on the record</li>
+        <li><b>searched</b> grep -rniE &#x27;approver|approved_by|principal|user_id&#x27; libs/langgraph/langgraph/types.py<br>no match; the checkpoint records that an update happened and never who made it</li>
+      </ul>
+      <p>R2.2 is not assessed here, because this system is not in that business and marking it down for that would be dishonest.</p>
+      <h3>TR-3 Gated</h3>
+      <p><i>Actions carry a verdict, and approvals carry a name.</i></p>
+      <p><b>R3.1 &middot; present.</b> Does a consequential action produce a durable entry whether or not it ran?</p>
+      <p>The strongest answer to this requirement in the census. An action that was prepared and never ran is in durable storage rather than in memory, because resumption depends on it being there.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/langchain-ai/langgraph/blob/81bf17b23123e4ef8b9d5f49fa09a0122fc2edd1/libs/langgraph/langgraph/types.py#L851">libs/langgraph/langgraph/types.py:851 interrupt</a><br>interrupt(value) pauses the graph before the step completes, and the pending interrupt is part of the checkpointed state</li>
+        <li><b>source</b> <a href="https://github.com/langchain-ai/langgraph/blob/81bf17b23123e4ef8b9d5f49fa09a0122fc2edd1/libs/checkpoint-sqlite/langgraph/checkpoint/sqlite/__init__.py#L152-L162">libs/checkpoint-sqlite/langgraph/checkpoint/sqlite/__init__.py:152-162</a><br>the writes table records per-task writes against a checkpoint, so a task that was prepared and then paused leaves a durable row</li>
+        <li><b>source</b> <a href="https://github.com/langchain-ai/langgraph/blob/81bf17b23123e4ef8b9d5f49fa09a0122fc2edd1/libs/checkpoint/langgraph/checkpoint/base/__init__.py#L103-L104">libs/checkpoint/langgraph/checkpoint/base/__init__.py:103-104</a><br>the checkpoint carrying that state is written through the checkpointer, so unlike a run-scoped ledger it survives the process by default</li>
+      </ul>
+      <p><b>R3.2 &middot; present.</b> Does an action&#x27;s risk class come from somewhere the proposing model cannot write to?</p>
+      <p>Binary rather than graded, like the other frameworks here, and outside model control, which is the substance of the requirement.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/langchain-ai/langgraph/blob/81bf17b23123e4ef8b9d5f49fa09a0122fc2edd1/libs/langgraph/langgraph/types.py#L851-L864">libs/langgraph/langgraph/types.py:851-864 interrupt</a><br>the interrupt is placed in graph code by the developer, and interrupt_before is set at compile time; a model&#x27;s output cannot add, remove or satisfy one</li>
+      </ul>
+      <p><b>R3.3 &middot; partial.</b> Are refusals recorded as faithfully as permissions?</p>
+      <p>A refusal is durably recorded, because everything is, but only as a state change. Nothing distinguishes &#x27;the human said no&#x27; from any other value arriving in a channel.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/langchain-ai/langgraph/blob/81bf17b23123e4ef8b9d5f49fa09a0122fc2edd1/libs/langgraph/langgraph/types.py#L799-L823">libs/langgraph/langgraph/types.py:799-823 Command</a><br>Command.resume carries the value that resumes an interrupt, and a refusal is expressed as whatever value the application chooses to send</li>
+        <li><b>source</b> <a href="https://github.com/langchain-ai/langgraph/blob/81bf17b23123e4ef8b9d5f49fa09a0122fc2edd1/libs/checkpoint/langgraph/checkpoint/base/__init__.py#L42-L48">libs/checkpoint/langgraph/checkpoint/base/__init__.py:42-48</a><br>the resulting checkpoint is labelled source &#x27;update&#x27; or &#x27;loop&#x27; like any other, with nothing marking it as a refusal</li>
+      </ul>
+      <p><b>R3.4 &middot; absent.</b> Does a refusal record why it was refused?</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/langchain-ai/langgraph/blob/81bf17b23123e4ef8b9d5f49fa09a0122fc2edd1/libs/langgraph/langgraph/types.py#L823">libs/langgraph/langgraph/types.py:823</a><br>resume is typed as dict[str, Any] | Any | None, so a reason can be passed but has no defined place and no defined shape</li>
+        <li><b>searched</b> grep -rniE &#x27;reason|rejection&#x27; libs/langgraph/langgraph/types.py<br>no field named reason or rejection exists on Command or on the interrupt types; any reason an application supplies is an opaque value the framework does not model</li>
+      </ul>
+      <p><b>R3.5 &middot; absent.</b> Does an approval identify a person or a named role holder?</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/langchain-ai/langgraph/blob/81bf17b23123e4ef8b9d5f49fa09a0122fc2edd1/libs/langgraph/langgraph/types.py#L799-L823">libs/langgraph/langgraph/types.py:799-823 Command</a><br>the resume payload identifies which interrupt it answers and carries a value; there is no field for who answered</li>
+        <li><b>searched</b> grep -rniE &#x27;approver|approved_by|principal|user_id&#x27; libs/langgraph/langgraph/types.py<br>no match anywhere in the types module that defines the human-in-the-loop surface</li>
+      </ul>
+      <p><b>R3.6 &middot; absent.</b> Does the approver&#x27;s identity come from the authentication layer rather than from something the model can write?</p>
+      <ul>
+        <li><b>searched</b> grep -rniE &#x27;approver|approved_by|principal|user_id&#x27; libs/langgraph/langgraph/types.py<br>no identity is captured at the resume boundary, so none can come from an authentication layer</li>
+        <li><b>source</b> <a href="https://github.com/langchain-ai/langgraph/blob/81bf17b23123e4ef8b9d5f49fa09a0122fc2edd1/libs/langgraph/langgraph/types.py#L823">libs/langgraph/langgraph/types.py:823</a><br>resume is an arbitrary value supplied by the caller, which is exactly the request-body-shaped input the specification warns against treating as identity</li>
+      </ul>
+      <p><b>R3.7 &middot; absent.</b> Is the acting agent prevented from approving its own action?</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/langchain-ai/langgraph/blob/81bf17b23123e4ef8b9d5f49fa09a0122fc2edd1/libs/langgraph/langgraph/types.py#L799-L823">libs/langgraph/langgraph/types.py:799-823</a><br>any code holding the thread can send a Command(resume=...), including the same process that raised the interrupt, so a graph can resume its own pause without a person</li>
+        <li><b>searched</b> grep -rniE &#x27;approver|approved_by|principal|user_id&#x27; libs/langgraph/langgraph/types.py<br>with no principals modelled, a proposer and an approver cannot be told apart</li>
+      </ul>
+      <h3>TR-4 Verifiable</h3>
+      <p><i>The record can be shown not to have changed.</i></p>
+      <p><b>R4.1 &middot; absent.</b> Does the system publish a scheme under which the record&#x27;s past state can be verified?</p>
+      <p>parent_checkpoint_id makes the history a chain in structure, which is most of the shape of a hash chain and none of its force: the links are ids rather than digests, so they order the record without binding it.</p>
+      <ul>
+        <li><b>searched</b> grep -rniE &#x27;hash_chain|merkle|tamper|checksum|signature&#x27; libs/checkpoint/ libs/langgraph/langgraph/ --include=*.py<br>matches are Python introspection only (inspect.signature, function signature docs); no integrity scheme is defined or published</li>
+      </ul>
+      <p><b>R4.2 &middot; absent.</b> Can an independent party run that verification without the vendor&#x27;s cooperation?</p>
+      <ul>
+        <li><b>searched</b> grep -rniE &#x27;def verify|verification&#x27; libs/checkpoint/ --include=*.py<br>no verification surface exists, so there is nothing for an independent party to run</li>
+      </ul>
+      <p><b>R4.3 &middot; absent.</b> Would alteration of a past entry be detectable after the fact?</p>
+      <p>This is the closest any assessed system comes to being one change away from TR-4 alone: a digest of each checkpoint that included its parent&#x27;s digest would make the existing chain tamper-evident without altering the write path.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/langchain-ai/langgraph/blob/81bf17b23123e4ef8b9d5f49fa09a0122fc2edd1/libs/checkpoint-sqlite/langgraph/checkpoint/sqlite/__init__.py#L142-L151">libs/checkpoint-sqlite/langgraph/checkpoint/sqlite/__init__.py:142-151</a><br>the checkpoint column is an opaque BLOB with no digest over it or over its parent, so editing a stored checkpoint leaves the chain looking intact</li>
+        <li><b>searched</b> grep -rniE &#x27;hash_chain|merkle|tamper|checksum&#x27; libs/checkpoint/ --include=*.py<br>no match</li>
+      </ul>
+      <h3>How this was read</h3>
+      <p>Read of libs/checkpoint/langgraph/checkpoint/base/__init__.py, libs/checkpoint-sqlite/langgraph/checkpoint/sqlite/__init__.py and libs/langgraph/langgraph/types.py at 81bf17b, cloned from the public repository. Line numbers are that commit&#x27;s.</p>
+      <h3>If a verdict here is wrong</h3>
+      <p>Then it is wrong in the ordinary way readings are wrong, and every verdict cites a file and a line at a pinned commit precisely so that being wrong is cheap to demonstrate. The remedy is a pull request against <a href="https://github.com/troybrandonc-bit/machine-testimony/blob/main/census/subjects/langgraph.json">the subject file</a>, and it does not involve persuading anybody. Nobody applied for this and it is not a certification.</p>
+      <p>The <a href="/register/">standing register</a> carries every system side by side, and <a href="/assess/">the rubric</a> is the twenty requirements in full, free to apply to anything, including to this assessment.</p>
+    </div>
+  </div>
+</div>
+<footer class="foot">
+  <div class="wrap">
+    <p>Editor: Troy Clifford. Operated by Garnet Taurus Ltd.</p>
+    <p>Specification text CC BY 4.0. Schema and tools MIT.</p>
+    <p>Machine Testimony is a research programme, not a registered institute or a certification body.</p>
+  </div>
+</footer>
+
+</body>
+</html>

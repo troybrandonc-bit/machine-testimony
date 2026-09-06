@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AutoGen audit trail and approval records, assessed &ndash; Machine Testimony</title>
+<meta name="description" content="AutoGen read against 20 record-keeping requirements at commit 027ecf0. 4 present, 5 partial, 10 absent. Every verdict cites a file and a line, and a wrong one is fixed by a pull request.">
+<meta property="og:title" content="AutoGen audit trail and approval records, assessed">
+<meta property="og:description" content="AutoGen read against 20 record-keeping requirements at commit 027ecf0. 4 present, 5 partial, 10 absent. Every verdict cites a file and a line, and a wrong one is fixed by a pull request.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://machinetestimony.org/register/autogen/">
+<meta property="og:image" content="https://machinetestimony.org/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AutoGen audit trail and approval records, assessed">
+<meta name="twitter:description" content="AutoGen read against 20 record-keeping requirements at commit 027ecf0. 4 present, 5 partial, 10 absent. Every verdict cites a file and a line, and a wrong one is fixed by a pull request.">
+<meta name="twitter:image" content="https://machinetestimony.org/og.png">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/icon.png" type="image/png" sizes="512x512">
+<link rel="apple-touch-icon" href="/icon.png">
+<link rel="canonical" href="https://machinetestimony.org/register/autogen/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+
+  /* Built to the NBER pattern, which is what a research bureau's site actually
+     looks like: one coloured band carrying the lockup, the utility links, the
+     navigation and the name together; the institution named large and centred
+     in a serif; outlined destination tiles; then a dense white body in two
+     columns with a rail. Serif for reading, sans for metadata, underlined
+     links, hairline rules, and far less air than a product page. */
+  :root{
+    --band:#123a6b; --band-2:#0e2f57; --band-ink:#ffffff; --band-dim:#b9cbe4;
+    --paper:#ffffff; --ink:#111417; --body:#24292d; --muted:#5f6a72;
+    --rule:#c9cfd4; --rule-soft:#e3e7ea; --label:#123a6b; --link:#123a6b;
+    --display:"Source Serif 4",Georgia,"Times New Roman",serif;
+    --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --band:#0c2340; --band-2:#081a2f; --band-ink:#f2f6fb; --band-dim:#9db3ce;
+      --paper:#0f1214; --ink:#eef0f2; --body:#c2c8cd; --muted:#8a939a;
+      --rule:#2c3236; --rule-soft:#1f2427; --label:#9dc0ef; --link:#9dc0ef;
+    }
+  }
+  :root[data-theme="dark"]{
+    --band:#0c2340; --band-2:#081a2f; --band-ink:#f2f6fb; --band-dim:#9db3ce;
+    --paper:#0f1214; --ink:#eef0f2; --body:#c2c8cd; --muted:#8a939a;
+    --rule:#2c3236; --rule-soft:#1f2427; --label:#9dc0ef; --link:#9dc0ef;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--body);
+    font-family:var(--display);font-size:17px;line-height:1.55;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 30px}
+  a{color:var(--link);text-decoration:underline;text-underline-offset:2px;
+    text-decoration-thickness:1px}
+  a:hover{text-decoration-thickness:2px}
+
+  /* ── the band: lockup, utility, nav and the name, all one field ─────── */
+  .band{background:var(--band);color:var(--band-ink);
+    background-image:linear-gradient(180deg,var(--band) 0%,var(--band-2) 100%)}
+  .band a{color:var(--band-ink);text-decoration:none}
+  .band a:hover{text-decoration:underline}
+  .topbar{display:flex;align-items:center;gap:26px;flex-wrap:wrap;padding:16px 0 12px}
+  .lockup{display:flex;align-items:center;gap:13px}
+  .lockup .mk{width:31px;height:31px;flex:none;color:var(--band-ink)}
+  .lockup .bar{width:2px;align-self:stretch;background:var(--band-ink);opacity:.55}
+  .lockup .nm{font-family:var(--sans);font-weight:700;font-size:11.5px;
+    letter-spacing:.085em;line-height:1.32;text-transform:uppercase}
+  .utility{margin-left:auto;font-family:var(--sans);font-size:13.5px;
+    display:flex;gap:12px;align-items:center;color:var(--band-dim)}
+  .utility .sep{opacity:.45}
+  nav.primary{border-bottom:1px solid rgba(255,255,255,.42);
+    display:flex;gap:26px;flex-wrap:wrap;padding:9px 0 11px;
+    font-family:var(--sans);font-size:14.5px}
+
+  .hero{text-align:center;padding:54px 0 46px}
+  .hero h1{font-family:var(--display);font-weight:700;color:var(--band-ink);
+    font-size:clamp(2.3rem,5.4vw,3.5rem);line-height:1.05;letter-spacing:-.012em;
+    margin:0}
+  .hero .strap{max-width:44rem;margin:20px auto 0;color:var(--band-ink);
+    font-size:clamp(1.02rem,2vw,1.24rem);line-height:1.45;opacity:.94}
+  .tiles{display:grid;gap:16px;margin:34px auto 0;max-width:52rem}
+  @media (min-width:700px){.tiles{grid-template-columns:1fr 1fr}}
+  .tile{border:1px solid rgba(255,255,255,.6);padding:17px 20px;
+    font-family:var(--sans);font-weight:600;font-size:15px;color:var(--band-ink);
+    text-decoration:none;display:block}
+  .tile:hover{background:rgba(255,255,255,.09);text-decoration:none}
+
+  /* ── the body: main column and a rail ───────────────────────────────── */
+  .main{display:grid;gap:34px;padding-top:40px;padding-bottom:10px}
+  /* Grid children default to min-width:auto and so refuse to shrink below
+     their content. On a phone this is a single column, so one wide code
+     block or table pushed the whole page past the viewport. The desktop
+     rule below says minmax(0,1fr) and was masking it above 960px. */
+  .main>*{min-width:0}
+  @media (min-width:960px){
+    .main{grid-template-columns:minmax(0,1fr) 21rem;gap:52px;align-items:start}
+  }
+  h2.label{font-family:var(--display);font-weight:700;color:var(--label);
+    font-size:1.06rem;margin:0 0 12px;padding-bottom:9px;
+    border-bottom:1px solid var(--rule)}
+  .block{margin:0 0 40px}
+  .block p{margin:0 0 15px;max-width:46rem}
+  .block p:last-child{margin-bottom:0}
+
+  table.levels{width:100%;border-collapse:collapse;font-size:16px}
+  table.levels th{text-align:left;font-family:var(--sans);font-size:11px;
+    letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+    font-weight:600;padding:0 14px 8px 0;border-bottom:1px solid var(--rule)}
+  table.levels td{padding:13px 14px 13px 0;border-bottom:1px solid var(--rule-soft);
+    vertical-align:top}
+  table.levels td.lv{font-family:var(--sans);font-weight:700;font-size:12.5px;
+    color:var(--label);white-space:nowrap;letter-spacing:.04em}
+  table.levels td.t{font-weight:600;color:var(--ink);min-width:15rem}
+
+  .entries{list-style:none;margin:0;padding:0}
+  .entries li{padding:16px 0;border-bottom:1px solid var(--rule-soft)}
+  .entries li:first-child{padding-top:0}
+  .entries h3{font-size:1.12rem;font-weight:600;margin:0 0 4px;line-height:1.32}
+  .entries h3 a{color:var(--ink)}
+  .entries .kind{font-family:var(--sans);font-weight:700;font-size:11px;
+    letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+    display:block;margin-bottom:5px}
+  .entries p{margin:0;font-size:16px;max-width:44rem}
+  .entries .meta{margin-top:7px;font-family:var(--sans);font-size:12.5px;
+    color:var(--muted)}
+
+  /* ── the rail ───────────────────────────────────────────────────────── */
+  .rail{border-top:3px solid var(--band);padding-top:14px}
+  .rail h2{font-family:var(--display);font-weight:700;color:var(--label);
+    font-size:1.02rem;margin:0 0 10px}
+  .rail .item{padding:13px 0;border-bottom:1px solid var(--rule-soft)}
+  .rail .item:last-of-type{border-bottom:0}
+  .rail .item b{display:block;font-weight:600;color:var(--ink);font-size:1rem;
+    margin-bottom:3px}
+  .rail .item p{margin:0;font-size:15px;color:var(--body)}
+  .rail .links{list-style:none;margin:16px 0 0;padding:16px 0 0;
+    border-top:1px solid var(--rule);font-family:var(--sans);font-size:14.5px}
+  .rail .links li{margin:0 0 7px}
+
+  footer.foot{border-top:3px solid var(--band);margin-top:34px;
+    padding:20px 0 46px;font-family:var(--sans);font-size:13.5px;color:var(--muted)}
+  footer.foot p{margin:0 0 4px}
+
+  /* Only what a prose page needs beyond the shared stylesheet. */
+  pre.snip{background:none;border-left:2px solid var(--rule);margin:0 0 16px;
+    padding:2px 0 2px 13px;font-size:13px;overflow-x:auto;max-width:100%;
+    font-family:var(--mono);line-height:1.55}
+  pre.snip.addr{overflow-x:visible;white-space:pre-wrap;overflow-wrap:anywhere}
+  .block h3{font-family:var(--display);font-weight:600;color:var(--ink);
+    font-size:1.08rem;margin:26px 0 8px}
+  .block ol,.block ul{margin:0 0 15px;padding-left:1.15rem;max-width:46rem}
+  .block li{margin:0 0 7px}
+  .dateline{font-family:var(--sans);font-size:12.5px;color:var(--muted);
+    margin:0 0 22px}
+  /* The one sentence a page is allowed to insist on. For a measured number the
+     rest of the page exists to explain, never for emphasis on an opinion. */
+  p.callout{border-left:2px solid var(--band);padding:10px 0 10px 14px;
+    margin:0 0 17px;max-width:46rem}
+  table.facts{width:100%;border-collapse:collapse;font-size:14px;margin:0 0 20px}
+  table.facts th{text-align:left;font-family:var(--sans);font-size:11px;
+    font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--muted);padding:0 12px 6px 0;white-space:nowrap;
+    vertical-align:top;width:8.5rem}
+  table.facts td{padding:0 0 6px;font-family:var(--mono);font-size:12.5px;
+    overflow-wrap:anywhere;border-bottom:1px solid var(--rule-soft)}
+  table.facts th{border-bottom:1px solid var(--rule-soft)}
+  /* The register's tables. A wide table scrolls inside its own box rather
+     than pushing the page sideways, which is the thing that made the site
+     unreadable on a phone the first time. */
+  .scroller{overflow-x:auto;max-width:100%;margin:0 0 16px}
+  table.reg{border-collapse:collapse;font-size:14px;min-width:34rem}
+  table.reg th{text-align:left;font-family:var(--sans);font-size:11px;
+    font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--muted);padding:0 14px 7px 0;white-space:nowrap;
+    border-bottom:1px solid var(--rule)}
+  table.reg td{padding:8px 14px 8px 0;border-bottom:1px solid var(--rule-soft);
+    vertical-align:top}
+  table.reg td.s{font-weight:600;white-space:nowrap}
+  table.reg td.n,table.reg td.lv,table.reg td.d{font-family:var(--sans);
+    font-size:12.5px;white-space:nowrap;color:var(--body)}
+  table.reg td.lv{font-weight:700}
+  table.reg td.v{font-family:var(--sans);font-size:11px;font-weight:700;
+    letter-spacing:.02em;white-space:nowrap;color:var(--muted)}
+  /* Absent is the finding, so it is the one that is not muted. */
+  table.reg td.v.n{color:var(--ink)}
+  table.reg td.w{font-family:var(--mono);font-size:12px;color:var(--muted);
+    overflow-wrap:anywhere}
+  table.reg tr.own td{background:#f4f7fb}
+  .tag{font-family:var(--sans);font-size:10.5px;font-weight:700;
+    letter-spacing:.04em;text-transform:uppercase;color:var(--muted);
+    white-space:nowrap}
+  @media (max-width:620px){
+    table.reg{font-size:13px}
+    table.reg td.w{font-size:11px}
+    pre.snip{font-size:12px}
+    table.facts th{width:6.6rem;font-size:10px}
+    table.facts td{font-size:11.5px}
+  }
+</style>
+</head>
+<body>
+
+<div class="band">
+  <div class="wrap">
+    <div class="topbar">
+      <div class="lockup">
+        <svg class="mk" viewBox="0 0 64 64" aria-hidden="true">
+          <g fill="currentColor">
+            <rect x="2" y="18" width="20" height="20"/>
+            <polygon points="2,38 22,38 2,56"/>
+            <rect x="30" y="22" width="20" height="20"/>
+            <polygon points="50,22 30,22 50,4"/>
+          </g>
+        </svg>
+        <div class="bar"></div>
+        <div class="nm">Machine<br>Testimony</div>
+      </div>
+      <div class="utility">
+        <a href="https://datatracker.ietf.org/doc/draft-clifford-testimony-record/">Specification</a>
+        <span class="sep">|</span>
+        <a href="https://github.com/troybrandonc-bit/machine-testimony">Validator and adapters</a>
+        <span class="sep">|</span>
+        <a href="/llms.txt">For machines</a>
+      </div>
+    </div>
+    <nav class="primary">
+      <a href="/#question">The question</a>
+      <a href="/#conformance">Conformance</a>
+      <a href="/#papers">Working papers</a>
+      <a href="/#census">Census</a>
+      <a href="/register/">The register</a>
+      <a href="/ask/">Ask your supplier</a>
+      <a href="/tamper-evidence/">Tamper evidence</a>
+      <a href="/assess/">Assess a system</a>
+      <a href="/#publications">Publications</a>
+      <a href="/eu-ai-act/">EU AI Act</a>
+      <a href="/underwriting/">Underwriting</a>
+      <a href="/demand/">Who asked</a>
+      <a href="/approval-binding/">Approval binding</a>
+      <a href="/approvals/">Approvals</a>
+      <a href="/check/">Check a record</a>
+      <a href="/implement/">Implementing it</a>
+      <a href="/#taking-part">Taking part</a>
+    </nav>
+  </div>
+</div>
+<div class="wrap main">
+  <div>
+    <p class="dateline">Assessment, 2026-09-04 &middot; autogen-core 0.7.5 (027ecf0)</p>
+    <h2 class="label">What AutoGen records, and what it does not</h2>
+    <div class="block">
+      <table class="facts">
+        <tr><th>Read at</th><td><a href="https://github.com/microsoft/autogen/tree/027ecf0a379bcc1d09956d46d12d44a3ad9cee14">027ecf0</a></td></tr>
+        <tr><th>Repository</th><td><a href="https://github.com/microsoft/autogen">github.com/microsoft/autogen</a></td></tr>
+        <tr><th>Licence</th><td>MIT (code, LICENSE-CODE); CC BY 4.0 (documentation, LICENSE)</td></tr>
+        <tr><th>Assessed as</th><td>stores, acts</td></tr>
+        <tr><th>Reaches</th><td>no level yet</td></tr>
+        <tr><th>Read by</th><td>Troy Brandon Clifford</td></tr>
+      </table>
+      <div class="scroller">
+      <table class="reg">
+        <thead><tr><th>Level</th><th>Meets</th><th>What the level asks</th></tr></thead>
+        <tbody>
+          <tr><td class="s">TR-1 Recorded</td><td class="n">1/5</td><td class="w">The record exists and is append-only.</td></tr>
+          <tr><td class="s">TR-2 Explained</td><td class="n">2/4</td><td class="w">Every belief resolves to its evidence, and disagreements survive.</td></tr>
+          <tr><td class="s">TR-3 Gated</td><td class="n">1/7</td><td class="w">Actions carry a verdict, and approvals carry a name.</td></tr>
+          <tr><td class="s">TR-4 Verifiable</td><td class="n">0/3</td><td class="w">The record can be shown not to have changed.</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p>A count is requirements fully met out of those that apply. This system is assessed as <b>stores, acts</b>, and requirements outside that are not counted against it.</p>
+      <p class="callout">AutoGen is assessed as storing and acting but not deriving: its memory holds what a caller puts in it, and any inference is done by the user&#x27;s agents rather than by the framework. It has the best-modelled approval request in this census. ApprovalRequest carries the code and the full LLM context, and ApprovalResponse requires a reason rather than accepting a bare boolean, which is more than the other frameworks here ask for. Two things stop that translating into a record. The reason reaches the transcript interpolated into an output string on a result carrying exit_code=1, which is the same shape an execution error takes, so a refusal and a crash are indistinguishable to anything reading afterwards. And ApprovalResponse has no approver, so the fact that a person decided is not recorded even though the fact that a decision happened is. On the memory side, the built-in ListMemory is an append-only in-process list whose contents carry no timestamp at all.</p>
+      <h3>Every verdict, and what it rests on</h3>
+      <p>Twenty requirements, each stated as a capability rather than a format, so a system that holds the information in its own shape counts as having it. An <b>absent</b> verdict cites where the assessor looked and did not find it, which is the difference between a measurement and an accusation.</p>
+      <h3>TR-1 Recorded</h3>
+      <p><i>The record exists and is append-only.</i></p>
+      <p><b>R1.1 &middot; absent.</b> When the system stores a fact, does it durably record when that happened?</p>
+      <p>A caller can put a timestamp in metadata, but then the caller is recording it, not the system, and nothing obliges or checks it. Reading a MemoryContent back gives no answer to when it was stored.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/microsoft/autogen/blob/027ecf0a379bcc1d09956d46d12d44a3ad9cee14/python/packages/autogen-core/src/autogen_core/memory/_base_memory.py#L26-L36">python/packages/autogen-core/src/autogen_core/memory/_base_memory.py:26-36 MemoryContent</a><br>the fields are content, mime_type and an optional free-form metadata dict. There is no time field of any kind</li>
+        <li><b>searched</b> grep -rniE &#x27;created_at|timestamp|\bts\b&#x27; python/packages/autogen-core/src/autogen_core/memory/ --include=*.py<br>no match anywhere in the memory package</li>
+      </ul>
+      <p><b>R1.2 &middot; partial.</b> When a stored fact changes, is the previous version still readable?</p>
+      <p>Nothing is overwritten, because nothing can be. What keeps this from a pass is that readable later is bounded by the life of the process: the built-in implementation is a list, and preserving it across a restart is the embedding application&#x27;s problem.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/microsoft/autogen/blob/027ecf0a379bcc1d09956d46d12d44a3ad9cee14/python/packages/autogen-core/src/autogen_core/memory/_base_memory.py#L78-L131">python/packages/autogen-core/src/autogen_core/memory/_base_memory.py:78-131</a><br>the Memory API is update_context, query, add, clear and close. There is no update or delete-one operation, so a stored item cannot be changed and nothing is lost to a change</li>
+        <li><b>source</b> <a href="https://github.com/microsoft/autogen/blob/027ecf0a379bcc1d09956d46d12d44a3ad9cee14/python/packages/autogen-core/src/autogen_core/memory/_list_memory.py#L22-L23">python/packages/autogen-core/src/autogen_core/memory/_list_memory.py:22-23</a><br>ListMemory is documented as a &quot;Simple chronological list-based memory implementation&quot; holding its contents in the component config, with no persistence of its own</li>
+      </ul>
+      <p><b>R1.3 &middot; present.</b> Does the ordinary write path ever destroy what was previously recorded?</p>
+      <p>The ordinary write path is append-only by omission rather than by design: there is no update operation to misuse. That is still the property the requirement asks for.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/microsoft/autogen/blob/027ecf0a379bcc1d09956d46d12d44a3ad9cee14/python/packages/autogen-core/src/autogen_core/memory/_base_memory.py#L114">python/packages/autogen-core/src/autogen_core/memory/_base_memory.py:114</a><br>add is the only write, and it appends a MemoryContent</li>
+        <li><b>source</b> <a href="https://github.com/microsoft/autogen/blob/027ecf0a379bcc1d09956d46d12d44a3ad9cee14/python/packages/autogen-core/src/autogen_core/memory/_base_memory.py#L125">python/packages/autogen-core/src/autogen_core/memory/_base_memory.py:125 clear</a><br>the only destructive call empties the whole store and is an explicit operation rather than part of writing</li>
+      </ul>
+      <p><b>R1.4 &middot; partial.</b> Are entries distinguishable by kind, or is everything one undifferentiated blob of text?</p>
+      <p>The type discriminates the format of the payload, not the kind of record. A claim, the document it came from and a note about an action are all one MemoryContent differing only in what a caller happened to put in metadata.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/microsoft/autogen/blob/027ecf0a379bcc1d09956d46d12d44a3ad9cee14/python/packages/autogen-core/src/autogen_core/memory/_base_memory.py#L26-L36">python/packages/autogen-core/src/autogen_core/memory/_base_memory.py:26-36</a><br>MemoryContent carries a mime_type, so text, JSON, images and binary are distinguishable</li>
+        <li><b>source</b> <a href="https://github.com/microsoft/autogen/blob/027ecf0a379bcc1d09956d46d12d44a3ad9cee14/python/packages/autogen-core/src/autogen_core/memory/_base_memory.py#L35-L36">python/packages/autogen-core/src/autogen_core/memory/_base_memory.py:35-36</a><br>everything beyond the content and its MIME type goes into an untyped metadata dict</li>
+      </ul>
+      <p><b>R1.5 &middot; absent.</b> When data must be destroyed for a legal reason, is the destruction itself recorded?</p>
+      <p>There is also no way to remove one subject&#x27;s items short of clearing everything, which makes an erasure request an all-or-nothing operation on the whole memory.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/microsoft/autogen/blob/027ecf0a379bcc1d09956d46d12d44a3ad9cee14/python/packages/autogen-core/src/autogen_core/memory/_base_memory.py#L125">python/packages/autogen-core/src/autogen_core/memory/_base_memory.py:125 clear</a><br>&quot;Clear all entries from memory&quot;; the whole store goes and nothing marks that it did</li>
+        <li><b>searched</b> grep -rniE &#x27;tombstone|deleted_at|erasure|audit&#x27; python/packages/autogen-core/src/autogen_core/memory/ --include=*.py<br>no match</li>
+      </ul>
+      <h3>TR-2 Explained</h3>
+      <p><i>Every belief resolves to its evidence, and disagreements survive.</i></p>
+      <p><b>R2.1 &middot; absent.</b> Can the source a stored fact came from be recovered from the store, by following a link rather than by guessing?</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/microsoft/autogen/blob/027ecf0a379bcc1d09956d46d12d44a3ad9cee14/python/packages/autogen-core/src/autogen_core/memory/_base_memory.py#L26-L36">python/packages/autogen-core/src/autogen_core/memory/_base_memory.py:26-36</a><br>MemoryContent has no field referring to a message, document or event</li>
+        <li><b>searched</b> grep -rniE &#x27;source|provenance|origin|message_id&#x27; python/packages/autogen-core/src/autogen_core/memory/ --include=*.py<br>the only matches are docstrings about cleaning up resources; nothing in the package models where a memory came from</li>
+      </ul>
+      <p><b>R2.3 &middot; present.</b> When two stored facts about the same proposition disagree, do both survive?</p>
+      <p>Both survive, which is what this asks. They survive because nothing in the framework is capable of noticing they disagree, which is what the next requirement is for.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/microsoft/autogen/blob/027ecf0a379bcc1d09956d46d12d44a3ad9cee14/python/packages/autogen-core/src/autogen_core/memory/_base_memory.py#L78-L125">python/packages/autogen-core/src/autogen_core/memory/_base_memory.py:78-125</a><br>the API offers no update and no consolidation step, so two items that disagree both remain in the list until the store is cleared</li>
+        <li><b>source</b> <a href="https://github.com/microsoft/autogen/blob/027ecf0a379bcc1d09956d46d12d44a3ad9cee14/python/packages/autogen-core/src/autogen_core/memory/_list_memory.py#L22-L23">python/packages/autogen-core/src/autogen_core/memory/_list_memory.py:22-23</a><br>the list is chronological and nothing prunes it</li>
+      </ul>
+      <p><b>R2.4 &middot; absent.</b> Is the disagreement itself queryable, or must a reader diff rows to notice it?</p>
+      <ul>
+        <li><b>searched</b> grep -rniE &#x27;class Conflict|contradict|disagree&#x27; python/packages/autogen-core/src/autogen_core/ python/packages/autogen-agentchat/src/ --include=*.py<br>the two matches are code comments about type variance and content types; there is no conflict record, id or query surface</li>
+      </ul>
+      <p><b>R2.5 &middot; present.</b> When a conflict is resolved, does the record say who resolved it and by what method?</p>
+      <p>A pass under the specification&#x27;s own wording, which records resolution only if it happens. This is the conservative outcome, reached because the framework declines to do the thing rather than because it does it carefully.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/microsoft/autogen/blob/027ecf0a379bcc1d09956d46d12d44a3ad9cee14/python/packages/autogen-core/src/autogen_core/memory/_base_memory.py#L78-L125">python/packages/autogen-core/src/autogen_core/memory/_base_memory.py:78-125</a><br>nothing in the memory API resolves anything: there is no update, no merge and no consolidation, so a disagreement is never decided and never silently closed</li>
+      </ul>
+      <p>R2.2 is not assessed here, because this system is not in that business and marking it down for that would be dishonest.</p>
+      <h3>TR-3 Gated</h3>
+      <p><i>Actions carry a verdict, and approvals carry a name.</i></p>
+      <p><b>R3.1 &middot; partial.</b> Does a consequential action produce a durable entry whether or not it ran?</p>
+      <p>The attempt is recorded and the record is well populated. Whether it outlives the run is not the framework&#x27;s decision.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/microsoft/autogen/blob/027ecf0a379bcc1d09956d46d12d44a3ad9cee14/python/packages/autogen-agentchat/src/autogen_agentchat/agents/_code_executor_agent.py#L69-L73">python/packages/autogen-agentchat/src/autogen_agentchat/agents/_code_executor_agent.py:69-73 ApprovalRequest</a><br>the request carries the code to be executed and the full LLM message context, so what was proposed is captured in detail</li>
+        <li><b>source</b> <a href="https://github.com/microsoft/autogen/blob/027ecf0a379bcc1d09956d46d12d44a3ad9cee14/python/packages/autogen-agentchat/src/autogen_agentchat/agents/_code_executor_agent.py#L711-L714">python/packages/autogen-agentchat/src/autogen_agentchat/agents/_code_executor_agent.py:711-714</a><br>a denied execution returns a result rather than vanishing, so the attempt leaves a trace in the conversation</li>
+        <li><b>searched</b> grep -rniE &#x27;tombstone|deleted_at|erasure|audit&#x27; python/packages/autogen-core/src/autogen_core/memory/ --include=*.py<br>no durable record type exists; the trace is a message in the team&#x27;s history, persisted only if the embedding application saves that state</li>
+      </ul>
+      <p><b>R3.2 &middot; present.</b> Does an action&#x27;s risk class come from somewhere the proposing model cannot write to?</p>
+      <p>Scoped to code execution rather than to tool calls in general, which is narrower than the requirement imagines but is genuinely outside model control within that scope.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/microsoft/autogen/blob/027ecf0a379bcc1d09956d46d12d44a3ad9cee14/python/packages/autogen-agentchat/src/autogen_agentchat/agents/_code_executor_agent.py#L140-L141">python/packages/autogen-agentchat/src/autogen_agentchat/agents/_code_executor_agent.py:140-141</a><br>approval_func is supplied when constructing the CodeExecutorAgent and is &quot;called before each code execution to get approval&quot;; the model cannot install, remove or satisfy it</li>
+        <li><b>source</b> <a href="https://github.com/microsoft/autogen/blob/027ecf0a379bcc1d09956d46d12d44a3ad9cee14/python/packages/autogen-agentchat/src/autogen_agentchat/agents/_code_executor_agent.py#L84-L86">python/packages/autogen-agentchat/src/autogen_agentchat/agents/_code_executor_agent.py:84-86</a><br>the function types are fixed in the framework, so the gate&#x27;s shape is not something a plan can negotiate</li>
+      </ul>
+      <p><b>R3.3 &middot; partial.</b> Are refusals recorded as faithfully as permissions?</p>
+      <p>The refusal is recorded in the same channel and with the same standing as a permission, which satisfies the letter. Structurally it is indistinguishable from a crash: anyone counting failed executions afterwards will count refusals among them.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/microsoft/autogen/blob/027ecf0a379bcc1d09956d46d12d44a3ad9cee14/python/packages/autogen-agentchat/src/autogen_agentchat/agents/_code_executor_agent.py#L711-L714">python/packages/autogen-agentchat/src/autogen_agentchat/agents/_code_executor_agent.py:711-714</a><br>a refusal returns exit_code=1 with output &quot;Code execution was not approved. Reason: ...&quot;, which is the same result type and the same exit code an execution error produces</li>
+      </ul>
+      <p><b>R3.4 &middot; partial.</b> Does a refusal record why it was refused?</p>
+      <p>Requiring the reason at the point of decision is better than every other framework assessed here, two of which discard it or never model it. What is lost is the structure: a reason parsed back out of a formatted sentence is not a machine-readable field.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/microsoft/autogen/blob/027ecf0a379bcc1d09956d46d12d44a3ad9cee14/python/packages/autogen-agentchat/src/autogen_agentchat/agents/_code_executor_agent.py#L76-L80">python/packages/autogen-agentchat/src/autogen_agentchat/agents/_code_executor_agent.py:76-80 ApprovalResponse</a><br>reason is a required str, not an optional one, so a refusal cannot be expressed without giving a reason</li>
+        <li><b>source</b> <a href="https://github.com/microsoft/autogen/blob/027ecf0a379bcc1d09956d46d12d44a3ad9cee14/python/packages/autogen-agentchat/src/autogen_agentchat/agents/_code_executor_agent.py#L714">python/packages/autogen-agentchat/src/autogen_agentchat/agents/_code_executor_agent.py:714</a><br>the reason reaches the record interpolated into an output string; the ApprovalResponse object itself is not retained</li>
+      </ul>
+      <p><b>R3.5 &middot; absent.</b> Does an approval identify a person or a named role holder?</p>
+      <p>The documented example function reads a console prompt and returns ApprovalResponse(approved=True, reason=&#x27;Approved by user&#x27;). The word user appears in the reason string, which is a sentence rather than an identity.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/microsoft/autogen/blob/027ecf0a379bcc1d09956d46d12d44a3ad9cee14/python/packages/autogen-agentchat/src/autogen_agentchat/agents/_code_executor_agent.py#L76-L80">python/packages/autogen-agentchat/src/autogen_agentchat/agents/_code_executor_agent.py:76-80</a><br>ApprovalResponse is approved: bool and reason: str. There is no field for who approved</li>
+        <li><b>searched</b> grep -rn &#x27;approver|approved_by|principal&#x27; python/packages/autogen-agentchat/src/autogen_agentchat/agents/_code_executor_agent.py<br>no match; the module that defines the approval surface models no person</li>
+      </ul>
+      <p><b>R3.6 &middot; absent.</b> Does the approver&#x27;s identity come from the authentication layer rather than from something the model can write?</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/microsoft/autogen/blob/027ecf0a379bcc1d09956d46d12d44a3ad9cee14/python/packages/autogen-agentchat/src/autogen_agentchat/agents/_code_executor_agent.py#L84-L86">python/packages/autogen-agentchat/src/autogen_agentchat/agents/_code_executor_agent.py:84-86</a><br>an approval function is any callable matching the signature, invoked in-process with no authentication step anywhere in the path</li>
+        <li><b>searched</b> grep -rn &#x27;approver|approved_by|principal&#x27; python/packages/autogen-agentchat/src/autogen_agentchat/agents/_code_executor_agent.py<br>no identity is captured, so none can be sourced from an authentication layer</li>
+      </ul>
+      <p><b>R3.7 &middot; absent.</b> Is the acting agent prevented from approving its own action?</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/microsoft/autogen/blob/027ecf0a379bcc1d09956d46d12d44a3ad9cee14/python/packages/autogen-agentchat/src/autogen_agentchat/agents/_code_executor_agent.py#L84-L86">python/packages/autogen-agentchat/src/autogen_agentchat/agents/_code_executor_agent.py:84-86</a><br>the approval function is ordinary code in the same process as the agent, so a one-line function returning approved=True satisfies the gate with no person involved and nothing distinguishing that from a human decision</li>
+        <li><b>searched</b> grep -rn &#x27;approver|approved_by|principal&#x27; python/packages/autogen-agentchat/src/autogen_agentchat/agents/_code_executor_agent.py<br>with no principals modelled, a proposer and an approver cannot be told apart</li>
+      </ul>
+      <h3>TR-4 Verifiable</h3>
+      <p><i>The record can be shown not to have changed.</i></p>
+      <p><b>R4.1 &middot; absent.</b> Does the system publish a scheme under which the record&#x27;s past state can be verified?</p>
+      <ul>
+        <li><b>searched</b> grep -rniE &#x27;hash_chain|merkle|tamper|checksum&#x27; python/packages/autogen-core/src/ python/packages/autogen-agentchat/src/ --include=*.py<br>no match; no integrity scheme is defined or published</li>
+      </ul>
+      <p><b>R4.2 &middot; absent.</b> Can an independent party run that verification without the vendor&#x27;s cooperation?</p>
+      <ul>
+        <li><b>searched</b> grep -rniE &#x27;hash_chain|merkle|tamper|checksum&#x27; python/packages/autogen-core/src/ python/packages/autogen-agentchat/src/ --include=*.py<br>no scheme exists, so there is nothing for an independent party to run</li>
+      </ul>
+      <p><b>R4.3 &middot; absent.</b> Would alteration of a past entry be detectable after the fact?</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/microsoft/autogen/blob/027ecf0a379bcc1d09956d46d12d44a3ad9cee14/python/packages/autogen-core/src/autogen_core/memory/_list_memory.py#L22-L23">python/packages/autogen-core/src/autogen_core/memory/_list_memory.py:22-23</a><br>memory is a plain in-process list with no digest over its contents, so alteration is not merely undetectable, it leaves nothing behind to detect</li>
+        <li><b>searched</b> grep -rniE &#x27;hash_chain|merkle|tamper|checksum&#x27; python/packages/autogen-core/src/ --include=*.py<br>no match</li>
+      </ul>
+      <h3>How this was read</h3>
+      <p>Read of python/packages/autogen-core/src/autogen_core/memory/_base_memory.py and _list_memory.py, and python/packages/autogen-agentchat/src/autogen_agentchat/agents/_code_executor_agent.py at 027ecf0, cloned from the public repository. Line numbers are that commit&#x27;s.</p>
+      <h3>If a verdict here is wrong</h3>
+      <p>Then it is wrong in the ordinary way readings are wrong, and every verdict cites a file and a line at a pinned commit precisely so that being wrong is cheap to demonstrate. The remedy is a pull request against <a href="https://github.com/troybrandonc-bit/machine-testimony/blob/main/census/subjects/autogen.json">the subject file</a>, and it does not involve persuading anybody. Nobody applied for this and it is not a certification.</p>
+      <p>The <a href="/register/">standing register</a> carries every system side by side, and <a href="/assess/">the rubric</a> is the twenty requirements in full, free to apply to anything, including to this assessment.</p>
+    </div>
+  </div>
+</div>
+<footer class="foot">
+  <div class="wrap">
+    <p>Editor: Troy Clifford. Operated by Garnet Taurus Ltd.</p>
+    <p>Specification text CC BY 4.0. Schema and tools MIT.</p>
+    <p>Machine Testimony is a research programme, not a registered institute or a certification body.</p>
+  </div>
+</footer>
+
+</body>
+</html>

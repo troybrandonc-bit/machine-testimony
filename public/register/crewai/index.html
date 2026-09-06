@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CrewAI audit trail and approval records, assessed &ndash; Machine Testimony</title>
+<meta name="description" content="CrewAI read against 20 record-keeping requirements at commit 92eb5f9. 2 present, 7 partial, 11 absent. Every verdict cites a file and a line, and a wrong one is fixed by a pull request.">
+<meta property="og:title" content="CrewAI audit trail and approval records, assessed">
+<meta property="og:description" content="CrewAI read against 20 record-keeping requirements at commit 92eb5f9. 2 present, 7 partial, 11 absent. Every verdict cites a file and a line, and a wrong one is fixed by a pull request.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://machinetestimony.org/register/crewai/">
+<meta property="og:image" content="https://machinetestimony.org/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="CrewAI audit trail and approval records, assessed">
+<meta name="twitter:description" content="CrewAI read against 20 record-keeping requirements at commit 92eb5f9. 2 present, 7 partial, 11 absent. Every verdict cites a file and a line, and a wrong one is fixed by a pull request.">
+<meta name="twitter:image" content="https://machinetestimony.org/og.png">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/icon.png" type="image/png" sizes="512x512">
+<link rel="apple-touch-icon" href="/icon.png">
+<link rel="canonical" href="https://machinetestimony.org/register/crewai/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+
+  /* Built to the NBER pattern, which is what a research bureau's site actually
+     looks like: one coloured band carrying the lockup, the utility links, the
+     navigation and the name together; the institution named large and centred
+     in a serif; outlined destination tiles; then a dense white body in two
+     columns with a rail. Serif for reading, sans for metadata, underlined
+     links, hairline rules, and far less air than a product page. */
+  :root{
+    --band:#123a6b; --band-2:#0e2f57; --band-ink:#ffffff; --band-dim:#b9cbe4;
+    --paper:#ffffff; --ink:#111417; --body:#24292d; --muted:#5f6a72;
+    --rule:#c9cfd4; --rule-soft:#e3e7ea; --label:#123a6b; --link:#123a6b;
+    --display:"Source Serif 4",Georgia,"Times New Roman",serif;
+    --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --band:#0c2340; --band-2:#081a2f; --band-ink:#f2f6fb; --band-dim:#9db3ce;
+      --paper:#0f1214; --ink:#eef0f2; --body:#c2c8cd; --muted:#8a939a;
+      --rule:#2c3236; --rule-soft:#1f2427; --label:#9dc0ef; --link:#9dc0ef;
+    }
+  }
+  :root[data-theme="dark"]{
+    --band:#0c2340; --band-2:#081a2f; --band-ink:#f2f6fb; --band-dim:#9db3ce;
+    --paper:#0f1214; --ink:#eef0f2; --body:#c2c8cd; --muted:#8a939a;
+    --rule:#2c3236; --rule-soft:#1f2427; --label:#9dc0ef; --link:#9dc0ef;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--body);
+    font-family:var(--display);font-size:17px;line-height:1.55;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 30px}
+  a{color:var(--link);text-decoration:underline;text-underline-offset:2px;
+    text-decoration-thickness:1px}
+  a:hover{text-decoration-thickness:2px}
+
+  /* ── the band: lockup, utility, nav and the name, all one field ─────── */
+  .band{background:var(--band);color:var(--band-ink);
+    background-image:linear-gradient(180deg,var(--band) 0%,var(--band-2) 100%)}
+  .band a{color:var(--band-ink);text-decoration:none}
+  .band a:hover{text-decoration:underline}
+  .topbar{display:flex;align-items:center;gap:26px;flex-wrap:wrap;padding:16px 0 12px}
+  .lockup{display:flex;align-items:center;gap:13px}
+  .lockup .mk{width:31px;height:31px;flex:none;color:var(--band-ink)}
+  .lockup .bar{width:2px;align-self:stretch;background:var(--band-ink);opacity:.55}
+  .lockup .nm{font-family:var(--sans);font-weight:700;font-size:11.5px;
+    letter-spacing:.085em;line-height:1.32;text-transform:uppercase}
+  .utility{margin-left:auto;font-family:var(--sans);font-size:13.5px;
+    display:flex;gap:12px;align-items:center;color:var(--band-dim)}
+  .utility .sep{opacity:.45}
+  nav.primary{border-bottom:1px solid rgba(255,255,255,.42);
+    display:flex;gap:26px;flex-wrap:wrap;padding:9px 0 11px;
+    font-family:var(--sans);font-size:14.5px}
+
+  .hero{text-align:center;padding:54px 0 46px}
+  .hero h1{font-family:var(--display);font-weight:700;color:var(--band-ink);
+    font-size:clamp(2.3rem,5.4vw,3.5rem);line-height:1.05;letter-spacing:-.012em;
+    margin:0}
+  .hero .strap{max-width:44rem;margin:20px auto 0;color:var(--band-ink);
+    font-size:clamp(1.02rem,2vw,1.24rem);line-height:1.45;opacity:.94}
+  .tiles{display:grid;gap:16px;margin:34px auto 0;max-width:52rem}
+  @media (min-width:700px){.tiles{grid-template-columns:1fr 1fr}}
+  .tile{border:1px solid rgba(255,255,255,.6);padding:17px 20px;
+    font-family:var(--sans);font-weight:600;font-size:15px;color:var(--band-ink);
+    text-decoration:none;display:block}
+  .tile:hover{background:rgba(255,255,255,.09);text-decoration:none}
+
+  /* ── the body: main column and a rail ───────────────────────────────── */
+  .main{display:grid;gap:34px;padding-top:40px;padding-bottom:10px}
+  /* Grid children default to min-width:auto and so refuse to shrink below
+     their content. On a phone this is a single column, so one wide code
+     block or table pushed the whole page past the viewport. The desktop
+     rule below says minmax(0,1fr) and was masking it above 960px. */
+  .main>*{min-width:0}
+  @media (min-width:960px){
+    .main{grid-template-columns:minmax(0,1fr) 21rem;gap:52px;align-items:start}
+  }
+  h2.label{font-family:var(--display);font-weight:700;color:var(--label);
+    font-size:1.06rem;margin:0 0 12px;padding-bottom:9px;
+    border-bottom:1px solid var(--rule)}
+  .block{margin:0 0 40px}
+  .block p{margin:0 0 15px;max-width:46rem}
+  .block p:last-child{margin-bottom:0}
+
+  table.levels{width:100%;border-collapse:collapse;font-size:16px}
+  table.levels th{text-align:left;font-family:var(--sans);font-size:11px;
+    letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+    font-weight:600;padding:0 14px 8px 0;border-bottom:1px solid var(--rule)}
+  table.levels td{padding:13px 14px 13px 0;border-bottom:1px solid var(--rule-soft);
+    vertical-align:top}
+  table.levels td.lv{font-family:var(--sans);font-weight:700;font-size:12.5px;
+    color:var(--label);white-space:nowrap;letter-spacing:.04em}
+  table.levels td.t{font-weight:600;color:var(--ink);min-width:15rem}
+
+  .entries{list-style:none;margin:0;padding:0}
+  .entries li{padding:16px 0;border-bottom:1px solid var(--rule-soft)}
+  .entries li:first-child{padding-top:0}
+  .entries h3{font-size:1.12rem;font-weight:600;margin:0 0 4px;line-height:1.32}
+  .entries h3 a{color:var(--ink)}
+  .entries .kind{font-family:var(--sans);font-weight:700;font-size:11px;
+    letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+    display:block;margin-bottom:5px}
+  .entries p{margin:0;font-size:16px;max-width:44rem}
+  .entries .meta{margin-top:7px;font-family:var(--sans);font-size:12.5px;
+    color:var(--muted)}
+
+  /* ── the rail ───────────────────────────────────────────────────────── */
+  .rail{border-top:3px solid var(--band);padding-top:14px}
+  .rail h2{font-family:var(--display);font-weight:700;color:var(--label);
+    font-size:1.02rem;margin:0 0 10px}
+  .rail .item{padding:13px 0;border-bottom:1px solid var(--rule-soft)}
+  .rail .item:last-of-type{border-bottom:0}
+  .rail .item b{display:block;font-weight:600;color:var(--ink);font-size:1rem;
+    margin-bottom:3px}
+  .rail .item p{margin:0;font-size:15px;color:var(--body)}
+  .rail .links{list-style:none;margin:16px 0 0;padding:16px 0 0;
+    border-top:1px solid var(--rule);font-family:var(--sans);font-size:14.5px}
+  .rail .links li{margin:0 0 7px}
+
+  footer.foot{border-top:3px solid var(--band);margin-top:34px;
+    padding:20px 0 46px;font-family:var(--sans);font-size:13.5px;color:var(--muted)}
+  footer.foot p{margin:0 0 4px}
+
+  /* Only what a prose page needs beyond the shared stylesheet. */
+  pre.snip{background:none;border-left:2px solid var(--rule);margin:0 0 16px;
+    padding:2px 0 2px 13px;font-size:13px;overflow-x:auto;max-width:100%;
+    font-family:var(--mono);line-height:1.55}
+  pre.snip.addr{overflow-x:visible;white-space:pre-wrap;overflow-wrap:anywhere}
+  .block h3{font-family:var(--display);font-weight:600;color:var(--ink);
+    font-size:1.08rem;margin:26px 0 8px}
+  .block ol,.block ul{margin:0 0 15px;padding-left:1.15rem;max-width:46rem}
+  .block li{margin:0 0 7px}
+  .dateline{font-family:var(--sans);font-size:12.5px;color:var(--muted);
+    margin:0 0 22px}
+  /* The one sentence a page is allowed to insist on. For a measured number the
+     rest of the page exists to explain, never for emphasis on an opinion. */
+  p.callout{border-left:2px solid var(--band);padding:10px 0 10px 14px;
+    margin:0 0 17px;max-width:46rem}
+  table.facts{width:100%;border-collapse:collapse;font-size:14px;margin:0 0 20px}
+  table.facts th{text-align:left;font-family:var(--sans);font-size:11px;
+    font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--muted);padding:0 12px 6px 0;white-space:nowrap;
+    vertical-align:top;width:8.5rem}
+  table.facts td{padding:0 0 6px;font-family:var(--mono);font-size:12.5px;
+    overflow-wrap:anywhere;border-bottom:1px solid var(--rule-soft)}
+  table.facts th{border-bottom:1px solid var(--rule-soft)}
+  /* The register's tables. A wide table scrolls inside its own box rather
+     than pushing the page sideways, which is the thing that made the site
+     unreadable on a phone the first time. */
+  .scroller{overflow-x:auto;max-width:100%;margin:0 0 16px}
+  table.reg{border-collapse:collapse;font-size:14px;min-width:34rem}
+  table.reg th{text-align:left;font-family:var(--sans);font-size:11px;
+    font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--muted);padding:0 14px 7px 0;white-space:nowrap;
+    border-bottom:1px solid var(--rule)}
+  table.reg td{padding:8px 14px 8px 0;border-bottom:1px solid var(--rule-soft);
+    vertical-align:top}
+  table.reg td.s{font-weight:600;white-space:nowrap}
+  table.reg td.n,table.reg td.lv,table.reg td.d{font-family:var(--sans);
+    font-size:12.5px;white-space:nowrap;color:var(--body)}
+  table.reg td.lv{font-weight:700}
+  table.reg td.v{font-family:var(--sans);font-size:11px;font-weight:700;
+    letter-spacing:.02em;white-space:nowrap;color:var(--muted)}
+  /* Absent is the finding, so it is the one that is not muted. */
+  table.reg td.v.n{color:var(--ink)}
+  table.reg td.w{font-family:var(--mono);font-size:12px;color:var(--muted);
+    overflow-wrap:anywhere}
+  table.reg tr.own td{background:#f4f7fb}
+  .tag{font-family:var(--sans);font-size:10.5px;font-weight:700;
+    letter-spacing:.04em;text-transform:uppercase;color:var(--muted);
+    white-space:nowrap}
+  @media (max-width:620px){
+    table.reg{font-size:13px}
+    table.reg td.w{font-size:11px}
+    pre.snip{font-size:12px}
+    table.facts th{width:6.6rem;font-size:10px}
+    table.facts td{font-size:11.5px}
+  }
+</style>
+</head>
+<body>
+
+<div class="band">
+  <div class="wrap">
+    <div class="topbar">
+      <div class="lockup">
+        <svg class="mk" viewBox="0 0 64 64" aria-hidden="true">
+          <g fill="currentColor">
+            <rect x="2" y="18" width="20" height="20"/>
+            <polygon points="2,38 22,38 2,56"/>
+            <rect x="30" y="22" width="20" height="20"/>
+            <polygon points="50,22 30,22 50,4"/>
+          </g>
+        </svg>
+        <div class="bar"></div>
+        <div class="nm">Machine<br>Testimony</div>
+      </div>
+      <div class="utility">
+        <a href="https://datatracker.ietf.org/doc/draft-clifford-testimony-record/">Specification</a>
+        <span class="sep">|</span>
+        <a href="https://github.com/troybrandonc-bit/machine-testimony">Validator and adapters</a>
+        <span class="sep">|</span>
+        <a href="/llms.txt">For machines</a>
+      </div>
+    </div>
+    <nav class="primary">
+      <a href="/#question">The question</a>
+      <a href="/#conformance">Conformance</a>
+      <a href="/#papers">Working papers</a>
+      <a href="/#census">Census</a>
+      <a href="/register/">The register</a>
+      <a href="/ask/">Ask your supplier</a>
+      <a href="/tamper-evidence/">Tamper evidence</a>
+      <a href="/assess/">Assess a system</a>
+      <a href="/#publications">Publications</a>
+      <a href="/eu-ai-act/">EU AI Act</a>
+      <a href="/underwriting/">Underwriting</a>
+      <a href="/demand/">Who asked</a>
+      <a href="/approval-binding/">Approval binding</a>
+      <a href="/approvals/">Approvals</a>
+      <a href="/check/">Check a record</a>
+      <a href="/implement/">Implementing it</a>
+      <a href="/#taking-part">Taking part</a>
+    </nav>
+  </div>
+</div>
+<div class="wrap main">
+  <div>
+    <p class="dateline">Assessment, 2026-09-04 &middot; main at 92eb5f9</p>
+    <h2 class="label">What CrewAI records, and what it does not</h2>
+    <div class="block">
+      <table class="facts">
+        <tr><th>Read at</th><td><a href="https://github.com/crewAIInc/crewAI/tree/92eb5f91830cde5a7c4be921cb295c5523649d13">92eb5f9</a></td></tr>
+        <tr><th>Repository</th><td><a href="https://github.com/crewAIInc/crewAI">github.com/crewAIInc/crewAI</a></td></tr>
+        <tr><th>Licence</th><td>MIT</td></tr>
+        <tr><th>Assessed as</th><td>stores, derives, acts</td></tr>
+        <tr><th>Reaches</th><td>no level yet</td></tr>
+        <tr><th>Read by</th><td>Troy Brandon Clifford</td></tr>
+      </table>
+      <div class="scroller">
+      <table class="reg">
+        <thead><tr><th>Level</th><th>Meets</th><th>What the level asks</th></tr></thead>
+        <tbody>
+          <tr><td class="s">TR-1 Recorded</td><td class="n">1/5</td><td class="w">The record exists and is append-only.</td></tr>
+          <tr><td class="s">TR-2 Explained</td><td class="n">0/5</td><td class="w">Every belief resolves to its evidence, and disagreements survive.</td></tr>
+          <tr><td class="s">TR-3 Gated</td><td class="n">1/7</td><td class="w">Actions carry a verdict, and approvals carry a name.</td></tr>
+          <tr><td class="s">TR-4 Verifiable</td><td class="n">0/3</td><td class="w">The record can be shown not to have changed.</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p>A count is requirements fully met out of those that apply. This system is assessed as <b>stores, derives, acts</b>, and requirements outside that are not counted against it.</p>
+      <p class="callout">CrewAI has a real gate and a real consolidation step, and both are worth understanding before deploying it where a record matters. The gate is the before_tool_call hook: developer code, filtered by tool name, that can block a call, which satisfies the requirement that risk not be decided by the model. What it does with a block is the problem. HookAborted carries a reason, run_before_tool_call_hooks discards it, and the executor substitutes the fixed string &#x27;Tool execution blocked by hook&#x27;, which goes back to the model as an ordinary tool result. The refusal survives as narration in a transcript rather than as a decision anybody can query. On the memory side, an LLM emits a keep/update/delete plan over existing records and updates overwrite content in place while preserving the record id and created_at, with no history kept anywhere. Both behaviours are reasonable for a framework optimising for agents that work; neither leaves a record.</p>
+      <h3>Every verdict, and what it rests on</h3>
+      <p>Twenty requirements, each stated as a capability rather than a format, so a system that holds the information in its own shape counts as having it. An <b>absent</b> verdict cites where the assessor looked and did not find it, which is the difference between a measurement and an accusation.</p>
+      <h3>TR-1 Recorded</h3>
+      <p><i>The record exists and is append-only.</i></p>
+      <p><b>R1.1 &middot; present.</b> When the system stores a fact, does it durably record when that happened?</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/crewAIInc/crewAI/blob/92eb5f91830cde5a7c4be921cb295c5523649d13/lib/crewai/src/crewai/memory/types.py#L46">lib/crewai/src/crewai/memory/types.py:46</a><br>MemoryRecord.created_at is a required datetime on the record itself</li>
+        <li><b>source</b> <a href="https://github.com/crewAIInc/crewAI/blob/92eb5f91830cde5a7c4be921cb295c5523649d13/lib/crewai/src/crewai/memory/storage/lancedb_storage.py#L255">lib/crewai/src/crewai/memory/storage/lancedb_storage.py:255</a><br>created_at is serialised into the stored row, so it survives the process</li>
+      </ul>
+      <p><b>R1.2 &middot; absent.</b> When a stored fact changes, is the previous version still readable?</p>
+      <p>Once a record is updated, what it previously said is gone. Preserving created_at while replacing content is worse than either alternative for a reader: the record looks as old as the original claim while carrying the new one.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/crewAIInc/crewAI/blob/92eb5f91830cde5a7c4be921cb295c5523649d13/lib/crewai/src/crewai/memory/storage/lancedb_storage.py#L320">lib/crewai/src/crewai/memory/storage/lancedb_storage.py:320</a><br>&quot;Update a record by ID. Preserves created_at, updates last_accessed.&quot; The content field is replaced and the prior value is not written anywhere</li>
+        <li><b>searched</b> grep -rniE &#x27;def history|version|previous_value|old_value|supersed&#x27; lib/crewai/src/crewai/memory/ --include=*.py<br>the only matches concern LanceDB table versions and optimistic concurrency retries; there is no memory history table, no version column and no revision chain</li>
+      </ul>
+      <p><b>R1.3 &middot; absent.</b> Does the ordinary write path ever destroy what was previously recorded?</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/crewAIInc/crewAI/blob/92eb5f91830cde5a7c4be921cb295c5523649d13/lib/crewai/src/crewai/memory/encoding_flow.py#L457-L473">lib/crewai/src/crewai/memory/encoding_flow.py:457-473</a><br>the encoding flow builds a replacement MemoryRecord reusing the existing id and created_at, and calls self._storage.update(updated). This is the ordinary write path, not an administrative one</li>
+        <li><b>source</b> <a href="https://github.com/crewAIInc/crewAI/blob/92eb5f91830cde5a7c4be921cb295c5523649d13/lib/crewai/src/crewai/memory/encoding_flow.py#L455">lib/crewai/src/crewai/memory/encoding_flow.py:455</a><br>dedup_deletes are applied and counted in records_deleted, so the same path also destroys records outright</li>
+        <li><b>searched</b> grep -rniE &#x27;def history|previous_value|old_value|supersed&#x27; lib/crewai/src/crewai/memory/ --include=*.py<br>no match; nothing retains what was overwritten or deleted</li>
+      </ul>
+      <p><b>R1.4 &middot; partial.</b> Are entries distinguishable by kind, or is everything one undifferentiated blob of text?</p>
+      <p>There is more than one kind of record in the system, but within memory a claim and whatever produced it are the same shape, distinguished only by whatever a caller happened to put in the metadata dict.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/crewAIInc/crewAI/blob/92eb5f91830cde5a7c4be921cb295c5523649d13/lib/crewai/src/crewai/memory/types.py#L20">lib/crewai/src/crewai/memory/types.py:20 MemoryRecord</a><br>one record class carrying content, scope, categories, an arbitrary metadata dict, importance and source</li>
+        <li><b>source</b> lib/crewai/src/crewai/memory/storage/kickoff_task_outputs_storage.py<br>task outputs are a separate store, so not everything is one shape</li>
+      </ul>
+      <p><b>R1.5 &middot; absent.</b> When data must be destroyed for a legal reason, is the destruction itself recorded?</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/crewAIInc/crewAI/blob/92eb5f91830cde5a7c4be921cb295c5523649d13/lib/crewai/src/crewai/memory/storage/lancedb_storage.py#L440-L456">lib/crewai/src/crewai/memory/storage/lancedb_storage.py:440-456</a><br>deletion is expressed as SQL-style conditions such as created_at &lt; timestamp, applied directly to the table</li>
+        <li><b>searched</b> grep -rniE &#x27;tombstone|deleted_at|erasure|audit&#x27; lib/crewai/src/crewai/memory/ --include=*.py<br>no match; nothing survives a deletion to record that one occurred</li>
+      </ul>
+      <h3>TR-2 Explained</h3>
+      <p><i>Every belief resolves to its evidence, and disagreements survive.</i></p>
+      <p><b>R2.1 &middot; partial.</b> Can the source a stored fact came from be recovered from the store, by following a link rather than by guessing?</p>
+      <p>A user id or a session id narrows the origin to a person or a conversation. It does not identify the message, document or event the claim came from, so recovering that means searching the session by hand if it still exists.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/crewAIInc/crewAI/blob/92eb5f91830cde5a7c4be921cb295c5523649d13/lib/crewai/src/crewai/memory/types.py#L60-L66">lib/crewai/src/crewai/memory/types.py:60-66</a><br>source is &quot;Origin of this memory (e.g. user ID, session ID). Used for provenance tracking and privacy filtering&quot;</li>
+      </ul>
+      <p><b>R2.2 &middot; partial.</b> Can a fact the system inferred be told apart from one it was told?</p>
+      <p>The metadata is labelled and the content is not, which is the wrong way round for this purpose. After consolidation a record can hold model-written text while presenting as the original observation.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/crewAIInc/crewAI/blob/92eb5f91830cde5a7c4be921cb295c5523649d13/lib/crewai/src/crewai/memory/analyze.py#L18-L19">lib/crewai/src/crewai/memory/analyze.py:18-19</a><br>ExtractedMetadata is documented as &quot;Fixed schema for LLM-extracted metadata&quot;, so metadata the model produced is labelled as such</li>
+        <li><b>source</b> <a href="https://github.com/crewAIInc/crewAI/blob/92eb5f91830cde5a7c4be921cb295c5523649d13/lib/crewai/src/crewai/memory/types.py#L20-L46">lib/crewai/src/crewai/memory/types.py:20-46</a><br>MemoryRecord.content carries no marker distinguishing text the system was given from text it wrote</li>
+        <li><b>source</b> <a href="https://github.com/crewAIInc/crewAI/blob/92eb5f91830cde5a7c4be921cb295c5523649d13/lib/crewai/src/crewai/memory/encoding_flow.py#L457-L473">lib/crewai/src/crewai/memory/encoding_flow.py:457-473</a><br>a consolidated record&#x27;s content is new_content written by the LLM, stored under the original record&#x27;s id and created_at with nothing recording that it was rewritten</li>
+      </ul>
+      <p><b>R2.3 &middot; partial.</b> When two stored facts about the same proposition disagree, do both survive?</p>
+      <p>Two disagreeing memories both persist until the consolidation step runs over them, at which point the plan may delete one or overwrite it. This is the textbook case for a partial: survival is real but conditional on a step that runs automatically.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/crewAIInc/crewAI/blob/92eb5f91830cde5a7c4be921cb295c5523649d13/lib/crewai/src/crewai/memory/analyze.py#L124-L136">lib/crewai/src/crewai/memory/analyze.py:124-136 ConsolidationPlan</a><br>&quot;LLM output for consolidating new content with existing memories&quot;, carrying actions over existing records described as keep/update/delete</li>
+        <li><b>source</b> <a href="https://github.com/crewAIInc/crewAI/blob/92eb5f91830cde5a7c4be921cb295c5523649d13/lib/crewai/src/crewai/memory/encoding_flow.py#L122-L139">lib/crewai/src/crewai/memory/encoding_flow.py:122-139 intra_batch_dedup</a><br>near-exact duplicates are dropped before anything is stored, counted as items_dropped_dedup</li>
+      </ul>
+      <p><b>R2.4 &middot; absent.</b> Is the disagreement itself queryable, or must a reader diff rows to notice it?</p>
+      <ul>
+        <li><b>searched</b> grep -rniE &#x27;class Conflict|contradict|conflict&#x27; lib/crewai/src/crewai/memory/ --include=*.py<br>every match refers to LanceDB optimistic-concurrency commit conflicts, not to disagreement between memories. There is no conflict record, id or query surface</li>
+      </ul>
+      <p><b>R2.5 &middot; partial.</b> When a conflict is resolved, does the record say who resolved it and by what method?</p>
+      <p>The reason is computed and then not stored. That is a narrower gap than not having one, and closing it would mean carrying insert_reason onto the updated record rather than discarding it after the branch.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/crewAIInc/crewAI/blob/92eb5f91830cde5a7c4be921cb295c5523649d13/lib/crewai/src/crewai/memory/analyze.py#L137-L139">lib/crewai/src/crewai/memory/analyze.py:137-139</a><br>insert_reason exists on the plan, so a reason is modelled at the point the decision is made</li>
+        <li><b>source</b> <a href="https://github.com/crewAIInc/crewAI/blob/92eb5f91830cde5a7c4be921cb295c5523649d13/lib/crewai/src/crewai/memory/encoding_flow.py#L457-L473">lib/crewai/src/crewai/memory/encoding_flow.py:457-473</a><br>the record written back carries content, scope, categories, metadata, importance, created_at, last_accessed and embedding. No reason, no deciding model and no reference to what it replaced are among them</li>
+      </ul>
+      <h3>TR-3 Gated</h3>
+      <p><i>Actions carry a verdict, and approvals carry a name.</i></p>
+      <p><b>R3.1 &middot; partial.</b> Does a consequential action produce a durable entry whether or not it ran?</p>
+      <p>A stopped attempt does leave a mark, which is why this is not absent. What it leaves is a sentence in the model&#x27;s context, structurally identical to a tool that ran and returned that text. Nothing an auditor could query separates the two.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/crewAIInc/crewAI/blob/92eb5f91830cde5a7c4be921cb295c5523649d13/lib/crewai/src/crewai/agents/crew_agent_executor.py#L984-L989">lib/crewai/src/crewai/agents/crew_agent_executor.py:984-989</a><br>hook_blocked = run_before_tool_call_hooks(...); when true the executor sets result to &quot;Tool execution blocked by hook. Tool: {func_name}&quot; and that string becomes the tool result</li>
+        <li><b>searched</b> grep -rniE &#x27;ToolUsageBlocked|blocked&#x27; lib/crewai/src/crewai/events/ --include=*.py<br>no match; no event type distinguishes a blocked call, so a blocked attempt is not emitted as its own thing</li>
+      </ul>
+      <p><b>R3.2 &middot; present.</b> Does an action&#x27;s risk class come from somewhere the proposing model cannot write to?</p>
+      <p>Coarser than a graded risk class, but the substance holds: which tools are gated is fixed in code the model cannot write.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/crewAIInc/crewAI/blob/92eb5f91830cde5a7c4be921cb295c5523649d13/lib/crewai/src/crewai/hooks/decorators.py#L208-L249">lib/crewai/src/crewai/hooks/decorators.py:208-249 before_tool_call</a><br>hooks are registered in developer code and filtered by tool name and agent, for example @before_tool_call(tools=[&quot;delete_file&quot;, &quot;execute_code&quot;])</li>
+        <li><b>source</b> <a href="https://github.com/crewAIInc/crewAI/blob/92eb5f91830cde5a7c4be921cb295c5523649d13/lib/crewai/src/crewai/hooks/tool_hooks.py#L171-L189">lib/crewai/src/crewai/hooks/tool_hooks.py:171-189 run_before_tool_call_hooks</a><br>the hook decides, and the model has no way to register, remove or satisfy one from its output</li>
+      </ul>
+      <p><b>R3.3 &middot; partial.</b> Are refusals recorded as faithfully as permissions?</p>
+      <p>A refusal is recorded in the same channel as a permission, which is the letter of this requirement, but with no marker that it was a refusal rather than an output.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/crewAIInc/crewAI/blob/92eb5f91830cde5a7c4be921cb295c5523649d13/lib/crewai/src/crewai/agents/crew_agent_executor.py#L986-L989">lib/crewai/src/crewai/agents/crew_agent_executor.py:986-989</a><br>the blocked branch produces a result string handled identically to a successful tool result</li>
+      </ul>
+      <p><b>R3.4 &middot; absent.</b> Does a refusal record why it was refused?</p>
+      <p>This is the most fixable finding in this file. The reason is constructed and then thrown away two frames later. Returning it instead of a boolean would give every refusal a machine-readable cause at no design cost.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/crewAIInc/crewAI/blob/92eb5f91830cde5a7c4be921cb295c5523649d13/lib/crewai/src/crewai/hooks/tool_hooks.py#L140-L149">lib/crewai/src/crewai/hooks/tool_hooks.py:140-149 before_tool_call_reducer</a><br>a False return raises HookAborted(reason=&quot;before_tool_call hook returned False&quot;), so a reason exists at the point of refusal</li>
+        <li><b>source</b> <a href="https://github.com/crewAIInc/crewAI/blob/92eb5f91830cde5a7c4be921cb295c5523649d13/lib/crewai/src/crewai/hooks/tool_hooks.py#L181-L189">lib/crewai/src/crewai/hooks/tool_hooks.py:181-189</a><br>the HookAborted is caught and converted to a bare True; the reason on the exception is discarded and never returned to the caller</li>
+        <li><b>source</b> <a href="https://github.com/crewAIInc/crewAI/blob/92eb5f91830cde5a7c4be921cb295c5523649d13/lib/crewai/src/crewai/agents/crew_agent_executor.py#L987">lib/crewai/src/crewai/agents/crew_agent_executor.py:987</a><br>the executor substitutes the fixed string &quot;Tool execution blocked by hook. Tool: {func_name}&quot;, which names the tool and not the reason</li>
+        <li><b>searched</b> grep -rn &#x27;reason&#x27; lib/crewai/src/crewai/hooks/tool_hooks.py lib/crewai/src/crewai/agents/crew_agent_executor.py | grep -i &#x27;block\|abort\|hook&#x27;<br>exactly one hit, the HookAborted construction at tool_hooks.py:149. Nothing downstream reads it, so no reason reaches the record or the model</li>
+      </ul>
+      <p><b>R3.5 &middot; absent.</b> Does an approval identify a person or a named role holder?</p>
+      <p>The approval is a line entered at a terminal. Whoever is sitting at that terminal is the approver, and the system records neither the fact nor the identity.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/crewAIInc/crewAI/blob/92eb5f91830cde5a7c4be921cb295c5523649d13/lib/crewai/src/crewai/hooks/llm_hooks.py#L117-L129">lib/crewai/src/crewai/hooks/llm_hooks.py:117-129 request_human_input</a><br>the signature is request_human_input(prompt, default_message) -&gt; str, documented as pausing console updates, displaying a prompt and waiting for input, and useful for &quot;approval gates&quot;</li>
+        <li><b>searched</b> grep -rniE &#x27;approver|approved_by|principal&#x27; lib/crewai/src/crewai/hooks/ --include=*.py<br>no match; the return value is the typed text and nothing identifies who typed it</li>
+      </ul>
+      <p><b>R3.6 &middot; absent.</b> Does the approver&#x27;s identity come from the authentication layer rather than from something the model can write?</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/crewAIInc/crewAI/blob/92eb5f91830cde5a7c4be921cb295c5523649d13/lib/crewai/src/crewai/hooks/llm_hooks.py#L117-L121">lib/crewai/src/crewai/hooks/llm_hooks.py:117-121</a><br>input is read from the console with no authentication step of any kind in the path</li>
+        <li><b>searched</b> grep -rniE &#x27;approver|approved_by|principal&#x27; lib/crewai/src/crewai/hooks/ --include=*.py<br>no identity is captured, so none can be sourced from an authentication layer</li>
+      </ul>
+      <p><b>R3.7 &middot; absent.</b> Is the acting agent prevented from approving its own action?</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/crewAIInc/crewAI/blob/92eb5f91830cde5a7c4be921cb295c5523649d13/lib/crewai/src/crewai/hooks/decorators.py#L224-L229">lib/crewai/src/crewai/hooks/decorators.py:224-229</a><br>a hook that returns None permits the call, so a hook of one line approves everything it is registered for without any human being involved</li>
+        <li><b>searched</b> grep -rniE &#x27;approver|approved_by|principal&#x27; lib/crewai/src/crewai/hooks/ --include=*.py<br>with no principals modelled anywhere, a proposer and an approver cannot be distinguished even in principle</li>
+      </ul>
+      <h3>TR-4 Verifiable</h3>
+      <p><i>The record can be shown not to have changed.</i></p>
+      <p><b>R4.1 &middot; absent.</b> Does the system publish a scheme under which the record&#x27;s past state can be verified?</p>
+      <ul>
+        <li><b>searched</b> grep -rniE &#x27;hash_chain|merkle|tamper|checksum|digest|signature&#x27; lib/crewai/src/crewai/memory/ --include=*.py<br>no match anywhere in the memory subsystem</li>
+      </ul>
+      <p><b>R4.2 &middot; absent.</b> Can an independent party run that verification without the vendor&#x27;s cooperation?</p>
+      <ul>
+        <li><b>searched</b> grep -rniE &#x27;hash_chain|merkle|tamper|checksum|digest|signature&#x27; lib/crewai/src/crewai/memory/ --include=*.py<br>no scheme exists, so there is nothing for an independent party to run</li>
+      </ul>
+      <p><b>R4.3 &middot; absent.</b> Would alteration of a past entry be detectable after the fact?</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/crewAIInc/crewAI/blob/92eb5f91830cde5a7c4be921cb295c5523649d13/lib/crewai/src/crewai/memory/storage/lancedb_storage.py#L320-L332">lib/crewai/src/crewai/memory/storage/lancedb_storage.py:320-332</a><br>update replaces a row by id with no digest of the prior state, so an alteration made through the ordinary API is already indistinguishable from an original write, let alone one made against the table directly</li>
+        <li><b>searched</b> grep -rniE &#x27;hash_chain|merkle|tamper|checksum&#x27; lib/crewai/src/crewai/memory/ --include=*.py<br>no match</li>
+      </ul>
+      <h3>How this was read</h3>
+      <p>Read of lib/crewai/src/crewai/memory/types.py, memory/encoding_flow.py, memory/analyze.py, memory/storage/lancedb_storage.py, hooks/decorators.py, hooks/tool_hooks.py, hooks/llm_hooks.py and agents/crew_agent_executor.py at 92eb5f9, cloned from the public repository. Line numbers are that commit&#x27;s. The project versions from SCM and the clone carries no tag, so the commit is the identifier.</p>
+      <h3>If a verdict here is wrong</h3>
+      <p>Then it is wrong in the ordinary way readings are wrong, and every verdict cites a file and a line at a pinned commit precisely so that being wrong is cheap to demonstrate. The remedy is a pull request against <a href="https://github.com/troybrandonc-bit/machine-testimony/blob/main/census/subjects/crewai.json">the subject file</a>, and it does not involve persuading anybody. Nobody applied for this and it is not a certification.</p>
+      <p>The <a href="/register/">standing register</a> carries every system side by side, and <a href="/assess/">the rubric</a> is the twenty requirements in full, free to apply to anything, including to this assessment.</p>
+    </div>
+  </div>
+</div>
+<footer class="foot">
+  <div class="wrap">
+    <p>Editor: Troy Clifford. Operated by Garnet Taurus Ltd.</p>
+    <p>Specification text CC BY 4.0. Schema and tools MIT.</p>
+    <p>Machine Testimony is a research programme, not a registered institute or a certification body.</p>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -33,6 +33,10 @@ import subject     # noqa: E402
 
 OUT = os.path.join(ROOT, "pages", "register.html")
 
+NUMBER = {1: "one", 2: "two", 3: "three", 4: "four", 5: "five",
+          6: "six", 7: "seven", 8: "eight", 9: "nine", 10: "ten",
+          11: "eleven", 12: "twelve"}
+
 # The date the next reading happens, and it is a commitment rather than a hope.
 #
 # A register that says "eight systems, read in September" is a document. One
@@ -111,12 +115,16 @@ def main() -> int:
     w = b.append
     # The title and description are metadata: they exist to match a query,
     # not to be read on the page, which takes its heading from the body below.
-    w("<!--title: AI agent audit trail comparison: eight systems, "
-      "twenty requirements")
-    w("    desc: An audit trail comparison of eight AI agent systems: which "
+    # Counted rather than typed. This line said "eight" for two subjects
+    # longer than it was true, because the suite recomputes every number in
+    # the body and never looked at the metadata.
+    n = NUMBER.get(len(docs), str(len(docs)))
+    w("<!--title: AI agent audit trail comparison: %s systems, "
+      "twenty requirements" % n)
+    w("    desc: An audit trail comparison of %s AI agent systems: which "
       "record what, with every verdict citing a file and a line at a pinned "
       "commit. Updated rather than dated, and a wrong verdict is fixed by a "
-      "pull request.")
+      "pull request." % n)
     w("    slug: register-->")
     w("")
     w('<div class="wrap main">')
@@ -154,7 +162,8 @@ def main() -> int:
         w('          <tr%s><td class="s">%s%s</td>%s<td class="lv">%s</td>'
           '<td class="d">%s</td><td class="d">%s</td></tr>'
           % (' class="own"' if own else "",
-             esc(d["name"]),
+             '<a href="/register/%s/">%s</a>'
+             % (esc(d["subject"]), esc(d["name"])),
              ' <span class="tag">the author\'s own</span>' if own else "",
              "".join(cells), esc(lv), esc(d["assessed_by"]),
              esc(last_read(d))))
@@ -162,7 +171,10 @@ def main() -> int:
     w("      </table>")
     w("      </div>")
 
-    w("      <p class=\"cont\">A count is met out of applicable. A system that "
+    w("      <p class=\"cont\">Each name links to that system's own page, "
+      "carrying every verdict, the reasoning behind it and a link to each "
+      "cited line at the pinned commit. "
+      "A count is met out of applicable. A system that "
       "does not act is not marked down for having no gate, and the requirements "
       "that do not apply to it are not counted against it.</p>")
 

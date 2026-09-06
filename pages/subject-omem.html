@@ -1,0 +1,158 @@
+<!--title: OMEM audit trail and approval records, assessed
+    desc: OMEM read against 20 record-keeping requirements at commit 9a77c20. 20 present. Every verdict cites a file and a line, and a wrong one is fixed by a pull request.
+    slug: register/omem-->
+
+<div class="wrap main">
+  <div>
+    <p class="dateline">Assessment, 2026-09-04 &middot; 0.3.15 (9a77c20)</p>
+    <h2 class="label">What OMEM records, and what it does not</h2>
+    <div class="block">
+      <table class="facts">
+        <tr><th>Read at</th><td><a href="https://github.com/troybrandonc-bit/Omem/tree/9a77c206655340dc37222113327b98ac3b049c98">9a77c20</a></td></tr>
+        <tr><th>Repository</th><td><a href="https://github.com/troybrandonc-bit/Omem">github.com/troybrandonc-bit/Omem</a></td></tr>
+        <tr><th>Licence</th><td>MIT</td></tr>
+        <tr><th>Assessed as</th><td>stores, derives, acts</td></tr>
+        <tr><th>Reaches</th><td>TR-4</td></tr>
+        <tr><th>Read by</th><td>Troy Brandon Clifford</td></tr>
+      </table>
+      <div class="scroller">
+      <table class="reg">
+        <thead><tr><th>Level</th><th>Meets</th><th>What the level asks</th></tr></thead>
+        <tbody>
+          <tr><td class="s">TR-1 Recorded</td><td class="n">5/5</td><td class="w">The record exists and is append-only.</td></tr>
+          <tr><td class="s">TR-2 Explained</td><td class="n">5/5</td><td class="w">Every belief resolves to its evidence, and disagreements survive.</td></tr>
+          <tr><td class="s">TR-3 Gated</td><td class="n">7/7</td><td class="w">Actions carry a verdict, and approvals carry a name.</td></tr>
+          <tr><td class="s">TR-4 Verifiable</td><td class="n">3/3</td><td class="w">The record can be shown not to have changed.</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p>A count is requirements fully met out of those that apply. This system is assessed as <b>stores, derives, acts</b>, and requirements outside that are not counted against it.</p>
+      <p class="callout">OMEM is the reference implementation of the specification this rubric derives from, so a high score is a tautology rather than a finding. Two of the verdicts below were reached only after the rubric itself was corrected: an earlier draft scored OMEM&#x27;s GDPR erasure path as a TR-1 failure, and scored its deliberate refusal to resolve contradictions as a TR-2 failure. Both were defects in the questions.</p>
+      <h3>Every verdict, and what it rests on</h3>
+      <p>Twenty requirements, each stated as a capability rather than a format, so a system that holds the information in its own shape counts as having it. An <b>absent</b> verdict cites where the assessor looked and did not find it, which is the difference between a measurement and an accusation.</p>
+      <h3>TR-1 Recorded</h3>
+      <p><i>The record exists and is append-only.</i></p>
+      <p><b>R1.1 &middot; present.</b> When the system stores a fact, does it durably record when that happened?</p>
+      <p>The write time is distinct from the time the fact held, which the schema separates as at and held_from.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/troybrandonc-bit/Omem/blob/9a77c206655340dc37222113327b98ac3b049c98/server/store.py#L767">server/store.py:767</a><br>assert_timestamps returns the recorded time held with each assertion, not derived from a log line</li>
+        <li><b>test</b> server/tests_testimony_export.py<br>the exported record carries an RFC 3339 write time per entry and the validator&#x27;s TR-1 time checks pass</li>
+      </ul>
+      <p><b>R1.2 &middot; present.</b> When a stored fact changes, is the previous version still readable?</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/troybrandonc-bit/Omem/blob/9a77c206655340dc37222113327b98ac3b049c98/server/omem_engine/engine.py#L136">server/omem_engine/engine.py:136</a><br>revision_chain returns the full chain of superseded assertions</li>
+        <li><b>test</b> benchmarks/witness/scenarios/supersession.json<br>the history axis scores whether what once held is still on the record as history</li>
+      </ul>
+      <p><b>R1.3 &middot; present.</b> Does the ordinary write path ever destroy what was previously recorded?</p>
+      <p>A correction is a new assertion. The routine write path has no update-in-place.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/troybrandonc-bit/Omem/blob/9a77c206655340dc37222113327b98ac3b049c98/server/api.py#L393">server/api.py:393</a><br>&quot;Retraction is not erasure: the append-only log keeps history&quot;</li>
+        <li><b>source</b> <a href="https://github.com/troybrandonc-bit/Omem/blob/9a77c206655340dc37222113327b98ac3b049c98/server/cleanup.py#L9">server/cleanup.py:9</a><br>the connector cleanup tool removes source material only: &quot;Memories already recorded stay: they are immutable engine history&quot;</li>
+      </ul>
+      <p><b>R1.4 &middot; present.</b> Are entries distinguishable by kind, or is everything one undifferentiated blob of text?</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/troybrandonc-bit/Omem/blob/9a77c206655340dc37222113327b98ac3b049c98/server/omem_engine/engine.py#L131-L140">server/omem_engine/engine.py:131-140</a><br>assertions, events, derivations and entities are separate primitives with separate stores, not rows in one table with a type column</li>
+        <li><b>api</b> GET /v1/assertions/{id}/why<br>returns provenance nodes tagged event, assertion or primitive</li>
+      </ul>
+      <p><b>R1.5 &middot; present.</b> When data must be destroyed for a legal reason, is the destruction itself recorded?</p>
+      <p>The strongest evidence here is the refusal at api.py:481: an erasure request that would leave the record unreplayable does not proceed, so the integrity claim at TR-4 cannot be quietly broken by a routine privacy request.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/troybrandonc-bit/Omem/blob/9a77c206655340dc37222113327b98ac3b049c98/server/api.py#L999-L1004">server/api.py:999-1004</a><br>an erasures table records that an erasure happened, holding an entity hash rather than re-retaining what was erased</li>
+        <li><b>source</b> <a href="https://github.com/troybrandonc-bit/Omem/blob/9a77c206655340dc37222113327b98ac3b049c98/server/api.py#L481">server/api.py:481</a><br>an erasure that would break the log&#x27;s replay is refused rather than performed silently</li>
+        <li><b>api</b> POST /v1/entities/{id}/forget<br>gated on the erasure.execute admin permission, server/enterprise.py:86</li>
+      </ul>
+      <h3>TR-2 Explained</h3>
+      <p><i>Every belief resolves to its evidence, and disagreements survive.</i></p>
+      <p><b>R2.1 &middot; present.</b> Can the source a stored fact came from be recovered from the store, by following a link rather than by guessing?</p>
+      <p>The link exists but is recovered by scanning completed ingest jobs and JSON-parsing each produced list, rather than by an indexed reference. That is a performance property, not a capability gap, and it is why this is present rather than partial.</p>
+      <ul>
+        <li><b>api</b> GET /v1/assertions/{id}/why<br>returns source (the connector record with its payload), provenance.nodes, and evidence</li>
+        <li><b>source</b> <a href="https://github.com/troybrandonc-bit/Omem/blob/9a77c206655340dc37222113327b98ac3b049c98/server/ingest.py#L814">server/ingest.py:814</a><br>source_for_assertion resolves a belief back to the source record that produced it</li>
+      </ul>
+      <p><b>R2.2 &middot; present.</b> Can a fact the system inferred be told apart from one it was told?</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/troybrandonc-bit/Omem/blob/9a77c206655340dc37222113327b98ac3b049c98/server/api.py#L273">server/api.py:273</a><br>derivations carry a dkind, defaulting to inference, with extraction used for facts read out of a source</li>
+        <li><b>source</b> <a href="https://github.com/troybrandonc-bit/Omem/blob/9a77c206655340dc37222113327b98ac3b049c98/server/extraction.py#L158">server/extraction.py:158</a><br>&quot;the fact carries dkind=\&quot;inference\&quot; so /why distinguishes what was read in&quot;</li>
+        <li><b>test</b> benchmarks/witness/scenarios/speculation.json<br>the speculation axis scores whether a guess is ever returned as a memory</li>
+      </ul>
+      <p><b>R2.3 &middot; present.</b> When two stored facts about the same proposition disagree, do both survive?</p>
+      <ul>
+        <li><b>test</b> server/tests_testimony_export.py<br>&quot;both contradicted sides are present and neither was dropped&quot;</li>
+        <li><b>source</b> <a href="https://github.com/troybrandonc-bit/Omem/blob/9a77c206655340dc37222113327b98ac3b049c98/server/omem_engine/engine.py#L123">server/omem_engine/engine.py:123</a><br>proposition_state returns CONTRADICTED; neither side is removed to produce it</li>
+      </ul>
+      <p><b>R2.4 &middot; present.</b> Is the disagreement itself queryable, or must a reader diff rows to notice it?</p>
+      <ul>
+        <li><b>api</b> GET /v1/memory/conflicts, server/api.py:3001<br>conflicts are listable as objects</li>
+        <li><b>source</b> server/conflict_narrow.py<br>conflicts_for returns the conflicts touching one assertion</li>
+      </ul>
+      <p><b>R2.5 &middot; present.</b> When a conflict is resolved, does the record say who resolved it and by what method?</p>
+      <p>OMEM has no automatic conflict resolution at all, which is the conservative reading of a specification that records resolution only if it happens. A contradiction stands until a human retracts or supersedes one side, and that act is attributed like any other assertion.</p>
+      <ul>
+        <li><b>source</b> scripts/export_testimony.py<br>&quot;OMEM never resolves a contradiction on its own, so an exported conflict is unresolved unless a human or a rule resolved it&quot;; the exported resolution is null</li>
+        <li><b>test</b> benchmarks/witness/scenarios/contradiction.json<br>the contradiction axis scores disagreement being visible rather than resolved by timestamp</li>
+      </ul>
+      <h3>TR-3 Gated</h3>
+      <p><i>Actions carry a verdict, and approvals carry a name.</i></p>
+      <p><b>R3.1 &middot; present.</b> Does a consequential action produce a durable entry whether or not it ran?</p>
+      <p>Scope: this covers actions that pass through OMEM&#x27;s own gate. Actions an agent takes elsewhere are invisible to it, which is true of any gate and worth stating rather than leaving implied.</p>
+      <ul>
+        <li><b>test</b> server/tests_testimony_export.py<br>&quot;the refusals are in the record with their reasons&quot; and &quot;no refused action is recorded as executed&quot;</li>
+        <li><b>source</b> server/healing.py<br>the gate writes a decision per proposed action, permitted or refused</li>
+      </ul>
+      <p><b>R3.2 &middot; present.</b> Does an action&#x27;s risk class come from somewhere the proposing model cannot write to?</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/troybrandonc-bit/Omem/blob/9a77c206655340dc37222113327b98ac3b049c98/server/healing.py#L122">server/healing.py:122</a><br>register(action_type, risk, handler, description); the risk class is set at registration, not by the caller proposing the action</li>
+        <li><b>api</b> GET /v1/healing/actions<br>the registry is readable, so an auditor can check the risk column against it rather than trusting the record</li>
+        <li><b>test</b> server/tests_testimony_export.py<br>&quot;the refund that ran is reported at the registry&#x27;s risk class&quot; and &quot;a low-risk action that ran without approval is reported as low&quot;</li>
+      </ul>
+      <p><b>R3.3 &middot; present.</b> Are refusals recorded as faithfully as permissions?</p>
+      <ul>
+        <li><b>test</b> server/tests_testimony_export.py<br>the export contains 5 decisions of which the refusals carry equal standing to the permissions</li>
+      </ul>
+      <p><b>R3.4 &middot; present.</b> Does a refusal record why it was refused?</p>
+      <ul>
+        <li><b>test</b> server/tests_testimony_export.py<br>&quot;the refusals are in the record with their reasons&quot;, asserting reason is non-empty on every refusal</li>
+        <li><b>test</b> server/tests_testimony_export.py<br>&quot;the refused unregistered action is named, not summarised away&quot;</li>
+      </ul>
+      <p><b>R3.5 &middot; present.</b> Does an approval identify a person or a named role holder?</p>
+      <ul>
+        <li><b>test</b> server/tests_testimony_export.py<br>&quot;the approver is a person, not the agent&quot;</li>
+      </ul>
+      <p><b>R3.6 &middot; present.</b> Does the approver&#x27;s identity come from the authentication layer rather than from something the model can write?</p>
+      <ul>
+        <li><b>test</b> server/tests_testimony_export.py<br>&quot;the approver identity is the authenticated principal, not the sent name&quot;; the name supplied by the caller is kept as a label rather than as proof</li>
+        <li><b>source</b> scripts/export_testimony.py<br>identity_source is auth-session or api-key depending on the principal the auth layer resolved</li>
+      </ul>
+      <p><b>R3.7 &middot; present.</b> Is the acting agent prevented from approving its own action?</p>
+      <p>Enforced by the gate, not documented as a recommendation. This is the requirement most likely to be met on paper and missed in code, because a name in a request body satisfies every other check.</p>
+      <ul>
+        <li><b>test</b> server/tests_testimony_export.py<br>&quot;an agent holding a high-risk key cannot approve its own refund&quot; and &quot;no money moved on the agent&#x27;s own say-so&quot;</li>
+        <li><b>docs</b> CHANGELOG.md, 0.3.15, 1 September 2026<br>&quot;An agent can no longer approve its own high-risk action&quot;</li>
+      </ul>
+      <h3>TR-4 Verifiable</h3>
+      <p><i>The record can be shown not to have changed.</i></p>
+      <p><b>R4.1 &middot; present.</b> Does the system publish a scheme under which the record&#x27;s past state can be verified?</p>
+      <ul>
+        <li><b>source</b> server/replay_verify.py<br>deterministic replay of the append-only log into two independent fresh engines, with state digests compared</li>
+        <li><b>source</b> scripts/export_testimony.py<br>the exported record carries an integrity entry of scheme replay, naming the engine and its version</li>
+      </ul>
+      <p><b>R4.2 &middot; present.</b> Can an independent party run that verification without the vendor&#x27;s cooperation?</p>
+      <p>OMEM is self-hosted, so the record holder and the vendor are the same party by default. The verification does not require the author&#x27;s cooperation or any key he holds. RE-READ 2026-09-05, and the original verdict was not supported for the digest path when it was given. On 4 September this was assessed by reading code, against a reference validator that never recomputed a digest and a specification that never said how one is computed, so no independent party could have recomputed anything; and scripts/export_testimony.py serialised with json.dumps(sort_keys=True), whose default separators differ from the reference canonicalisation, so a third party following the specification would have computed a different number and concluded the record had been altered. Both were fixed on 5 September. Re-read by exporting from a live server and recomputing the digest from the published rule with nothing of OMEM&#x27;s on the path: they agree. The verdict stands as of 2026-09-05 and did not hold as of 2026-09-04.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/troybrandonc-bit/Omem/blob/9a77c206655340dc37222113327b98ac3b049c98/server/replay_verify.py#L5-L7">server/replay_verify.py:5-7</a><br>--anchor compares against a digest file &quot;kept somewhere OMEM does not control&quot;</li>
+        <li><b>source</b> scripts/testimony_validate.py<br>the validator is stdlib-only and offline, and the file header invites copying it into the reader&#x27;s own repository rather than depending on this one</li>
+        <li><b>test</b> re-read 2026-09-05: exported from a live server, digest recomputed from the published rule alone<br>the record&#x27;s digest and an independent recomputation agree; covers names 5 entries; the export reaches TR-4 under a validator that recomputes</li>
+      </ul>
+      <p><b>R4.3 &middot; present.</b> Would alteration of a past entry be detectable after the fact?</p>
+      <ul>
+        <li><b>source</b> scripts/export_testimony.py<br>a sha256 digest over every entry in the record, so any later edit to the exported file is detectable</li>
+        <li><b>source</b> server/replay_verify.py<br>alteration of the underlying log changes the replayed state digest</li>
+      </ul>
+      <h3>How this was read</h3>
+      <p>Read of the server source at 9a77c20, plus the assertions made by server/tests_testimony_export.py, which drives a real server rather than a fixture. This is the author assessing his own software against his own specification, and the result should be read as carrying no evidential weight whatever. It is here so the rubric is applied to the system that wrote it before it is applied to anybody else&#x27;s, and so that the questions can be checked against a system whose source the reader can also open.</p>
+      <h3>If a verdict here is wrong</h3>
+      <p>Then it is wrong in the ordinary way readings are wrong, and every verdict cites a file and a line at a pinned commit precisely so that being wrong is cheap to demonstrate. The remedy is a pull request against <a href="https://github.com/troybrandonc-bit/machine-testimony/blob/main/census/subjects/omem.json">the subject file</a>, and it does not involve persuading anybody. Nobody applied for this and it is not a certification.</p>
+      <p>The <a href="/register/">standing register</a> carries every system side by side, and <a href="/assess/">the rubric</a> is the twenty requirements in full, free to apply to anything, including to this assessment.</p>
+    </div>
+  </div>
+</div>

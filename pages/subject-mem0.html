@@ -1,0 +1,126 @@
+<!--title: mem0 audit trail and approval records, assessed
+    desc: mem0 read against 20 record-keeping requirements at commit 9a7924b. 3 present, 5 partial, 5 absent. Every verdict cites a file and a line, and a wrong one is fixed by a pull request.
+    slug: register/mem0-->
+
+<div class="wrap main">
+  <div>
+    <p class="dateline">Assessment, 2026-09-04 &middot; 2.0.20 (9a7924b)</p>
+    <h2 class="label">What mem0 records, and what it does not</h2>
+    <div class="block">
+      <table class="facts">
+        <tr><th>Read at</th><td><a href="https://github.com/mem0ai/mem0/tree/9a7924befd7026e41e445ba809370009e5e985a6">9a7924b</a></td></tr>
+        <tr><th>Repository</th><td><a href="https://github.com/mem0ai/mem0">github.com/mem0ai/mem0</a></td></tr>
+        <tr><th>Licence</th><td>Apache-2.0</td></tr>
+        <tr><th>Assessed as</th><td>stores, derives</td></tr>
+        <tr><th>Reaches</th><td>no level yet</td></tr>
+        <tr><th>Read by</th><td>Troy Brandon Clifford</td></tr>
+      </table>
+      <div class="scroller">
+      <table class="reg">
+        <thead><tr><th>Level</th><th>Meets</th><th>What the level asks</th></tr></thead>
+        <tbody>
+          <tr><td class="s">TR-1 Recorded</td><td class="n">3/5</td><td class="w">The record exists and is append-only.</td></tr>
+          <tr><td class="s">TR-2 Explained</td><td class="n">0/5</td><td class="w">Every belief resolves to its evidence, and disagreements survive.</td></tr>
+          <tr><td class="s">TR-3 Gated</td><td class="n">n/a</td><td class="w">Actions carry a verdict, and approvals carry a name.</td></tr>
+          <tr><td class="s">TR-4 Verifiable</td><td class="n">0/3</td><td class="w">The record can be shown not to have changed.</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p>A count is requirements fully met out of those that apply. This system is assessed as <b>stores, derives</b>, and requirements outside that are not counted against it.</p>
+      <p class="callout">mem0 is a memory layer built for retrieval quality and low integration cost, and its update phase consolidates on purpose: when new information contradicts an existing memory, the prompt at configs/prompts.py:264 instructs the model to delete the old one. Most of the gaps here follow directly from that goal rather than being oversights against it, and mem0 has never claimed to be an audit record. What the assessment says is narrow: a deployment that later needs to show what the agent believed and why will not find those facts here, because the design traded them away for something else it wanted more. Two findings are worth the maintainers&#x27; attention independently of any of that, and both are noted on the requirements they sit under: R1.5, where a deleted memory&#x27;s text is retained in the local history database, and R2.2, where nothing distinguishes an LLM-extracted fact from a message stored verbatim.</p>
+      <h3>Every verdict, and what it rests on</h3>
+      <p>Twenty requirements, each stated as a capability rather than a format, so a system that holds the information in its own shape counts as having it. An <b>absent</b> verdict cites where the assessor looked and did not find it, which is the difference between a measurement and an accusation.</p>
+      <h3>TR-1 Recorded</h3>
+      <p><i>The record exists and is append-only.</i></p>
+      <p><b>R1.1 &middot; present.</b> When the system stores a fact, does it durably record when that happened?</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/mem0ai/mem0/blob/9a7924befd7026e41e445ba809370009e5e985a6/mem0/memory/main.py#L1961">mem0/memory/main.py:1961 _create_memory</a><br>new_metadata[&#x27;created_at&#x27;] and [&#x27;updated_at&#x27;] are written into the vector store payload alongside the text, not into a separate log</li>
+        <li><b>source</b> <a href="https://github.com/mem0ai/mem0/blob/9a7924befd7026e41e445ba809370009e5e985a6/mem0/memory/main.py#L2038">mem0/memory/main.py:2038 _update_memory</a><br>updated_at is refreshed on every update while created_at is carried forward from the existing payload</li>
+      </ul>
+      <p><b>R1.2 &middot; present.</b> When a stored fact changes, is the previous version still readable?</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/mem0ai/mem0/blob/9a7924befd7026e41e445ba809370009e5e985a6/mem0/memory/storage.py#L108-L119">mem0/memory/storage.py:108-119</a><br>the history table holds memory_id, old_memory, new_memory, event, created_at, updated_at, is_deleted, actor_id and role</li>
+        <li><b>api</b> Memory.history(memory_id), mem0/memory/main.py:1946<br>public method returning the change history for one memory</li>
+        <li><b>source</b> <a href="https://github.com/mem0ai/mem0/blob/9a7924befd7026e41e445ba809370009e5e985a6/mem0/configs/base.py#L42-L45">mem0/configs/base.py:42-45</a><br>history_db_path defaults to ~/.mem0/history.db, so the history persists rather than living only in the process</li>
+      </ul>
+      <p><b>R1.3 &middot; partial.</b> Does the ordinary write path ever destroy what was previously recorded?</p>
+      <p>The routine write path overwrites. A correction is an edit to the existing record rather than a new entry, and the previous state lives in a separate history database instead of in the store being queried. This is the requirement that keeps mem0 below TR-1, and it is a deliberate design choice rather than a defect: consolidating in place is what makes the retrieval surface small.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/mem0ai/mem0/blob/9a7924befd7026e41e445ba809370009e5e985a6/mem0/memory/main.py#L2038">mem0/memory/main.py:2038 _update_memory</a><br>calls self.vector_store.update(vector_id=memory_id, ...), replacing the stored text and embedding for that id in place</li>
+        <li><b>source</b> <a href="https://github.com/mem0ai/mem0/blob/9a7924befd7026e41e445ba809370009e5e985a6/mem0/memory/main.py#L2100">mem0/memory/main.py:2100 _delete_memory</a><br>calls self.vector_store.delete(vector_id=memory_id), removing the record from the live store</li>
+        <li><b>source</b> <a href="https://github.com/mem0ai/mem0/blob/9a7924befd7026e41e445ba809370009e5e985a6/mem0/memory/storage.py#L150">mem0/memory/storage.py:150 add_history</a><br>both paths write a history row carrying the previous value, so the prior text is not lost</li>
+      </ul>
+      <p><b>R1.4 &middot; present.</b> Are entries distinguishable by kind, or is everything one undifferentiated blob of text?</p>
+      <p>The kinds are separate. Whether they are linked is a different question, assessed at R2.1.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/mem0ai/mem0/blob/9a7924befd7026e41e445ba809370009e5e985a6/mem0/memory/storage.py#L17-L18">mem0/memory/storage.py:17-18</a><br>history and messages are separate tables created alongside the vector store, so a memory, the message it came from and the record of a change are three distinct record kinds</li>
+      </ul>
+      <p><b>R1.5 &middot; partial.</b> When data must be destroyed for a legal reason, is the destruction itself recorded?</p>
+      <p>The deletion is recorded, which is half of what this asks. The other half is not met, and in a direction worth flagging to the maintainers: _delete_memory writes the deleted memory&#x27;s own text into history.old_memory, so a deletion carried out to satisfy a privacy request leaves that content sitting in the local history database. Anyone relying on delete_all for erasure should know the text survives there. This is the one verdict in the census demonstrated by running the assessed system rather than by reading it, because it is a claim that something is written rather than that something is missing, and it concerns data somebody asked to have deleted.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/mem0ai/mem0/blob/9a7924befd7026e41e445ba809370009e5e985a6/mem0/memory/main.py#L1890">mem0/memory/main.py:1890 delete_all</a><br>the per-user deletion path, which calls _delete_memory for each memory so every deletion is written to history</li>
+        <li><b>source</b> <a href="https://github.com/mem0ai/mem0/blob/9a7924befd7026e41e445ba809370009e5e985a6/mem0/memory/main.py#L2100">mem0/memory/main.py:2100 _delete_memory</a><br>add_history is called with prev_value as old_memory and is_deleted=1, so the destruction is recorded</li>
+        <li><b>source</b> <a href="https://github.com/mem0ai/mem0/blob/9a7924befd7026e41e445ba809370009e5e985a6/mem0/memory/storage.py#L326">mem0/memory/storage.py:326 reset</a><br>DROP TABLE IF EXISTS history; a full reset destroys the record of what was destroyed</li>
+        <li><b>run</b> benchmarks/census/verify/mem0_delete_retains_text.py --repo ./mem0<br>executed against this commit: add_history for a DELETE event writes the memory&#x27;s own text into history.old_memory and it is readable from the database afterwards. Runs mem0&#x27;s SQLiteManager directly, with no network, no LLM and no API key. Output is reproducible by checking out 9a7924be and running the script</li>
+      </ul>
+      <h3>TR-2 Explained</h3>
+      <p><i>Every belief resolves to its evidence, and disagreements survive.</i></p>
+      <p><b>R2.1 &middot; partial.</b> Can the source a stored fact came from be recovered from the store, by following a link rather than by guessing?</p>
+      <p>The raw source is kept but the fact does not point at it. Recovering which message produced a given memory means matching on actor, role and approximate time, which is guessing rather than following a link.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/mem0ai/mem0/blob/9a7924befd7026e41e445ba809370009e5e985a6/mem0/memory/storage.py#L19">mem0/memory/storage.py:19 _create_messages_table</a><br>raw messages are retained, and get_last_messages reads them back</li>
+        <li><b>source</b> <a href="https://github.com/mem0ai/mem0/blob/9a7924befd7026e41e445ba809370009e5e985a6/mem0/memory/main.py#L1961">mem0/memory/main.py:1961 _create_memory</a><br>the payload written for a memory is data, hash, created_at, updated_at and text_lemmatized, plus role and actor_id; there is no message or source identifier among them</li>
+        <li><b>searched</b> grep -n &#x27;message_id\|source_id&#x27; mem0/memory/main.py<br>no match; the only &#x27;source&#x27; hits are a local variable in merge_filters</li>
+      </ul>
+      <p><b>R2.2 &middot; absent.</b> Can a fact the system inferred be told apart from one it was told?</p>
+      <p>Both kinds of memory sit in one store looking identical. A consumer reading a mem0 memory cannot tell whether the model wrote it or a person did, which matters most for exactly the memories a model got wrong.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/mem0ai/mem0/blob/9a7924befd7026e41e445ba809370009e5e985a6/mem0/memory/main.py#L879-L914">mem0/memory/main.py:879-914</a><br>with infer=False the raw message content is stored verbatim as a memory; with infer=True the LLM-extracted fact is stored. Both go through _create_memory and produce the same payload shape</li>
+        <li><b>searched</b> grep -rn &#x27;is_inferred\|inferred\|&quot;infer&quot;&#x27; mem0/memory/main.py mem0/memory/storage.py<br>no match; the infer argument controls the code path but is never recorded on the resulting memory</li>
+      </ul>
+      <p><b>R2.3 &middot; partial.</b> When two stored facts about the same proposition disagree, do both survive?</p>
+      <p>Only one side survives as a belief. The other survives as a text column in a history row, which is an audit trail rather than a retained memory: a later query about that subject returns the winner and gives no sign there was ever a loser.</p>
+      <ul>
+        <li><b>docs</b> <a href="https://github.com/mem0ai/mem0/blob/9a7924befd7026e41e445ba809370009e5e985a6/mem0/configs/prompts.py#L264">mem0/configs/prompts.py:264</a><br>&quot;Delete: If the retrieved facts contain information that contradicts the information present in the memory, then you have to delete it&quot;</li>
+        <li><b>source</b> <a href="https://github.com/mem0ai/mem0/blob/9a7924befd7026e41e445ba809370009e5e985a6/mem0/memory/main.py#L2100">mem0/memory/main.py:2100 _delete_memory</a><br>the contradicted memory is removed from the vector store; its text is written to history.old_memory with is_deleted=1</li>
+      </ul>
+      <p><b>R2.4 &middot; absent.</b> Is the disagreement itself queryable, or must a reader diff rows to notice it?</p>
+      <p>A disagreement leaves an UPDATE or DELETE event indistinguishable from any other. Noticing that two sources ever disagreed means reading the history and inferring it.</p>
+      <ul>
+        <li><b>searched</b> grep -rniE &#x27;class Conflict|conflict_id|def conflicts|contradiction&#x27; mem0/ --include=*.py<br>the only match is descriptive text inside an LLM prompt at configs/prompts.py:699; there is no conflict record, id or listing anywhere in the code</li>
+        <li><b>source</b> <a href="https://github.com/mem0ai/mem0/blob/9a7924befd7026e41e445ba809370009e5e985a6/mem0/memory/storage.py#L108-L119">mem0/memory/storage.py:108-119</a><br>the history schema has no column that would mark a change as having been caused by a disagreement</li>
+      </ul>
+      <p><b>R2.5 &middot; partial.</b> When a conflict is resolved, does the record say who resolved it and by what method?</p>
+      <p>What changed is recorded. Who decided and how is not: the decision is taken by an LLM against the prompt at configs/prompts.py, and neither the model, the prompt version nor the reason is written down anywhere.</p>
+      <ul>
+        <li><b>source</b> <a href="https://github.com/mem0ai/mem0/blob/9a7924befd7026e41e445ba809370009e5e985a6/mem0/memory/storage.py#L150">mem0/memory/storage.py:150 add_history</a><br>records event, old_memory, new_memory, actor_id and role</li>
+        <li><b>source</b> <a href="https://github.com/mem0ai/mem0/blob/9a7924befd7026e41e445ba809370009e5e985a6/mem0/memory/main.py#L2100">mem0/memory/main.py:2100 _delete_memory</a><br>actor_id is copied from the memory&#x27;s own payload, so it names the speaker the memory came from rather than whatever decided to delete it</li>
+      </ul>
+      <h3>TR-3 Gated</h3>
+      <p><i>Actions carry a verdict, and approvals carry a name.</i></p>
+      <p>R3.1, R3.2, R3.3, R3.4, R3.5, R3.6, R3.7 are not assessed here, because this system is not in that business and marking it down for that would be dishonest.</p>
+      <h3>TR-4 Verifiable</h3>
+      <p><i>The record can be shown not to have changed.</i></p>
+      <p><b>R4.1 &middot; absent.</b> Does the system publish a scheme under which the record&#x27;s past state can be verified?</p>
+      <p>No scheme is published, which is consistent with the product not claiming one. The md5 in the payload is a content hash a holder recomputes from the current text, so it detects nothing about alteration.</p>
+      <ul>
+        <li><b>searched</b> grep -rniE &#x27;hash_chain|merkle|signature|tamper|checksum|anchor&#x27; mem0/ --include=*.py<br>no match relating to record integrity. The hashes present are an md5 of memory text used for deduplication (main.py:1961), a sha1 used to bucket telemetry notices (memory/notices.py:94) and a sha256 used to anonymise a telemetry id (memory/setup.py:97)</li>
+        <li><b>docs</b> mem0 README.md<br>no integrity, verification or tamper-evidence claim is made</li>
+      </ul>
+      <p><b>R4.2 &middot; absent.</b> Can an independent party run that verification without the vendor&#x27;s cooperation?</p>
+      <ul>
+        <li><b>searched</b> grep -rniE &#x27;verify|verification&#x27; mem0/memory/ --include=*.py<br>no verification surface exists to be run by anybody, so the question of who can run it does not arise</li>
+      </ul>
+      <p><b>R4.3 &middot; absent.</b> Would alteration of a past entry be detectable after the fact?</p>
+      <ul>
+        <li><b>searched</b> grep -rniE &#x27;hash_chain|merkle|signature|tamper|checksum|anchor&#x27; mem0/ --include=*.py<br>no match; nothing links one record to the next, so editing a row in the history database or the vector store leaves no evidence</li>
+        <li><b>source</b> <a href="https://github.com/mem0ai/mem0/blob/9a7924befd7026e41e445ba809370009e5e985a6/mem0/memory/storage.py#L108-L119">mem0/memory/storage.py:108-119</a><br>history rows carry no digest of prior rows and no ordering guarantee beyond their timestamps</li>
+      </ul>
+      <h3>How this was read</h3>
+      <p>Read of mem0/memory/main.py, mem0/memory/storage.py, mem0/configs/base.py and mem0/configs/prompts.py at 9a7924b, cloned from the public repository. Line numbers are that commit&#x27;s.</p>
+      <h3>If a verdict here is wrong</h3>
+      <p>Then it is wrong in the ordinary way readings are wrong, and every verdict cites a file and a line at a pinned commit precisely so that being wrong is cheap to demonstrate. The remedy is a pull request against <a href="https://github.com/troybrandonc-bit/machine-testimony/blob/main/census/subjects/mem0.json">the subject file</a>, and it does not involve persuading anybody. Nobody applied for this and it is not a certification.</p>
+      <p>The <a href="/register/">standing register</a> carries every system side by side, and <a href="/assess/">the rubric</a> is the twenty requirements in full, free to apply to anything, including to this assessment.</p>
+    </div>
+  </div>
+</div>

@@ -167,6 +167,91 @@ def main():
     missing = sorted(tv.TYPES - known)
     check("every entry type the specification defines has a sentence",
           not missing, "no case for: %s" % missing)
+    print("")
+    print("every assessed system has a page, and it says what the file says")
+    # These pages are the census's evidence as a surface: roughly two hundred
+    # claims that until now existed only as JSON in the repository. The failure
+    # that matters is a page disagreeing with the subject file it was built
+    # from, or a subject gaining no page after being added, so both are
+    # recomputed here rather than trusted.
+    sdir = os.path.join(ROOT, "census", "subjects")
+    subjects = {}
+    for f in sorted(os.listdir(sdir)):
+        if f.endswith(".json"):
+            d = json.load(io.open(os.path.join(sdir, f), encoding="utf-8"))
+            subjects[d["subject"]] = d
+    for slug, d in sorted(subjects.items()):
+        live = os.path.join(PUB, "register", slug, "index.html")
+        here = os.path.exists(live)
+        check("/register/%s/ exists" % slug, here)
+        if not here:
+            continue
+        page = io.open(live, encoding="utf-8").read()
+        # Every verdict in the file appears on the page against its own
+        # requirement id, so a page cannot quietly soften one.
+        wrong = []
+        for rid, a in d["assessments"].items():
+            word = a["verdict"].replace("_", " ")
+            if ("%s &middot; %s." % (rid, word)) not in page:
+                wrong.append("%s=%s" % (rid, a["verdict"]))
+        check("  %s carries every verdict from its file" % slug,
+              not wrong, wrong)
+        # A cited line is only worth citing if it points at the commit read.
+        cites = [e for a in d["assessments"].values()
+                 for e in a.get("evidence", []) if e["kind"] != "searched"]
+        if d.get("commit") and cites:
+            check("  %s links its citations at the pinned commit" % slug,
+                  ("/blob/%s/" % d["commit"]) in page, d["commit"][:12])
+        # The register exists to be believed by someone who owes the author
+        # nothing, so a page about somebody else's software does not mention
+        # the author's product.
+        check("  %s names no product the author is selling" % slug,
+              slug == "omem" or "OMEM" not in page)
+
+    reg = io.open(os.path.join(PUB, "register", "index.html"),
+                  encoding="utf-8").read()
+    missing = [s for s in sorted(subjects)
+               if 'href="/register/%s/"' % s not in reg]
+    check("the register links to every system's page", not missing, missing)
+    # This said "eight systems" for two subjects longer than it was true. Every
+    # number in the body is recomputed by this suite; nothing looked at the
+    # metadata, which is the half a search engine reads.
+    words = {8: "eight", 9: "nine", 10: "ten", 11: "eleven", 12: "twelve"}
+    want = words.get(len(subjects), str(len(subjects)))
+    head = reg[:reg.index("</head>")]
+    check("the register's own metadata counts the systems it has",
+          ("%s systems" % want) in head
+          and not any(("%s systems" % w) in head
+                      for k, w in words.items() if k != len(subjects)),
+          want)
+    print("")
+    print("llms.txt counts what the census found")
+    # The third hand-typed count to go stale in this repository, after the
+    # underwriting rows and the register's own metadata. This file is the one a
+    # language model reads and quotes, so a wrong number here is repeated by
+    # something that will not check it.
+    llms = io.open(os.path.join(PUB, "llms.txt"), encoding="utf-8").read()
+    words = {1: "one", 2: "two", 3: "three", 4: "four", 5: "five", 6: "six",
+             7: "seven", 8: "eight", 9: "nine", 10: "ten", 11: "eleven"}
+    r35 = [(d["assessments"].get("R3.5") or {}).get("verdict")
+           for d in subjects.values()]
+    r35 = [v for v in r35 if v]
+    cannot, applicable = r35.count("absent"), len(r35)
+    want = ("%s of the %s assessed systems that take actions could not say "
+            "which person approved one"
+            % (words[cannot].capitalize(), words[applicable]))
+    check("the approval sentence matches the assessments", want in llms,
+          want)
+    # And every page it points at is a page that exists.
+    import re as _re
+    linked = set(_re.findall(r"https://machinetestimony\.org/([a-z0-9/-]+)/",
+                             llms))
+    gone = sorted(p for p in linked
+                  if not os.path.exists(os.path.join(PUB, *p.split("/"),
+                                                     "index.html")))
+    check("every machinetestimony.org page it names exists", not gone, gone)
+
+
     print("\nthe underwriting page counts what the census actually found")
     # Every number on that page is a claim to an underwriter about eight named
     # products. It is recomputed here from the assessments rather than trusted,
