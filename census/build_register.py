@@ -14,7 +14,7 @@ Nothing here is written by hand. A verdict on the page that is not in a subject
 file is impossible by construction, which matters more here than it does on an
 ordinary page: this is the surface a vendor would object to.
 
-Copyright 2026 Michael Brandon Clifford. MIT licensed.
+Copyright 2026 Garnet Taurus Ltd. MIT licensed.
 """
 from __future__ import annotations
 

@@ -10,7 +10,7 @@
     "derives"
   ],
   "assessed_on": "2026-09-04",
-  "assessed_by": "Michael Brandon Clifford",
+  "assessed_by": "Troy Brandon Clifford",
   "method": "Read of graphiti_core/edges.py, graphiti_core/nodes.py and graphiti_core/utils/maintenance/edge_operations.py at a6e026f, cloned from the public repository. Line numbers are that commit's.",
   "notes": "Graphiti is bi-temporal by design and it shows in almost every answer here. A fact that stops being true is not removed: resolve_edge_contradictions stamps invalid_at and expired_at on the existing edge and keeps it, so both sides of a disagreement remain in the graph and a query about a past moment can still be answered. Facts also point at the episodes they were extracted from, and the raw episode content is retained as a separate node type, which means the told and the inferred can never be confused for one another. This is the strongest showing of the systems assessed so far and it was arrived at independently of this specification, which is the most useful kind of agreement. The single thing standing between it and TR-1 is that deletion, when it does happen, leaves no record that it happened.",
   "assessments": {

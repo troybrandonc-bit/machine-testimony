@@ -24,7 +24,7 @@ not failing at approval gates; it is not an approval gate. Scoring it as a
 failure would be dishonest, so subjects declare their scope and requirements
 outside it resolve to `not_applicable`.
 
-Copyright 2026 Michael Brandon Clifford. MIT licensed.
+Copyright 2026 Garnet Taurus Ltd. MIT licensed.
 """
 from __future__ import annotations
 

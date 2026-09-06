@@ -18,7 +18,7 @@ The second property is that wrapping must be invisible. CrewAI builds
 schema would present every tool to the model as taking no arguments. That is a
 silent failure that still passes a smoke test, so it gets an assertion.
 
-Copyright 2026 Michael Brandon Clifford. MIT licensed.
+Copyright 2026 Garnet Taurus Ltd. MIT licensed.
 """
 import io
 import os

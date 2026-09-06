@@ -10,7 +10,7 @@
     "acts"
   ],
   "assessed_on": "2026-09-04",
-  "assessed_by": "Michael Brandon Clifford",
+  "assessed_by": "Troy Brandon Clifford",
   "method": "Read of src/agent/memory-git.ts, memory-git-signing.ts, memory-git-hooks.ts, acting-user.ts, check-approval.ts, approval-result-normalization.ts and src/tools/manager.ts at e0a0e1e, cloned from the public repository. Line numbers are that commit's. SCOPE: this repository is the harness. Agent messages, including approval requests and responses, are held by the Letta server, which is not in it. Requirements that turn on the shape of that record are marked undetermined rather than guessed, and say so.",
   "notes": "The memory here is a git repository, and that one decision answers most of TR-1 by itself: every memory write is a commit, so nothing is overwritten, every prior version is readable, and the history has an author. It is the only assessed system whose store is content-addressed by construction, which puts it closer to TR-4 than anything else in this census. Two things stop it going further and both are deliberate. Commit signing is not merely absent but explicitly disabled, in memory-git-signing.ts, because the harness-managed committer identities have no key, so a rewritten history is indistinguishable from an original one to anyone who did not record a SHA beforehand. And git's durability cuts the other way on erasure: deleting a memory is a commit, which records the deletion and keeps the deleted content in history, so honouring a real erasure request means rewriting the history that was the point of using git. The approval flow could not be settled from this repository and is marked accordingly rather than assumed.",
   "assessments": {

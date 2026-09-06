@@ -10,7 +10,7 @@
     "derives"
   ],
   "assessed_on": "2026-09-04",
-  "assessed_by": "Michael Brandon Clifford",
+  "assessed_by": "Troy Brandon Clifford",
   "method": "Read of mem0/memory/main.py, mem0/memory/storage.py, mem0/configs/base.py and mem0/configs/prompts.py at 9a7924b, cloned from the public repository. Line numbers are that commit's.",
   "notes": "mem0 is a memory layer built for retrieval quality and low integration cost, and its update phase consolidates on purpose: when new information contradicts an existing memory, the prompt at configs/prompts.py:264 instructs the model to delete the old one. Most of the gaps here follow directly from that goal rather than being oversights against it, and mem0 has never claimed to be an audit record. What the assessment says is narrow: a deployment that later needs to show what the agent believed and why will not find those facts here, because the design traded them away for something else it wanted more. Two findings are worth the maintainers' attention independently of any of that, and both are noted on the requirements they sit under: R1.5, where a deleted memory's text is retained in the local history database, and R2.2, where nothing distinguishes an LLM-extracted fact from a message stored verbatim.",
   "assessments": {

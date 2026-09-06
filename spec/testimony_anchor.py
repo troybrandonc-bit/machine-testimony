@@ -32,7 +32,7 @@ No dependencies. The request is a few dozen bytes of DER built by hand below,
 because the alternative is asking every implementer to install a certificate
 library to emit one entry.
 
-Copyright 2026 Michael Brandon Clifford. MIT licensed.
+Copyright 2026 Garnet Taurus Ltd. MIT licensed.
 """
 from __future__ import annotations
 

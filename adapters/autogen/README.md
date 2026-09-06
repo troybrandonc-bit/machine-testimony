@@ -74,5 +74,5 @@ receipt, not an account of itself.
 `tests/tests_autogen_testimony.py`, 28 checks, run against a real
 `autogen_core` workbench. CI installs the library and fails if the suite skips.
 
-MIT. Copyright 2026 Michael Brandon Clifford.
+MIT. Copyright 2026 Garnet Taurus Ltd.
 The specification: <https://datatracker.ietf.org/doc/draft-clifford-testimony-record/>

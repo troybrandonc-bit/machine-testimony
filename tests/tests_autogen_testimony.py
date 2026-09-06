@@ -19,7 +19,7 @@ Three properties, each a way an approval gate quietly stops being one.
   THE RECORD MUST SURVIVE THE VALIDATOR. Not "looks right": run through the
   reference validator, which is the same file a stranger would run.
 
-Copyright 2026 Michael Brandon Clifford. MIT licensed.
+Copyright 2026 Garnet Taurus Ltd. MIT licensed.
 """
 import asyncio
 import io

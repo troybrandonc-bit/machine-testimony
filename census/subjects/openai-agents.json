@@ -11,7 +11,7 @@
     "acts"
   ],
   "assessed_on": "2026-09-04",
-  "assessed_by": "Michael Brandon Clifford",
+  "assessed_by": "Troy Brandon Clifford",
   "method": "Read of src/agents/tool.py, src/agents/run_state.py, src/agents/_tool_invocation.py, src/agents/memory/sqlite_session.py and src/agents/memory/openai_responses_compaction_session.py at 89c02c8, cloned from the public repository. Line numbers are that commit's.",
   "notes": "This is the first system assessed here that gates actions, so it is the first with anything to say at TR-3, and the shape of the answer is consistent: the SDK knows a great deal about WHAT was proposed and almost nothing about WHO allowed it. Tools carry needs_approval set in developer code, a run keeps a canonical ledger of tool invocations recording whether each executed, and a rejection can carry a reason. But approve() takes no approver, and the only thing called an identity in the approval path identifies the tool call rather than a person. The other half of the picture is the session layer, where the default store is append-only but the optional compaction session clears the whole history and writes back a model-written summary in its place. Both observations describe an SDK doing its job: it is a framework for building agents, not a record of what they did, and it does not claim otherwise.",
   "assessments": {

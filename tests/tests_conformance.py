@@ -11,7 +11,7 @@ The runner is checked too. It is the file a stranger copies, and it has already
 had one defect that would have told every Windows user their implementation
 produced no answer.
 
-Copyright 2026 Michael Brandon Clifford. MIT licensed.
+Copyright 2026 Garnet Taurus Ltd. MIT licensed.
 """
 import io
 import json

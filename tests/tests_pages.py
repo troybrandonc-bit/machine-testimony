@@ -16,7 +16,7 @@ which every sub-page had until today, because the generator that composed them
 lived outside the repository where nobody could see it disagreeing with the
 homepage.
 
-Copyright 2026 Michael Brandon Clifford. MIT licensed.
+Copyright 2026 Garnet Taurus Ltd. MIT licensed.
 """
 import html
 import io

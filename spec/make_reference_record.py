@@ -18,7 +18,7 @@ old token stays valid for the old record; it is simply no longer the one on
 the page. Do not rerun it casually, because the digest on the page is
 something people may have quoted.
 
-Copyright 2026 Michael Brandon Clifford. MIT licensed.
+Copyright 2026 Garnet Taurus Ltd. MIT licensed.
 """
 from __future__ import annotations
 

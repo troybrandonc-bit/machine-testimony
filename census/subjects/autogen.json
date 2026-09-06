@@ -10,7 +10,7 @@
     "acts"
   ],
   "assessed_on": "2026-09-04",
-  "assessed_by": "Michael Brandon Clifford",
+  "assessed_by": "Troy Brandon Clifford",
   "method": "Read of python/packages/autogen-core/src/autogen_core/memory/_base_memory.py and _list_memory.py, and python/packages/autogen-agentchat/src/autogen_agentchat/agents/_code_executor_agent.py at 027ecf0, cloned from the public repository. Line numbers are that commit's.",
   "notes": "AutoGen is assessed as storing and acting but not deriving: its memory holds what a caller puts in it, and any inference is done by the user's agents rather than by the framework. It has the best-modelled approval request in this census. ApprovalRequest carries the code and the full LLM context, and ApprovalResponse requires a reason rather than accepting a bare boolean, which is more than the other frameworks here ask for. Two things stop that translating into a record. The reason reaches the transcript interpolated into an output string on a result carrying exit_code=1, which is the same shape an execution error takes, so a refusal and a crash are indistinguishable to anything reading afterwards. And ApprovalResponse has no approver, so the fact that a person decided is not recorded even though the fact that a decision happened is. On the memory side, the built-in ListMemory is an append-only in-process list whose contents carry no timestamp at all.",
   "assessments": {

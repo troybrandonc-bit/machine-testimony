@@ -10,7 +10,7 @@
     "acts"
   ],
   "assessed_on": "2026-09-04",
-  "assessed_by": "Michael Brandon Clifford",
+  "assessed_by": "Troy Brandon Clifford",
   "method": "Read of libs/checkpoint/langgraph/checkpoint/base/__init__.py, libs/checkpoint-sqlite/langgraph/checkpoint/sqlite/__init__.py and libs/langgraph/langgraph/types.py at 81bf17b, cloned from the public repository. Line numbers are that commit's.",
   "notes": "LangGraph is assessed as storing and acting but not deriving. It persists state the graph computed and executes nodes with effects, but the framework itself makes no claims about the world beyond what its user's nodes put into a channel, so scoring it on the told-versus-inferred requirement would be scoring the user's code rather than the framework. Its checkpointer is the most append-only structure in this census: every checkpoint is a new row keyed by its own id, carrying parent_checkpoint_id, so the history of a thread is a chain nothing overwrites. The gap is the same one every other system here has, in the same place. interrupt() genuinely pauses before a consequential step, and the value that resumes it is an arbitrary payload with nobody's name on it.",
   "assessments": {

@@ -82,5 +82,5 @@ public `Model` interface. The agent, the Runner, the tool, the interruption,
 `to_state` and `approve`/`reject` are all the real ones, because those are what
 is under test.
 
-MIT. Copyright 2026 Michael Brandon Clifford.
+MIT. Copyright 2026 Garnet Taurus Ltd.
 The specification: <https://datatracker.ietf.org/doc/draft-clifford-testimony-record/>

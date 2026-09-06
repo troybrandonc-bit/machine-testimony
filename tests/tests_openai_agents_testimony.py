@@ -26,7 +26,7 @@ So the properties here are about identity, not about gating:
   this very SDK: a needs_approval predicate returned None from an unhandled
   branch, None read as no approval needed, and the gate opened.
 
-Copyright 2026 Michael Brandon Clifford. MIT licensed.
+Copyright 2026 Garnet Taurus Ltd. MIT licensed.
 """
 import asyncio
 import io

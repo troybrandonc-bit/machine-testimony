@@ -19,7 +19,7 @@ The point of putting these in code rather than in a style guide is that the
 census cannot be published with an assessment that breaks them. The check runs
 in CI like everything else.
 
-Copyright 2026 Michael Brandon Clifford. MIT licensed.
+Copyright 2026 Garnet Taurus Ltd. MIT licensed.
 """
 from __future__ import annotations
 

@@ -31,7 +31,7 @@ because somebody did that.
 
 This file has no dependencies and imports nothing of ours. Copy it.
 
-Copyright 2026 Michael Brandon Clifford. MIT licensed.
+Copyright 2026 Garnet Taurus Ltd. MIT licensed.
 """
 from __future__ import annotations
 

@@ -33,7 +33,7 @@ LLM, no API key, and nothing written outside a temporary directory.
 Exit 0 means the behaviour was demonstrated. Exit 1 means it was not, which
 would mean the census entry for mem0 R1.5 needs correcting.
 
-Copyright 2026 Michael Brandon Clifford. MIT licensed.
+Copyright 2026 Garnet Taurus Ltd. MIT licensed.
 """
 from __future__ import annotations
 
