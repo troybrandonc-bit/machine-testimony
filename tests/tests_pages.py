@@ -250,6 +250,68 @@ def main():
                   if not os.path.exists(os.path.join(PUB, *p.split("/"),
                                                      "index.html")))
     check("every machinetestimony.org page it names exists", not gone, gone)
+    print("")
+    print("no page quotes a census tally that has moved")
+    # The fourth stale hand-typed count found in this repository. This one sat
+    # two paragraphs below a sentence promising that the counts on the page are
+    # recomputed by the test suite rather than typed, which was true of that
+    # page's own counts and not of the census tally it quoted.
+    #
+    # Rather than guard the one sentence, this sweeps every published page for
+    # the shape of the claim, so the next one is caught wherever somebody
+    # writes it.
+    import re as _re
+    words = {1: "one", 2: "two", 3: "three", 4: "four", 5: "five", 6: "six",
+             7: "seven", 8: "eight", 9: "nine", 10: "ten", 11: "eleven",
+             12: "twelve"}
+    acting = [(d["assessments"].get("R3.5") or {}).get("verdict")
+              for d in subjects.values()]
+    acting = [v for v in acting if v]
+    want_acting = words.get(len(acting), str(len(acting)))
+    want_total = words.get(len(subjects), str(len(subjects)))
+
+    # `/census/2026-09/` is a dated document with a DOI. It assessed eight
+    # systems and it always will have, so it is excluded deliberately rather
+    # than by accident.
+    DATED = {os.path.join("census", "2026-09")}
+    shape = _re.compile(
+        r"(\w+)\s+(?:assessed\s+)?systems?\s+(?:there\s+)?that\s+take\s+or\s+gate",
+        _re.I)
+    bad = []
+    for base, _dirs, files in os.walk(PUB):
+        rel = os.path.relpath(base, PUB)
+        if rel in DATED or any(rel.startswith(d + os.sep) for d in DATED):
+            continue
+        if "index.html" not in files:
+            continue
+        page = io.open(os.path.join(base, "index.html"),
+                       encoding="utf-8").read()
+        for found in shape.findall(page):
+            if found.lower() not in (want_acting, str(len(acting))):
+                bad.append("/%s/ says %r, census says %r"
+                           % (rel.replace(os.sep, "/"), found, want_acting))
+    check("every page agrees on how many systems take or gate actions",
+          not bad, bad)
+
+    # The same for the plain total, which is the other number pages quote.
+    shape2 = _re.compile(r"(\w+)\s+(?:widely deployed\s+)?agent systems were",
+                         _re.I)
+    bad2 = []
+    for base, _dirs, files in os.walk(PUB):
+        rel = os.path.relpath(base, PUB)
+        if rel in DATED or any(rel.startswith(d + os.sep) for d in DATED):
+            continue
+        if "index.html" not in files:
+            continue
+        page = io.open(os.path.join(base, "index.html"),
+                       encoding="utf-8").read()
+        for found in shape2.findall(page):
+            if found.lower() not in (want_total, str(len(subjects))):
+                bad2.append("/%s/ says %r, census has %r"
+                            % (rel.replace(os.sep, "/"), found, want_total))
+    check("every page agrees on how many systems were assessed",
+          not bad2, bad2)
+
 
 
     print("\nthe underwriting page counts what the census actually found")
