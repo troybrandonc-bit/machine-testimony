@@ -1,6 +1,10 @@
 # Testimony Records from AutoGen
 
-One file. Copy `testimony_autogen.py` and
+```
+pip install testimony-autogen
+```
+
+Or one file: copy `testimony_autogen.py` and
 [`testimony_emit.py`](../../spec/testimony_emit.py) next to your agent. There is
 nothing else to install and nothing here depends on OMEM.
 

@@ -27,6 +27,7 @@ import re
 import shutil
 import subprocess
 import sys
+import tomllib
 import tempfile
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -290,7 +291,13 @@ def main():
         files = os.listdir(here)
         check("%s has a README" % d, "README.md" in files, files)
         check("%s carries its licence" % d, "LICENSE" in files, files)
-        mod = [f for f in files if f.startswith("testimony_") and f.endswith(".py")]
+        # hatch_build.py copies the validator and the emitter in beside the
+        # adapter at build time. They are gitignored, but a run after a local
+        # build sees them, and picking one of them as "the adapter" makes every
+        # check below examine the wrong file.
+        BUNDLED = {"testimony_validate.py", "testimony_emit.py"}
+        mod = [f for f in files if f.startswith("testimony_")
+               and f.endswith(".py") and f not in BUNDLED]
         check("%s has exactly one adapter module" % d, len(mod) == 1, mod)
         src = io.open(os.path.join(here, mod[0]), encoding="utf-8").read()
         check("%s needs nothing from OMEM" % d, "omem" not in src.lower())
@@ -315,6 +322,29 @@ def main():
               "testimony_validate" in rd)
         check("%s's README says it needs nothing of ours" % d,
               "nothing" in rd.lower())
+        # An adapter you cannot install is a file somebody has to be told
+        # about, which is friction at exactly the point where a reader becomes
+        # an implementer. Three of the four shipped without packaging.
+        check("%s is installable, not only copyable" % d,
+              "pyproject.toml" in files and "hatch_build.py" in files, files)
+        proj = io.open(os.path.join(here, "pyproject.toml"),
+                       encoding="utf-8").read()
+        # The dependency list, not the file: every one of these pyprojects
+        # carries a comment saying it does not depend on OMEM, and a substring
+        # search finds the promise rather than checking it.
+        deps = tomllib.loads(proj)["project"]["dependencies"]
+        check("%s depends on its framework and nothing else" % d,
+              len(deps) == 1 and "omem" not in deps[0].lower(), deps)
+        check("%s ships the validator with itself" % d,
+              "testimony-validate = " in proj)
+        # The three that import the emitter must carry it into the wheel, or
+        # the install is an ImportError with a stranger's name on it.
+        if "import testimony_emit" in src:
+            check("%s's wheel carries the emitter it imports" % d,
+                  proj.count("testimony_emit.py") >= 2, proj.count("testimony_emit.py"))
+        rd_pkg = io.open(os.path.join(here, "README.md"), encoding="utf-8").read()
+        check("%s's README opens with the install line" % d,
+              "pip install testimony-" in rd_pkg)
 
     print("\nthe demand reading counts what its own data says")
     # Every number on /demand/ is a claim about eighty-four issues belonging to
