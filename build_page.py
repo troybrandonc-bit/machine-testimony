@@ -41,6 +41,10 @@ EXTRA = """
   .block li{margin:0 0 7px}
   .dateline{font-family:var(--sans);font-size:12.5px;color:var(--muted);
     margin:0 0 22px}
+  /* The one sentence a page is allowed to insist on. For a measured number the
+     rest of the page exists to explain, never for emphasis on an opinion. */
+  p.callout{border-left:2px solid var(--band);padding:10px 0 10px 14px;
+    margin:0 0 17px;max-width:46rem}
   table.facts{width:100%;border-collapse:collapse;font-size:14px;margin:0 0 20px}
   table.facts th{text-align:left;font-family:var(--sans);font-size:11px;
     font-weight:700;letter-spacing:.06em;text-transform:uppercase;

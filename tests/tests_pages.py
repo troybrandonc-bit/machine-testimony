@@ -20,6 +20,7 @@ Copyright 2026 Michael Brandon Clifford. MIT licensed.
 """
 import html
 import io
+import json
 import os
 import re
 import shutil
@@ -164,6 +165,57 @@ def main():
     missing = sorted(tv.TYPES - known)
     check("every entry type the specification defines has a sentence",
           not missing, "no case for: %s" % missing)
+    print("\nthe underwriting page counts what the census actually found")
+    # Every number on that page is a claim to an underwriter about eight named
+    # products. It is recomputed here from the assessments rather than trusted,
+    # because the register is re-read on a schedule and a verdict that moves
+    # would otherwise leave a stale count in front of somebody pricing risk.
+    uw = io.open(os.path.join(PUB, "underwriting", "index.html"),
+                 encoding="utf-8").read()
+    subs = {}
+    sdir = os.path.join(ROOT, "census", "subjects")
+    for f in sorted(os.listdir(sdir)):
+        if f.endswith(".json"):
+            s = json.load(io.open(os.path.join(sdir, f), encoding="utf-8"))
+            subs[s["name"]] = {k: v["verdict"]
+                               for k, v in s["assessments"].items()}
+    check("the page speaks for every subject in the register",
+          len(subs) == 8, len(subs))
+
+    def tally(req):
+        vs = [v.get(req, "not_applicable") for v in subs.values()]
+        n = [v for v in vs if v != "not_applicable"]
+        return (len(n), n.count("present"), n.count("partial"),
+                n.count("absent"), n.count("undetermined"))
+
+    # (requirement, the row's six numbers as written on the page)
+    ROWS = [("R3.5", (6, 1, 0, 4, 1)), ("R3.6", (6, 1, 0, 4, 1)),
+            ("R3.7", (6, 1, 0, 4, 1)), ("R3.1", (6, 3, 3, 0, 0)),
+            ("R3.3", (6, 2, 4, 0, 0)), ("R3.4", (6, 2, 2, 2, 0)),
+            ("R1.2", (8, 5, 2, 1, 0)), ("R2.1", (8, 2, 4, 2, 0))]
+    for req, want in ROWS:
+        check("the %s row is what the assessments say" % req,
+              tally(req) == want, "page says %s, census says %s"
+              % (want, tally(req)))
+
+    # The two sentences the page puts in a callout, which is where a reader
+    # who reads nothing else will look.
+    n_acts, can, _, _, undet = tally("R3.5")
+    check("one of six acting systems can name an approver, as claimed",
+          (n_acts, can, undet) == (6, 1, 1), (n_acts, can, undet))
+    check("and the page says so in those words",
+          "one can name the person who approved an action" in uw)
+    tot, ver, _, _, _ = tally("R4.2")
+    check("six of eight cannot be verified without the vendor, as claimed",
+          (tot, tot - ver) == (8, 6), (tot, ver))
+    check("and the page says so in those words",
+          "six produce records\n        that cannot be verified without the "
+          "vendor" in uw or "six produce records" in uw)
+    check("it points at the register rather than asking to be believed",
+          'href="/register/"' in uw and 'href="/assess/"' in uw)
+    check("and it names no product it is selling",
+          "OMEM" not in uw and "omem" not in uw.lower())
+
 
     print("\nthe site does not link at things that are not there")
     dead = []
