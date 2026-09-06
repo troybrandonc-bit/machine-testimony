@@ -145,7 +145,9 @@ def main() -> int:
 
     b = []
     w = b.append
-    w("<!--title: Questions to ask your AI supplier")
+    # Metadata, matching a query. The page heading comes from the body.
+    w("<!--title: Questions to ask an AI supplier about logging and "
+      "audit trails")
     w("    desc: Eight questions about what a system records, with what a real "
       "answer looks like and what a soft yes sounds like. Free to send as your "
       "own, and grounded in a published assessment of eight agent systems.")

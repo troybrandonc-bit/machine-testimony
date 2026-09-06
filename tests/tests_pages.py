@@ -18,6 +18,7 @@ homepage.
 
 Copyright 2026 Garnet Taurus Ltd. MIT licensed.
 """
+import collections
 import html
 import io
 import json
@@ -398,6 +399,67 @@ def main():
           "Article 5" in act and "Article 50" in act)
     check("the correction is dated rather than quietly made",
           "Corrected 6 September 2026" in act)
+
+    print("\nevery page says what it is about in words somebody would search")
+    # A title and a description exist to match a query. These were written to
+    # read well instead, so the site ranked for nothing: a search for what a
+    # deployer actually types returned six results and none of them was here.
+    # The visible headings are untouched; only the metadata changed.
+    titles, descs = {}, {}
+    for page in pages():
+        src = io.open(page, encoding="utf-8").read()
+        rel = os.path.relpath(page, PUB).replace(os.sep, "/")
+        t = re.search(r"<title>([^<]*)", src)
+        d = re.search(r'<meta name="description" content="([^"]*)', src)
+        if t: titles[rel] = html.unescape(t.group(1)).replace(" – Machine Testimony", "")
+        if d: descs[rel] = html.unescape(d.group(1))
+
+    check("every page has a title", len(titles) == len(list(pages())),
+          "%d of %d" % (len(titles), len(list(pages()))))
+    check("every page has a description", len(descs) == len(titles),
+          sorted(set(titles) - set(descs)))
+    dupes = [t for t, n in collections.Counter(titles.values()).items() if n > 1]
+    check("no two pages share a title", not dupes, dupes)
+    check("no title is only the site name",
+          not [r for r, t in titles.items() if t.strip() == "Machine Testimony"],
+          [r for r, t in titles.items() if t.strip() == "Machine Testimony"])
+
+    # The words a buyer types. Not every page needs them, but a page whose
+    # subject is one of these and which never says the word cannot be found.
+    NEEDS = {
+        "eu-ai-act/index.html": ("EU AI Act", "Article 12"),
+        "register/index.html": ("audit trail",),
+        "tamper-evidence/index.html": ("Tamper-evident",),
+        "approvals/index.html": ("approval records",),
+        "underwriting/index.html": ("insurance",),
+    }
+    for rel, words in NEEDS.items():
+        blob = titles.get(rel, "") + " " + descs.get(rel, "")
+        missing = [w for w in words if w.lower() not in blob.lower()]
+        check("%s is findable by its own subject" % rel.split("/")[0],
+              not missing, "title and description never say: %s" % missing)
+
+    check("the corrected deadline is in the snippet a searcher reads",
+          "2 December 2027" in descs.get("eu-ai-act/index.html", ""))
+    # Rewriting the titles for search silently rewrote four visible headings
+    # too, because on those pages the heading text and the title were the same
+    # string. The promise of that change was that nothing a reader sees moves,
+    # so the promise is checked rather than remembered.
+    leaked = []
+    for page in pages():
+        src = io.open(page, encoding="utf-8").read()
+        t = re.search(r"<title>([^<]*)", src)
+        if not t:
+            continue
+        bare = html.unescape(t.group(1)).replace(" – Machine Testimony", "").strip()
+        if len(bare) < 25:
+            continue          # a short title can legitimately match a heading
+        for m in re.finditer(r"<h[12][^>]*>([^<]{25,})</h[12]>", src):
+            if html.unescape(m.group(1)).strip() == bare:
+                leaked.append(os.path.relpath(page, PUB))
+    check("no page's visible heading was replaced by its search title",
+          not leaked, sorted(set(leaked)))
+
 
     print("\nthe site does not link at things that are not there")
     dead = []
