@@ -237,7 +237,7 @@ jobs:
           testimony-validate out.jsonl --require TR-4
 
   drift:
-    name: the two copies of the validator are the same file
+    name: every copy of the validator is the same file
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -274,6 +274,47 @@ jobs:
             exit 1
           fi
           echo "identical"
+
+      # The Python validator was the only copy guarded, and it is not the only
+      # copy. testimony.ts is a second implementation of the same rules that
+      # the browser page and both repositories' equivalence suites run, and the
+      # .mts harness is what turns either into a report. On 6 September the
+      # harnesses had drifted: the OMEM copy had stopped emitting `basis`, so
+      # its equivalence suite compared verdicts without comparing whether
+      # anybody could confirm them, and was quietly weaker than the one
+      # published here.
+      - name: Compare the browser validator and its harness
+        run: |
+          BASE=https://raw.githubusercontent.com/troybrandonc-bit/Omem/main
+          fetch () {
+            for i in 1 2 3; do
+              if curl -sfL --max-time 30 "$1" -o "$2"; then return 0; fi
+              echo "attempt $i could not fetch $1, retrying"; sleep 5
+            done
+            echo "::error::could not fetch $1 after three attempts; this check has verified nothing"
+            exit 1
+          }
+          fetch "$BASE/web/lib/testimony.ts" /tmp/theirs.ts
+          fetch "$BASE/scripts/testimony_validate_js.mts" /tmp/theirs.mts
+          if ! diff -u /tmp/theirs.ts spec/testimony.ts > /tmp/dts.txt; then
+            echo "::error::the two copies of the browser validator have diverged"
+            head -60 /tmp/dts.txt
+            exit 1
+          fi
+          # The harnesses legitimately differ in one line, the import path,
+          # because the validator sits somewhere else in each repository.
+          # Everything else about them, including which fields they report,
+          # must agree.
+          grep -v '^import ' /tmp/theirs.mts > /tmp/a.mts
+          grep -v '^import ' spec/testimony_validate_js.mts > /tmp/b.mts
+          if ! diff -u /tmp/a.mts /tmp/b.mts > /tmp/dmts.txt; then
+            echo "::error::the two validator harnesses report different things"
+            echo "A harness that omits a field makes its own suite weaker than"
+            echo "the other one without either failing. Bring them back level."
+            head -40 /tmp/dmts.txt
+            exit 1
+          fi
+          echo "both identical, harness aside from its import"
 
   draft:
     name: the draft renders, and agrees with the validator
