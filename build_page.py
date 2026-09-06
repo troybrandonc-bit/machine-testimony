@@ -45,7 +45,7 @@ EXTRA = """
      rest of the page exists to explain, never for emphasis on an opinion. */
   p.callout{border-left:2px solid var(--band);padding:10px 0 10px 14px;
     margin:0 0 17px;max-width:46rem}
-  table.facts{width:100%;border-collapse:collapse;font-size:14px;margin:0 0 20px}
+  table.facts{width:100%;border-collapse:collapse;font-size:14px;margin:0 0 20px;font-variant-numeric:tabular-nums}
   table.facts th{text-align:left;font-family:var(--sans);font-size:12.5px;
     font-weight:600;color:var(--body);padding:0 12px 6px 0;
     white-space:nowrap;vertical-align:top;width:8.5rem}
@@ -56,7 +56,7 @@ EXTRA = """
      than pushing the page sideways, which is the thing that made the site
      unreadable on a phone the first time. */
   .scroller{overflow-x:auto;max-width:100%;margin:0 0 16px}
-  table.reg{border-collapse:collapse;font-size:14px;min-width:34rem}
+  table.reg{border-collapse:collapse;font-size:14px;min-width:34rem;font-variant-numeric:tabular-nums}
   table.reg th{text-align:left;font-family:var(--sans);font-size:12.5px;
     font-weight:600;color:var(--body);padding:0 14px 7px 0;
     white-space:nowrap;border-bottom:1px solid var(--rule)}
@@ -154,7 +154,7 @@ def build(fragment: str) -> str:
 <link rel="canonical" href="https://machinetestimony.org/{info['slug']}/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 {css}
 {EXTRA}</style>

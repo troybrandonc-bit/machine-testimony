@@ -22,7 +22,7 @@
 <link rel="canonical" href="https://machinetestimony.org/register/haystack/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 
   /* Built to the NBER pattern, which is what a research bureau's site actually
@@ -37,7 +37,7 @@
     --rule:#c9cfd4; --rule-soft:#e3e7ea; --label:#123a6b; --link:#123a6b;
     --display:"Source Serif 4",Georgia,"Times New Roman",serif;
     --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-    --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
   }
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
@@ -108,7 +108,7 @@
   .block p{margin:0 0 15px;max-width:46rem}
   .block p:last-child{margin-bottom:0}
 
-  table.levels{width:100%;border-collapse:collapse;font-size:16px}
+  table.levels{width:100%;border-collapse:collapse;font-size:16px;font-variant-numeric:tabular-nums}
   table.levels th{text-align:left;font-family:var(--sans);font-size:12.5px;color:var(--muted);
     font-weight:600;padding:0 14px 8px 0;border-bottom:1px solid var(--rule)}
   table.levels td{padding:13px 14px 13px 0;border-bottom:1px solid var(--rule-soft);
@@ -160,7 +160,7 @@
      rest of the page exists to explain, never for emphasis on an opinion. */
   p.callout{border-left:2px solid var(--band);padding:10px 0 10px 14px;
     margin:0 0 17px;max-width:46rem}
-  table.facts{width:100%;border-collapse:collapse;font-size:14px;margin:0 0 20px}
+  table.facts{width:100%;border-collapse:collapse;font-size:14px;margin:0 0 20px;font-variant-numeric:tabular-nums}
   table.facts th{text-align:left;font-family:var(--sans);font-size:12.5px;
     font-weight:600;color:var(--body);padding:0 12px 6px 0;
     white-space:nowrap;vertical-align:top;width:8.5rem}
@@ -171,7 +171,7 @@
      than pushing the page sideways, which is the thing that made the site
      unreadable on a phone the first time. */
   .scroller{overflow-x:auto;max-width:100%;margin:0 0 16px}
-  table.reg{border-collapse:collapse;font-size:14px;min-width:34rem}
+  table.reg{border-collapse:collapse;font-size:14px;min-width:34rem;font-variant-numeric:tabular-nums}
   table.reg th{text-align:left;font-family:var(--sans);font-size:12.5px;
     font-weight:600;color:var(--body);padding:0 14px 7px 0;
     white-space:nowrap;border-bottom:1px solid var(--rule)}

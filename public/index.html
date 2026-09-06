@@ -22,7 +22,7 @@
 <link rel="canonical" href="https://machinetestimony.org/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Inter:wght@400;450;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Inter:wght@400;450;500&display=swap" rel="stylesheet">
 <style>
   /* Built to the NBER pattern, which is what a research bureau's site actually
      looks like: one coloured band carrying the lockup, the utility links, the
@@ -36,7 +36,7 @@
     --rule:#c9cfd4; --rule-soft:#e3e7ea; --label:#123a6b; --link:#123a6b;
     --display:"Source Serif 4",Georgia,"Times New Roman",serif;
     --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-    --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
   }
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
@@ -107,7 +107,7 @@
   .block p{margin:0 0 15px;max-width:46rem}
   .block p:last-child{margin-bottom:0}
 
-  table.levels{width:100%;border-collapse:collapse;font-size:16px}
+  table.levels{width:100%;border-collapse:collapse;font-size:16px;font-variant-numeric:tabular-nums}
   table.levels th{text-align:left;font-family:var(--sans);font-size:12.5px;color:var(--muted);
     font-weight:600;padding:0 14px 8px 0;border-bottom:1px solid var(--rule)}
   table.levels td{padding:13px 14px 13px 0;border-bottom:1px solid var(--rule-soft);
