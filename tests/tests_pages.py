@@ -318,8 +318,11 @@ def main():
               "takes a decide() callable but has no NoDecision guard"
               if takes_predicate else "no explicit approve/refuse either")
         rd = io.open(os.path.join(here, "README.md"), encoding="utf-8").read()
+        # Either form: the script name for a copied file, or the console
+        # command the wheel installs. The property is that the README says how
+        # to check the output, not which spelling it uses.
         check("%s's README says how to check the output" % d,
-              "testimony_validate" in rd)
+              "testimony_validate" in rd or "testimony-validate" in rd)
         check("%s's README says it needs nothing of ours" % d,
               "nothing" in rd.lower())
         # An adapter you cannot install is a file somebody has to be told
