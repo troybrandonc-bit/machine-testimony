@@ -1,5 +1,5 @@
 <!--title: Implement audit records for AI agents: format, validator, adapters
-    desc: Add conformant audit records to an AI agent in an afternoon, with two files. A single-file emitter with no dependencies, and 52 records with the verdict each should get, so you can tell when you are finished.
+    desc: Add conformant audit records to an AI agent in an afternoon, with two files. A single-file emitter with no dependencies, and 53 records with the verdict each should get, so you can tell when you are finished.
     slug: implement-->
 
 <div class="wrap main">
@@ -69,12 +69,12 @@ python3 demo/what_your_log_cannot_answer.py</pre>
       <h3>Knowing when you are finished</h3>
       <p>The
         <a href="https://github.com/troybrandonc-bit/machine-testimony/tree/main/conformance">conformance
-        corpus</a> is 52 records and the verdict each one should get. The runner
+        corpus</a> is 53 records and the verdict each one should get. The runner
         takes your command and compares.</p>
 
       <pre class="snip">python3 conformance/run.py --command "python3 my_validator.py --json {file}"
 
-52 of 52 agree with the reference</pre>
+53 of 53 agree with the reference</pre>
 
       <p><code>run.py</code> imports nothing of ours. Copy it into your
         repository and run it in your own CI, which is the only kind of
@@ -82,15 +82,15 @@ python3 demo/what_your_log_cannot_answer.py</pre>
 
       <h3>What conformance means here, and what it does not</h3>
       <p>Your implementation reaches the same verdict as the reference on all
-        52 cases. It does not mean the same check names, the same wording, or
+        53 cases. It does not mean the same check names, the same wording, or
         the same number of checks. Those are this project's prose, and a corpus
         that compared them would be testing whether you had transliterated
         somebody else's file rather than implemented a specification. An
         independent implementation is the entire point, so the comparison is
         deliberately blind to everything except the answer.</p>
 
-      <p>It is also not a certificate. It is a statement about 52 cases, and
-        the specification is larger than any 52 cases.</p>
+      <p>It is also not a certificate. It is a statement about 53 cases, and
+        the specification is larger than any 53 cases.</p>
 
       <h3>Two cases worth reading first</h3>
       <p><code>digest-of-nothing</code> is sixty-four zeros where a digest
