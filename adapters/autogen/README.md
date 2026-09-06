@@ -1,7 +1,10 @@
 # Testimony Records from AutoGen
 
-_Packaged and tested; the first publish to PyPI is pending, so for
-now it is one file._ Copy `testimony_autogen.py` and
+```
+pip install testimony-autogen
+```
+
+Or one file: copy `testimony_autogen.py` and
 [`testimony_emit.py`](../../spec/testimony_emit.py) next to your agent. There is
 nothing else to install and nothing here depends on OMEM.
 

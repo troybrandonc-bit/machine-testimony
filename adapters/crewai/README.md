@@ -1,7 +1,10 @@
 # Testimony Records from CrewAI
 
-_Packaged and tested; the first publish to PyPI is pending, so for
-now it is one file._ Copy `testimony_crewai.py` and
+```
+pip install testimony-crewai
+```
+
+Or one file: copy `testimony_crewai.py` and
 [`testimony_emit.py`](../../spec/testimony_emit.py) next to your crew. There is
 nothing else to install and nothing here depends on OMEM.
 
