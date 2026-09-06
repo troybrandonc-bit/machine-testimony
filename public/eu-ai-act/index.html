@@ -109,13 +109,12 @@
   .block p:last-child{margin-bottom:0}
 
   table.levels{width:100%;border-collapse:collapse;font-size:16px}
-  table.levels th{text-align:left;font-family:var(--sans);font-size:11px;
-    letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+  table.levels th{text-align:left;font-family:var(--sans);font-size:12.5px;color:var(--muted);
     font-weight:600;padding:0 14px 8px 0;border-bottom:1px solid var(--rule)}
   table.levels td{padding:13px 14px 13px 0;border-bottom:1px solid var(--rule-soft);
     vertical-align:top}
   table.levels td.lv{font-family:var(--sans);font-weight:700;font-size:12.5px;
-    color:var(--label);white-space:nowrap;letter-spacing:.04em}
+    color:var(--label);white-space:nowrap;}
   table.levels td.t{font-weight:600;color:var(--ink);min-width:15rem}
 
   .entries{list-style:none;margin:0;padding:0}
@@ -123,8 +122,7 @@
   .entries li:first-child{padding-top:0}
   .entries h3{font-size:1.12rem;font-weight:600;margin:0 0 4px;line-height:1.32}
   .entries h3 a{color:var(--ink)}
-  .entries .kind{font-family:var(--sans);font-weight:700;font-size:11px;
-    letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+  .entries .kind{font-family:var(--sans);font-weight:600;font-size:12.5px;color:var(--muted);
     display:block;margin-bottom:5px}
   .entries p{margin:0;font-size:16px;max-width:44rem}
   .entries .meta{margin-top:7px;font-family:var(--sans);font-size:12.5px;
@@ -147,27 +145,56 @@
     padding:20px 0 46px;font-family:var(--sans);font-size:13.5px;color:var(--muted)}
   footer.foot p{margin:0 0 4px}
 
+  /* Only what a prose page needs beyond the shared stylesheet. */
+  pre.snip{background:none;border-left:2px solid var(--rule);margin:0 0 16px;
+    padding:2px 0 2px 13px;font-size:13px;overflow-x:auto;max-width:100%;
+    font-family:var(--mono);line-height:1.55}
+  pre.snip.addr{overflow-x:visible;white-space:pre-wrap;overflow-wrap:anywhere}
   .block h3{font-family:var(--display);font-weight:600;color:var(--ink);
     font-size:1.08rem;margin:26px 0 8px}
   .block ol,.block ul{margin:0 0 15px;padding-left:1.15rem;max-width:46rem}
   .block li{margin:0 0 7px}
   .dateline{font-family:var(--sans);font-size:12.5px;color:var(--muted);
     margin:0 0 22px}
-  table.map{width:100%;border-collapse:collapse;font-size:15px;margin:6px 0 18px}
-  table.map th{text-align:left;font-family:var(--sans);font-size:11px;
-    letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
-    font-weight:600;padding:0 12px 8px 0;border-bottom:1px solid var(--rule)}
-  table.map td{padding:11px 12px 11px 0;vertical-align:top;
-    border-bottom:1px solid var(--rule-soft);overflow-wrap:anywhere}
-  table.map td.a{font-family:var(--sans);font-weight:600;color:var(--ink);
-    white-space:nowrap;width:6.5rem;font-size:13.5px}
-  table.map td.lv{font-family:var(--sans);font-weight:700;font-size:12.5px;
-    color:var(--muted);white-space:nowrap;width:4.5rem}
+  /* The one sentence a page is allowed to insist on. For a measured number the
+     rest of the page exists to explain, never for emphasis on an opinion. */
+  p.callout{border-left:2px solid var(--band);padding:10px 0 10px 14px;
+    margin:0 0 17px;max-width:46rem}
+  table.facts{width:100%;border-collapse:collapse;font-size:14px;margin:0 0 20px}
+  table.facts th{text-align:left;font-family:var(--sans);font-size:12.5px;
+    font-weight:600;color:var(--body);padding:0 12px 6px 0;
+    white-space:nowrap;vertical-align:top;width:8.5rem}
+  table.facts td{padding:0 0 6px;font-family:var(--mono);font-size:12.5px;
+    overflow-wrap:anywhere;border-bottom:1px solid var(--rule-soft)}
+  table.facts th{width:6.6rem;font-size:11.5px}
+  /* The register's tables. A wide table scrolls inside its own box rather
+     than pushing the page sideways, which is the thing that made the site
+     unreadable on a phone the first time. */
+  .scroller{overflow-x:auto;max-width:100%;margin:0 0 16px}
+  table.reg{border-collapse:collapse;font-size:14px;min-width:34rem}
+  table.reg th{text-align:left;font-family:var(--sans);font-size:12.5px;
+    font-weight:600;color:var(--body);padding:0 14px 7px 0;
+    white-space:nowrap;border-bottom:1px solid var(--rule)}
+  table.reg td{padding:8px 14px 8px 0;border-bottom:1px solid var(--rule-soft);
+    vertical-align:top}
+  table.reg td.s{font-weight:600;white-space:nowrap}
+  table.reg td.n,table.reg td.lv,table.reg td.d{font-family:var(--sans);
+    font-size:12.5px;white-space:nowrap;color:var(--body)}
+  table.reg td.lv{font-weight:700}
+  table.reg td.v{font-family:var(--sans);font-size:13px;font-weight:400;
+    white-space:nowrap;color:var(--muted)}
+  /* Absent is the finding, so it is the one that is not muted. */
+  table.reg td.v.n{color:var(--ink)}
+  table.reg td.w{font-family:var(--mono);font-size:12px;color:var(--muted);
+    overflow-wrap:anywhere}
+  .tag{font-family:var(--sans);font-size:12.5px;font-weight:400;
+    font-style:italic;color:var(--muted);white-space:nowrap}
   @media (max-width:620px){
-    table.map{font-size:14px}
-    table.map td{padding:9px 8px 9px 0}
-    table.map td.a{width:5rem;font-size:12.5px}
-    table.map td.lv{width:3.6rem;font-size:11.5px}
+    table.reg{font-size:13px}
+    table.reg td.w{font-size:11px}
+    pre.snip{font-size:12px}
+    table.facts th{width:6.6rem;font-size:10px}
+    table.facts td{font-size:11.5px}
   }
 </style>
 </head>
@@ -217,8 +244,6 @@
     </nav>
   </div>
 </div>
-
-
 <div class="wrap main">
   <div>
     <p class="dateline">Reference note, 5 September 2026</p>
@@ -443,7 +468,6 @@
     </ul>
   </aside>
 </div>
-
 <footer class="foot">
   <div class="wrap">
     <p>Editor: Troy Clifford. Operated by Garnet Taurus Ltd.</p>
