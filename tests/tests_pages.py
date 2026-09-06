@@ -828,6 +828,56 @@ def main():
             odd.append(os.path.relpath(page, PUB) + " (no nav)")
     check("no page has drifted from the homepage's navigation", not odd,
           "; ".join(odd[:4]))
+    print("")
+    print("every published page has a source that produces it")
+    # /changes/ was published with no source in pages/, so the rebuild check
+    # above never saw it, and it drifted: the live copy had been built by an
+    # older generator and carried a stylesheet two revisions behind. It is the
+    # governance page, which made it the worst one to leave unguarded.
+    #
+    # Converting it was cheap. The three below are not yet converted and are
+    # named here rather than left to be discovered, so the debt is visible and
+    # a fourth cannot appear quietly.
+    UNCONVERTED = {
+        "check",       # carries the browser validator, generated separately
+        "approvals",
+        "eu-ai-act",
+    }
+    # A different case, and the distinction matters. These are deposited
+    # documents with DOIs, frozen to match what Zenodo serves. They must never
+    # be regenerated from a source, because a source that could be rebuilt is a
+    # source that could quietly diverge from the deposit.
+    DEPOSITED = {
+        "census/2026-09",   # doi:10.5281/zenodo.22290922
+        "papers/wp1",       # doi:10.5281/zenodo.22286050
+    }
+    sources = set()
+    for f in os.listdir(os.path.join(ROOT, "pages")):
+        if not f.endswith(".html"):
+            continue
+        text = io.open(os.path.join(ROOT, "pages", f), encoding="utf-8").read()
+        m = re.search(r"slug:\s*([^\s>]+?)-->", text)
+        if m:
+            sources.add(m.group(1))
+    published = set()
+    for name in os.listdir(PUB):
+        d = os.path.join(PUB, name)
+        if os.path.isdir(d) and os.path.exists(os.path.join(d, "index.html")):
+            published.add(name)
+        # subject pages live one level down, under register/
+        sub = os.path.join(d, "index.html")
+        if os.path.isdir(d):
+            for inner in os.listdir(d):
+                if os.path.isdir(os.path.join(d, inner)) and os.path.exists(
+                        os.path.join(d, inner, "index.html")):
+                    published.add("%s/%s" % (name, inner))
+    orphans = sorted(published - sources - UNCONVERTED - DEPOSITED)
+    check("no published page lacks a source in pages/", not orphans, orphans)
+    # And the allowlist must not outlive the thing it excuses.
+    stale = sorted((UNCONVERTED | DEPOSITED) & sources)
+    check("the unconverted list names only pages that are still unconverted",
+          not stale, "now converted, remove from the list: %s" % stale)
+
 
     print("\nevery generated page is what its source produces")
     # Anything in pages/ is built by build_page.py. A generated page that has
