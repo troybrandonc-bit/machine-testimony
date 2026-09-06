@@ -217,6 +217,58 @@ def main():
           "OMEM" not in uw and "omem" not in uw.lower())
 
 
+    print("\nevery page closes the banner before the page begins")
+    # The banner is navy with near-white text. Left open it wraps the whole
+    # document, and every generated page on this site rendered that way from
+    # the day build_page.py was written until 6 September 2026. The suite did
+    # not catch it because it only asked whether each page matched what the
+    # generator produced, and the generator was consistently wrong. This asks
+    # about the result instead.
+    from html.parser import HTMLParser
+
+    class _Band(HTMLParser):
+        def __init__(self):
+            HTMLParser.__init__(self)
+            self.depth = []
+            self.band_at = None
+            self.closed = False
+            self.content_inside = False
+
+        def handle_starttag(self, tag, attrs):
+            if tag != "div":
+                return
+            cls = dict(attrs).get("class", "")
+            self.depth.append(cls)
+            if cls == "band" and self.band_at is None:
+                self.band_at = len(self.depth)
+            elif (self.band_at is not None and not self.closed
+                  and "wrap" in cls and "hero" not in cls
+                  and len(self.depth) == self.band_at + 1
+                  and ("main" in cls or "page" in cls)):
+                self.content_inside = True
+
+        def handle_endtag(self, tag):
+            if tag != "div" or not self.depth:
+                return
+            here = len(self.depth)
+            self.depth.pop()
+            if self.band_at is not None and here == self.band_at:
+                self.closed = True
+
+    unclosed, swallowed = [], []
+    for page in pages():
+        p = _Band()
+        p.feed(io.open(page, encoding="utf-8").read())
+        if p.band_at is None:
+            continue                      # a page with no banner is not a bug
+        rel = os.path.relpath(page, PUB)
+        if not p.closed:
+            unclosed.append(rel)
+        if p.content_inside:
+            swallowed.append(rel)
+    check("the banner div is closed on every page", not unclosed, unclosed)
+    check("so no page's content is inside it", not swallowed, swallowed)
+
     print("\nthe site does not link at things that are not there")
     dead = []
     for page in pages():
