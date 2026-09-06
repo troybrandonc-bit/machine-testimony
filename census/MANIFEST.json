@@ -57,6 +57,18 @@
       "digest": "sha256:eb4cbc876998f0716b6fbc617cbf25a11989bd59ceabcac4a0d006e234f409bd"
     },
     {
+      "file": "subjects/haystack.json",
+      "subject": "haystack",
+      "name": "Haystack",
+      "version": "3.1.1+ (82da3ad)",
+      "url": "https://github.com/deepset-ai/haystack",
+      "commit": "82da3adc2fac4675b80ff5573b790ec07113697b",
+      "assessed_on": "2026-09-06",
+      "level_reached": null,
+      "assessed_by": "Troy Brandon Clifford",
+      "digest": "sha256:4069ea9a99ee37330ad3b8b743d033824655f99f6fad07fc2d3a7c9f7f88a450"
+    },
+    {
       "file": "subjects/langgraph.json",
       "subject": "langgraph",
       "name": "LangGraph",
@@ -133,7 +145,7 @@
     "rubric.py": "sha256:716880b1bf0a8c5152b871559e6e641a0e6822af91c9d9446053644174832518",
     "subject.py": "sha256:46032f4a40827aba0bf72497442bf8c9a7922ecd55539d711287dea13b4a7f35"
   },
-  "census_digest": "sha256:45bb3ffe9c848d4c54a6f231be1faffdfd151085b1a0f62c504e2480e8eba6e8",
+  "census_digest": "sha256:8d215c9229f6f96ccd6b6e8e55e4ed4060d5773176fd798b37655fdd26b03265",
   "recompute": "python3 benchmarks/census/manifest.py --check",
   "note": "Each subject names the exact commit its citations refer to. A system that later gains a capability recorded here as absent has not made this document wrong: the assessment was of that commit, which still exists and still reads the same way. A later assessment is a new entry with a new date, never an edit to this one."
 }

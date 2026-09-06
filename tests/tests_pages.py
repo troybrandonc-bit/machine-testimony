@@ -182,7 +182,7 @@ def main():
             subs[s["name"]] = {k: v["verdict"]
                                for k, v in s["assessments"].items()}
     check("the page speaks for every subject in the register",
-          len(subs) == 9, len(subs))
+          len(subs) == 10, len(subs))
 
     def tally(req):
         vs = [v.get(req, "not_applicable") for v in subs.values()]
@@ -191,10 +191,10 @@ def main():
                 n.count("absent"), n.count("undetermined"))
 
     # (requirement, the row's six numbers as written on the page)
-    ROWS = [("R3.5", (7, 1, 0, 5, 1)), ("R3.6", (7, 1, 0, 5, 1)),
-            ("R3.7", (7, 1, 0, 5, 1)), ("R3.1", (7, 4, 3, 0, 0)),
-            ("R3.3", (7, 3, 4, 0, 0)), ("R3.4", (7, 2, 3, 2, 0)),
-            ("R1.2", (9, 5, 3, 1, 0)), ("R2.1", (9, 2, 5, 2, 0))]
+    ROWS = [("R3.5", (8, 1, 0, 6, 1)), ("R3.6", (8, 1, 0, 6, 1)),
+            ("R3.7", (8, 1, 0, 6, 1)), ("R3.1", (8, 5, 3, 0, 0)),
+            ("R3.3", (8, 4, 4, 0, 0)), ("R3.4", (8, 2, 4, 2, 0)),
+            ("R1.2", (10, 5, 3, 2, 0)), ("R2.1", (10, 2, 6, 2, 0))]
     for req, want in ROWS:
         check("the %s row is what the assessments say" % req,
               tally(req) == want, "page says %s, census says %s"
@@ -203,16 +203,16 @@ def main():
     # The two sentences the page puts in a callout, which is where a reader
     # who reads nothing else will look.
     n_acts, can, _, _, undet = tally("R3.5")
-    check("one of seven acting systems can name an approver, as claimed",
-          (n_acts, can, undet) == (7, 1, 1), (n_acts, can, undet))
+    check("one of eight acting systems can name an approver, as claimed",
+          (n_acts, can, undet) == (8, 1, 1), (n_acts, can, undet))
     check("and the page says so in those words",
           "one can name the person who approved an action" in uw)
     tot, ver, _, _, _ = tally("R4.2")
-    check("seven of nine cannot be verified without the vendor, as claimed",
-          (tot, tot - ver) == (9, 7), (tot, ver))
+    check("eight of ten cannot be verified without the vendor, as claimed",
+          (tot, tot - ver) == (10, 8), (tot, ver))
     check("and the page says so in those words",
-          "seven produce records\n        that cannot be verified without the "
-          "vendor" in uw or "seven produce records" in uw)
+          "eight produce records\n        that cannot be verified without the "
+          "vendor" in uw or "eight produce records" in uw)
     check("it points at the register rather than asking to be believed",
           'href="/register/"' in uw and 'href="/assess/"' in uw)
     check("and it names no product it is selling",
