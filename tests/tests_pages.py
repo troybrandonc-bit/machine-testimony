@@ -269,6 +269,52 @@ def main():
     check("the banner div is closed on every page", not unclosed, unclosed)
     check("so no page's content is inside it", not swallowed, swallowed)
 
+    print("\nthe site knows about every adapter that exists")
+    # Three adapters shipped on 6 September with no README and no mention on
+    # the page a stranger is sent to, which is the page that says what to do
+    # when you are already in a framework. An adapter nobody can find is not
+    # distribution, and that is the whole argument for writing adapters.
+    adir = os.path.join(ROOT, "adapters")
+    built = sorted(d for d in os.listdir(adir)
+                   if os.path.isdir(os.path.join(adir, d)))
+    check("there are adapters to check", len(built) >= 4, built)
+
+    impl = io.open(os.path.join(PUB, "implement", "index.html"),
+                   encoding="utf-8").read()
+    missing = [d for d in built if "/adapters/" + d not in impl]
+    check("/implement/ links every adapter directory", not missing, missing)
+
+    for d in built:
+        here = os.path.join(adir, d)
+        files = os.listdir(here)
+        check("%s has a README" % d, "README.md" in files, files)
+        check("%s carries its licence" % d, "LICENSE" in files, files)
+        mod = [f for f in files if f.startswith("testimony_") and f.endswith(".py")]
+        check("%s has exactly one adapter module" % d, len(mod) == 1, mod)
+        src = io.open(os.path.join(here, mod[0]), encoding="utf-8").read()
+        check("%s needs nothing from OMEM" % d, "omem" not in src.lower())
+        # Every one of these is a gate, and a gate that can be read as
+        # permitting by accident is the defect they were written against.
+        # The three taking a decide() callable must refuse anything that is not
+        # a decision they issued. LangGraph's takes none: the caller calls
+        # approve() or refuse() by name, so there is no predicate whose return
+        # value could be misread, and demanding the guard there would be asking
+        # for an answer to a question that cannot be posed.
+        # "decide" as a substring also matches the word "decided" in
+        # prose, which is how this first read LangGraph as taking a
+        # callable it has never had.
+        takes_predicate = "decide=" in src or "self._decide" in src
+        check("%s cannot be read as permitting by accident" % d,
+              ("NoDecision" in src) if takes_predicate
+              else ("def approve" in src and "def refuse" in src),
+              "takes a decide() callable but has no NoDecision guard"
+              if takes_predicate else "no explicit approve/refuse either")
+        rd = io.open(os.path.join(here, "README.md"), encoding="utf-8").read()
+        check("%s's README says how to check the output" % d,
+              "testimony_validate" in rd)
+        check("%s's README says it needs nothing of ours" % d,
+              "nothing" in rd.lower())
+
     print("\nthe site does not link at things that are not there")
     dead = []
     for page in pages():
