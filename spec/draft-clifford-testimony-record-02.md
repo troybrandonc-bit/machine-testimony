@@ -386,6 +386,22 @@ entry's digest. The `messageImprint` of the TSTInfo in that token MUST be
 the entry's digest: a token signed over anything else is a valid timestamp
 for some other record and says nothing about this one.
 
+A `kind` SHOULD be an absolute URI or a reverse-DNS name, such as
+`org.opentimestamps`, rather than a bare word. This is not about making a false
+claim harder to write, which it barely does. It is that `kind` is an extension
+point, and an unregistered extension point collides: two implementers who
+independently choose `blockchain` for different mechanisms produce records a
+validator reads as the same claim when they are not. The problem gets worse as
+adoption improves, which is the kind worth fixing before it exists, and it is
+why namespaces, package names and media types all settled on the same
+convention.
+
+A bare word is not refused. Refusing one would fail an honest emitter over
+spelling, and the identifier resolving an ambiguity does not make the claim it
+carries any more checkable: an anchor whose kind is a URI is attested on exactly
+the same terms as one whose kind is a word, and an implementation MUST NOT
+report it otherwise.
+
 Other kinds are permitted and `rfc3161` is not privileged. A digest committed
 to a public blockchain, or published to independent relays, is an external
 anchor by the definition above: evidence for it is held by somebody other than
@@ -755,6 +771,12 @@ distinction, and a decision that contradicts itself between `executed`,
 `verdict` and `outcome` no longer reaches TR-3. Observing an action run and
 being unable to confirm its effect is not a contradiction: a call that returned
 while settlement is pending is both.
+
+An anchor's `kind` SHOULD now be an absolute URI or a reverse-DNS name, because
+an unregistered extension point collides between honest implementers, which is a
+failure mode that needs nobody to lie. A bare word is still accepted, and a
+URI-shaped one is attested on the same terms, since an identifier resolves
+ambiguity rather than manufacturing evidence.
 
 An anchor of a kind an implementation cannot recompute is now reported as
 attested rather than refused. The reference validator read every anchor token
