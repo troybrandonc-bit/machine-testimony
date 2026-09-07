@@ -269,6 +269,32 @@ def cases():
     add("anchor", "a record a third party signed, published at /anchor/",
         anchored)
 
+    # An advisory system: it assesses and records, and somebody else executes.
+    # Two things about it were expressible and had no worked example, so an
+    # implementer had to infer both from prose. First, that `acts: false` is the
+    # honest declaration for a party that judges but does not run anything, and
+    # that such a record is not marked down for carrying no decisions. Second,
+    # that an anchor kind this validator cannot recompute reaches the same level
+    # as one it can, reported as attested rather than refused.
+    #
+    # Together they are the shape of every independent assurance service: a
+    # judgement, the evidence it rested on, and a commitment to a clock nobody
+    # in the transaction controls. It reaches TR-4 and nothing about it is
+    # forced.
+    advisory = [
+        scope(acts=False),
+        ev(),
+        bel(proposition="safe_to_execute", asserted_by="review.v4"),
+    ]
+    add("advisory-anchored-elsewhere",
+        "a system that judges but does not act, anchored by a kind this "
+        "validator cannot recompute",
+        advisory + [integrity(advisory, scheme="external-anchor",
+                              anchor={"kind": "opentimestamps",
+                                      "authority": "bitcoin proof-of-work",
+                                      "token": "AAAA"})])
+
+
     # ── the digest rule itself ──────────────────────────────────────────────
     body = gated()
     body[1]["confidence"] = 0.87

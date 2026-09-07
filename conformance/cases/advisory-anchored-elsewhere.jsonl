@@ -1,0 +1,4 @@
+{"spec": "testimony-record/0.2", "type": "scope", "id": "s1", "at": "2026-09-01T09:00:00Z", "acts": false}
+{"spec": "testimony-record/0.2", "type": "evidence", "id": "e1", "at": "2026-09-01T09:00:01Z", "kind": "api", "source": "crm://1"}
+{"spec": "testimony-record/0.2", "type": "belief", "id": "b1", "at": "2026-09-01T09:00:02Z", "proposition": "safe_to_execute", "asserted_by": "review.v4", "subject": "customer:a", "polarity": "affirm", "state": "believed_true", "evidence": ["e1"]}
+{"spec": "testimony-record/0.2", "type": "integrity", "id": "i1", "at": "2026-09-01T09:00:05Z", "scheme": "external-anchor", "digest": "sha256:e4d749dca1dd24bb936ed368afd125d4499bcf3f32e00428cb3175064958d6f6", "covers": ["s1", "e1", "b1"], "anchor": {"kind": "opentimestamps", "authority": "bitcoin proof-of-work", "token": "AAAA"}}
