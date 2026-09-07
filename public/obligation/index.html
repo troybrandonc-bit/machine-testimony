@@ -3,23 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Verify an AI record was not altered, without the vendor &ndash; Machine Testimony</title>
-<meta name="description" content="A published AI agent audit record, anchored to an RFC 3161 Time Stamp Authority. Three commands verify it, none of them ours.">
-<meta property="og:title" content="Verify an AI record was not altered, without the vendor">
-<meta property="og:description" content="A published AI agent audit record, anchored to an RFC 3161 Time Stamp Authority. Three commands verify it, none of them ours.">
+<title>Everyone requires the log. Nobody requires it to name who approved &ndash; Machine Testimony</title>
+<meta name="description" content="A law, a certification scheme, a controls catalogue and a governance framework read against four questions. All three that specify a record require one to be kept. None requires it to say who authorised the action, and none requires it to be checkable by anyone other than the party that wrote it.">
+<meta property="og:title" content="Everyone requires the log. Nobody requires it to name who approved">
+<meta property="og:description" content="A law, a certification scheme, a controls catalogue and a governance framework read against four questions. All three that specify a record require one to be kept. None requires it to say who authorised the action, and none requires it to be checkable by anyone other than the party that wrote it.">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://machinetestimony.org/anchor/">
+<meta property="og:url" content="https://machinetestimony.org/obligation/">
 <meta property="og:image" content="https://machinetestimony.org/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Verify an AI record was not altered, without the vendor">
-<meta name="twitter:description" content="A published AI agent audit record, anchored to an RFC 3161 Time Stamp Authority. Three commands verify it, none of them ours.">
+<meta name="twitter:title" content="Everyone requires the log. Nobody requires it to name who approved">
+<meta name="twitter:description" content="A law, a certification scheme, a controls catalogue and a governance framework read against four questions. All three that specify a record require one to be kept. None requires it to say who authorised the action, and none requires it to be checkable by anyone other than the party that wrote it.">
 <meta name="twitter:image" content="https://machinetestimony.org/og.png">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/icon.png" type="image/png" sizes="512x512">
 <link rel="apple-touch-icon" href="/icon.png">
-<link rel="canonical" href="https://machinetestimony.org/anchor/">
+<link rel="canonical" href="https://machinetestimony.org/obligation/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -247,137 +247,157 @@
 </div>
 <div class="wrap main">
   <div>
-    <p class="dateline">Reference record, 5 September 2026</p>
-    <h2 class="label">A record you can check without us</h2>
+    <p class="dateline">Reading, 7 September 2026</p>
+    <h2 class="label">Everyone requires the log. Nobody requires it to name who approved.</h2>
 
     <div class="block">
-      <p>A record's integrity digest is computed by whoever wrote the record.
-        It detects an outsider's edit, which is worth having, and it establishes
-        nothing about the writer: anybody able to change the entries can
-        recompute the digest over the changed ones and hand you a file that
-        agrees with itself.</p>
+      <p>From 2 December 2027, a deployer of a high-risk AI system in the
+        European Union must keep the logs its system generates. Article 12
+        says the system shall technically allow for the automatic recording
+        of events over its lifetime. Article 26(6) says the deployer shall
+        keep those logs for at least six months. Article 14 says a natural
+        person shall oversee the system.</p>
 
-      <p>The record below closes that. Its digest is signed by a Time Stamp
-        Authority, under that authority's own key, at a time nobody here
-        chose. Three commands check it. None of them is ours, and none of them
-        needs anything from this site except the two files.</p>
+      <p>None of those articles says what has to be in the record for it to
+        answer a question afterwards. So it is worth asking whether anything
+        else does. Four instruments were read against four questions.</p>
 
-      <h3>The files</h3>
-      <p><a href="/anchor/record.jsonl">record.jsonl</a> is thirteen entries: a
-        support agent that reads four sources, finds two systems of record
-        disagreeing about a customer's balance, refuses to close the account,
-        and issues a smaller refund that a named person approved. It is a
-        worked example rather than a real customer, and everything in it is
-        invented except the anchor.</p>
+      <p class="callout"><b>Where these require a record of what an automated
+        system did, do they require it to say who authorised a consequential
+        action, and to be checkable by somebody other than the party that
+        produced it?</b></p>
 
-      <p><a href="/anchor/anchor.tsr">anchor.tsr</a> is the timestamp token,
-        as returned by the authority.</p>
-
-      <table class="facts">
-        <tr><th>Digest</th>
-          <td>sha256:34bf5a95693e32fe9bb9a8f4975ea1807d309855e9f09bbb0f3d6cb05606b6e8</td></tr>
-        <tr><th>Authority</th><td>http://timestamp.digicert.com</td></tr>
-        <tr><th>Signed at</th><td>2026-09-05T14:31:54Z</td></tr>
-        <tr><th>Covers</th><td>12 entries, named in the record</td></tr>
+      <h3>What the reading found</h3>
+      <div class="scroller">
+      <table class="reg">
+        <thead><tr>
+          <th>Instrument</th><th>Kind</th>
+          <th>Record<br>required</th><th>Who<br>authorised</th>
+          <th>Shown<br>unaltered</th><th>Retention<br>stated</th>
+        </tr></thead>
+        <tbody>
+          <tr><td class="s">EU AI Act</td><td class="d">law</td>
+            <td class="v">required</td><td class="v n">absent</td>
+            <td class="v n">absent</td><td class="v">required</td></tr>
+          <tr><td class="s">ForHumanity</td><td class="d">certification scheme</td>
+            <td class="v">required</td><td class="v n">absent</td>
+            <td class="v">partial</td><td class="v">required</td></tr>
+          <tr><td class="s">CoSAI Risk Map</td><td class="d">controls catalogue</td>
+            <td class="v">required</td><td class="v n">absent</td>
+            <td class="v">partial</td><td class="v n">absent</td></tr>
+          <tr><td class="s">NIST AI RMF 1.0</td><td class="d">governance framework</td>
+            <td class="v">n/a</td><td class="v">n/a</td>
+            <td class="v">n/a</td><td class="v">n/a</td></tr>
+        </tbody>
       </table>
+      </div>
 
-      <h3>One: recompute the digest</h3>
-      <p>The digest is over the twelve entries the record's integrity entry
-        names, each written as JSON with its members in order and no spare
-        whitespace, joined by newlines. Nothing here reads the digest; it
-        computes one and you compare.</p>
+      <p>Three of the four specify what a record must contain. All three
+        require one to be kept. <b>None of the three requires it to name the
+        person who authorised an action, and none requires it to be capable of
+        being shown unaltered by anyone other than its author.</b></p>
 
-      <pre class="snip">python3 -c '
-import hashlib, json, sys
-e = [json.loads(l) for l in open("record.jsonl") if l.strip()]
-b = [x for x in e if x["type"] != "integrity"]
-c = [json.dumps(x, sort_keys=True, separators=(",", ":")) for x in b]
-print(hashlib.sha256("\n".join(c).encode()).hexdigest())'</pre>
+      <h3>The law has the gap too</h3>
+      <p>This is the part worth sitting with. It would be one thing if the
+        schemes were behind the regulation. They are not. The regulation has
+        the same hole.</p>
 
-      <h3>Two: read what the authority signed</h3>
-      <pre class="snip">openssl ts -reply -in anchor.tsr -text</pre>
+      <p>Across Articles 12, 14 and 26 there are ten references to recording
+        events and nine to human oversight. There is not one requirement that
+        the record say which person exercised that oversight, and not one
+        occurrence of tamper, unaltered, integrity of the log or independent
+        verification. The logs must exist, and must be kept for six months.
+        Nothing requires that a kept log can be shown to be the one that was
+        written.</p>
 
-      <p>The <code>Message data</code> it prints is the same digest. That is
-        the binding: the authority signed this record and not another one.</p>
+      <p>So a deployer can be fully compliant with Article 12 and Article 26,
+        hand a regulator six months of logs, and be unable to demonstrate
+        either that a human approved a particular action or that the file
+        produced is the file recorded.</p>
 
-      <h3>Three: check the signature against your own roots</h3>
-      <p>Use your system's certificate store, not one we supply. On Debian or
-        Ubuntu it is the path below; on a Mac with Homebrew's OpenSSL it is
-        usually <code>/opt/homebrew/etc/openssl@3/cert.pem</code>.</p>
+      <h3>ForHumanity has the vocabulary and spends it elsewhere</h3>
+      <p>Of everything read, the ForHumanity criteria are much the most
+        developed on record-keeping: roughly 1,300 uses of the word log across
+        five documents, and an Event Log established over twelve areas of an
+        agentic system including the orchestration layer, outcomes, a risk log
+        and a human interactions log.</p>
 
-      <pre class="snip">openssl ts -verify -in anchor.tsr \
-  -digest 34bf5a95693e32fe9bb9a8f4975ea1807d309855e9f09bbb0f3d6cb05606b6e8 \
-  -CAfile /etc/ssl/certs/ca-certificates.crt</pre>
+      <p>The Event Log is then defined as five components paraphrased from
+        ISO 27001: user ID, system activity, date and time, device and
+        location, and IP address. That answers which session acted. It does not
+        answer which person allowed it, and the phrase who approved does not
+        appear in the five documents.</p>
 
-      <pre class="snip">Verification: OK</pre>
+      <p>The integrity vocabulary is present and properly defined. Data
+        Integrity is taken from NIST as data not altered in an unauthorised
+        manner, and Integrity as the degree to which a system prevents
+        unauthorised access or modification. Both are used only in test data
+        curation, where chain of custody is a step in the Data Curation
+        Report. The care is real, and it is aimed at the training data rather
+        than at the record of what the system did.</p>
 
-      <p>At that point you have checked, without trusting this site, that a
-        third party signed this exact set of bytes at that time.</p>
+      <h3>Why a framework sits in the table as not applicable</h3>
+      <p>NIST AI RMF 1.0 contains no occurrence of log, logging,
+        record-keeping or audit trail. Reporting that as a finding would be
+        the error this reading exists to avoid. The framework organises risk
+        management into four functions and deliberately specifies no controls;
+        the suggested actions live in a separate companion Playbook. A
+        document that does not specify controls is not failing to specify one,
+        in the same way that a vector store is not failing to authorise
+        actions.</p>
 
-      <h3>What that does and does not establish</h3>
-      <p>It establishes that the record existed in exactly this form at
-        2026-09-05T14:31:54Z, and that it has not changed since.</p>
+      <p>It is in the table so that the count of instruments that specify a
+        record is three rather than four, and so that the zero is visible
+        without being counted as a deficiency.</p>
 
-      <p>It does not establish that the record is true. It does not establish
-        that it is complete. It does not establish that a different record was
-        not produced at the same time and discarded. A timestamp fixes bytes
-        and a time, and a page that let you infer more from it would be making
-        the mistake this project exists to point at.</p>
+      <h3>One of them is already closing it</h3>
+      <p>CoSAI, the OASIS coalition, has a control requiring that an agent's
+        actions, tool use and reasoning be transparent and auditable through
+        logging, and a separate control requiring that all modifications to
+        runtime components be immutably recorded. That is immutability
+        required for configuration rather than for the action record, but the
+        idea is in the catalogue rather than absent from it.</p>
 
-      <p>The record says as much in its own integrity entry, in a
-        <code>does_not_prove</code> member, so a reader who has the file and
-        not this page is told the same thing.</p>
+      <p>More to the point, a risk filed there on 6 September 2026 states the
+        distinction directly: the audit trail is intact, and what is false is
+        the content of the report. That is the same defect, arrived at
+        independently. It is open at the time of reading.</p>
 
-      <h3>Anchoring your own</h3>
-      <p>The tool is one standard-library file, MIT licensed, with no
-        dependencies. It builds the request by hand rather than asking you to
-        install a certificate library to emit one entry.</p>
+      <h3>The one that could not be read</h3>
+      <p>ISO/IEC 42001 is the most widely referenced AI management standard
+        and its text is paywalled. A reading whose rule is that every verdict
+        cites the clause it rests on cannot assess what it has not read, so it
+        has no row. That the deployers governed by a standard cannot read it
+        without paying is recorded as a fact about the field rather than
+        scored as a verdict.</p>
 
-      <pre class="snip">python3 testimony_anchor.py record.jsonl &gt;&gt; record.jsonl
-python3 testimony_validate.py record.jsonl</pre>
+      <h3>What this does not show</h3>
+      <p>Four questions, not an assessment of whether any of these is good at
+        what it is for. Each of these instruments is doing a job, and none of
+        them set out to specify a record format. A scheme that answers no to
+        three questions here may be excellent at the thing it was written for.</p>
 
-      <p>Both are in the
-        <a href="https://github.com/troybrandonc-bit/machine-testimony">specification
-        repository</a>. You can also
-        <a href="/check/">check a record in the browser</a>, which runs the
-        same checks in a second implementation and never uploads anything.</p>
+      <p>Only published text was read, at the versions named in the data. A
+        criterion that exists in a draft, a working group or a later revision
+        is outside this. And a reading is wrong in the ordinary way readings
+        are wrong, which is why every verdict names the article, control or
+        criterion it rests on.</p>
 
-      <h3>What was wrong here until today</h3>
-      <p>Until 5 September 2026 the validator did not recompute digests. It
-        checked that an integrity entry carried one. A record could reach the
-        top level with a digest of sixty-four zeros, and an anchored record
-        could carry a real, correctly signed token over some entirely different
-        record.</p>
+      <h3>Check it</h3>
+      <p>The four questions, the verdicts, the documents read and the reasoning
+        for each are in
+        <a href="https://github.com/troybrandonc-bit/machine-testimony/blob/main/census/schemes/readings.json">census/schemes/readings.json</a>.
+        The counts on this page are recomputed from that file by the test suite
+        rather than typed.</p>
 
-      <p>Two further things came out of fixing it. The specification had never
-        said how a digest is computed, so no independent implementer could have
-        recomputed one; that is now written down. And the two implementations
-        of the rule in this author's own repositories had never agreed with
-        each other, because one of them left the default spacing in its JSON.
-        Neither was noticed for as long as nothing checked.</p>
-
-      <p>They are recorded here rather than quietly repaired, on the same
-        reasoning the rest of this applies to everybody else: a system that
-        cannot show what it got wrong is asking to be taken on trust.</p>
+      <p>The companion question, asked of the software rather than of the
+        rules, is the <a href="/register/">conformance census</a>: of the eight
+        systems there that take or gate actions, one can name the person who
+        approved. And the specific failure where the approval is recorded but
+        the action changes underneath it is
+        <a href="/approval-binding/">a separate reading</a>.</p>
     </div>
   </div>
-
-  <aside class="rail">
-    <h2 class="label">The files</h2>
-    <p class="cont"><a href="/anchor/record.jsonl">record.jsonl</a><br>
-      <a href="/anchor/anchor.tsr">anchor.tsr</a></p>
-
-    <h2 class="label">What each check rests on</h2>
-    <p class="cont">Recomputing the digest and reading the token are settled
-      from the files. The record's claim that its risk classes came from a
-      registry is not, and the browser validator marks it as an attestation
-      rather than counting it as proof.</p>
-
-    <hr>
-    <p class="cont"><a href="/check/">Check a record</a><br>
-      <a href="https://datatracker.ietf.org/doc/draft-clifford-testimony-record/">The specification, as an Internet-Draft</a><br>
-      <a href="/census/2026-09/">Eight systems, assessed</a></p>
-  </aside>
 </div>
 <footer class="foot">
   <div class="wrap">
