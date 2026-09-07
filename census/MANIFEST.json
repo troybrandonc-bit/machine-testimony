@@ -142,10 +142,10 @@
     }
   ],
   "scored_against": {
-    "rubric.py": "sha256:716880b1bf0a8c5152b871559e6e641a0e6822af91c9d9446053644174832518",
-    "subject.py": "sha256:46032f4a40827aba0bf72497442bf8c9a7922ecd55539d711287dea13b4a7f35"
+    "rubric.py": "sha256:59cb8c7fb77debc1949724d9eeac83601e952ce1f00567f31327b8b733437663",
+    "subject.py": "sha256:578d31a2809361ea8c9db3fe77fb42b7110c85c9e08fada33ae4a6529bdacd71"
   },
-  "census_digest": "sha256:8d215c9229f6f96ccd6b6e8e55e4ed4060d5773176fd798b37655fdd26b03265",
+  "census_digest": "sha256:a0a8ab5541fcd15c79b9984593e80692ab6ce70e1bf51a43be4ae63df8cf0126",
   "recompute": "python3 benchmarks/census/manifest.py --check",
   "note": "Each subject names the exact commit its citations refer to. A system that later gains a capability recorded here as absent has not made this document wrong: the assessment was of that commit, which still exists and still reads the same way. A later assessment is a new entry with a new date, never an edit to this one."
 }

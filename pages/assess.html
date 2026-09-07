@@ -39,6 +39,41 @@ cp census/TEMPLATE.json census/subjects/their-system.json</pre>
         <code>present</code> beside each one, so the work is reading source and
         writing down what you found.</p>
 
+      <h3>If you are on the register and you have fixed it</h3>
+      <p>Ask, and the system is read again at whatever commit you name. There
+        is no fee, no form, and no conditions. Open an issue or write to the
+        address below, say which commit, and the reading happens against the
+        same twenty requirements everybody else was read against.</p>
+
+      <p><b>The earlier assessment is not deleted and not edited.</b> It moves
+        to <span class="mono">census/subjects/prior/</span> exactly as it was
+        published, stays digested by the manifest, and the new file names it.
+        Both dates stay readable. That is the rule the whole thing rests on: a
+        verdict is about a named tree, so a later fix does not make the earlier
+        reading false, and a re-reading produces a new assessment beside the old
+        one rather than a quiet correction.</p>
+
+      <p>It also means the two can be compared, which is the point. A reader can
+        see a system that moved, and can see that the second reading was not
+        kinder than the first.</p>
+
+      <p><b>What is not on offer.</b> No sight of the verdict before it is
+        published, no right of reply inside the assessment, and no agreement not
+        to publish a worse result than last time. If the re-reading finds fewer
+        requirements met, that is what goes up. A re-assessment nobody could
+        fail would not be worth requesting.</p>
+
+      <p>The mechanics are one script, so that a re-reading costs the same
+        reading the first one did rather than a rename:</p>
+
+      <pre class="snip">python3 census/reassess.py their-system --commit &lt;40 hex&gt;     --version "1.4.0" --on 2026-10-01</pre>
+
+      <p>Every verdict in the reopened file is written over with
+        <span class="mono">pending</span> and the old one kept beside it in
+        <span class="mono">was</span>. The checker refuses to publish a file
+        that still carries one, so each requirement has to be settled by opening
+        the source again.</p>
+
       <h3>Your assessment, as a record</h3>
       <p>The instrument asks ten systems whether they can say what they
         concluded, on what evidence, and who concluded it. Until now it could
