@@ -39,6 +39,42 @@ cp census/TEMPLATE.json census/subjects/their-system.json</pre>
         <code>present</code> beside each one, so the work is reading source and
         writing down what you found.</p>
 
+      <h3>Your assessment, as a record</h3>
+      <p>The instrument asks ten systems whether they can say what they
+        concluded, on what evidence, and who concluded it. Until now it could
+        not answer those questions about its own conclusions. An assessor ran
+        the rubric, formed twenty verdicts and handed over a document, and
+        nothing bound that document to the commit it was read at, the rubric
+        version it was scored against, or the person who scored it.</p>
+
+      <pre class="snip">python3 census/testify.py their-system &gt; assessment.jsonl</pre>
+
+      <p>Every verdict becomes a belief. Every citation becomes evidence that
+        belief names, including the search that found nothing, which is the only
+        honest way to evidence an absence. The subject's commit and a digest of
+        the rubric are in the record rather than in a covering email, so both
+        sides of the comparison are pinned. It reaches TR-4 and declares that it
+        does not act, because an assessment reads and concludes and gates
+        nothing.</p>
+
+      <p>Stamp the digest with a Time Stamp Authority and pass
+        <span class="mono">--anchor</span>, and your client can hand the result
+        to a regulator, an insurer or the other side, who can check it
+        <i>without trusting you</i>. That is the property that makes an
+        assessment worth something to somebody who was not there, and no report
+        on letterhead has it.</p>
+
+      <p><b>One thing does not map, and the tool says so rather than hiding
+        it.</b> The rubric has five verdicts and the format has four belief
+        states. Present, absent and undetermined land exactly. Not applicable is
+        not a belief about the system and is listed in the scope entry instead.
+        <span class="mono">partial</span> has no honest home: it is not believed
+        true, not believed false, and not unknown, since the assessor knows
+        precisely what they found. It is emitted as unknown with the verdict
+        kept verbatim beside it. That is a finding about the format, recorded
+        rather than resolved by picking whichever state flattered the
+        result.</p>
+
       <h3>The rule the whole thing rests on</h3>
       <p>Every verdict cites evidence, <b>including a verdict of absence</b>.
         Saying a system does not record something, without saying where you

@@ -544,6 +544,16 @@ jobs:
           set +e; out=$(python tests_census.py 2>&1); rc=$?; set -e
           echo "$out"
           [ $rc -eq 0 ] || { echo "::error::the census suite failed"; exit 1; }
+      # An instrument that grades others on being able to say what they
+      # concluded, and cannot say it about its own conclusions, is an opinion
+      # with a rubric attached. So the assessment emits a record and the record
+      # is held to the specification the assessment applies.
+      - name: An assessment survives the standard it applies
+        working-directory: tests
+        run: |
+          set +e; out=$(python tests_testify.py 2>&1); rc=$?; set -e
+          echo "$out"
+          [ $rc -eq 0 ] || { echo "::error::the assessment records failed"; exit 1; }
       - name: The shipped manifest is the manifest of the shipped files
         run: |
           before=$(python -c "import json,io;print(json.load(io.open('census/MANIFEST.json',encoding='utf-8'))['census_digest'])")
