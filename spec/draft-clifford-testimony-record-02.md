@@ -385,6 +385,19 @@ TimeStampResp {{!RFC3161}} obtained from a Time Stamp Authority over the
 entry's digest. The `messageImprint` of the TSTInfo in that token MUST be
 the entry's digest: a token signed over anything else is a valid timestamp
 for some other record and says nothing about this one.
+
+Other kinds are permitted and `rfc3161` is not privileged. A digest committed
+to a public blockchain, or published to independent relays, is an external
+anchor by the definition above: evidence for it is held by somebody other than
+the emitter. An implementation that cannot recompute a given kind MUST NOT
+refuse the record on that ground. It reports the anchor as attested and says
+which kind it could not read, so a reader learns that this level rests on one
+fewer settled check and why.
+
+Refusing an unrecognised kind marks a record down for carrying evidence the
+reader's tools happen not to parse, which says nothing about the record. An
+implementation that reports it as verified without reading it is worse, and is
+the failure this format exists to make visible.
 Such a token is verifiable by any RFC 3161 implementation, without reference to
 the emitter or to this document's tooling, which is the property that makes it
 worth more than a digest the emitter computed. It fixes the bytes and the time
@@ -742,6 +755,12 @@ distinction, and a decision that contradicts itself between `executed`,
 `verdict` and `outcome` no longer reaches TR-3. Observing an action run and
 being unable to confirm its effect is not a contradiction: a call that returned
 while settlement is pending is both.
+
+An anchor of a kind an implementation cannot recompute is now reported as
+attested rather than refused. The reference validator read every anchor token
+as an RFC 3161 TimeStampResp whatever its `kind` said, so a digest committed to
+Bitcoin proof-of-work could not reach the fourth level: it was marked down for
+carrying evidence no single authority can move.
 
 The clock is now named as an attested claim. Every `at` is written by the
 emitter, and the section listing what a reader cannot settle did not say so,

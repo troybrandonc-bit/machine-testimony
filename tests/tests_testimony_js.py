@@ -183,6 +183,35 @@ def records():
         out["an entry written after the authority saw it"] = "\n".join(
             json.dumps(e) for e in forward)
 
+    # An anchor kind the validator cannot recompute. Nothing here read `kind`
+    # until 7 September 2026, so a digest committed to Bitcoin proof-of-work
+    # failed the imprint comparison and could not reach TR-4: marked down for
+    # carrying evidence no single authority can move. Both validators have to
+    # agree on the dispatch as well as on the parsing, or a record's level
+    # depends on which one you ran.
+    anchor_entry = next((e for e in lines
+                         if e.get("type") == "integrity" and e.get("anchor")), None)
+    if anchor_entry:
+        def with_anchor(**fields):
+            out = []
+            for e in lines:
+                if e is anchor_entry:
+                    e = dict(e, anchor=dict(e["anchor"], **fields))
+                out.append(e)
+            return "\n".join(json.dumps(x) for x in out)
+
+        out["an anchor committed to bitcoin, not a TSA"] = with_anchor(
+            kind="opentimestamps", token="AAAA",
+            authority="bitcoin proof-of-work via OpenTimestamps")
+        out["an anchor kind nobody has implemented"] = with_anchor(
+            kind="somebody-elses-scheme", token="AAAA")
+        # The dispatch must not become a way past the check it replaces.
+        out["an rfc3161 anchor whose token is rubbish"] = with_anchor(token="AAAA")
+        out["an anchor of any kind with no token at all"] = "\n".join(
+            json.dumps(dict(e, anchor={k: v for k, v in e["anchor"].items()
+                                       if k != "token"})
+                       if e is anchor_entry else e) for e in lines)
+
     return out
 
 
