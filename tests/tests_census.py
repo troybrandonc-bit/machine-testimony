@@ -453,5 +453,92 @@ check("no count exceeds the number of systems it applies to",
       all(int(a) <= int(b) <= len(subject.load_all(SUBJ)) for a, b in _pairs),
       _pairs)
 
+
+print("\na re-reading costs what the first reading cost")
+# The offer is the point of this, and an offer is only worth what its terms are.
+# These hold the terms rather than the prose: that a reopened subject cannot be
+# published without being read, that the earlier assessment survives unedited,
+# and that the page does not promise a preview or a veto to anybody.
+import shutil                                                   # noqa: E402
+import tempfile                                                 # noqa: E402
+sys.path.insert(0, os.path.join(ROOT, "census"))
+import reassess as ra                                           # noqa: E402
+import subject as sub                                           # noqa: E402
+
+work = tempfile.mkdtemp()
+try:
+    real = os.path.join(ROOT, "census", "subjects")
+    shutil.copytree(real, os.path.join(work, "subjects"))
+    ra.SUBJECTS = os.path.join(work, "subjects")
+    ra.PRIOR = os.path.join(ra.SUBJECTS, "prior")
+
+    before = sub.load(os.path.join(ra.SUBJECTS, "langgraph.json"))
+    kept, opened = ra.reassess("langgraph", "b" * 40, "9.9.9", "2026-10-01")
+
+    check("the assessment being replaced is kept", os.path.exists(kept), kept)
+    archived = json.load(io.open(kept, encoding="utf-8"))
+    check("and is byte-for-byte what was published",
+          archived == before, "the archived copy was altered")
+
+    after = json.load(io.open(opened, encoding="utf-8"))
+    check("the reopened file names what it supersedes",
+          after["supersedes"]["commit"] == before["commit"]
+          and after["supersedes"]["file"].endswith(os.path.basename(kept)),
+          after.get("supersedes"))
+    check("and carries the level the earlier reading reached",
+          after["supersedes"]["level"] == sub.level_reached(before),
+          after["supersedes"].get("level"))
+
+    # The whole point. A re-assessment must not be publishable by renaming the
+    # last one, so every inherited verdict is void until somebody reads it.
+    verdicts = {a["verdict"] for a in after["assessments"].values()}
+    check("every inherited verdict is void until it is read again",
+          verdicts == {"pending"}, verdicts)
+    check("and the verdict it had before is kept beside it",
+          all(a.get("was") for a in after["assessments"].values()))
+    still = [p for p in sub.validate(after) if "still pending" in p]
+    check("the checker refuses to publish a file still pending",
+          len(still) == len(after["assessments"]), len(still))
+    check("and says where the old verdict went",
+          all("'was'" in p for p in still))
+
+    # A re-reading of the same tree is not a re-reading. Checked on an
+    # untouched copy, because the file above is now pending and would be
+    # refused for that reason first.
+    shutil.copytree(real, os.path.join(work, "again"))
+    ra.SUBJECTS = os.path.join(work, "again")
+    ra.PRIOR = os.path.join(ra.SUBJECTS, "prior")
+    same = False
+    try:
+        ra.reassess("langgraph", before["commit"], "1.0", "2026-10-02")
+    except SystemExit:
+        same = True
+    check("re-assessing the same commit is refused", same)
+    short = False
+    try:
+        ra.reassess("langgraph", "abc123", "1.0", "2026-10-02")
+    except SystemExit:
+        short = True
+    check("and an abbreviated commit is refused, as in a first reading", short)
+finally:
+    shutil.rmtree(work, ignore_errors=True)
+
+print("\nthe offer says the unwelcome half out loud")
+asx = io.open(os.path.join(ROOT, "public", "assess", "index.html"), encoding="utf-8").read()
+reg = io.open(os.path.join(ROOT, "public", "register", "index.html"), encoding="utf-8").read()
+flat_a, flat_r = " ".join(asx.split()), " ".join(reg.split())
+check("the re-reading is offered without a fee or conditions",
+      "no fee, no form, and no conditions" in flat_a)
+check("the earlier assessment is promised unedited, on both pages",
+      "prior/" in flat_a and "prior/" in flat_r)
+# An offer that guaranteed the result could only improve would make every row
+# on the register worth less, so refusing that has to be published, not implied.
+for page, flat in (("assess", flat_a), ("register", flat_r)):
+    check("/%s/ refuses to promise a better result" % page,
+          "worse result than last time" in flat, page)
+check("and refuses a preview of the verdict, on both",
+      all("no sight of the verdict before it" in f.lower()
+          for f in (flat_a, flat_r)))
+
 print("\n%d passed, %d failed" % (PASS, FAIL))
 sys.exit(1 if FAIL else 0)

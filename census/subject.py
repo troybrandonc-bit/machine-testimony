@@ -131,6 +131,17 @@ def validate(doc: dict) -> list[str]:
             continue
 
         verdict = got.get("verdict")
+        if verdict == rubric.PENDING:
+            # A subject reopened at a newer commit inherits the old verdicts
+            # with this written over each of them. Refusing it here is what
+            # makes a re-assessment cost the same reading the first one did: a
+            # file cannot be published by renaming the last one and changing
+            # the date.
+            problems.append(
+                f"{req.id}: still pending. This subject was reopened at a new "
+                f"commit and this requirement has not been read there yet. The "
+                f"verdict it had before is in 'was'.")
+            continue
         if verdict not in rubric.VERDICTS:
             problems.append(f"{req.id}: verdict {verdict!r} is not one of "
                             f"{list(rubric.VERDICTS)}")

@@ -58,13 +58,20 @@ def _digest(path: str) -> str:
 
 def build() -> dict:
     rows = []
-    for name in sorted(os.listdir(SUBJECTS)):
-        if not name.endswith(".json"):
-            continue
+    names = [n for n in sorted(os.listdir(SUBJECTS)) if n.endswith(".json")]
+    # A superseded assessment stays published, because the rule the census
+    # rests on is that a verdict is about a named tree and a later fix does not
+    # make an earlier reading false. It is therefore digested here too, or a
+    # reader could not tell whether the version they are citing is the version
+    # that was published.
+    prior = os.path.join(SUBJECTS, "prior")
+    names += [os.path.join("prior", n)
+              for n in sorted(os.listdir(prior)) if n.endswith(".json")]         if os.path.isdir(prior) else []
+    for name in names:
         path = os.path.join(SUBJECTS, name)
         doc = subject.load(path)          # a manifest of invalid files is worthless
         rows.append({
-            "file": f"subjects/{name}",
+            "file": "subjects/" + name.replace(os.sep, "/"),
             "subject": doc["subject"],
             "name": doc["name"],
             "version": doc["version"],

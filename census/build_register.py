@@ -246,6 +246,22 @@ def main() -> int:
       "<code>troy@machinetestimony.com</code> naming the requirement and where "
       "to look. There is no fee and no advantage to being first, beyond the "
       "row being right sooner.</p>")
+    # The register was a judgement made once, which is the least useful shape
+    # it could have: the people with the most reason to care about a scoreboard
+    # are the ones on it, and nothing here gave them a way to move. The terms
+    # include the unwelcome half deliberately. A re-reading nobody could fail
+    # would not be worth asking for, and offering one would make every row on
+    # this page worth less.
+    w("      <p>Name a commit and the whole system is read again there, not "
+      "just the requirement you raised. The assessment you are replacing is "
+      "kept exactly as published, in <code>census/subjects/prior/</code>, "
+      "still digested by the manifest and still citable, and the new one names "
+      "it. Both dates stay readable, so a reader can see a system that moved "
+      "rather than a row that quietly changed. "
+      "<a href=\"/assess/\">The terms are the same for everybody</a> and they "
+      "include the unwelcome half: no sight of the verdict before it goes up, "
+      "no right of reply inside the assessment, and no undertaking to withhold "
+      "a worse result than last time.</p>")
     w("      <p>The date is not decoration. This page fails its own build once "
       "it has passed, so it either moves because the reading happened or it is "
       "withdrawn deliberately. A register still promising a reading that was "

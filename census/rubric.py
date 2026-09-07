@@ -45,6 +45,13 @@ CAPABILITIES = {
 # claimed on unchecked facts is not a level.
 VERDICTS = ("present", "partial", "absent", "undetermined", "not_applicable")
 
+# Not a verdict. What reassess.py writes over every inherited verdict when a
+# subject is reopened at a newer commit, so that a re-reading cannot be
+# published by doing nothing: each one has to be settled by opening the source
+# again. run.py --check refuses a file that still carries any, which is what
+# stops a re-assessment being a rename of the last one.
+PENDING = "pending"
+
 LEVELS = {
     "TR-1": ("Recorded", "The record exists and is append-only."),
     "TR-2": ("Explained",
