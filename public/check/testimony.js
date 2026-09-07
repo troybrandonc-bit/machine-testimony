@@ -87,6 +87,7 @@ const ATTESTED = new Set([
     "the risk class is declared to come from outside the proposing model",
     "the approver's name is declared to come from authentication",
     "a replay scheme names the engine and its version",
+    "an anchor of a kind this validator cannot recompute rests on its authority",
 ]);
 /* SHA-256 by hand, because the digest has to be recomputed here and
  * crypto.subtle is asynchronous. Making validate() async would push an await
@@ -222,6 +223,21 @@ export function b64(text) {
 }
 const SHA256_OID = [0x06, 0x09, 0x60, 0x86, 0x48, 0x01, 0x65, 0x03, 0x04,
     0x02, 0x01];
+/* The anchor kinds this validator can recompute for itself. `kind` has always
+ * been required on an anchor and until 7 September 2026 nothing read it: every
+ * token was parsed as an RFC 3161 TimeStampResp whatever the record said it
+ * was. So an anchor committed to Bitcoin proof-of-work through OpenTimestamps
+ * failed "the anchor's authority signed this record's digest" and could not
+ * reach TR-4, marked down for carrying evidence no operator and no key can
+ * move rather than a token from a single authority. That is the error the
+ * rubric's applies_to exists to prevent, committed inside the validator.
+ *
+ * An anchor of another kind is reported as ATTESTED rather than failed, which
+ * is the exact meaning of the word: the record asserts somebody else holds
+ * evidence, the fields saying who and what are present and checked, and this
+ * reader cannot confirm it. The level is still reached and rests on one fewer
+ * verified check, which the per-level basis counts already report. */
+const CHECKABLE_KINDS = new Set(["rfc3161"]);
 export function imprints(token) {
     const out = [];
     for (let i = 0; i + SHA256_OID.length < token.length; i++) {
@@ -567,10 +583,18 @@ export function validate(text) {
     }
     add("TR-4", "a digest is the digest of the entries it covers", wrong.length === 0, wrong.slice(0, 3).join("; "));
     const adrift = [];
+    const unread = [];
+    let checkable = 0;
     for (const g of integrity) {
         if (str(g.scheme) !== "external-anchor")
             continue;
         const a = obj(g.anchor);
+        const kind = str(a.kind).trim().toLowerCase();
+        if (kind && !CHECKABLE_KINDS.has(kind)) {
+            unread.push(kind);
+            continue; /* not this validator's to judge, nor its to fail */
+        }
+        checkable += 1;
         const tok = str(a.token), want = str(g.digest);
         if (!tok || !want.startsWith("sha256:"))
             continue; /* reported as hollow */
@@ -586,7 +610,11 @@ export function validate(text) {
             adrift.push(`line ${g._line}: the authority signed a different digest ` +
                 `(${found[0].slice(0, 16)}..)`);
     }
-    add("TR-4", "the anchor's authority signed this record's digest", adrift.length === 0, adrift.slice(0, 3).join("; "));
+    if (checkable)
+        add("TR-4", "the anchor's authority signed this record's digest", adrift.length === 0, adrift.slice(0, 3).join("; "));
+    if (unread.length)
+        add("TR-4", "an anchor of a kind this validator cannot recompute rests " +
+            "on its authority", true, "not checked here: " + Array.from(new Set(unread)).sort().join(", "));
     /* The one bound on the record's own clock a reader can settle. Every `at` is
      * written by the emitter, and nothing above checks one against anything
      * outside the emitter: RFC 3339 shape and non-decreasing order are both
@@ -602,9 +630,10 @@ export function validate(text) {
             continue;
         const a = obj(g.anchor);
         const tok = str(a.token);
-        if (!tok)
+        const kind = str(a.kind).trim().toLowerCase();
+        if (!tok || (kind && !CHECKABLE_KINDS.has(kind)))
             continue;
-        const raw = b64(tok);
+        const raw = b64(tok); /* genTime is RFC 3161's; another kind has none */
         if (!raw)
             continue; /* reported as adrift, above */
         const seen = genTime(raw);
