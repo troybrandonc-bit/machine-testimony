@@ -39,6 +39,17 @@ import testimony_validate as tv        # noqa: E402
 
 PASS = FAIL = 0
 
+# Deposited documents, frozen to match what Zenodo serves under a DOI. They are
+# archived artefacts rather than pages of the site: the navigation they carry is
+# part of what was deposited, so they are exempt from the rebuild check and from
+# the navigation check alike. Regenerating one to pick up a new nav link would
+# make the live copy differ from the deposit, which is the failure both checks
+# exist to prevent.
+DEPOSITED = {
+    "census/2026-09",   # doi:10.5281/zenodo.22290922
+    "papers/wp1",       # doi:10.5281/zenodo.22286050
+}
+
 CA_BUNDLES = (
     "/etc/ssl/certs/ca-certificates.crt",
     "/etc/pki/tls/certs/ca-bundle.crt",
@@ -788,6 +799,75 @@ def main():
           "census/binding/readings.json" in ab)
     check("and sells nothing", "OMEM" not in ab and "omem" not in ab.lower())
 
+    print("\nthe reading of the schemes says what its data says")
+    # Four instruments, three of which specify what a record must contain. The
+    # fourth is in the data to be counted out: a framework that deliberately
+    # specifies no controls is not failing to specify one, and reporting its
+    # zero would be the error this reading exists to avoid. So every headline
+    # number on the page is recomputed over the assessable subjects only.
+    ob = io.open(os.path.join(PUB, "obligation", "index.html"),
+                 encoding="utf-8").read()
+    sc = json.load(io.open(os.path.join(ROOT, "census", "schemes",
+                                        "readings.json"), encoding="utf-8"))
+    qs = [q["id"] for q in sc["questions"]]
+    check("four questions were asked", len(qs) == 4, qs)
+    check("four instruments were read", len(sc["subjects"]) == 4,
+          len(sc["subjects"]))
+    for sub in sc["subjects"]:
+        check("%s answers every question" % sub["name"],
+              set(sub["answers"]) == set(qs), sorted(sub["answers"]))
+        check("%s declares what kind of instrument it is" % sub["name"],
+              bool(sub.get("kind")), sub.get("kind"))
+        check("%s names what was read and where it came from" % sub["name"],
+              bool(sub.get("read")) and bool(sub.get("source")), sub.get("read"))
+        for qid, a in sub["answers"].items():
+            check("%s %s cites something for its verdict" % (sub["name"], qid),
+                  a["verdict"] in sc["verdicts"] and len(a.get("note", "")) > 20,
+                  "%s %r" % (a["verdict"], a.get("note", "")[:40]))
+        # A subject is assessable on every question or on none. A mixed row
+        # would mean the instrument kind had been decided per question, which
+        # is exactly where a convenient not applicable would hide.
+        na = [q for q in qs if sub["answers"][q]["verdict"] == "not_applicable"]
+        check("%s is assessable throughout or not at all" % sub["name"],
+              len(na) in (0, len(qs)), na)
+
+    able = [x for x in sc["subjects"]
+            if x["answers"]["Q1"]["verdict"] != "not_applicable"]
+    check("three of the four specify what a record must contain",
+          len(able) == 3, len(able))
+    flat_ob = " ".join(ob.split())
+    check("and the page says three", "three rather than four" in flat_ob)
+    check("all three require a record to be kept",
+          all(x["answers"]["Q1"]["verdict"] == "required" for x in able),
+          [x["answers"]["Q1"]["verdict"] for x in able])
+    # The finding itself. If either of these stops being unanimous, the
+    # sentence on the page becomes false, and this is where that surfaces.
+    check("none of the three requires the record to name who authorised",
+          all(x["answers"]["Q2"]["verdict"] == "absent" for x in able),
+          [(x["name"], x["answers"]["Q2"]["verdict"]) for x in able])
+    check("none requires it be shown unaltered by a third party",
+          not [x for x in able if x["answers"]["Q3"]["verdict"] == "required"],
+          [x["name"] for x in able
+           if x["answers"]["Q3"]["verdict"] == "required"])
+    check("the page states that finding",
+          "None of the three requires it to name the person who authorised an "
+          "action" in flat_ob)
+    check("the page names every instrument it read",
+          all(x["name"] in ob for x in sc["subjects"]),
+          [x["name"] for x in sc["subjects"] if x["name"] not in ob])
+    check("it records what it could not read rather than guessing",
+          bool(sc.get("not_read")) and all(x["name"] in ob and "paywall" in x["why"]
+                                           for x in sc["not_read"]),
+          [x["name"] for x in sc.get("not_read", [])])
+    check("it says a framework specifying no controls is not failing",
+          "not failing to specify one" in flat_ob)
+    check("and what the reading does not show",
+          "What this does not show" in flat_ob
+          and "not an assessment of whether any of these is good" in flat_ob)
+    check("it links the data rather than asking to be believed",
+          "census/schemes/readings.json" in ob)
+    check("and sells nothing", "OMEM" not in ob and "omem" not in ob.lower())
+
     print("\nthe site does not link at things that are not there")
     dead = []
     for page in pages():
@@ -820,6 +900,9 @@ def main():
     for page in pages():
         if os.path.dirname(page) == PUB:
             continue
+        slug = os.path.relpath(os.path.dirname(page), PUB).replace(os.sep, "/")
+        if slug in DEPOSITED:
+            continue
         s = io.open(page, encoding="utf-8").read()
         try:
             if nav(s) != home:
@@ -828,6 +911,8 @@ def main():
             odd.append(os.path.relpath(page, PUB) + " (no nav)")
     check("no page has drifted from the homepage's navigation", not odd,
           "; ".join(odd[:4]))
+    print("  (%d deposited document(s) skipped: %s)"
+          % (len(DEPOSITED), ", ".join(sorted(DEPOSITED))))
     print("")
     print("no page reintroduces the ornament")
     # Uppercase micro-labels with letter-spacing are the eyebrow pattern, and
@@ -893,14 +978,6 @@ def main():
         # unstyled. Converting it means teaching the generator about
         # page-scoped CSS, which is a change to every page, not to this one.
         "check",
-    }
-    # A different case, and the distinction matters. These are deposited
-    # documents with DOIs, frozen to match what Zenodo serves. They must never
-    # be regenerated from a source, because a source that could be rebuilt is a
-    # source that could quietly diverge from the deposit.
-    DEPOSITED = {
-        "census/2026-09",   # doi:10.5281/zenodo.22290922
-        "papers/wp1",       # doi:10.5281/zenodo.22286050
     }
     sources = set()
     for f in os.listdir(os.path.join(ROOT, "pages")):
