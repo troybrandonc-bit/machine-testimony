@@ -254,6 +254,14 @@ jobs:
       # A check that cannot run has verified nothing, so a fetch failure fails
       # the job rather than skipping. Three attempts first, because the network
       # is allowed one bad day.
+      #
+      # On a pull request a divergence warns rather than blocks. This compares
+      # against the other repository's main, so a contributor who changes the
+      # validator here gets a failure they have no way to fix: the matching
+      # commit is in a repository they cannot push to. Failing them asks them
+      # to do the impossible and is a good way to receive no contributions.
+      # The divergence still matters, so it blocks on main, which is the only
+      # place it would actually be live.
       - name: Compare against the copy in the OMEM repository
         run: |
           URL=https://raw.githubusercontent.com/troybrandonc-bit/Omem/main/scripts/testimony_validate.py
@@ -266,6 +274,15 @@ jobs:
             exit 1
           fi
           if ! diff -u /tmp/theirs.py spec/testimony_validate.py > /tmp/d.txt; then
+            if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
+              echo "::warning::the two copies of the reference validator differ"
+              echo "If this pull request changes the validator here, that is expected."
+              echo "The matching change in the OMEM repository is the maintainer's to"
+              echo "land, and a contributor has no way to make it. This check blocks on"
+              echo "main, where a divergence would actually be live."
+              head -40 /tmp/d.txt
+              exit 0
+            fi
             echo "::error::the two copies of the reference validator have diverged"
             echo "This repository holds the specification, so spec/testimony_validate.py"
             echo "is the canonical one. Update the OMEM copy from it, or bring the"
@@ -297,6 +314,15 @@ jobs:
           fetch "$BASE/web/lib/testimony.ts" /tmp/theirs.ts
           fetch "$BASE/scripts/testimony_validate_js.mts" /tmp/theirs.mts
           if ! diff -u /tmp/theirs.ts spec/testimony.ts > /tmp/dts.txt; then
+            if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
+              echo "::warning::the two copies of the browser validator differ"
+              echo "If this pull request changes the validator here, that is expected."
+              echo "The matching change in the OMEM repository is the maintainer's to"
+              echo "land, and a contributor has no way to make it. This check blocks on"
+              echo "main, where a divergence would actually be live."
+              head -40 /tmp/dts.txt
+              exit 0
+            fi
             echo "::error::the two copies of the browser validator have diverged"
             head -60 /tmp/dts.txt
             exit 1
@@ -308,6 +334,15 @@ jobs:
           grep -v '^import ' /tmp/theirs.mts > /tmp/a.mts
           grep -v '^import ' spec/testimony_validate_js.mts > /tmp/b.mts
           if ! diff -u /tmp/a.mts /tmp/b.mts > /tmp/dmts.txt; then
+            if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
+              echo "::warning::the two validator harnesses differ"
+              echo "If this pull request changes the validator here, that is expected."
+              echo "The matching change in the OMEM repository is the maintainer's to"
+              echo "land, and a contributor has no way to make it. This check blocks on"
+              echo "main, where a divergence would actually be live."
+              head -40 /tmp/dmts.txt
+              exit 0
+            fi
             echo "::error::the two validator harnesses report different things"
             echo "A harness that omits a field makes its own suite weaker than"
             echo "the other one without either failing. Bring them back level."
