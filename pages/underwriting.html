@@ -11,10 +11,27 @@
       <p>Policies covering autonomous agents are being written now, and the
         drafting has converged on a condition precedent: the insured must
         preserve the records that show what the agent did and who allowed it.
-        One published model clause requires the insured to keep <i>"prompts,
-        tool traces, access logs, model/version records, approval records, and
-        rollback history"</i>, and observes that <i>"without logs, causation and
-        allocation become nearly impossible"</i>.</p>
+        The model clause quoted throughout this note is from
+        <a href="https://arxiv.org/abs/2606.05449">Quanyan Zhu, <i>Insurance of
+        Agentic AI</i></a> (arXiv:2606.05449), whose Table 2 makes it a
+        condition precedent to indemnity that the insured <i>"shall preserve
+        materially relevant prompts, tool traces, access logs, model/version
+        records, approval records, and rollback history, where reasonably
+        available"</i>, on the drafting caution that <i>"without logs, causation
+        and allocation become nearly impossible"</i>. Its control schedule
+        separately requires <i>"documented human confirmation or equivalent
+        approved control"</i> for consequential decisions.</p>
+
+      <p><b>Four words carry more weight than their length suggests.</b>
+        Preservation is conditioned on the record being <i>where reasonably
+        available</i>, and whether that caveat protects an insured or voids the
+        clause for most of the market is an empirical question rather than a
+        drafting one. If the software has nowhere to put the identity of an
+        approver, the record was not available on the day the policy incepted,
+        at any price. Read one way the caveat excuses exactly the deployers the
+        condition precedent was written to bind. Read the other, the deployer is
+        uninsured on a point they had no way to discover. The measurement below
+        is what decides which.</p>
 
       <p>That clause assumes the records exist. This note is about whether they
         do. Ten widely deployed agent systems were read against a published
