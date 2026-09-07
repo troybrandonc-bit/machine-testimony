@@ -11,6 +11,18 @@
   "scope": "acts",
   "spec": "testimony-record/0.2"
  },
+ "advisory-anchored-elsewhere": {
+  "level": "TR-4",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": true
+  },
+  "note": "a system that judges but does not act, anchored by a kind this validator cannot recompute",
+  "scope": "record only",
+  "spec": "testimony-record/0.2"
+ },
  "anchor": {
   "level": "TR-4",
   "levels_met": {

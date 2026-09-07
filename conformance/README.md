@@ -52,7 +52,7 @@ checks here exist because somebody said so.
 | TR-1 | 6 cases: well formed, and failing something at TR-2 |
 | TR-2 | 12 cases: evidence that resolves, conflicts that keep both sides, resolutions that name what was kept |
 | TR-3 | 19 cases: gates, refusals that did not execute, approvals that name a person other than the proposer, provenance declared from somewhere the model cannot write, and actions whose effect the record cannot confirm |
-| TR-4 | 4 cases: a hash chain, a replay that names its engine, a number that serialises portably, and a record a Time Stamp Authority actually signed |
+| TR-4 | 5 cases: a hash chain, a replay that names its engine, a number that serialises portably, a record a Time Stamp Authority actually signed, and an advisory system anchored by a kind this validator cannot recompute |
 
 The TR-4 cases are the ones worth reading first if you are short of time.
 `digest-of-nothing` is sixty-four zeros where a digest should be, and it
