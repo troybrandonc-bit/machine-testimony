@@ -19,6 +19,7 @@ homepage.
 Copyright 2026 Garnet Taurus Ltd. MIT licensed.
 """
 import collections
+import glob
 import html
 import io
 import json
@@ -867,6 +868,42 @@ def main():
     check("it links the data rather than asking to be believed",
           "census/schemes/readings.json" in ob)
     check("and sells nothing", "OMEM" not in ob and "omem" not in ob.lower())
+
+    print("\nthe governance page commits to something checkable")
+    # A governance page that says only "one editor decides" describes the
+    # arrangement without constraining it. What stops a fork is not the
+    # arrangement, it is that somebody stuck can tell whether they are stuck:
+    # a stated answering time, a stated point at which to give up waiting, and
+    # the fact that nothing needed to continue is held only by the editor.
+    #
+    # These are the load-bearing sentences. If one is edited out, the page has
+    # gone back to describing rather than committing, and this fails.
+    ch = io.open(os.path.join(PUB, "changes", "index.html"),
+                 encoding="utf-8").read()
+    flat_ch = " ".join(ch.split())
+    check("it commits to a time for an answer, not just to reading",
+          "within fourteen days" in flat_ch)
+    check("and says what the reporter may conclude if that time passes",
+          "ninety days" in flat_ch and "unmaintained" in flat_ch)
+    check("it says the delay is the editor's failure rather than the reporter's",
+          "the editor's failure and not the reporter's" in flat_ch)
+    check("it declines to name a successor and says why",
+          "No successor is named" in flat_ch)
+    # The claim that makes the missing successor survivable is that every part
+    # is already somewhere the editor does not control. Each of those has to be
+    # true, so each is named rather than gestured at.
+    for where in ("IETF datatracker", "Zenodo"):
+        check("continuation does not depend on the editor: %s" % where,
+              where in ch, where)
+    check("anybody can continue without the editor's cooperation",
+          "needs no cooperation from the editor" in flat_ch)
+    # The people who found the defects are named on the page and in the draft's
+    # acknowledgements. A reader deciding whether to rely on this should be able
+    # to see that its defects are found by people who do not work for it.
+    draft = io.open(sorted(glob.glob(os.path.join(ROOT, "spec", "draft-*-[0-9][0-9].md")))[-1], encoding="utf-8").read()
+    for who in ("Phill Clapham", "impartshadow", "babyblueviper1"):
+        check("%s is credited on the governance page" % who, who in ch, who)
+        check("and in the draft's acknowledgements", who in draft, who)
 
     print("\nthe site does not link at things that are not there")
     dead = []
