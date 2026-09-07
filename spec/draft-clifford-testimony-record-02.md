@@ -488,10 +488,31 @@ about any of these can settle it without asking anybody.
 An **attested** check is one the record asserts and no reader can confirm from
 it. That a risk class came from a registry. That an approver's name came from
 an authenticated session. That a replay engine reproduces what it claims to.
-These are worth requiring, because a system that records nothing cannot be
-contradicted and one that records a specific claim can be. They are not
-evidence, and a conformance report that presents them as though they were is
-making the error this format exists to make visible.
+**And every `at` in the record.** These are worth requiring, because a system
+that records nothing cannot be contradicted and one that records a specific
+claim can be. They are not evidence, and a conformance report that presents
+them as though they were is making the error this format exists to make
+visible.
+
+The clock deserves saying out loud, because two checks touch it and both are
+verified, which makes it look better founded than it is. That an `at` is a
+well-formed {{RFC3339}} timestamp, and that entries are in non-decreasing
+write-time order, are both settleable from the record alone and both correctly
+marked. Together they establish that the emitter's numbers are well formed and
+monotone, not that they are true, and an emitter that back-dates consistently
+satisfies both without effort.
+
+One bound on it can be settled by a reader, and only where an entry is covered
+by an external anchor. A TimeStampResp carries the moment the authority saw the
+digest, so an entry claiming a write time after that moment is contradicted by
+a party with no stake in the record. That is a check rather than an assertion,
+and an implementation that anchors SHOULD make it. It is one-sided: it bounds
+`at` from above and says nothing about a time written earlier than the truth.
+
+Nothing in this specification closes back-dating, and no self-contained record
+can, because the emitter authored every number in it. Closing it requires a
+timestamp taken before the fact rather than over the finished record, which is
+a different and heavier requirement than any level here states.
 
 An implementation reporting a level SHOULD report, for each level, how many of
 its checks were of each kind. The reference validator does. A level cited
@@ -722,6 +743,13 @@ distinction, and a decision that contradicts itself between `executed`,
 being unable to confirm its effect is not a contradiction: a call that returned
 while settlement is pending is both.
 
+The clock is now named as an attested claim. Every `at` is written by the
+emitter, and the section listing what a reader cannot settle did not say so,
+which meant a reader consulting exactly that section to find the emitter's
+unsupported claims was told the wrong thing by omission. One checkable bound is
+stated with it, and the limit of that bound is stated too: an external anchor
+bounds a write time from above and nothing here closes back-dating.
+
 # Acknowledgements
 {:numbered="false"}
 
@@ -730,3 +758,13 @@ containing no decision entries, a requirement that appears nowhere in the
 specification text, with the effect that a system holding a genuine hash chain
 and gating nothing could not reach TR-4 however good its integrity was. The
 scope entry and the per-level reporting in this document are the result.
+
+An author writing as impartshadow proposed the `outcome` member, found within
+hours that the first implementation of it refused the honest case it existed to
+express, and proposed both `may_duplicate` and the placement of an approval
+deadline on the request rather than on the approval.
+
+An author writing as babyblueviper1 established that the record's own clock was
+an attested claim the specification did not disclose, that the two checks
+touching it prove only well-formedness and monotonicity, and that an RFC 3161
+token already carried a bound on it that no implementation was reading.

@@ -29,6 +29,7 @@ import testimony_validate as tv  # noqa: E402
 
 RUNNER = os.path.join(ROOT, "spec", "testimony_validate_js.mts")
 EXAMPLE = os.path.join(ROOT, "spec", "testimony-record-example.jsonl")
+ANCHORED = os.path.join(ROOT, "public", "anchor", "record.jsonl")
 PASS = FAIL = 0
 
 
@@ -164,6 +165,24 @@ def records():
         line(spec=S2, type="evidence", id="e1", at="2026-01-01T00:00:01Z",
              kind="email", source="doc:1", digest="sha256:aa"),
     ])
+    # The anchor path had no case here, which is how a check that reads an
+    # RFC 3161 token could have been ported wrongly and still passed: every
+    # record above reaches at most the imprint comparison. These use the real
+    # published token, so both validators have to parse the same DER and arrive
+    # at the same genTime, not merely agree that they failed.
+    with open(ANCHORED, encoding="utf-8") as f:
+        anchored = f.read()
+    out["the anchored record, with its real token"] = anchored
+
+    lines = [json.loads(l) for l in anchored.splitlines() if l.strip()]
+    covered = next((g["covers"][0] for g in lines
+                    if g.get("type") == "integrity" and g.get("covers")), None)
+    if covered:
+        forward = [dict(e, at="2099-01-01T00:00:00Z")
+                   if e.get("id") == covered else e for e in lines]
+        out["an entry written after the authority saw it"] = "\n".join(
+            json.dumps(e) for e in forward)
+
     return out
 
 
