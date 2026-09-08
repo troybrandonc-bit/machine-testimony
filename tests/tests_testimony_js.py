@@ -207,6 +207,36 @@ def records():
             kind="somebody-elses-scheme", token="AAAA")
         # The dispatch must not become a way past the check it replaces.
         out["an rfc3161 anchor whose token is rubbish"] = with_anchor(token="AAAA")
+        # A SCITT receipt. The dispatch, the CBOR and the Merkle arithmetic
+        # all have to agree between the two, not only the level: a record
+        # reaching TR-4 in both for different reasons is exactly the failure
+        # this pair exists to catch.
+        import base64 as _b64
+        from tests_scitt import receipt as _receipt
+        from tests_scitt import root_of as _root
+        from tests_scitt import path_of as _path
+        from tests_scitt import _sha as _h
+
+        want = str(anchor_entry.get("digest") or "")
+        if want.startswith("sha256:"):
+            leaves = [_h(b"filler", bytes([i])) for i in range(8)]
+            leaves[2] = bytes.fromhex(want[7:])
+            head = _root(leaves).hex()
+            proof = _path(leaves, 2)
+            tok = _b64.b64encode(_receipt(8, 2, proof)).decode()
+            out["a scitt receipt landing on the declared head"] = with_anchor(
+                kind="scitt", token=tok, root=head,
+                authority="a transparency service")
+            out["a scitt receipt landing somewhere else"] = with_anchor(
+                kind="scitt", token=tok, root=("0" * 63) + "1",
+                authority="a transparency service")
+            out["a scitt anchor that declares no head"] = with_anchor(
+                kind="scitt", token=tok, root="",
+                authority="a transparency service")
+            out["a scitt receipt over another data structure"] = with_anchor(
+                kind="scitt", root=head, authority="a transparency service",
+                token=_b64.b64encode(_receipt(8, 2, proof, vds=2)).decode())
+
         out["an anchor of any kind with no token at all"] = "\n".join(
             json.dumps(dict(e, anchor={k: v for k, v in e["anchor"].items()
                                        if k != "token"})

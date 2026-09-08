@@ -30,10 +30,17 @@ normative:
   RFC7493:
   RFC3339:
   RFC7464:
+  # Normative since -02 added `kind: scitt`: an implementation that checks one
+  # has to follow both. They were informative while the format only mentioned
+  # transparency logs as an example of an anchor somebody else holds.
+  RFC9162:
+  RFC9942:
 
 informative:
-  RFC9162:
-  I-D.ietf-scitt-architecture:
+  # Was I-D.ietf-scitt-architecture until 8 September 2026. The draft became
+  # RFC 9943 in June 2026 and citing the superseded I-D pointed a reader at a
+  # document that had been replaced.
+  RFC9943:
   TR-SPEC:
     title: "The Testimony Record: specification source, reference validator and adapters"
     author:
@@ -410,6 +417,31 @@ start of the token, since a SignerInfo may carry a signing-time attribute of
 its own and a scan from the front can return the signer's clock in place of the
 authority's.
 
+An `external-anchor` of kind `scitt` carries, as `token`, the base64 of a COSE
+receipt {{!RFC9942}} over a log whose verifiable data structure is
+RFC9162_SHA256 {{!RFC9162}}, and MUST also carry `root`: the tree head, in
+lowercase hex, that the receipt's inclusion proof lands on.
+
+The head is required, and the reason is the whole of what makes the anchor
+worth anything. A receipt carries an inclusion proof and not a root; the root
+is the detached payload the log's signature covers. So an inclusion proof taken
+over some other record reconstructs perfectly well and simply arrives at a
+different head, and a reader with no head to compare against has checked
+nothing at all. With the head declared, the check is arithmetic: reconstruct
+from the entry's digest as the leaf, and it either lands on the declared head
+or it does not.
+
+What that settles is that this proof is over this record and reaches the head
+the anchor names. What it does not settle is that the head is the log's. That
+needs the log's signature over the root, a key, and a curve, and it is
+therefore attested rather than verified, on exactly the terms an RFC 3161
+token's issuance is. An implementation MUST NOT report a reconstructed head as
+evidence that the log published it.
+
+A receipt declaring any other verifiable data structure is reported as attested
+in the same way an unreadable kind is, and MUST NOT be refused. The structure
+is a different one, not a bad one.
+
 A `kind` SHOULD be an absolute URI or a reverse-DNS name, such as
 `org.opentimestamps`, rather than a bare word. This is not about making a false
 claim harder to write, which it barely does. It is that `kind` is an extension
@@ -618,8 +650,10 @@ declares otherwise skips the gate requirements. Two things limit the damage: a
 record contradicting its own declaration fails at TR-1, and the declaration is
 reported with the level rather than hidden inside it. Neither is a substitute
 for external attestation. Consumers requiring assurance beyond self-assertion
-should look to the SCITT architecture {{I-D.ietf-scitt-architecture}} and to
-transparency logs {{RFC9162}}.
+should look to the SCITT architecture {{RFC9943}} and to transparency logs
+{{RFC9162}}. An `external-anchor` of kind `scitt` is the direct expression of
+that: a COSE receipt {{RFC9942}} over such a log, checked here as far as bytes
+alone go.
 
 An approval is only as strong as its identity source. The format requires
 identity to originate outside anything the proposing model can write, and

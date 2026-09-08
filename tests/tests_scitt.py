@@ -6,6 +6,12 @@ The second runs the IETF SCITT working group's own cross-implementation
 vectors, which is the half that means anything, because agreeing with yourself
 is not interoperability.
 
+The algorithms live in testimony_validate.py rather than beside it, because
+that file is copied whole into other repositories and into every adapter
+wheel. An import would make the reference validator behave differently
+depending on what sits next to it, and two copies calling themselves the
+reference would reach different verdicts.
+
 The vectors are not vendored. Set SCITT_VECTORS to a checkout of
 ietf-wg-scitt/examples/test-vectors/scitt-cose and the second half runs; leave
 it unset and it says so rather than passing quietly, on the same terms as the
@@ -13,7 +19,9 @@ adapter suites that skip without their framework.
 
 Copyright 2026 Garnet Taurus Ltd. MIT licensed.
 """
+import base64
 import hashlib
+import io
 import json
 import os
 import sys
@@ -22,7 +30,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.normpath(os.path.join(HERE, ".."))
 sys.path.insert(0, os.path.join(ROOT, "spec"))
 
-import testimony_scitt as sc                                 # noqa: E402
+import testimony_validate as sc                              # noqa: E402
 
 PASS = FAIL = 0
 
@@ -43,6 +51,41 @@ def _sha(*p):
         h.update(x)
     return h.digest()
 
+
+
+
+# A receipt, encoded here, so the whole path can be exercised. Only the
+# shapes a receipt uses. Building one rather than borrowing one is what lets
+# a test say 'this record, this tree' and then break it on purpose.
+def _c(mt, n):
+    if n < 24:
+        return bytes([mt << 5 | n])
+    if n < 256:
+        return bytes([mt << 5 | 24, n])
+    if n < 65536:
+        return bytes([mt << 5 | 25]) + n.to_bytes(2, 'big')
+    return bytes([mt << 5 | 26]) + n.to_bytes(4, 'big')
+
+
+def _enc(v):
+    if v is None or isinstance(v, bool):
+        return bytes([0xf6])
+    if isinstance(v, int):
+        return _c(0, v) if v >= 0 else _c(1, -1 - v)
+    if isinstance(v, bytes):
+        return _c(2, len(v)) + v
+    if isinstance(v, list):
+        return _c(4, len(v)) + b''.join(_enc(x) for x in v)
+    if isinstance(v, dict):
+        return _c(5, len(v)) + b''.join(_enc(k) + _enc(x) for k, x in v.items())
+    raise TypeError(type(v))
+
+
+def receipt(size, index, path, vds=1):
+    protected = _enc({395: vds, 1: -8})
+    proof = _enc([size, index, [bytes(p) for p in path]])
+    body = [protected, {396: {-1: [proof]}}, None, bytes(8)]
+    return bytes([0xd2]) + _enc(body)
 
 def root_of(leaves):
     """The RFC 9162 tree head, computed the slow obvious way."""
@@ -123,6 +166,68 @@ def main():
                        == "BAD_STATEMENT_SIGNATURE"]
         check("a bad statement signature is not detectable from the bytes",
               len(undecidable) == 1, undecidable)
+
+    print()
+    print("a scitt anchor binds a record, or says why it does not")
+    src = os.path.join(ROOT, "public", "anchor", "record.jsonl")
+    entries = [json.loads(l) for l in io.open(src, encoding="utf-8")
+               if l.strip()]
+    body = [e for e in entries if e["type"] != "integrity"]
+    dig = sc.digest_of(body)
+    leaves = [_sha(b"filler", bytes([i])) for i in range(8)]
+    leaves[2] = bytes.fromhex(dig)
+    head = root_of(leaves).hex()
+    proof = path_of(leaves, 2)
+
+    def anchored(**over):
+        a = {"kind": "scitt", "authority": "a transparency service",
+             "token": base64.b64encode(receipt(8, 2, proof)).decode(),
+             "root": head}
+        a.update(over.pop("anchor", {}))
+        g = {"spec": body[0]["spec"], "type": "integrity", "id": "g1",
+             "at": "2026-09-08T12:00:00Z", "scheme": "external-anchor",
+             "digest": "sha256:" + dig,
+             "covers": [e["id"] for e in body], "anchor": a}
+        g.update(over)
+        return sc.validate(chr(10).join(
+            json.dumps(e) for e in body + [g])).as_dict()
+
+    def named(rep, want):
+        return [c for c in rep["checks"] if c["check"] == want]
+
+    BIND = "the anchor's token is over this record's digest"
+    rep = anchored()
+    check("a receipt whose proof lands on the declared head reaches TR-4",
+          rep["level"] == "TR-4",
+          [c["check"] for c in rep["checks"] if not c["ok"]])
+    check("and the binding is reported verified",
+          named(rep, BIND) and named(rep, BIND)[0]["basis"] == "verified")
+    check("while the head being the log's is attested, not settled",
+          rep["basis"]["TR-4"]["attested"] >= 2,
+          rep["basis"]["TR-4"])
+
+    bad = anchored(anchor={"root": ("0" * 63) + "1"})
+    check("a proof landing somewhere other than the declared head fails",
+          not named(bad, BIND)[0]["ok"] and bad["level"] != "TR-4",
+          bad["level"])
+
+    none = anchored(anchor={"root": ""})
+    check("a scitt anchor with no declared head is refused, since nothing "
+          "would be checked", not named(none, BIND)[0]["ok"],
+          named(none, BIND))
+
+    # Another verifiable data structure is not a bad one. Refusing it would
+    # repeat the mistake refusing an unknown kind was, in a narrower place.
+    other = anchored(anchor={"token": base64.b64encode(
+        receipt(8, 2, proof, vds=2)).decode()})
+    check("a receipt over a structure this reader cannot check is attested "
+          "rather than failed", other["level"] == "TR-4"
+          and not named(other, BIND), other["level"])
+
+    wrong = anchored(anchor={"token": base64.b64encode(
+        receipt(8, 5, proof)).decode()})
+    check("a receipt for a different leaf does not land on the head",
+          not named(wrong, BIND)[0]["ok"])
 
     print("\n%d passed, %d failed" % (PASS, FAIL))
     return 1 if FAIL else 0
