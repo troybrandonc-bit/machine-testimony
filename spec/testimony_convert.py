@@ -239,6 +239,11 @@ SYNONYMS = {
                     "predicate"),
     "decision": ("decision_id", "action_id", "request_id", "call_id",
                  "correlation_id", "receipt_id", "receipt"),
+    # Every log names its own clock differently and the Elastic one starts
+    # with an @, which is why the parts split drops punctuation.
+    "at": ("at", "ts", "time", "timestamp", "datetime", "event_time",
+           "occurred_at", "created_at", "logged_at", "start_time",
+           "starttimeunixnano", "observedtimeunixnano"),
 }
 # Members a record cannot get from a field, only from the emitter's own model.
 NOT_MAPPABLE = ("polarity", "state", "acts", "sides", "evidence")
@@ -524,6 +529,8 @@ def main() -> int:
             "usage: testimony_convert.py RECORDS.jsonl [entry_type ...]"
             + chr(10)
             + "       testimony_convert.py RECORDS.jsonl --report" + chr(10)
+            + "       testimony_convert.py RECORDS.jsonl --against eu-ai-act"
+            + chr(10)
             + chr(10)
             + "prints a Mapping suggested from your own field names, or asks "
             + "the four" + chr(10)
@@ -555,6 +562,17 @@ def main() -> int:
     if not rows:
         raise SystemExit("no JSON objects in %s" % sys.argv[1])
     args = sys.argv[2:]
+    if "--against" in args:
+        # Imported here so the converter stays usable without it, and so a
+        # copied file does not fail on an import somebody did not take.
+        from criteria import against
+        i = args.index("--against")
+        which = args[i + 1] if i + 1 < len(args) else "eu-ai-act"
+        try:
+            print(against(rows, which, sys.argv[1]))
+        except ValueError as e:
+            raise SystemExit(str(e))
+        return 0
     if "--report" in args:
         print(report(rows, sys.argv[1]))
         return 0
