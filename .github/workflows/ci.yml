@@ -291,6 +291,33 @@ jobs:
             exit 1
           fi
           echo "identical"
+      # The Python copy was compared across repositories from the start and
+      # the TypeScript one was not, so it drifted the moment the anchor check
+      # was split on 8 September 2026 and nothing said so. OMEM's own cross
+      # validator suite did not catch it either, because none of its records
+      # carries an external anchor, so the checks that differed never ran.
+      - name: Compare the TypeScript copy in the OMEM repository
+        run: |
+          URL=https://raw.githubusercontent.com/troybrandonc-bit/Omem/main/web/lib/testimony.ts
+          for i in 1 2 3; do
+            if curl -sfL --max-time 30 "$URL" -o /tmp/theirs.ts; then break; fi
+            echo "attempt $i could not fetch, retrying"; sleep 5
+          done
+          if [ ! -s /tmp/theirs.ts ]; then
+            echo "::error::could not fetch the other TypeScript copy after three attempts; this check has verified nothing"
+            exit 1
+          fi
+          if ! diff -u /tmp/theirs.ts spec/testimony.ts > /tmp/dts.txt; then
+            if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
+              echo "::warning::the two copies of the TypeScript validator differ"
+              head -40 /tmp/dts.txt
+              exit 0
+            fi
+            echo "::error::the two copies of the TypeScript validator have diverged"
+            head -60 /tmp/dts.txt
+            exit 1
+          fi
+          echo "identical"
 
       # The Python validator was the only copy guarded, and it is not the only
       # copy. testimony.ts is a second implementation of the same rules that
@@ -495,6 +522,13 @@ jobs:
           [ $rc -eq 0 ] || { echo "::error::the site suite failed"; exit 1; }
           if echo "$out" | grep -qiE 'NOT VERIFIED'; then
             echo "::error::the page's commands were not actually run"; exit 1
+          fi
+          # A deposit held by CERN is somebody else's uptime. It is reported
+          # rather than blocked, because failing a merge over their outage says
+          # nothing about this repository. A deposit that answers and disagrees
+          # with the pages is a normal failure and blocks like any other.
+          if echo "$out" | grep -qiE 'DEPOSIT UNREACHABLE'; then
+            echo "::warning::the DOI checks did not run: the deposit was unreachable"
           fi
 
   implementers:

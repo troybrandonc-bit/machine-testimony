@@ -30,6 +30,7 @@ import subprocess
 import sys
 import tomllib
 import tempfile
+import time
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.normpath(os.path.join(HERE, ".."))
@@ -59,6 +60,27 @@ CA_BUNDLES = (
     "/mingw64/etc/ssl/certs/ca-bundle.crt",
     "C:/Program Files/Git/mingw64/etc/ssl/certs/ca-bundle.crt",
 )
+
+
+def fetch(url, timeout=45, tries=3):
+    """A network read with retries, because the network is allowed one bad day.
+
+    The DOI checks resolve a record held by CERN. Failing a pull request
+    because Zenodo was slow reports nothing about the repository, and passing
+    quietly would be worse, so the retry sits between the two: three attempts,
+    and only then the honest NOT VERIFIED.
+    """
+    import urllib.request        # imported here: the module-level scope has no
+                                 # urllib, it is pulled in inside main()
+    last = None
+    for n in range(tries):
+        try:
+            return urllib.request.urlopen(url, timeout=timeout).read()
+        except Exception as e:                                  # noqa: BLE001
+            last = e
+            if n + 1 < tries:
+                time.sleep(3)
+    raise last
 
 
 def check(name, cond, detail=""):
@@ -1020,12 +1042,18 @@ def main():
               "README.md"}),
             ("the census", CENSUS_DOI, set())):
         try:
-            rec = json.loads(urllib.request.urlopen(
-                "https://zenodo.org/api/records/" + doi.split(".")[-1],
-                timeout=25).read().decode("utf-8"))
+            rec = json.loads(fetch(
+                "https://zenodo.org/api/records/"
+                + doi.split(".")[-1]).decode("utf-8"))
         except Exception as e:                                  # noqa: BLE001
-            print("  NOT VERIFIED: Zenodo unreachable for %s (%s)"
-                  % (name, str(e)[:60]))
+            # Deliberately NOT the "NOT VERIFIED" sentinel the anchor checks
+            # use. That one means a command this repository controls did not
+            # run, and it should block. This means a third party was down.
+            # Failing every merge because CERN is having a bad hour reports
+            # nothing about the repository and teaches people to ignore CI.
+            # A deposit that IS reachable and disagrees still fails, below.
+            print("  DEPOSIT UNREACHABLE: %s (%s). The pages were not checked "
+                  "against it on this run." % (name, str(e)[:60]))
             continue
         got = {f.get("key") for f in rec.get("files") or []}
         check("%s deposit exists and is public" % name, bool(rec.get("doi")),
@@ -1066,11 +1094,10 @@ def main():
                      os.path.join(ROOT, 'pages', src + '.html')],
                     capture_output=True, text=True)
                 try:
-                    held = urllib.request.urlopen(
-                        held_at[f], timeout=25).read().decode('utf-8')
+                    held = fetch(held_at[f]).decode('utf-8')
                 except Exception as e:                       # noqa: BLE001
-                    print('  NOT VERIFIED: could not fetch %s from the '
-                          'deposit (%s)' % (f, str(e)[:60]))
+                    print('  DEPOSIT UNREACHABLE: could not fetch %s (%s)'
+                          % (f, str(e)[:60]))
                     continue
                 check('%s in the deposit is what the page still produces'
                       % f,
