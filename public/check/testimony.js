@@ -82,6 +82,20 @@ const ENUMS = [
  * alone. Named rather than passed at each call site, so that this file and the
  * Python cannot come to disagree about which kind a check is; the cross
  * validator test compares the basis of every check between them. */
+/* Three members are declared to be an Actor: a belief's `asserted_by`, a
+ * decision's `proposed_by`, and an approval's `approver`. The Conventions
+ * section defines one as an object carrying at least `id` and `kind`, and
+ * until 8 September 2026 neither validator checked that: presence was required
+ * and shape was not, so `asserted_by: "review.v4"` passed TR-1 and TR-2.
+ *
+ * Found by babyblueviper1, who built a validator from the draft's prose alone
+ * and disagreed with the corpus on exactly one of fifty-four cases. They were
+ * right, and a port of the Python could never have found it, because a port
+ * inherits the reading rather than the text. */
+const ACTOR_FIELDS = {
+    belief: "asserted_by", decision: "proposed_by", approval: "approver",
+};
+const ACTOR_KINDS = new Set(["agent", "human", "system", "connector"]);
 const ATTESTED = new Set([
     "no decisions required: the system declares it does not act",
     "the risk class is declared to come from outside the proposing model",
@@ -379,6 +393,29 @@ export function validate(text) {
             if (!(f in e))
                 missing.push(`line ${e._line}: ${str(e.type)} missing '${f}'`);
     add("TR-1", "required fields are present for each type", missing.length === 0, missing.slice(0, 3).join("; "));
+    /* A name is not an actor. "review.v4" says something produced the belief and
+     * nothing about what kind of thing, which is the distinction the format
+     * exists to keep: a claim asserted by a model and one asserted by a person
+     * are different claims, and a string cannot tell them apart. */
+    const shapeless = [];
+    for (const e of entries) {
+        const f = ACTOR_FIELDS[str(e.type)];
+        if (!f || !(f in e))
+            continue; /* absence is the required-fields check */
+        const who = e[f];
+        if (typeof who !== "object" || who === null || Array.isArray(who)) {
+            shapeless.push(`line ${e._line}: ${str(e.type)}.${f} is not an object`);
+            continue;
+        }
+        const w = who;
+        if (!str(w.id).trim())
+            shapeless.push(`line ${e._line}: ${str(e.type)}.${f} has no id`);
+        if (!ACTOR_KINDS.has(str(w.kind)))
+            shapeless.push(`line ${e._line}: ${str(e.type)}.${f} kind ` +
+                `${JSON.stringify(w.kind)} is not one of ` +
+                `${JSON.stringify(Array.from(ACTOR_KINDS).sort())}`);
+    }
+    add("TR-1", "every actor is an object naming an id and a kind", shapeless.length === 0, shapeless.slice(0, 3).join("; "));
     const badEnum = [];
     for (const e of entries)
         for (const [t, f, allowed] of ENUMS)
