@@ -43,7 +43,19 @@ SIGNALS = {
     "identity_source": ("identity_source",
                         "where that identity was resolved from"),
     "integrity": ("integrity", "anything that would show the rows unaltered"),
+    "user_id": ("user_id", "which user or session acted"),
+    "device": ("device", "the device or location it acted from"),
+    "ip": ("ip", "the network address it acted from"),
+    "activity": ("action_type", "what the system did"),
 }
+
+# Some criteria no log can answer, because they are about a policy, a document
+# or a retention period rather than about a record's contents. Marking those
+# NOT EVIDENCED would report a failure where there is only a category error,
+# and an assessor reading that would rightly stop trusting the rest. They are
+# named and set aside instead, which is also useful: it tells somebody which
+# criteria their logs speak to at all before they go looking.
+NOT_IN_RECORDS = "not answerable from records"
 
 # Instrument, clause, what a record has to show, and the signals that would
 # evidence it. Every row here appears at /eu-ai-act/ and the wording is that
@@ -78,9 +90,48 @@ EU_AI_ACT = (
      ("integrity",)),
 )
 
+# ForHumanity's certification criteria, as read on 6 September 2026 across
+# CORE AAA System Governance Deployer v1.6, EU AI Act Multi AAA Agent
+# Governance v1.5, Provider v1.5, Deployer v1.6, and the Guidance on Supporting
+# AAA System Procurement v1.0. Published at
+# https://machinetestimony.org/obligation/.
+#
+# The finding that matters to somebody being audited against these: the Event
+# Log is defined as five components paraphrased from ISO 27001, and they answer
+# which SESSION acted. A deployer can satisfy the logging criterion completely
+# and still be unable to say which person approved anything, because no
+# criterion asks. That is worth knowing before an audit rather than during one.
+FORHUMANITY = (
+    ("EM-EU-PR-RK-AC-2602-001",
+     "Event Logs across twelve areas including the orchestration layer, "
+     "outcomes, a risk log and a human interactions log.",
+     ("write_time", "activity")),
+    ("EM-EU-PR-RK-AC-2602-001",
+     "The Event Log's five components, paraphrased from ISO 27001: user ID, "
+     "system activity, date and time, device and location, and IP address.",
+     ("user_id", "activity", "write_time", "device", "ip")),
+    ("EM-EU-PR-RK-AC-2602-005",
+     "Retention according to the relevant legal framework, and failing that "
+     "no less than six months.",
+     (NOT_IN_RECORDS,)),
+    ("Read across all five documents",
+     "No criterion requires that a retained Event Log be shown not to have "
+     "been altered. Data Integrity is defined as prevention of unauthorised "
+     "modification, which is a control rather than a property of the record.",
+     (NOT_IN_RECORDS,)),
+    ("Read across all five documents",
+     "No criterion asks who approved. Natural person appears 49 times and the "
+     "single occurrence of approver is a plan approver in an unrelated "
+     "criterion. Nothing here obliges the record to name a person, which is "
+     "why satisfying the logging criteria does not answer it.",
+     (NOT_IN_RECORDS,)),
+)
+
 INSTRUMENTS = {
     "eu-ai-act": ("the EU AI Act, as read at "
                   "https://machinetestimony.org/eu-ai-act/", EU_AI_ACT),
+    "forhumanity": ("the ForHumanity certification criteria, as read at "
+                    "https://machinetestimony.org/obligation/", FORHUMANITY),
 }
 
 
@@ -112,7 +163,16 @@ def against(rows: list, instrument: str = "eu-ai-act",
     seen = _seen(rows)
     out = ["%d rows read from %s, against %s." % (len(rows), name, where), ""]
     short = 0
+    aside = 0
     for clause, shows, signals in table:
+        if signals == (NOT_IN_RECORDS,):
+            aside += 1
+            out.append("  NOT IN RECORDS  %s" % clause)
+            out.append("  %-15s %s" % ("", shows))
+            out.append("      no log answers this: it is about a policy, a "
+                       "document or a period")
+            out.append("")
+            continue
         found = {s: _find(seen, rows, s) for s in signals}
         missing = [s for s, v in found.items() if not v]
         if missing:
@@ -127,8 +187,12 @@ def against(rows: list, instrument: str = "eu-ai-act",
             out.append("      %-6s %s" % ("", mark))
         out.append("")
     out.append("%d of %d obligations cannot be evidenced from these rows."
-               % (short, len(table)) if short else
-               "Every obligation here has something in these rows to rest on.")
+               % (short, len(table) - aside) if short else
+               "Every obligation a record can speak to has something in these "
+               "rows to rest on.")
+    if aside:
+        out.append("%d more are not about a record's contents at all and were "
+                   "set aside rather than failed." % aside)
     out += ["",
             "What this is. A search of the rows you gave it for the things a "
             "published reading",

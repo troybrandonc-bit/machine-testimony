@@ -394,6 +394,49 @@ def main():
     check("an instrument nobody has read is refused rather than guessed",
           _raises(lambda: criteria.against(gate, "iso-42001")))
 
+    print()
+    print("a second instrument, because one framework is a demo")
+    # Held to the published reading the same way the Act rows are held to
+    # their page. The criterion identifiers and the findings come out of
+    # census/schemes/readings.json, which is what was deposited.
+    readings = json.load(io.open(
+        os.path.join(ROOT, "census", "schemes", "readings.json"),
+        encoding="utf-8"))
+    fh = [s for s in readings["subjects"] if "ForHumanity" in s.get("name", "")]
+    check("the scheme census carries a ForHumanity reading", len(fh) == 1)
+    if fh:
+        notes = " ".join(a["note"] for a in fh[0]["answers"].values())
+        for cid in ("EM-EU-PR-RK-AC-2602-001", "EM-EU-PR-RK-AC-2602-005"):
+            check("%s is a criterion the reading actually names" % cid,
+                  cid in notes, notes[:120])
+        check("and the five components are quoted from it, not invented",
+              "user ID, system activity, date and time, device and location"
+              in notes)
+
+    full = [{"ts": "2026-09-02T09:14:02Z", "action_type": "issue_refund",
+             "user_id": "sam@corp", "ip": "10.0.0.4", "device": "wks-3"}]
+    text = criteria.against(full, "forhumanity", "client.jsonl")
+    check("a log with all five components could evidence the Event Log",
+          "COULD EVIDENCE  EM-EU-PR-RK-AC-2602-001" in text, text[:400])
+
+    thin = [{"ts": "2026-09-02T09:14:02Z", "action_type": "issue_refund"}]
+    text2 = criteria.against(thin, "forhumanity", "client.jsonl")
+    check("and one without them is short rather than silent",
+          "NOT EVIDENCED" in text2 and "NOTHING HERE" in text2)
+
+    # The state that stops a category error being reported as a failure.
+    check("retention is set aside rather than failed, since no log answers it",
+          "NOT IN RECORDS  EM-EU-PR-RK-AC-2602-005" in text, text[-900:])
+    check("and the count says so separately",
+          "not about a record's contents at all" in text, text[-400:])
+
+    # The finding an auditor most needs from this instrument.
+    check("it says satisfying the logging criteria does not answer who "
+          "approved", "No criterion asks who approved" in text)
+
+    check("both instruments are offered", set(criteria.INSTRUMENTS) ==
+          {"eu-ai-act", "forhumanity"}, sorted(criteria.INSTRUMENTS))
+
     print("\n%d passed, %d failed" % (PASS, FAIL))
     return 1 if FAIL else 0
 

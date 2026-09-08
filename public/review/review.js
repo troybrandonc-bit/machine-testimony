@@ -125,6 +125,37 @@ export const SYNONYMS = {
     "receipt_id",
     "receipt"
   ],
+  "user_id": [
+    "user_id",
+    "userid",
+    "user",
+    "principal",
+    "subject_id",
+    "account",
+    "session_user",
+    "actor_id",
+    "username"
+  ],
+  "device": [
+    "device",
+    "device_id",
+    "host",
+    "hostname",
+    "location",
+    "geo",
+    "region",
+    "workstation",
+    "user_agent"
+  ],
+  "ip": [
+    "ip",
+    "ip_address",
+    "client_ip",
+    "remote_addr",
+    "source_ip",
+    "src_ip",
+    "peer"
+  ],
   "at": [
     "at",
     "ts",
