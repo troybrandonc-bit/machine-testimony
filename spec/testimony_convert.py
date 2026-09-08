@@ -532,12 +532,182 @@ def otlp_rows(doc: dict) -> list:
     return rows
 
 
+# ── a record out of telemetry they already emit ─────────────────────────────
+#
+# Every other route into this format needs somebody to change code. An adapter
+# is a dependency and an import; the emitter is a file to copy and calls to
+# place. That is a developer and a sprint, and it is the wall almost everybody
+# stops at.
+#
+# They are already emitting OpenTelemetry. So this builds what a record can be
+# built from that, with no code changed and no mapping written, and reports
+# what it could not fill.
+#
+# **It will not guess an approver.** Every other member can be wrong in a way a
+# reader notices; a wrong approver is a record that answers the one question it
+# exists to answer, with a name nobody checked. Those members are left out and
+# named, so a record produced this way reaches the level its telemetry actually
+# supports and stops there. That is the useful output: not a record that looks
+# finished, but the shortest list of what to add.
+
+NEVER_GUESSED = ("approver.id", "approver.kind", "identity_source")
+# `risk_source` is required on a decision and must not be inferred either, but
+# leaving it out would mean no decision could ever be built. So it is declared
+# as an extension saying plainly that the provenance was not established, which
+# the emitter permits for exactly this and which a reader cannot mistake for
+# one of the defined values.
+UNMAPPED_RISK_SOURCE = "x-provenance-not-established"
+
+# Field names are only half of it. A log says `allowed: true`; the format wants
+# `verdict: "permitted"`, and a mapping that gets the name right and the value
+# wrong is refused by the emitter with nothing built and nothing said. So the
+# handful of members that are enumerated get a conservative translation, and
+# anything not on these lists is passed through untouched to be refused loudly
+# rather than coerced into something plausible.
+COERCE = {
+    "verdict": {True: "permitted", False: "refused", "allow": "permitted",
+                "allowed": "permitted", "approve": "permitted",
+                "approved": "permitted", "permit": "permitted",
+                "deny": "refused", "denied": "refused", "block": "refused",
+                "blocked": "refused", "reject": "refused",
+                "rejected": "refused", "refuse": "refused"},
+    "risk_class": {"critical": "high", "severe": "high", "moderate": "medium",
+                   "med": "medium", "minor": "low", "info": "low"},
+    "kind": {"http": "api", "rest": "api", "call": "api", "tool": "api",
+             "doc": "document", "file": "document", "text": "document",
+             "msg": "message", "chat": "message", "log": "event",
+             "span": "event", "computed": "derived", "inferred": "derived"},
+}
+
+
+def coerced(member: str, get):
+    """A getter that translates a known value shape, and passes on anything
+    else so the emitter refuses it in the open."""
+    table = COERCE.get(member.split(".")[-1])
+    if not table:
+        return get
+
+    def read(row):
+        v = get(row)
+        if v is MISSING:
+            return v
+        key = v if isinstance(v, bool) else str(v).strip().lower()
+        return table.get(key, v)
+    return read
+
+
+def emit(rows: list, name: str = "the file") -> tuple:
+    """A record from rows nobody mapped by hand, and what was left out."""
+    r = em.Record()
+    r.scope(acts=True, description="Reconstructed from telemetry by "
+            "testimony_convert. Mapping inferred, not confirmed.")
+    seen = {}
+    for row in rows[:200]:
+        # Not `path`: that is the module-level helper this function needs two
+        # lines further down, and shadowing it turns a mapping into a TypeError.
+        for where, value in _paths(row).items():
+            seen.setdefault(where, value)
+
+    # Approvals are never built from an inferred mapping, and this is stated
+    # even when nothing in the rows looked like one. A record that quietly
+    # contained no approvals reads as a system that never asked a human,
+    # which is a much worse claim than saying nothing.
+    plans = []
+    withheld = ["approver.id", "approver.kind", "identity_source"]
+    for etype in ("evidence", "decision"):
+        fields, missing = {}, []
+        for member in _required(etype):
+            if member in NOT_MAPPABLE:
+                continue
+            lookup = member + ".id" if member in ACTORS else member
+            if lookup in NEVER_GUESSED:
+                if lookup not in withheld:
+                    withheld.append(lookup)
+                continue
+            if lookup == "risk_source":
+                fields[lookup] = const(UNMAPPED_RISK_SOURCE)
+                continue
+            hit = match(seen, lookup)
+            if hit:
+                fields[lookup] = coerced(lookup, path(hit[0]))
+                # An actor is an id AND a kind. Mapping only the id leaves an
+                # actor the validator refuses, and the kind here comes from
+                # the member rather than the data: the party proposing an
+                # action in an agent system is the agent, which is the one
+                # actor kind that can be read off the position it sits in.
+                if member in ACTORS:
+                    fields[member + ".kind"] = const(ACTORS[member])
+            else:
+                missing.append(lookup)
+        # The emitter demands risk_source on a decision and it is not in
+        # REQUIRED, so the loop above never reaches it. It must be set, and it
+        # must not be inferred, so it is declared as an extension saying the
+        # provenance was not established.
+        if etype == "decision":
+            fields.setdefault("risk_source", const(UNMAPPED_RISK_SOURCE))
+        if missing:
+            plans.append((etype, None, missing))
+        else:
+            plans.append((etype, Mapping(etype, fields), []))
+
+    built, refused = 0, []
+    for etype, mapping, missing in plans:
+        if not mapping:
+            continue
+        out = convert(rows, mapping, record=r)
+        built += len([x for x in out.rows if not x["missing"]
+                      and not x["error"]])
+        refused.extend(out.refusals)
+    if len(r.entries) > 1:
+        r.seal()
+    short = sorted({m for _, _, ms in plans for m in ms})
+    return r, {"built": built, "missing": short, "refused": refused[:4],
+               "withheld": sorted(set(withheld)), "rows": len(rows)}
+
+
+def emitted_note(res: dict, level) -> str:
+    out = ["# %d rows in, %d entries built, and this record reaches %s."
+           % (res["rows"], res["built"], level or "no level"),
+           "#"]
+    if res.get("refused"):
+        # Silence here would be the worst possible failure: a record that
+        # looks finished because the entries it could not build were dropped
+        # without a word.
+        out.append("# Refused by the emitter, so those rows are NOT in the "
+                   "record above:")
+        for m in res["refused"]:
+            out.append("#   %s" % m[:96])
+        out.append("#")
+    out.append("# Where a risk class came from is declared as %s, because it "
+               "was not" % UNMAPPED_RISK_SOURCE)
+    out.append("# established and saying so beats implying a registry set it.")
+    out.append("#")
+    if res["missing"]:
+        out.append("# Not in your telemetry at all: %s."
+                   % ", ".join(res["missing"]))
+    if res["withheld"]:
+        out.append("# No approval entry was built and none was guessed at. A "
+                   "wrong approver is a")
+        out.append("# record answering the one question this format exists to "
+                   "ask, with a name")
+        out.append("# nobody checked, so these are yours to map by hand: %s."
+                   % ", ".join(res["withheld"]))
+    out += ["#",
+            "# Nothing here was confirmed by a person. The mapping was "
+            "inferred from your",
+            "# field names, so read it before relying on it, and see "
+            "--report for what",
+            "# these rows can and cannot answer as they stand."]
+    return chr(10).join(out)
+
+
 def main() -> int:
     if len(sys.argv) < 2:
         raise SystemExit(
             "usage: testimony_convert.py RECORDS.jsonl [entry_type ...]"
             + chr(10)
             + "       testimony_convert.py RECORDS.jsonl --report" + chr(10)
+            + "       testimony_convert.py RECORDS.jsonl --emit" + chr(10)
             + "       testimony_convert.py RECORDS.jsonl --against eu-ai-act"
             + chr(10)
             + chr(10)
@@ -592,6 +762,16 @@ def main() -> int:
             print(against(rows, which, sys.argv[1]))
         except ValueError as e:
             raise SystemExit(str(e))
+        return 0
+    if "--emit" in args:
+        rec, res = emit(rows, sys.argv[1])
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        import testimony_validate as _tv
+        text = rec.jsonl()
+        level = _tv.validate(text).as_dict()["level"] if text else None
+        print(emitted_note(res, level))
+        if text:
+            print(text)
         return 0
     if "--report" in args:
         print(report(rows, sys.argv[1]))

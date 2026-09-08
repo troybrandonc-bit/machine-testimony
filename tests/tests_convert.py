@@ -352,6 +352,48 @@ def main():
           real.get("approver.id", ("",))[0] == "approval.approver", real)
 
 
+    print()
+    print("a record out of telemetry nobody mapped by hand")
+    from testimony_convert import emit, emitted_note, NEVER_GUESSED
+    rec, res = emit(FOREIGN, "their-logs.jsonl")
+    text = rec.jsonl()
+    check("it produces a record without anybody writing a mapping",
+          bool(text) and "testimony-record" in text, text[:120])
+    rep = tv.validate(text).as_dict()
+    # A record built from partial telemetry legitimately fails the checks for
+    # levels it does not claim. What must hold is that every check at the level
+    # it DOES reach passed, which is what the level means.
+    reached = rep["level"]
+    check("and every check at the level it claims passed",
+          reached and not [c for c in rep["checks"]
+                           if not c["ok"] and c["level"] <= reached],
+          (reached, [c["check"] for c in rep["checks"] if not c["ok"]]))
+
+    # The line the whole thing turns on. Every other member can be wrong in
+    # a way a reader notices. A wrong approver is a record answering the one
+    # question the format exists to ask, with a name nobody checked.
+    check("no approval entry is ever built from an inferred mapping",
+          not [e for e in rec.entries if e["type"] == "approval"],
+          [e["type"] for e in rec.entries])
+    for member in ("approver.id", "identity_source"):
+        check("%s is never guessed" % member, member in NEVER_GUESSED)
+    note = emitted_note(res, rep["level"])
+    check("and the note says so rather than leaving it silent",
+          "none was guessed at" in note and "approver.id" in note, note)
+    check("a record with no approvals would otherwise read as a system that "
+          "never asked a human", "yours to map by hand" in note)
+
+    check("it names what the telemetry did not carry",
+          "Not in your telemetry at all" in note, note)
+    check("and says the mapping was not confirmed by anybody",
+          "not confirmed" in text and "inferred" in note)
+
+    otlp_rec, otlp_res = emit(otlp_rows(OTLP), "otel.json")
+    check("it works on an OpenTelemetry export, which needs no code changed",
+          bool(otlp_rec.jsonl()), otlp_res)
+    check("and still refuses to invent an approver there",
+          not [e for e in otlp_rec.entries if e["type"] == "approval"])
+
     print("\n%d passed, %d failed" % (PASS, FAIL))
     return 1 if FAIL else 0
 
