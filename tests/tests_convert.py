@@ -202,6 +202,51 @@ def main():
     check("nothing is converted from a suggestion",
           "convert(" not in propose(FOREIGN, "decision"))
 
+    print()
+    print("it asks the four questions of a file, for somebody reviewing one")
+    from testimony_convert import report
+    text = report(FOREIGN, "a-gate.jsonl")
+    check("it finds the approver a gate log does record",
+          "ANSWERABLE" in text and "approval.approver" in text, text)
+    check("and reports the identity source it does not",
+          "NOT IN THE FILE" in text
+          and "where that identity was resolved from" in text)
+    check("and that nothing seals the file",
+          "digest, chain or signature" in text)
+    check("it counts them rather than leaving a reader to",
+          "2 of 4 are not in these rows" in text, text)
+
+    # An auditor has to stand behind a finding, so the finding has to say
+    # what it did not look at. Without this the report reads as a statement
+    # about the system, which it is not and cannot be.
+    check("it states its own scope rather than implying a wider one",
+          "does not claim to" in text and "somewhere these rows have never "
+          "been" in text)
+    check("and carries the command that reproduces it",
+          "Reproduce: python3 testimony_convert.py a-gate.jsonl --report"
+          in text)
+
+    sealed = [dict(r, prev_hash="sha256:aa", auth={"method": "oidc"})
+              for r in FOREIGN]
+    better = report(sealed, "sealed.jsonl")
+    check("a file that does carry them is reported as answering them",
+          "All four are present" in better, better)
+
+    print()
+    print("the finding shown to assessors is the finding the tool produces")
+    apage = io.open(os.path.join(ROOT, "pages", "assess.html"),
+                    encoding="utf-8").read()
+    shown = [_html.unescape(m) for m in
+             _re.findall(r'<pre class="snip">(.*?)</pre>', apage, _re.S)
+             if "--report" in m]
+    check("/assess/ shows the report", len(shown) == 1, len(shown))
+    if shown:
+        real = report(FOREIGN, "their-logs.jsonl")
+        for line in ("ANSWERABLE", "NOT IN THE FILE",
+                     "2 of 4 are not in these rows"):
+            check("and the page and the tool agree on %r" % line,
+                  line in shown[0] and line in real)
+
     print("\n%d passed, %d failed" % (PASS, FAIL))
     return 1 if FAIL else 0
 
