@@ -738,6 +738,16 @@ author, which is the property the two validators above cannot demonstrate howeve
 carefully they are written, because both were written by the same reader of the
 same text.
 
+The manner of the disagreement is worth as much as the count. Two people writing
+from this text without coordinating arrived independently at the same two gaps:
+a shape requirement stated in the Conventions and enforced nowhere, and a
+comparison this document required while saying nothing about where to take one
+side of it from. A single author re-reading their own specification cannot
+produce that, however carefully and however often, because the reading that
+produced the gap is the reading doing the re-reading. Two readers hitting the
+same omission separately is evidence about the text rather than about either of
+them.
+
 No independent emitter is known. That is the honest remaining state of it, and
 it is the thing a reader deciding whether to implement this should weigh most
 heavily.
