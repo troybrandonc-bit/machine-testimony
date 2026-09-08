@@ -49,11 +49,12 @@ approvals: dict[str, bool | DeferredToolApprovalResult]
 **A bare `True` approves.** That is not a criticism of the design, which is
 cleaner than most: `ToolApproved` carries `override_args`, so the framework
 already understands that what was approved and what the model proposed can
-differ. But a boolean has nowhere to put a person, and
-[an assessment of eight agent systems](https://machinetestimony.org/register/)
-found that is where almost all of them stop. Of the six that take or gate
-actions, one could name the person who approved one. Four could not, because
-approval is stored as a boolean and the identity was never written down.
+differ. But a boolean has nowhere to put a person.
+[Ten agent systems were read](https://machinetestimony.org/register/) against a
+published rubric, and this is where almost all of them stop: of the eight
+systems that take or gate actions, one could name the person who approved one,
+six could not because nothing on the approval path identifies a person, and in
+the eighth it could not be determined from outside the vendor.
 
 So this adapter never writes one. It requires an approver and a source for that
 approver's identity, or it refuses to record an approval at all.

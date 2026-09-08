@@ -345,6 +345,30 @@ def main():
                             % (rel.replace(os.sep, "/"), found, want_total))
     check("every page agrees on how many systems were assessed",
           not bad2, bad2)
+
+    # The published pages were swept and the adapters were not, so the
+    # pydantic-ai adapter and its readme went on quoting eight systems and four
+    # that could not, months after the census had grown to ten and six. They
+    # are prose a reader meets before they ever reach the register, and they
+    # link straight to it, so a reader who follows the link finds different
+    # numbers. Same two shapes, swept over the same tree the adapters live in.
+    bad3 = []
+    for base, _dirs, files in os.walk(os.path.join(ROOT, "adapters")):
+        for f in files:
+            if not f.endswith((".py", ".md")):
+                continue
+            rel = os.path.relpath(os.path.join(base, f), ROOT)
+            text = io.open(os.path.join(base, f), encoding="utf-8").read()
+            for found in shape.findall(text):
+                if found.lower() not in (want_acting, str(len(acting))):
+                    bad3.append("%s says %r act, census says %r"
+                                % (rel.replace(os.sep, "/"), found,
+                                   want_acting))
+            for found in shape2.findall(text):
+                if found.lower() not in (want_total, str(len(subjects))):
+                    bad3.append("%s says %r assessed, census has %r"
+                                % (rel.replace(os.sep, "/"), found, want_total))
+    check("every adapter agrees with the census it cites", not bad3, bad3)
     print("")
     print("every page that counts the corpus counts it correctly")
     # The fifth hand-typed count in this repository, and the first one caught
