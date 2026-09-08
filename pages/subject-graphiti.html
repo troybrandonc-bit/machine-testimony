@@ -102,7 +102,7 @@
         <li><b>searched</b> grep -rniE &#x27;hash_chain|merkle|signature|tamper|checksum|digest&#x27; graphiti_core/ --include=*.py<br>the only hash is an md5 used to key the LLM response cache at llm_client/client.py:157; nothing relates to record integrity</li>
         <li><b>docs</b> graphiti README.md<br>no integrity, verification or tamper-evidence claim is made</li>
       </ul>
-      <p><b>R4.2 &middot; absent.</b> Can an independent party run that verification without the vendor&#x27;s cooperation?</p>
+      <p><b>R4.2 &middot; absent.</b> Can an independent party run that verification without the vendor&#x27;s cooperation, and without the operator&#x27;s?</p>
       <ul>
         <li><b>searched</b> grep -rniE &#x27;def verify|verification&#x27; graphiti_core/ --include=*.py<br>no verification surface exists, so there is nothing for an independent party to run</li>
       </ul>
