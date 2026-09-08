@@ -83,6 +83,14 @@ before_js = io.open(os.path.join(ROOT, "public", "review", "review.js"),
     os.path.join(ROOT, "public", "review", "review.js")) else ""
 
 
+def _raises(fn):
+    try:
+        fn()
+        return False
+    except Exception:                                          # noqa: BLE001
+        return True
+
+
 def main():
     print("\nit reports what the source could not fill")
     APPROVAL = Mapping("approval", {
@@ -342,6 +350,49 @@ def main():
     real = suggest([{"approval": {"approver": "sam@corp.example"}}], "approval")
     check("while a field that means it is still found",
           real.get("approver.id", ("",))[0] == "approval.approver", real)
+
+    print()
+    print("it maps the finding onto a clause somebody is assessed against")
+    sys.path.insert(0, os.path.join(ROOT, "spec"))
+    import criteria
+
+    # The page is the published reading. Two statements of it are two to
+    # drift, so every clause in the data has to appear on the page it claims
+    # to come from, word for word.
+    page = io.open(os.path.join(ROOT, "pages", "eu-ai-act.html"),
+                   encoding="utf-8").read()
+    flat = " ".join(_re.sub(r"<[^>]+>", " ", page).split())
+    for clause, shows, _sig in criteria.EU_AI_ACT:
+        want = " ".join(shows.split())
+        check("/eu-ai-act/ carries %r as published" % shows[:38],
+              want in flat, want[:80])
+
+    gate = [{"ts": "2026-09-02T09:14:02Z", "tool": "issue_refund",
+             "risk": "high", "allowed": True, "ran": True,
+             "approval": {"approver": "sam@corp"}},
+            {"ts": "2026-09-02T09:14:40Z", "tool": "close_account",
+             "risk": "high", "allowed": False, "ran": False,
+             "reason": "outside declared scope"}]
+    text = criteria.against(gate, "eu-ai-act", "client.jsonl")
+    check("a clause with everything present is not marked short",
+          "COULD EVIDENCE  Art. 14" in text, text[:400])
+    check("and the one needing an identity source is",
+          "NOT EVIDENCED   Art. 14" in text)
+    check("the clock is found under whatever the log calls it",
+          "from 'ts'" in text, text[:300])
+
+    # The line that keeps this the right side of the roadmap: it gathers, it
+    # does not conclude. A tool that read as a compliance verdict would be
+    # the same error as a record that reads as proof.
+    for said in ("not legal advice", "not a compliance assessment",
+                 "not an opinion about anybody",
+                 "not that the obligation is breached"):
+        check("it says on its face it is %s" % said, said in text)
+    check("and names the reading it measured against, so a wrong one is "
+          "cheap to show", "machinetestimony.org/eu-ai-act/" in text)
+
+    check("an instrument nobody has read is refused rather than guessed",
+          _raises(lambda: criteria.against(gate, "iso-42001")))
 
     print("\n%d passed, %d failed" % (PASS, FAIL))
     return 1 if FAIL else 0

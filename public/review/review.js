@@ -124,6 +124,20 @@ export const SYNONYMS = {
     "correlation_id",
     "receipt_id",
     "receipt"
+  ],
+  "at": [
+    "at",
+    "ts",
+    "time",
+    "timestamp",
+    "datetime",
+    "event_time",
+    "occurred_at",
+    "created_at",
+    "logged_at",
+    "start_time",
+    "starttimeunixnano",
+    "observedtimeunixnano"
   ]
 };
 export const QUESTIONS = [
