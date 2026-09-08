@@ -1,0 +1,29 @@
+<!--title: AI suppliers whose records answer the questions buyers ask
+    desc: Suppliers who publish a Testimony Record from their own system, indexed by what the published validator says about it. Not a certification: the supplier publishes, the validator decides, and anybody can rerun it.
+    slug: directory-->
+<div class="wrap main">
+  <div>
+    <p class="dateline">A directory, not an assessment</p>
+    <h2 class="label">Suppliers whose records answer the questions</h2>
+    <div class="block">
+      <p>The <a href="/register/">register</a> reads systems at pinned commits and reports what they cannot do. Nobody volunteers for that. This is the other side of it: a supplier publishes a record from their own system, at a URL they control, and this page reports what the validator says about it.</p>
+      <p><b>Nothing here is assessed by this project.</b> The supplier publishes, the published validator produces the verdict, and the command that reproduces it is beside every row. A directory that graded submissions would be a certification body, which is a thing this project will not become.</p>
+      <p><b>And it is one record the supplier chose.</b> It shows the system can produce one, which is the question a buyer asks and which most systems cannot answer at all. It is not evidence about every action the system has ever taken, and reading it as that would be the soft yes the <a href="/ask/">questions</a> exist to catch.</p>
+    </div>
+    <h3>OMEM</h3>
+      <p>Published at <a href="https://machinetestimony.org/anchor/record.jsonl">https://machinetestimony.org/anchor/record.jsonl</a>. The validator reports <b>TR-4</b> over 13 entries, resting on 33 checks a reader can settle and 4 taken on the emitter&rsquo;s word.</p>
+      <p class="note">This project's own reference implementation. Listed on the same terms as anybody else and carrying no evidential weight for that reason, exactly as its row on the register does.</p>
+      <table>
+        <tr><th>The question</th><th>This record</th></tr>
+        <tr><td>does the record name which person approved</td><td>yes</td></tr>
+        <tr><td>does that name come from authentication</td><td>yes</td></tr>
+        <tr><td>is the approver a different party from the proposer</td><td>yes</td></tr>
+        <tr><td>are both sides of a disagreement kept</td><td>yes</td></tr>
+        <tr><td>does a resolved disagreement say who resolved it</td><td>yes</td></tr>
+        <tr><td>can a stored fact be traced to its source</td><td>yes</td></tr>
+        <tr><td>would alteration of a past entry be detectable</td><td>yes</td></tr>
+        <tr><td>can that be checked without the supplier</td><td>yes</td></tr>
+      </table>
+      <pre class="snip">python3 spec/testimony_validate.py &lt;(curl -s https://machinetestimony.org/anchor/record.jsonl)</pre>
+  </div>
+</div>
