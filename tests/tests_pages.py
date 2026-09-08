@@ -1245,6 +1245,21 @@ def main():
               bool(made) and made == have,
               "regenerate with build_page.py" if made else built.stderr[:120])
 
+    print()
+    print("every suite in tests/ is actually run by CI")
+    # CI names each suite explicitly rather than discovering them, which is
+    # the right call: a discovered suite that errors on import can look like
+    # a suite that passed. The cost is that a suite added and not wired in
+    # never runs and nobody finds out. This is the check for that, and it
+    # lives in a suite CI already runs, because a guard nobody runs has the
+    # same problem it is guarding against.
+    workflow = io.open(os.path.join(ROOT, ".github", "workflows", "ci.yml"),
+                       encoding="utf-8").read()
+    unwired = [os.path.basename(f)
+               for f in sorted(glob.glob(os.path.join(HERE, "tests_*.py")))
+               if os.path.basename(f) not in workflow]
+    check("no suite exists that CI never runs", not unwired, unwired)
+
     print("\n%d passed, %d failed" % (PASS, FAIL))
     return 1 if FAIL else 0
 

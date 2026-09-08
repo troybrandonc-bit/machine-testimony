@@ -1,0 +1,138 @@
+"""Conversion: what a format you already have cannot say.
+Run: python3 tests_convert.py
+
+Every project this format would help is already writing receipts in a shape it
+invented. For them the useful question is not how to record, it is what their
+shape cannot answer, and the converter exists to answer it in one run instead
+of one reading of a forty page draft.
+
+So the thing under test is the report rather than the record. A converter that
+quietly supplied an approver, or that dropped a row it could not fill, would
+produce a clean conversion and a false one, and it would be the exact defect
+this format exists to make visible.
+
+Copyright 2026 Garnet Taurus Ltd. MIT licensed.
+"""
+import json
+import os
+import sys
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+ROOT = os.path.normpath(os.path.join(HERE, ".."))
+sys.path.insert(0, os.path.join(ROOT, "spec"))
+
+import testimony_emit as em                                 # noqa: E402
+import testimony_validate as tv                             # noqa: E402
+from testimony_convert import Mapping, const, convert       # noqa: E402
+
+PASS = FAIL = 0
+
+
+def check(name, cond, detail=""):
+    global PASS, FAIL
+    if cond:
+        PASS += 1
+        print("  ok  " + name)
+    else:
+        FAIL += 1
+        print("  FAIL " + name + "  " + str(detail)[:240])
+
+
+# A receipt shape nobody here designed: a gate that records what it allowed and
+# who approved it, and never records how that principal was resolved.
+FOREIGN = [
+    {"event": "tool_call", "tool": "issue_refund", "risk": "high",
+     "caller": {"agent_id": "agent-1"}, "allowed": True, "ran": True,
+     "approval": {"receipt_id": "d_1", "approver": "sam@corp.example"}},
+    {"event": "tool_call", "tool": "send_email", "risk": "low",
+     "caller": {"agent_id": "agent-1"}, "allowed": False, "ran": False,
+     "reason": "outside declared scope"},
+    {"event": "heartbeat", "at": "2026-09-08T00:00:00Z"},
+]
+
+DECISION = Mapping("decision", {
+    "action_type": "tool", "risk_class": "risk",
+    "risk_source": const("policy"),
+    "proposed_by.id": "caller.agent_id",
+    "proposed_by.kind": const("agent"),
+    "verdict": lambda r: "permitted" if r.get("allowed") else "refused",
+    "executed": "ran", "reason": "reason",
+}, when=lambda r: r.get("event") == "tool_call")
+
+
+def main():
+    print("\nit reports what the source could not fill")
+    APPROVAL = Mapping("approval", {
+        "decision": "approval.receipt_id",
+        "approver.id": "approval.approver",
+        "approver.kind": const("human"),
+        "identity_source": "approval.identity_source",
+    }, when=lambda r: "approval" in r)
+    out = convert(FOREIGN, APPROVAL)
+    check("a field the emitter demands is named in the report, not raised "
+          "as a TypeError", out.missing == {"identity_source": 1}, out.missing)
+    check("and identity_source is reported even though REQUIRED omits it",
+          "identity_source" not in em.REQUIRED["approval"]
+          and "identity_source" in out.missing)
+    check("the row is not converted rather than converted with a hole",
+          out.entries == [], out.entries)
+    check("the report says so in words somebody can act on",
+          "identity_source" in out.report()
+          and "no value for" in out.report(), out.report())
+
+    print("\nit never invents a value")
+    src = "".join(open(os.path.join(ROOT, "spec", "testimony_convert.py"),
+                       encoding="utf-8"))
+    check("nothing in the converter supplies a default for a missing field",
+          "or 'unknown'" not in src and 'or "unknown"' not in src
+          and "setdefault(req" not in src)
+    check("a source with no approver produces no approval entry",
+          convert([{"approval": {"receipt_id": "d_1"}}], APPROVAL).entries
+          == [])
+
+    print("\nrows it can fill become a record the validator accepts")
+    r = em.Record()
+    r.scope(acts=True, description="Gate.")
+    out = convert(FOREIGN, DECISION, record=r)
+    check("only the rows the mapping claims are taken",
+          len(out.rows) == 2, [x["type"] for x in out.rows])
+    check("both convert with nothing missing",
+          out.missing == {} and not out.refusals,
+          (out.missing, out.refusals))
+    r.seal()
+    rep = tv.validate(r.jsonl()).as_dict()
+    # It stops at TR-2, and the reason is the finding rather than a defect
+    # in the conversion: their format recorded a high-risk action that ran and
+    # no approval to go with it, so the level it reaches is the honest one.
+    check("it reaches TR-2 and stops where their format runs out",
+          rep["level"] == "TR-2", rep["level"])
+    check("and names the executed high-risk action with no approval as why",
+          any("approval" in c["check"] for c in rep["checks"]
+              if not c["ok"] and c["level"] == "TR-3"),
+          [c["check"] for c in rep["checks"] if not c["ok"]])
+    check("and every check that passed is one the reader can settle or the "
+          "record declares", not [c for c in rep["checks"]
+                                  if c["basis"] not in ("verified",
+                                                        "attested")])
+
+    print("\nit passes the emitter's refusals through rather than around them")
+    bad = convert([{"event": "tool_call", "tool": "x", "risk": "high",
+                    "caller": {"agent_id": "a"}, "allowed": False,
+                    "ran": True, "reason": "no"}], DECISION)
+    check("a refused action that also executed is refused, not written",
+          bool(bad.refusals) and bad.entries == [], bad.refusals)
+
+    print("\nthe mapping declaration is checked before it is used")
+    try:
+        Mapping("not_a_type", {})
+        ok = False
+    except ValueError as e:
+        ok = "not an entry type" in str(e)
+    check("an unknown entry type is refused where it is written", ok)
+
+    print("\n%d passed, %d failed" % (PASS, FAIL))
+    return 1 if FAIL else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
