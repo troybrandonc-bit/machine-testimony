@@ -123,6 +123,92 @@ def main():
           r.returncode == 0 and "Conformance:" in r.stdout,
           (r.stdout or r.stderr)[-200:])
 
+    print()
+    print("it receives OTLP where the collector already sends it")
+    import threading, time, urllib.request, urllib.error
+    import receive
+    rx = os.path.join(tmp, "received.jsonl")
+    port = 4319
+
+    def _post(body, ctype="application/json", path="/v1/traces"):
+        # Port 0: the OS picks a free one. A fixed port re-bound four times in
+        # a row races with the previous socket closing, and a flaky test is
+        # worse than no test.
+        srv = receive.make_server(rx, "eu-ai-act", "127.0.0.1", 0)
+        bound = srv.server_address[1]
+        t = threading.Thread(target=srv.handle_request, daemon=True)
+        t.start()
+        req = urllib.request.Request(
+            "http://127.0.0.1:%d%s" % (bound, path),
+            data=body if isinstance(body, bytes) else body.encode(),
+            headers={"Content-Type": ctype})
+        try:
+            r = urllib.request.urlopen(req, timeout=8)
+            out = (r.status, json.loads(r.read().decode()))
+        except urllib.error.HTTPError as e:
+            out = (e.code, json.loads(e.read().decode()))
+        t.join(timeout=5)
+        srv.server_close()
+        return out
+
+    OTLP = {"resourceSpans": [{"scopeSpans": [{"spans": [
+        {"name": "execute_tool", "startTimeUnixNano": "1788800000000000000",
+         "attributes": [{"key": "gen_ai.tool.name",
+                        "value": {"stringValue": "issue_refund"}}]}]}]}]}
+    code, body = _post(json.dumps(OTLP))
+    check("a collector export is accepted and read",
+          code == 200 and body.get("read") and body.get("spans") == 1,
+          (code, body))
+    check("and it becomes a reading in the history", os.path.exists(rx))
+
+    code, body = _post(bytes([0, 1]), "application/x-protobuf")
+    check("protobuf is refused with the config line that fixes it, not "
+          "misread", code == 415 and "encoding: json" in body.get("error",""),
+          (code, body))
+    code, body = _post(json.dumps({"not": "otlp"}))
+    check("JSON that is not a trace export is refused",
+          code == 400 and "resourceSpans" in body.get("error", ""),
+          (code, body))
+    code, body = _post(json.dumps(OTLP), path="/v1/metrics")
+    check("only traces are served, rather than silently accepting the rest",
+          code == 404, (code, body))
+
+    print()
+    print("and packs a bundle an assessor can check alone")
+    import pack
+    outdir = os.path.join(tmp, "evidence-pack")
+    res = pack.build(hist, outdir)
+    for f in ("history.jsonl", "SUMMARY.md", "VERDICT.json"):
+        check("the pack carries %s" % f,
+              os.path.exists(os.path.join(outdir, f)))
+    text = io.open(os.path.join(outdir, "SUMMARY.md"),
+                   encoding="utf-8").read()
+    check("the summary names what changed and when",
+          "2026-10-02T10:00:00Z" in text, text[:600])
+    check("and says it is not an opinion about whether anything is met",
+          "is a compliance" in text and "assessor" in text
+          and "judgement" in text, text[:500])
+    check("it tells the assessor to fetch the validator elsewhere, so they "
+          "are not running what the assessed party supplied",
+          "git clone" in text and "testimony_validate.py" in text)
+
+    # The claim that lets the pack leave the building. The history keeps
+    # which field NAME evidenced a criterion, never the field's contents,
+    # so a customer identifier in the telemetry cannot ride along in it.
+    whole = " ".join(io.open(os.path.join(outdir, f), encoding="utf-8").read()
+                     for f in ("history.jsonl", "SUMMARY.md", "VERDICT.json"))
+    for secret in ("sam@corp", "crm://8842", "issue_refund"):
+        check("no telemetry value rides along in the pack: %r" % secret,
+              secret not in whole)
+    check("while the field names it rested on are there, which is the point",
+          "approval.identity_source" in whole or "identity_source" in whole)
+
+    d = json.load(io.open(os.path.join(outdir, "VERDICT.json"),
+                          encoding="utf-8"))
+    check("the verdict is the validator's own output, not the pack's",
+          d["level"] == tv.validate(io.open(hist, encoding="utf-8").read()
+                                    ).as_dict()["level"], d)
+
     print("\n%d passed, %d failed" % (PASS, FAIL))
     return 1 if FAIL else 0
 
