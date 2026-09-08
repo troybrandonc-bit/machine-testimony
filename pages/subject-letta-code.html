@@ -136,7 +136,7 @@
         <li><b>source</b> <a href="https://github.com/letta-ai/letta-code/blob/e0a0e1e62278f2ae9d5a9dea27c85e71e887e51b/src/agent/memory-git-signing.ts#L1-L15">src/agent/memory-git-signing.ts:1-15</a><br>&quot;Memory-repo commits must never be signed.&quot; GIT_DISABLE_COMMIT_SIGNING_ARGS passes -c commit.gpgsign=false as highest-precedence config on every harness git invocation, so no commit carries a signature</li>
         <li><b>source</b> <a href="https://github.com/letta-ai/letta-code/blob/e0a0e1e62278f2ae9d5a9dea27c85e71e887e51b/src/agent/memory-git.ts#L894-L900">src/agent/memory-git.ts:894-900</a><br>the same default is written into the repo&#x27;s local config, so even direct git commit runs inside the memory repo are unsigned</li>
       </ul>
-      <p><b>R4.2 &middot; present.</b> Can an independent party run that verification without the vendor&#x27;s cooperation?</p>
+      <p><b>R4.2 &middot; present.</b> Can an independent party run that verification without the vendor&#x27;s cooperation, and without the operator&#x27;s?</p>
       <p>Whatever verification the format supports can be run entirely by the record holder against their own clone. That is the requirement, and using git means it is satisfied by every tool the reader already has.</p>
       <ul>
         <li><b>source</b> <a href="https://github.com/letta-ai/letta-code/blob/e0a0e1e62278f2ae9d5a9dea27c85e71e887e51b/src/agent/memory-git.ts#L912-L924">src/agent/memory-git.ts:912-924</a><br>the memory repository&#x27;s mirror URL lives in the repo&#x27;s local .git/config under letta.memoryRepository.url and is configured by the user through a slash command, so the holder can keep their own copy</li>

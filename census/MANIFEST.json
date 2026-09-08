@@ -142,10 +142,10 @@
     }
   ],
   "scored_against": {
-    "rubric.py": "sha256:59cb8c7fb77debc1949724d9eeac83601e952ce1f00567f31327b8b733437663",
+    "rubric.py": "sha256:8f90e0f9746553fa21b558693aeee4f9263a664319a336183442db55f06e984b",
     "subject.py": "sha256:578d31a2809361ea8c9db3fe77fb42b7110c85c9e08fada33ae4a6529bdacd71"
   },
-  "census_digest": "sha256:a0a8ab5541fcd15c79b9984593e80692ab6ce70e1bf51a43be4ae63df8cf0126",
+  "census_digest": "sha256:0a1ffca12206e8a6716d42c01fc22ff25287a3176be22c4902482c73c62da3b3",
   "recompute": "python3 benchmarks/census/manifest.py --check",
   "note": "Each subject names the exact commit its citations refer to. A system that later gains a capability recorded here as absent has not made this document wrong: the assessment was of that commit, which still exists and still reads the same way. A later assessment is a new entry with a new date, never an edit to this one."
 }

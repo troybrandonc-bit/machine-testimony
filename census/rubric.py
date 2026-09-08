@@ -24,6 +24,31 @@ not failing at approval gates; it is not an approval gate. Scoring it as a
 failure would be dishonest, so subjects declare their scope and requirements
 outside it resolve to `not_applicable`.
 
+**On `stores` and the TR-4 requirements, amended 8 September 2026.** Jason
+Keirstead raised this in the CSA AARM working group and he is right that the
+word was doing two jobs. Holding working state, which a checkpointer or a
+session store does, is not the same as being the system of record for what a
+system did. An enterprise forwards audit records to a SIEM, and asking an SDK
+to be a ledger asks the wrong layer: it does not write the terabytes and it is
+not the steward.
+
+The requirements below are therefore about the record the system produces or
+holds, at whatever layer it lives, and not about a component being a ledger.
+What R4 asks is whether anything the system does would let alteration be
+detected by somebody afterwards. Forwarding does not answer that on its own: a
+record moved to a store the operator administers is still that operator's own
+word, and R4.2 is specifically about verification without the vendor's
+cooperation. An emitter discharges it by emitting something checkable, such as
+a digest bound to a moment by a third party, which is cheap and is per batch
+rather than per record.
+
+Of the thirty TR-4 verdicts in the first census, twenty one rest on a search of
+the whole source tree for any integrity primitive at all and are unaffected by
+which layer would carry it. Nine cite a state-persistence component, and those
+are the ones this amendment bears on. One of the nine is a `present`, since
+Letta Code's git-backed memory does make alteration detectable, so citing a
+state layer is not by itself the error.
+
 Copyright 2026 Garnet Taurus Ltd. MIT licensed.
 """
 from __future__ import annotations
@@ -186,11 +211,13 @@ REQUIREMENTS = [
         "Does the system publish a scheme under which the record's past state "
         "can be verified?",
         "a documented integrity scheme exists: replay, hash chain, signatures "
-        "or an external anchor",
-        "backups or exports exist, which preserve data but prove nothing of it"),
+        "or an external anchor, at whatever layer holds or emits the record",
+        "backups or exports exist, or records are forwarded to a store the "
+        "operator administers, which move the data without making alteration "
+        "detectable by anybody else"),
     Req("R4.2", "TR-4", "stores",
         "Can an independent party run that verification without the vendor's "
-        "cooperation?",
+        "cooperation, and without the operator's?",
         "the verification can be run by the record holder against their own copy",
         "verification is offered as a vendor service or needs vendor-held keys"),
     Req("R4.3", "TR-4", "stores",

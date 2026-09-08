@@ -165,7 +165,7 @@
         <li><b>source</b> <a href="https://github.com/deepset-ai/haystack/blob/82da3adc2fac4675b80ff5573b790ec07113697b/haystack/dataclasses/document.py#L68">haystack/dataclasses/document.py:68</a><br>but it is identity, not integrity: self.id = self.id or self._create_id() means a caller-supplied id is kept as given, and the hash is only computed when one is absent</li>
         <li><b>searched</b> grep -rniE &#x27;hmac|merkle|tamper|signature|verify_integrity&#x27; haystack<br>85 hits and not one is an integrity mechanism: 84 are inspect.signature and the single tamper match is the substring inside structlog&#x27;s TimeStamper at logging.py:386. hmac, merkle and verify_integrity return nothing</li>
       </ul>
-      <p><b>R4.2 &middot; absent.</b> Can an independent party run that verification without the vendor&#x27;s cooperation?</p>
+      <p><b>R4.2 &middot; absent.</b> Can an independent party run that verification without the vendor&#x27;s cooperation, and without the operator&#x27;s?</p>
       <p>Nothing here needs deepset&#x27;s cooperation, because there is nothing to withhold. Scored absent on the same basis as every other subject: absence of a scheme rather than a restriction on access to one.</p>
       <ul>
         <li><b>searched</b> grep -rn &#x27;_create_id&#x27; haystack<br>two hits: the definition and the single call at document.py:68. The hash is never recomputed and never compared, so there is no verification for an independent party to run</li>

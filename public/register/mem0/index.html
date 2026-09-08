@@ -352,7 +352,7 @@
         <li><b>searched</b> grep -rniE &#x27;hash_chain|merkle|signature|tamper|checksum|anchor&#x27; mem0/ --include=*.py<br>no match relating to record integrity. The hashes present are an md5 of memory text used for deduplication (main.py:1961), a sha1 used to bucket telemetry notices (memory/notices.py:94) and a sha256 used to anonymise a telemetry id (memory/setup.py:97)</li>
         <li><b>docs</b> mem0 README.md<br>no integrity, verification or tamper-evidence claim is made</li>
       </ul>
-      <p><b>R4.2 &middot; absent.</b> Can an independent party run that verification without the vendor&#x27;s cooperation?</p>
+      <p><b>R4.2 &middot; absent.</b> Can an independent party run that verification without the vendor&#x27;s cooperation, and without the operator&#x27;s?</p>
       <ul>
         <li><b>searched</b> grep -rniE &#x27;verify|verification&#x27; mem0/memory/ --include=*.py<br>no verification surface exists to be run by anybody, so the question of who can run it does not arise</li>
       </ul>
