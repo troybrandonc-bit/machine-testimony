@@ -560,6 +560,12 @@ jobs:
           set +e; out=$(python tests_emit.py 2>&1); rc=$?; set -e
           echo "$out"
           [ $rc -eq 0 ] || { echo "::error::the emitter suite failed"; exit 1; }
+      - name: A record's counts leave as counts and nothing else
+        working-directory: tests
+        run: |
+          set +e; out=$(python tests_contribute.py 2>&1); rc=$?; set -e
+          echo "$out"
+          [ $rc -eq 0 ] || { echo "::error::the contribution suite failed"; exit 1; }
       - name: A format somebody already has converts, or says what it cannot say
         working-directory: tests
         run: |
