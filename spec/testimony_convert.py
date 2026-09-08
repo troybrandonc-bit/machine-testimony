@@ -286,8 +286,16 @@ def suggest(rows: list, entry_type: str) -> dict:
         lookup = member + ".id" if member in ACTORS else member
         want = SYNONYMS.get(lookup, (member,))
         best = None
+        # Whole path, then leaf, then a loose overlap. Real logs nest, so
+        # `auth.method` means the authentication method and its leaf alone
+        # means something else entirely: `method` is also what a caller calls
+        # the operation it invoked. Reading the path is what tells them apart.
+        want_parts = [_parts(w) for w in want]
         for path, value in seen.items():
             leaf = path.split(".")[-1].lower()
+            if _parts(path) in want_parts:
+                best, why = path, "the whole path matches"
+                break
             if leaf == member.split(".")[-1].lower() or leaf in want:
                 best, why = path, "the name matches"
                 break
@@ -339,11 +347,98 @@ def propose(rows: list, entry_type: str, when: str = "") -> str:
     return chr(10).join(lines)
 
 
+# ── the four questions, asked of a file of records ───────────────────────────
+#
+# The census reads a vendor's source at a pinned commit, which is the right way
+# to assess a product and the wrong way to assess a deployment: nobody
+# reviewing their own supplier is going to read a framework's source, and the
+# question they actually have is about their own records.
+#
+# So this asks the four questions of a file. It reports what is in the file and
+# refuses to conclude anything about the system that wrote it, because a system
+# may record an approver somewhere this file has never seen. A finding that
+# overstated its own scope would be worth nothing to the person who has to
+# stand behind it.
+
+QUESTIONS = (
+    ("who approved a consequential action", "approver.id",
+     "a field that resolves to the identity of a person"),
+    ("and whether that was a person rather than the agent itself",
+     "identity_source",
+     "a field saying where that identity was resolved from"),
+    ("what the system tried and did not do", "verdict",
+     "a field distinguishing a refused action from an executed one"),
+    ("whether the file has changed since it was written", "integrity",
+     "a digest, chain or signature over the rows"),
+)
+
+INTEGRITY_HINTS = ("digest", "hash", "sha256", "checksum", "signature",
+                   "sig", "prev_hash", "chain", "merkle", "seal")
+
+
+def _has_integrity(rows):
+    for path in _paths(rows[0] if rows else {}):
+        leaf = path.split(".")[-1].lower()
+        if leaf in INTEGRITY_HINTS or (_parts(leaf) & set(INTEGRITY_HINTS)):
+            return path
+    return None
+
+
+def report(rows: list, name: str = "the file") -> str:
+    """What this file can and cannot answer, and nothing about the system."""
+    found = {}
+    for t in ("approval", "decision", "evidence"):
+        found.update(suggest(rows, t))
+    out = ["%d rows read from %s." % (len(rows), name), ""]
+    out.append("Of the four questions somebody asks after something goes "
+               "wrong:")
+    out.append("")
+    unanswerable = 0
+    for question, member, what in QUESTIONS:
+        if member == "integrity":
+            hit = _has_integrity(rows)
+            where = hit
+        else:
+            hit = found.get(member)
+            where = hit[0] if hit else None
+        if where:
+            out.append("  %-16s %s" % ("ANSWERABLE", question))
+            out.append("  %-16s from %r" % ("", where))
+        else:
+            unanswerable += 1
+            out.append("  %-16s %s" % ("NOT IN THE FILE", question))
+            out.append("  %-16s nothing here looks like %s" % ("", what))
+    out += ["",
+            "%d of 4 are not in these rows." % unanswerable if unanswerable
+            else "All four are present in these rows.",
+            "",
+            "What this does and does not say. It reports the shape of the rows "
+            "it was given.",
+            "A system may record an approver somewhere these rows have never "
+            "been, and this",
+            "cannot see that and does not claim to. What it establishes is "
+            "narrower and is",
+            "usually the question anyway: whether the record somebody would be "
+            "handed after",
+            "an incident answers these, or whether the answer has to come from "
+            "somebody's",
+            "memory.",
+            "",
+            "Reproduce: python3 testimony_convert.py %s --report" % name]
+    return chr(10).join(out)
+
+
 def main() -> int:
     if len(sys.argv) < 2:
         raise SystemExit(
-            "usage: testimony_convert.py RECORDS.jsonl [entry_type]" + chr(10)
-            + "prints a Mapping suggested from your own field names")
+            "usage: testimony_convert.py RECORDS.jsonl [entry_type ...]"
+            + chr(10)
+            + "       testimony_convert.py RECORDS.jsonl --report" + chr(10)
+            + chr(10)
+            + "prints a Mapping suggested from your own field names, or asks "
+            + "the four" + chr(10)
+            + "questions of the rows and reports which of them the rows can "
+            + "answer")
     rows = []
     for line in io.open(sys.argv[1], encoding="utf-8"):
         line = line.strip()
@@ -356,7 +451,12 @@ def main() -> int:
         rows.extend(v if isinstance(v, list) else [v])
     if not rows:
         raise SystemExit("no JSON objects in %s" % sys.argv[1])
-    wanted = sys.argv[2:] or ["decision", "approval", "evidence"]
+    args = sys.argv[2:]
+    if "--report" in args:
+        print(report(rows, sys.argv[1]))
+        return 0
+    wanted = [a for a in args if not a.startswith("-")] or [
+        "decision", "approval", "evidence"]
     print("# read %d rows from %s" % (len(rows), sys.argv[1]))
     for t in wanted:
         print()

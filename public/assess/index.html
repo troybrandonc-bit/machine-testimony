@@ -283,6 +283,42 @@ cp census/TEMPLATE.json census/subjects/their-system.json</pre>
         <code>present</code> beside each one, so the work is reading source and
         writing down what you found.</p>
 
+      <h3>The client's own records, before any of that</h3>
+      <p>Reading a supplier's source is the right way to assess a product and
+        the wrong way to open an engagement. It takes an engineer and a day,
+        and the question a client actually arrives with is about their own
+        records rather than their vendor's repository. So ask the four
+        questions of a file of those instead.</p>
+
+      <pre class="snip">python3 spec/testimony_convert.py their-logs.jsonl --report
+
+  ANSWERABLE       who approved a consequential action
+                   from 'approval.approver'
+  NOT IN THE FILE  and whether that was a person rather than the agent itself
+                   nothing here looks like a field saying where that identity was resolved from
+  ANSWERABLE       what the system tried and did not do
+                   from 'allowed'
+  NOT IN THE FILE  whether the file has changed since it was written
+                   nothing here looks like a digest, chain or signature over the rows
+
+2 of 4 are not in these rows.</pre>
+
+      <p>One command, no install, and nothing leaves the machine it runs on.
+        The finding is reproducible by the client, by their supplier and by
+        anyone who disputes it, which is the property that makes it worth
+        putting in front of somebody.</p>
+
+      <p>It reports the shape of the rows it was given and refuses to conclude
+        anything about the system that wrote them, because a system may record
+        an approver somewhere those rows have never been. That limit is printed
+        with every finding rather than left for a reader to infer. A report
+        that overstated its own scope would be worth nothing to the person who
+        has to stand behind it, and this is written for that person.</p>
+
+      <p>What it does establish is narrower and is usually the question anyway:
+        whether the record somebody is handed after an incident answers these,
+        or whether the answer has to come from somebody's memory.</p>
+
       <h3>If you are on the register and you have fixed it</h3>
       <p>Ask, and the system is read again at whatever commit you name. There
         is no fee, no form, and no conditions. Open an issue or write to the
