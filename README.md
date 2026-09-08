@@ -12,17 +12,23 @@ evaluating the format should not have to read it inside a vendor's repository.
 
 ```
 spec/
-  draft-clifford-testimony-record-01.md   the Internet-Draft source
+  draft-clifford-testimony-record-02.md   the Internet-Draft source
   testimony_validate.py                   the reference validator, one stdlib
                                           file, no network, MIT
   testimony_emit.py                       write a record from an ordinary
                                           program; copy it, no dependencies
+  testimony_convert.py                    express records you already write as
+                                          these, and be told what is missing
   testimony_anchor.py                     have a Time Stamp Authority sign one
-conformance/                              47 records and the verdict each
+  referent_sweep.py                       which fields name something outside
+                                          the record, and what checks them
+conformance/                              57 records and the verdict each
                                           should get, with a runner
-adapters/
-  langgraph/                              testimony-langgraph on PyPI
-tests/                                    run against a real graph, not a mock
+adapters/                                 langgraph, crewai, autogen,
+                                          openai-agents, pydantic-ai; one file
+                                          each, on PyPI
+tests/                                    run against the real libraries, not
+                                          mocks
 public/                                   the site
 ```
 
@@ -56,6 +62,13 @@ it. See `conformance/README.md`.
 To emit rather than to check, `spec/testimony_emit.py` is one file with no
 dependencies that refuses the mistakes where they are written, rather than
 leaving you to find them from a validator after the run is over.
+
+If you already write records of your own, `spec/testimony_convert.py` is the
+shorter path. Declare which of your fields mean what and it builds what it can
+and names every required field it had no value for, which is a measurement of
+your format rather than advice about it. It never supplies a value it was not
+given, so a gap arrives as a gap instead of as a clean conversion that is
+false.
 
 If you have read the specification and reached a different answer from the
 reference on a case, that disagreement is worth more than the corpus is. Open
