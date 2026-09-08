@@ -386,6 +386,24 @@ entry's digest. The `messageImprint` of the TSTInfo in that token MUST be
 the entry's digest: a token signed over anything else is a valid timestamp
 for some other record and says nothing about this one.
 
+An implementation making that comparison MUST take the imprint from the
+`messageImprint` of the TSTInfo, and not from the first SHA-256
+AlgorithmIdentifier it finds in the token. A TimeStampResp is a CMS SignedData,
+whose `digestAlgorithms` field carries a SHA-256 identifier **before** the
+TSTInfo does. A scan from the start of the token therefore finds the wrong one,
+and an implementation that stops there compares a value the authority never
+signed over, while appearing to check the thing this level rests on. An
+`AlgorithmIdentifier` may also carry an explicit NULL parameter, which must be
+skipped before the OCTET STRING holding the imprint.
+
+This is written down because two independent implementations made the same
+mistake, which is the evidence that the specification rather than either author
+was at fault. For the same reason, an implementation reading the TSA's
+`genTime` should begin its search at the message imprint rather than at the
+start of the token, since a SignerInfo may carry a signing-time attribute of
+its own and a scan from the front can return the signer's clock in place of the
+authority's.
+
 A `kind` SHOULD be an absolute URI or a reverse-DNS name, such as
 `org.opentimestamps`, rather than a bare word. This is not about making a false
 claim harder to write, which it barely does. It is that `kind` is an extension
@@ -772,6 +790,12 @@ distinction, and a decision that contradicts itself between `executed`,
 being unable to confirm its effect is not a contradiction: a call that returned
 while settlement is pending is both.
 
+The TSTInfo parsing trap is now stated: the first SHA-256 AlgorithmIdentifier
+in a TimeStampResp belongs to the CMS `digestAlgorithms` field and not to the
+message imprint, so an implementation that takes it compares a value the
+authority never signed. Two independent implementations made that mistake
+before it was written down.
+
 An anchor's `kind` SHOULD now be an absolute URI or a reverse-DNS name, because
 an unregistered extension point collides between honest implementers, which is a
 failure mode that needs nobody to lie. A bare word is still accepted, and a
@@ -809,3 +833,13 @@ An author writing as babyblueviper1 established that the record's own clock was
 an attested claim the specification did not disclose, that the two checks
 touching it prove only well-formedness and monotonicity, and that an RFC 3161
 token already carried a bound on it that no implementation was reading.
+
+They then wrote an implementation of this specification from its text alone,
+without reading the reference validator, and ran it over the conformance corpus.
+It disagreed on one case of fifty-four and was correct: three members declared
+here to be an Actor were checked for presence and never for shape, so a name
+where an object belongs reached the second level in the reference validator and
+in the corpus it publishes. That is the defect an implementation built from a
+port cannot find, because a port inherits its author's reading of the text
+rather than the text, and it is the reason this document asks for the other
+kind.
