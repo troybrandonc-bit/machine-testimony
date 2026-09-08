@@ -119,6 +119,47 @@ python3 demo/what_your_log_cannot_answer.py</pre>
           <a href="/anchor/">the next page</a>.</li>
       </ol>
 
+      <p>That list is a claim about your records, and you should not have to
+        take it on trust any more than anyone should take a conformance level
+        on trust.
+        <a href="https://github.com/troybrandonc-bit/machine-testimony/blob/main/spec/testimony_convert.py">testimony_convert.py</a>
+        measures it instead. Declare which of your fields mean what, and it
+        builds what it can and names every required field it had no value
+        for.</p>
+
+      <pre class="snip">from testimony_convert import Mapping, convert, const
+
+approvals = Mapping("approval", {
+    "decision":        "approval.receipt_id",
+    "approver.id":     "approval.approver",
+    "approver.kind":   const("human"),
+    "identity_source": "approval.identity_source",
+}, when=lambda row: "approval" in row)
+
+print(convert(my_receipts, approvals).report())
+
+1 source row, 0 entries built
+0 converted with every required field, 1 short
+
+required fields your records had no value for:
+  identity_source        1 of 1 row</pre>
+
+      <p>The report is the useful half rather than the record. It is a
+        measurement of your format, and you can run it without showing anybody
+        your records or your code.</p>
+
+      <p>It never supplies a value it was not given. A required field with no
+        source is reported missing and the row is not converted, so a gap
+        arrives as a gap. A converter that filled in an approver would produce
+        a clean conversion and a false one, which is the exact failure this
+        format exists to make visible.</p>
+
+      <p>Expect it to stop short somewhere, and expect that to be the finding.
+        Converting only the decisions out of a gate's own log leaves a
+        high-risk action that ran with no approval behind it, so the record
+        reaches TR-2 and names that as the reason. Nothing went wrong. Their
+        log could not answer the question, and now the level says so.</p>
+
       <h3>The honest state of this</h3>
       <p>There are two implementations and both are this author's, one in
         Python and one in TypeScript, written separately and compared against
@@ -142,6 +183,7 @@ python3 demo/what_your_log_cannot_answer.py</pre>
   <aside class="rail">
     <h2 class="label">The files</h2>
     <p class="cont"><a href="https://github.com/troybrandonc-bit/machine-testimony/blob/main/spec/testimony_emit.py">testimony_emit.py</a><br>
+      <a href="https://github.com/troybrandonc-bit/machine-testimony/blob/main/spec/testimony_convert.py">testimony_convert.py</a><br>
       <a href="https://github.com/troybrandonc-bit/machine-testimony/blob/main/spec/testimony_validate.py">testimony_validate.py</a><br>
       <a href="https://github.com/troybrandonc-bit/machine-testimony/tree/main/conformance">the conformance corpus</a></p>
 
