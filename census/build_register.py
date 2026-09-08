@@ -216,6 +216,74 @@ def main() -> int:
       "at code is, and has: this register carries corrections that came from "
       "being told I had read something wrong.</p>")
 
+    # The amendment is generated rather than written into pages/register.html,
+    # because this script owns that file and a hand edit to it is overwritten
+    # on the next run. That is how the first attempt at this section was lost.
+    #
+    # Counted here rather than stated, so the numbers move if the assessments
+    # do. The first hand count was wrong twice: once for truncating the
+    # locator before matching it, and once for calling every search broad when
+    # five of them looked only inside a state-persistence directory. Those
+    # five are the weakest evidence in the whole reading and they are the
+    # place this objection lands hardest, so they are named rather than
+    # averaged away.
+    STATE = ("checkpoint", "session", "memory", "storage", "sqlite",
+             "postgres", "lancedb")
+    tr4 = [(d["name"], r, a) for d in docs
+           for r, a in sorted((d.get("assessments") or {}).items())
+           if r.startswith("R4")]
+
+    def _loc(a):
+        return str(((a.get("evidence") or [{}])[0]).get("locator", ""))
+
+    state_only = []
+    for name, r, a in tr4:
+        loc = _loc(a)
+        if not loc.lower().startswith("grep"):
+            continue
+        paths = [t for t in loc.split() if not t.startswith("-") and "/" in t]
+        if paths and all(any(k in q.lower() for k in STATE) for q in paths):
+            state_only.append((name, r))
+
+    w("      <h3>What the fourth level asks, amended 8 September 2026</h3>")
+    w("      <p>Jason Keirstead put it to the CSA AARM working group that the "
+      "tamper-evidence requirements were being asked of the wrong layer. An "
+      "enterprise forwards audit records to a SIEM, which is its system of "
+      "record, and an SDK is not the steward: it emits, it does not write the "
+      "terabytes, and requiring it to be a ledger is not implementable. He is "
+      "right that the rubric was using one word, <code>stores</code>, for two "
+      "different things, and holding working state is not the same as being "
+      "the system of record for what a system did.</p>")
+    w("      <p>The requirements now say what they were always asking. They "
+      "are about the record a system produces or holds, at whatever layer it "
+      "lives, and not about a component being a ledger. What is asked is "
+      "whether anything the system does would let alteration be detected "
+      "afterwards.</p>")
+    w("      <p>Forwarding does not answer that on its own, and this is the "
+      "part that does not move. A record sent to a store the operator "
+      "administers is still that operator's own word, and under Article 12 "
+      "the operator is the party whose account is in question. So the "
+      "requirement asks for verification without the vendor's cooperation and "
+      "now without the operator's either. An emitter discharges it by "
+      "emitting something checkable rather than by becoming a ledger: a "
+      "digest bound to a moment by a third party, once per batch, which is "
+      "cheap and is squarely the emitter's job.</p>")
+    w("      <p>Where the evidence is weakest, counted rather than estimated. "
+      "Of the %d verdicts at this level, <b>%d rest on a search that looked "
+      "only inside a state-persistence directory</b>%s. A search of the "
+      "memory directory establishes that the memory directory has no "
+      "integrity scheme and nothing more, so these are the ones the objection "
+      "is right about twice over: wrong layer, and evidence that could not "
+      "have found the right one. They are listed here rather than corrected "
+      "quietly, and they will be read again at the next reading.</p>"
+      % (len(tr4), len(state_only),
+         (": " + ", ".join("%s %s" % (n, r) for n, r in state_only))
+         if state_only else ""))
+    w("      <p>No verdict changed today. A verdict reached from evidence that "
+      "was looking in the wrong place may still be the right verdict, and "
+      "saying so is not the same as showing it, which is why these are marked "
+      "for re-reading rather than flipped on an argument.</p>")
+
     # One name in every row is the honest state and the argument at once.
     readers = sorted({d["assessed_by"] for d in docs})
     w("      <h3>Who read these</h3>")
