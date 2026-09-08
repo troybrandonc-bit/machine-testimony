@@ -241,6 +241,15 @@ SYNONYMS = {
                  "correlation_id", "receipt_id", "receipt"),
     # Every log names its own clock differently and the Elastic one starts
     # with an @, which is why the parts split drops punctuation.
+    # The ForHumanity Event Log's five components. `user_id` is deliberately
+    # not `approver`: it answers which session acted, which is what that
+    # criterion asks for and is not the same question.
+    "user_id": ("user_id", "userid", "user", "principal", "subject_id",
+                "account", "session_user", "actor_id", "username"),
+    "device": ("device", "device_id", "host", "hostname", "location",
+               "geo", "region", "workstation", "user_agent"),
+    "ip": ("ip", "ip_address", "client_ip", "remote_addr", "source_ip",
+           "src_ip", "peer"),
     "at": ("at", "ts", "time", "timestamp", "datetime", "event_time",
            "occurred_at", "created_at", "logged_at", "start_time",
            "starttimeunixnano", "observedtimeunixnano"),
