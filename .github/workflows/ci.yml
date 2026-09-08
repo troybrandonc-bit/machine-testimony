@@ -560,6 +560,12 @@ jobs:
           set +e; out=$(python tests_emit.py 2>&1); rc=$?; set -e
           echo "$out"
           [ $rc -eq 0 ] || { echo "::error::the emitter suite failed"; exit 1; }
+      - name: A watched estate says when the evidence stopped being there
+        working-directory: tests
+        run: |
+          set +e; out=$(python tests_watch.py 2>&1); rc=$?; set -e
+          echo "$out"
+          [ $rc -eq 0 ] || { echo "::error::the watch suite failed"; exit 1; }
       - name: A format somebody already has converts, or says what it cannot say
         working-directory: tests
         run: |
