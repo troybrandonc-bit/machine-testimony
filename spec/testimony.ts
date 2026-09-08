@@ -120,6 +120,7 @@ const ATTESTED = new Set([
   "the approver's name is declared to come from authentication",
   "a replay scheme names the engine and its version",
   "an anchor of a kind this validator cannot recompute rests on its authority",
+  "and the authority named in it issued that token",
 ]);
 
 export type Report = {
@@ -260,7 +261,8 @@ const SHA256_OID = [0x06, 0x09, 0x60, 0x86, 0x48, 0x01, 0x65, 0x03, 0x04,
  * been required on an anchor and until 7 September 2026 nothing read it: every
  * token was parsed as an RFC 3161 TimeStampResp whatever the record said it
  * was. So an anchor committed to Bitcoin proof-of-work through OpenTimestamps
- * failed "the anchor's authority signed this record's digest" and could not
+ * failed the anchor check ("the anchor's authority signed this record's
+ * digest", as it was then called) and could not
  * reach TR-4, marked down for carrying evidence no operator and no key can
  * move rather than a token from a single authority. That is the error the
  * rubric's applies_to exists to prevent, committed inside the validator.
@@ -718,12 +720,20 @@ export function validate(text: string): Report {
     if (!found.length)
       adrift.push(`line ${g._line}: no SHA-256 imprint in the token`);
     else if (!found.includes(want.slice(7).toLowerCase()))
-      adrift.push(`line ${g._line}: the authority signed a different digest ` +
+      adrift.push(`line ${g._line}: the token is over a different digest ` +
         `(${found[0].slice(0, 16)}..)`);
   }
-  if (checkable)
-    add("TR-4", "the anchor's authority signed this record's digest",
+  // Two claims, and until 8 September 2026 they were reported as one. See
+  // the note in the Python reference: nothing here verifies a signature, so
+  // the imprint comparison keeps the verified mark it has earned and the
+  // authority's issuance becomes the attested claim it always was.
+  if (checkable) {
+    add("TR-4", "the anchor's token is over this record's digest",
       adrift.length === 0, adrift.slice(0, 3).join("; "));
+    add("TR-4", "and the authority named in it issued that token", true,
+      "no signature is checked here: that would need a certificate this " +
+      "validator does not carry");
+  }
   if (unread.length)
     add("TR-4", "an anchor of a kind this validator cannot recompute rests " +
       "on its authority", true,

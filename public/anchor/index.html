@@ -295,11 +295,16 @@ b = [x for x in e if x["type"] != "integrity"]
 c = [json.dumps(x, sort_keys=True, separators=(",", ":")) for x in b]
 print(hashlib.sha256("\n".join(c).encode()).hexdigest())'</pre>
 
-      <h3>Two: read what the authority signed</h3>
+      <h3>Two: read what the token is over</h3>
       <pre class="snip">openssl ts -reply -in anchor.tsr -text</pre>
 
       <p>The <code>Message data</code> it prints is the same digest. That is
-        the binding: the authority signed this record and not another one.</p>
+        the binding between the token and this record rather than some other
+        one. It is not yet a statement about who issued the token, which is
+        step three and needs a certificate rather than a comparison. The
+        reference validator stops here, and says so: it reports the binding as
+        verified and the authority's issuance as attested, because it carries
+        no certificate store of its own.</p>
 
       <h3>Three: check the signature against your own roots</h3>
       <p>Use your system's certificate store, not one we supply. On Debian or

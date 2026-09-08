@@ -534,18 +534,29 @@ without saying so is a number standing on an unknown mixture.
 A **verified** check is one a reader can settle from the record alone. That the
 evidence a belief cites is present, that both sides of a conflict are retained,
 that a refused action is not also recorded as executed, that a digest is the
-digest of the entries it covers, that the authority named in an anchor signed
-that digest and not a different one. A reader who disagrees with a validator
-about any of these can settle it without asking anybody.
+digest of the entries it covers, that an anchor's token is over that digest and
+not a different one. A reader who disagrees with a validator about any of these
+can settle it without asking anybody.
 
 An **attested** check is one the record asserts and no reader can confirm from
 it. That a risk class came from a registry. That an approver's name came from
 an authenticated session. That a replay engine reproduces what it claims to.
+**That the authority named in an anchor is the party that issued its token.**
 **And every `at` in the record.** These are worth requiring, because a system
 that records nothing cannot be contradicted and one that records a specific
 claim can be. They are not evidence, and a conformance report that presents
 them as though they were is making the error this format exists to make
 visible.
+
+The anchor was reported as one check until 8 September 2026 and is now two, for
+the same reason. It read "the anchor's authority signed this record's digest",
+marked verified, and no signature was verified anywhere in it: the check decodes
+the token, finds the SHA-256 imprints and asks whether this record's digest is
+among them. That comparison is arithmetic over bytes in the file and is
+correctly verified. That the named authority issued the token is a different
+claim needing a certificate the reference validator does not carry, and it was
+riding on the word "signed" with no check behind it. Splitting them changes no
+verdict and lets the per-level counts say how much of the level is settled.
 
 The clock deserves saying out loud, because two checks touch it and both are
 verified, which makes it look better founded than it is. That an `at` is a

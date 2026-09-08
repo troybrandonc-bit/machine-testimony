@@ -140,10 +140,16 @@ check("naming the authority and carrying the token",
       integ["anchor"]["kind"] == "rfc3161" and integ["anchor"]["token"])
 # The token here was issued over a different record, so it must fail. An
 # assessment that accepted any token would be worse than one with none.
+# Named rather than searched loosely, and the check must be PRESENT and
+# failing. Asserting only that no passing check has this name passes when the
+# name is wrong, which is what happened when the check was renamed on
+# 8 September 2026: the assertion went quiet instead of going red.
+_anchor = [c for c in ra.checks
+           if c["check"] == "the anchor's token is over this record's digest"]
+check("the anchor check ran at all", len(_anchor) == 1,
+      [c["check"] for c in ra.checks if "anchor" in c["check"]])
 check("a token issued over some other record is refused",
-      not [c for c in ra.checks
-           if c["check"] == "the anchor's authority signed this record's digest"
-           and c["ok"]])
+      bool(_anchor) and not _anchor[0]["ok"])
 
 print("\n%d passed, %d failed" % (PASS, FAIL))
 raise SystemExit(1 if FAIL else 0)
