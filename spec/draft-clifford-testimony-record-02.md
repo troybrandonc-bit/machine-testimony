@@ -30,11 +30,12 @@ normative:
   RFC7493:
   RFC3339:
   RFC7464:
-  # Normative since -02 added `kind: scitt`: an implementation that checks one
-  # has to follow both. They were informative while the format only mentioned
-  # transparency logs as an example of an anchor somebody else holds.
-  RFC9162:
-  RFC9942:
+  # RFC 9162 and RFC 9942 are deliberately absent, for the same reason RFC 2119
+  # and RFC 8174 are: they are cited inline as {{!RFC...}}, which makes them
+  # normative on its own, and naming them here as well makes kramdown warn that
+  # the reference is both inline and in the header. RFC 3161 has always been
+  # handled this way. They became normative when -02 added `kind: scitt`, since
+  # an implementation that checks one has to follow both.
 
 informative:
   # Was I-D.ietf-scitt-architecture until 8 September 2026. The draft became
