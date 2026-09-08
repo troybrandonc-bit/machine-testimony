@@ -25,6 +25,7 @@ sys.path.insert(0, os.path.join(ROOT, "spec"))
 import testimony_emit as em                                 # noqa: E402
 import testimony_validate as tv                             # noqa: E402
 from testimony_convert import Mapping, const, convert       # noqa: E402
+from testimony_convert import is_otlp, otlp_rows            # noqa: E402
 
 PASS = FAIL = 0
 
@@ -50,6 +51,22 @@ FOREIGN = [
      "reason": "outside declared scope"},
     {"event": "heartbeat", "at": "2026-09-08T00:00:00Z"},
 ]
+
+OTLP = {"resourceSpans": [{"resource": {"attributes": [
+    {"key": "service.name", "value": {"stringValue": "support-agent"}}]},
+    "scopeSpans": [{"scope": {"name": "instrumentation.langchain"},
+     "spans": [
+      {"traceId": "a1", "spanId": "b1", "name": "invoke_agent",
+       "attributes": [
+        {"key": "gen_ai.operation.name",
+         "value": {"stringValue": "invoke_agent"}},
+        {"key": "gen_ai.agent.id", "value": {"stringValue": "agent-1"}},
+        {"key": "gen_ai.tool.name",
+         "value": {"stringValue": "issue_refund"}}]},
+      {"traceId": "a1", "spanId": "b2", "name": "execute_tool",
+       "attributes": [{"key": "gen_ai.tool.name",
+                      "value": {"stringValue": "issue_refund"}}]}]}]}]}
+
 
 DECISION = Mapping("decision", {
     "action_type": "tool", "risk_class": "risk",
@@ -275,7 +292,8 @@ def main():
               gen.stderr[:120] or "the committed file is not what the "
               "generator produces")
 
-        cases = {"a gate log": FOREIGN,
+        cases = {"an OpenTelemetry export": otlp_rows(OTLP),
+                 "a gate log": FOREIGN,
                  "a sealed log": [dict(r, prev_hash="sha256:aa",
                                        auth={"method": "oidc"})
                                   for r in FOREIGN],
@@ -295,6 +313,35 @@ def main():
             check("%s reads the same in both" % name, got == want,
                   (r.stderr[:120] or "") + " | js=" + got[:90]
                   + " | py=" + want[:90])
+
+    print()
+    print("it reads an OpenTelemetry export, which is where the records are")
+    check("an OTLP document is recognised", is_otlp(OTLP))
+    rows = otlp_rows(OTLP)
+    check("every span becomes a row", len(rows) == 2, len(rows))
+    check("attributes are flattened onto the span",
+          rows[0].get("gen_ai.tool.name") == "issue_refund", rows[0])
+    check("and resource attributes travel with it, since service.name is "
+          "not on the span", rows[0].get("service.name") == "support-agent")
+
+    # The regression that matters more than any other here. `approver.id` and
+    # `gen_ai.agent.id` both end in `id`. Matching on that leaf reported the
+    # agent's own identifier as the approver, which would tell a reader they
+    # can say who approved when what they have is the agent approving itself.
+    # That is the precise failure this format exists to make visible, produced
+    # by the tool that exists to find it.
+    got = suggest(rows, "approval")
+    check("the agent's own id is NOT offered as the approver",
+          got.get("approver.id") is None, got)
+    text = report(rows, "otel-export.json")
+    check("so a GenAI span export cannot say who approved",
+          "NOT IN THE FILE  who approved" in text, text[:300])
+
+    # And the tool must still find a real one, or the guard above is just
+    # switching the feature off.
+    real = suggest([{"approval": {"approver": "sam@corp.example"}}], "approval")
+    check("while a field that means it is still found",
+          real.get("approver.id", ("",))[0] == "approval.approver", real)
 
     print("\n%d passed, %d failed" % (PASS, FAIL))
     return 1 if FAIL else 0

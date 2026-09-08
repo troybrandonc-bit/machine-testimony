@@ -149,6 +149,7 @@ export const QUESTIONS = [
   ]
 ];
 export const INTEGRITY_HINTS = ["digest", "hash", "sha256", "checksum", "signature", "sig", "prev_hash", "chain", "merkle", "seal"];
+export const GENERIC = ["id", "name", "type", "value", "key", "code", "status", "label"];
 
 function parts(name) {
   return name.toLowerCase().split(/[^a-z0-9]+/).filter(Boolean).sort();
@@ -178,12 +179,19 @@ export function match(seen, member) {
   const want = SYNONYMS[member] || [member];
   const wantKeys = want.map(key);
   const memberLeaf = member.split(".").pop().toLowerCase();
+  // A generic last segment names nothing on its own. `approver.id` must not
+  // match `gen_ai.agent.id` because both end in `id`: that is the agent's own
+  // identifier, and offering it as the approver would report the agent
+  // approving itself as a person having approved.
+  const bare = GENERIC.indexOf(memberLeaf) !== -1;
   let best = null, why = null;
   for (const path of Object.keys(seen)) {
     const leaf = path.split(".").pop().toLowerCase();
     if (wantKeys.indexOf(key(path)) !== -1) return [path, "the whole path matches"];
-    if (leaf === memberLeaf || want.indexOf(leaf) !== -1) return [path, "the name matches"];
-    if (parts(leaf).some((p) => want.indexOf(p) !== -1)) { best = path; why = "the name looks like it"; }
+    if (!bare && (leaf === memberLeaf || want.indexOf(leaf) !== -1))
+      return [path, "the name matches"];
+    if (want.indexOf(leaf) !== -1) return [path, "the name matches"];
+    if (parts(path).some((p) => want.indexOf(p) !== -1)) { best = path; why = "the name looks like it"; }
   }
   return best ? [best, why] : null;
 }

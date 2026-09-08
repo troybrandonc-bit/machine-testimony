@@ -242,6 +242,13 @@ SYNONYMS = {
 }
 # Members a record cannot get from a field, only from the emitter's own model.
 NOT_MAPPABLE = ("polarity", "state", "acts", "sides", "evidence")
+# Leaves that name nothing on their own. `approver.id` must not match
+# `gen_ai.agent.id` because both end in `id`: that is the agent's own
+# identifier, and reporting it as the approver would tell a reader they can
+# say who approved when what they have is the agent approving itself, which is
+# the exact failure this format exists to make visible. A dotted member is
+# matched on the part that carries the meaning, never on the last one.
+GENERIC = ("id", "name", "type", "value", "key", "code", "status", "label")
 # An actor is an object with an id and a kind, never a bare string, so these
 # expand into two lines rather than one. The kind is proposed from the member
 # and not from the data, which is why it is written as a const for a person to
@@ -302,16 +309,21 @@ def match(seen: dict, member: str):
         want = SYNONYMS.get(member, (member,))
         best = None
         want_parts = [_parts(w) for w in want]
+        member_leaf = member.split(".")[-1].lower()
+        bare = member_leaf in GENERIC
         best = why = None
         for path, value in seen.items():
             leaf = path.split(".")[-1].lower()
             if _parts(path) in want_parts:
                 best, why = path, "the whole path matches"
                 break
-            if leaf == member.split(".")[-1].lower() or leaf in want:
+            if not bare and (leaf == member_leaf or leaf in want):
                 best, why = path, "the name matches"
                 break
-            if _parts(leaf) & set(want):
+            if leaf in want:
+                best, why = path, "the name matches"
+                break
+            if set(_parts(path)) & set(want):
                 best, why = path, "the name looks like it"
         return (best, why) if best else None
 
@@ -439,6 +451,73 @@ def report(rows: list, name: str = "the file") -> str:
     return chr(10).join(out)
 
 
+# ── OpenTelemetry, because that is where the records already are ─────────────
+#
+# The argument for a SIEM-first pipeline is right about the plumbing: an
+# enterprise forwards audit records to one place, over an open spec, and an
+# agent that invents its own trail will not be used. So this reads that pipe
+# rather than asking anybody to leave it.
+#
+# What it finds there is the point. As of 8 September 2026 the GenAI semantic
+# conventions carry sixty one `gen_ai.*` attributes and none of them names who
+# authorised an action: no approver, no authorisation, no human oversight. The
+# only appearance of approval in the reference agent scenario is a decorator
+# switching it off. So a span export can be complete, correctly parsed and
+# properly integrated, and still be unable to say who approved, which is a
+# fact about the conventions rather than about anybody's implementation.
+#
+# Reading OTLP is therefore not a concession. It is how the question gets
+# asked of the records an enterprise actually has.
+
+def _attrs(items) -> dict:
+    """OTLP attribute list to a flat dict. Values are a one-key union."""
+    out = {}
+    for a in items or []:
+        if not isinstance(a, dict):
+            continue
+        v = a.get("value")
+        if isinstance(v, dict):
+            for k in ("stringValue", "intValue", "doubleValue", "boolValue"):
+                if k in v:
+                    out[str(a.get("key"))] = v[k]
+                    break
+            else:
+                if "arrayValue" in v:
+                    out[str(a.get("key"))] = json.dumps(v["arrayValue"])
+        elif v is not None:
+            out[str(a.get("key"))] = v
+    return out
+
+
+def is_otlp(doc) -> bool:
+    return isinstance(doc, dict) and isinstance(doc.get("resourceSpans"), list)
+
+
+def otlp_rows(doc: dict) -> list:
+    """Every span in an OTLP/JSON export, as one flat row each.
+
+    Resource and scope attributes travel with the span rather than being
+    dropped, because `service.name` and the instrumentation that produced a
+    span are part of what a reader needs and they do not live on the span.
+    """
+    rows = []
+    for rs in doc.get("resourceSpans") or []:
+        res = _attrs((rs.get("resource") or {}).get("attributes"))
+        for ss in rs.get("scopeSpans") or []:
+            scope = (ss.get("scope") or {}).get("name")
+            for sp in ss.get("spans") or []:
+                row = {k: v for k, v in sp.items()
+                       if k != "attributes" and not isinstance(v, (list, dict))}
+                row.update(res)
+                if scope:
+                    row["otel.scope.name"] = scope
+                row.update(_attrs(sp.get("attributes")))
+                for ev in sp.get("events") or []:
+                    row.update(_attrs(ev.get("attributes")))
+                rows.append(row)
+    return rows
+
+
 def main() -> int:
     if len(sys.argv) < 2:
         raise SystemExit(
@@ -450,16 +529,29 @@ def main() -> int:
             + "the four" + chr(10)
             + "questions of the rows and reports which of them the rows can "
             + "answer")
+    text = io.open(sys.argv[1], encoding="utf-8").read()
     rows = []
-    for line in io.open(sys.argv[1], encoding="utf-8"):
-        line = line.strip()
-        if not line:
-            continue
-        try:
-            v = json.loads(line)
-        except ValueError:
-            continue
-        rows.extend(v if isinstance(v, list) else [v])
+    try:
+        whole = json.loads(text)
+    except ValueError:
+        whole = None
+    if is_otlp(whole):
+        rows = otlp_rows(whole)
+        print("# read %d spans from an OpenTelemetry export" % len(rows))
+    elif isinstance(whole, list):
+        rows = [r for r in whole if isinstance(r, dict)]
+    elif isinstance(whole, dict):
+        rows = [whole]
+    else:
+        for line in text.split(chr(10)):
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                v = json.loads(line)
+            except ValueError:
+                continue
+            rows.extend(v if isinstance(v, list) else [v])
     if not rows:
         raise SystemExit("no JSON objects in %s" % sys.argv[1])
     args = sys.argv[2:]
