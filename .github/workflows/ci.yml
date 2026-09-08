@@ -532,6 +532,27 @@ jobs:
           set +e; out=$(python tests_convert.py 2>&1); rc=$?; set -e
           echo "$out"
           [ $rc -eq 0 ] || { echo "::error::the conversion suite failed"; exit 1; }
+      # The vectors are the working group's, not ours, and agreeing with
+      # ourselves about a Merkle tree would prove nothing. They are fetched
+      # rather than vendored so the copy under test is theirs, and the run
+      # fails if they could not be fetched rather than passing on the half
+      # that needs nobody.
+      - name: Fetch the SCITT cross-implementation vectors
+        run: |
+          git clone --depth 1 https://github.com/ietf-wg-scitt/examples.git             /tmp/scitt-examples
+          cd /tmp/scitt-examples/test-vectors/scitt-cose
+          shasum -a 256 -c SHA256SUMS
+      - name: A SCITT receipt is read to the standard bytes alone can settle
+        working-directory: tests
+        env:
+          SCITT_VECTORS: /tmp/scitt-examples/test-vectors/scitt-cose
+        run: |
+          set +e; out=$(python tests_scitt.py 2>&1); rc=$?; set -e
+          echo "$out"
+          [ $rc -eq 0 ] || { echo "::error::the SCITT suite failed"; exit 1; }
+          if echo "$out" | grep -qiE 'NOT VERIFIED'; then
+            echo "::error::the working group's vectors were not run"; exit 1
+          fi
 
   census:
     name: the register says what the assessments say
