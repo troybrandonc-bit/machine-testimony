@@ -37,8 +37,10 @@ Copyright 2026 Garnet Taurus Ltd. MIT licensed.
 from __future__ import annotations
 
 import inspect
+import io
 import json
 import os
+import re
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -198,3 +200,169 @@ def convert(rows: list, *mappings: Mapping, record=None) -> Converted:
             break
     out.entries = list(r.entries)
     return out
+
+# ── suggesting a mapping, so the first run costs a command ───────────────────
+#
+# Writing a Mapping by hand means reading the format first, and that reading is
+# the whole cost this file exists to remove. So it reads the records instead,
+# proposes what each field looks like, and prints a Mapping to correct.
+#
+# A SUGGESTION, never a conversion. The proposal is printed for a person to fix
+# and nothing is converted from a guess, because a converter that silently
+# guessed which field held the approver would produce a clean record answering
+# a question the source never answered, which is the defect this whole format
+# exists to make visible. Everything below is labelled with how it was reached.
+
+# Names seen in the wild for each member, lowercased, matched on whole
+# word-ish parts rather than substrings so `user_id` does not become `id`.
+SYNONYMS = {
+    "action_type": ("action", "action_type", "tool", "tool_name", "operation",
+                    "method", "op", "command", "capability"),
+    "risk_class": ("risk", "risk_class", "risk_level", "severity", "criticality"),
+    "verdict": ("verdict", "decision", "allowed", "permitted", "outcome",
+                "result", "status"),
+    "executed": ("executed", "ran", "performed", "applied", "did_run",
+                 "was_executed"),
+    "reason": ("reason", "rationale", "why", "explanation", "message",
+               "denial_reason"),
+    "approver.id": ("approver", "approver_id", "approved_by", "principal",
+                    "reviewer", "authorizer", "authoriser", "signer"),
+    "identity_source": ("identity_source", "auth_method", "auth_type",
+                        "authentication", "idp", "auth_source"),
+    "proposed_by.id": ("agent", "agent_id", "actor", "actor_id", "caller",
+                       "requester", "initiator", "proposer"),
+    "asserted_by.id": ("asserted_by", "author", "writer", "observer", "agent"),
+    "source": ("source", "uri", "url", "origin", "reference", "ref",
+               "document", "location"),
+    "subject": ("subject", "entity", "about", "target", "customer", "user"),
+    "proposition": ("proposition", "claim", "fact", "attribute", "property",
+                    "predicate"),
+    "decision": ("decision_id", "action_id", "request_id", "call_id",
+                 "correlation_id", "receipt_id", "receipt"),
+}
+# Members a record cannot get from a field, only from the emitter's own model.
+NOT_MAPPABLE = ("polarity", "state", "acts", "sides", "evidence")
+# An actor is an object with an id and a kind, never a bare string, so these
+# expand into two lines rather than one. The kind is proposed from the member
+# and not from the data, which is why it is written as a const for a person to
+# confirm: a system that logs an agent id under `approved_by` would otherwise
+# be handed `kind: human` by this file and never told.
+ACTORS = {"proposed_by": "agent", "asserted_by": "agent",
+          "approver": "human", "declared_by": "system"}
+
+
+def _paths(row, prefix=""):
+    """Every dotted path to a scalar in one row."""
+    out = {}
+    if isinstance(row, dict):
+        for k, v in row.items():
+            here = prefix + k
+            if isinstance(v, dict):
+                out.update(_paths(v, here + "."))
+            elif not isinstance(v, (list, tuple)):
+                out[here] = v
+    return out
+
+
+def _parts(name):
+    return set(re.split(r"[^a-z0-9]+", name.lower())) - {""}
+
+
+def suggest(rows: list, entry_type: str) -> dict:
+    """Which of their fields might mean what. A draft, not an answer.
+
+    Returns {member: (path, why)} for what could be matched, and leaves out
+    what could not, so the caller can see the difference between a field that
+    was found and one that has to be supplied.
+    """
+    seen = {}
+    for row in rows[:200]:
+        for path, value in _paths(row).items():
+            seen.setdefault(path, value)
+    out = {}
+    for member in _required(entry_type):
+        if member in NOT_MAPPABLE:
+            continue
+        lookup = member + ".id" if member in ACTORS else member
+        want = SYNONYMS.get(lookup, (member,))
+        best = None
+        for path, value in seen.items():
+            leaf = path.split(".")[-1].lower()
+            if leaf == member.split(".")[-1].lower() or leaf in want:
+                best, why = path, "the name matches"
+                break
+            if _parts(leaf) & set(want):
+                best, why = path, "the name looks like it"
+        if best:
+            out[member + ".id" if member in ACTORS else member] = (best, why)
+    return out
+
+
+def propose(rows: list, entry_type: str, when: str = "") -> str:
+    """The suggestion as a Mapping to paste, correct, and run."""
+    found = suggest(rows, entry_type)
+    need = []
+    for m in _required(entry_type):
+        if m in NOT_MAPPABLE:
+            continue
+        need.append(m + ".id" if m in ACTORS else m)
+    lines = ["# SUGGESTED, not checked. Every line below is a guess from a "
+             "field name.",
+             "# Correct it before you trust anything it produces: a wrong "
+             "mapping makes a",
+             "# clean record that answers a question your system never "
+             "answered.",
+             "%s = Mapping(%r, {" % (entry_type + "s", entry_type)]
+    for m in need:
+        if m in found:
+            path, why = found[m]
+            lines.append("    %-20s %-24s  # %s" % ('"%s":' % m,
+                                                    '"%s",' % path, why))
+            base = m[:-3] if m.endswith(".id") else ""
+            if base in ACTORS:
+                lines.append("    %-20s %-24s  # from the member, not your data"
+                             % ('"%s.kind":' % base,
+                                'const("%s"),' % ACTORS[base]))
+        else:
+            lines.append("    # %-18s ???                       # nothing in "
+                         "your records looks like this" % ('"%s":' % m))
+    lines.append("}%s)" % (", when=lambda row: %s" % when if when else ""))
+    absent = [m for m in need if m not in found]
+    if absent:
+        lines += ["",
+                  "# %d of %d members had no candidate: %s."
+                  % (len(absent), len(need), ", ".join(absent)),
+                  "# That is the finding. Either they are somewhere this could "
+                  "not see, or",
+                  "# your records do not carry them, and the second is worth "
+                  "knowing."]
+    return chr(10).join(lines)
+
+
+def main() -> int:
+    if len(sys.argv) < 2:
+        raise SystemExit(
+            "usage: testimony_convert.py RECORDS.jsonl [entry_type]" + chr(10)
+            + "prints a Mapping suggested from your own field names")
+    rows = []
+    for line in io.open(sys.argv[1], encoding="utf-8"):
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            v = json.loads(line)
+        except ValueError:
+            continue
+        rows.extend(v if isinstance(v, list) else [v])
+    if not rows:
+        raise SystemExit("no JSON objects in %s" % sys.argv[1])
+    wanted = sys.argv[2:] or ["decision", "approval", "evidence"]
+    print("# read %d rows from %s" % (len(rows), sys.argv[1]))
+    for t in wanted:
+        print()
+        print(propose(rows, t))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
