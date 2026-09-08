@@ -990,6 +990,95 @@ def main():
     check("and it carries forward the correction from the other reading",
           "was read and its scope was not" in flat_ex)
 
+    print("\na cited DOI resolves to a deposit that carries what the page says")
+    # A DOI on a page is a claim that somebody else holds this text and stamped
+    # its date. Checking only that the string is present would test the typing.
+    # This resolves the record and checks it carries the files the pages are
+    # generated from, so a mistyped digit, a deleted deposit or a record that
+    # never had these files fails here rather than in front of a reader.
+    #
+    # It is the concept DOI on the pages deliberately: a version DOI freezes at
+    # one deposit, and a corrected reading would leave every citation pointing
+    # at the version with the error in it.
+    READINGS_DOI = "10.5281/zenodo.22658916"
+    CENSUS_DOI = "10.5281/zenodo.22290922"
+    cited = set()
+    for page in pages():
+        cited |= set(re.findall(r"10\.5281/zenodo\.\d+",
+                                io.open(page, encoding="utf-8").read()))
+    check("the readings pages cite the deposit",
+          READINGS_DOI in cited, sorted(cited))
+    check("and no page cites a DOI that is not one of ours",
+          not (cited - {READINGS_DOI, CENSUS_DOI,
+                        "10.5281/zenodo.22286050", "10.5281/zenodo.22286051",
+                        "10.5281/zenodo.22290923"}),
+          sorted(cited))
+
+    for name, doi, want in (
+            ("the readings", READINGS_DOI,
+             {"obligation.md", "explaining.md", "instrument-readings.json",
+              "README.md"}),
+            ("the census", CENSUS_DOI, set())):
+        try:
+            rec = json.loads(urllib.request.urlopen(
+                "https://zenodo.org/api/records/" + doi.split(".")[-1],
+                timeout=25).read().decode("utf-8"))
+        except Exception as e:                                  # noqa: BLE001
+            print("  NOT VERIFIED: Zenodo unreachable for %s (%s)"
+                  % (name, str(e)[:60]))
+            continue
+        got = {f.get("key") for f in rec.get("files") or []}
+        check("%s deposit exists and is public" % name, bool(rec.get("doi")),
+              rec.get("doi"))
+        if want:
+            check("and carries every file the pages are generated from",
+                  want <= got, sorted(want - got))
+            # The deposit is generated from the same sources as the pages.
+            # If a page is edited and not re-deposited they drift, and the
+            # whole point of the DOI is that the two say the same thing.
+            #
+            # This reads what Zenodo actually holds rather than the local
+            # copy in readings-deposit/. A local file proves only that the
+            # intended upload was generated; fetching the deposited bytes
+            # proves the record a reader resolves says what the page says.
+            #
+            # One paragraph is exempt and only one: the page's citation of
+            # its own DOI. A deposit cannot contain the identifier it is
+            # given on publication, so requiring that would demand a new
+            # version for every deposit forever. Everything else matches or
+            # this fails.
+            def _comparable(text):
+                out = []
+                for l in text.replace(chr(13), '').split(chr(10)):
+                    if READINGS_DOI in l:
+                        continue
+                    if l.strip() or (out and out[-1].strip()):
+                        out.append(l)
+                return chr(10).join(out).strip()
+
+            held_at = {f.get('key'): (f.get('links') or {}).get('self')
+                       for f in rec.get('files') or []}
+            for f, src in (('obligation.md', 'obligation'),
+                           ('explaining.md', 'explaining')):
+                fresh = subprocess.run(
+                    [sys.executable,
+                     os.path.join(ROOT, 'census', 'to_markdown.py'),
+                     os.path.join(ROOT, 'pages', src + '.html')],
+                    capture_output=True, text=True)
+                try:
+                    held = urllib.request.urlopen(
+                        held_at[f], timeout=25).read().decode('utf-8')
+                except Exception as e:                       # noqa: BLE001
+                    print('  NOT VERIFIED: could not fetch %s from the '
+                          'deposit (%s)' % (f, str(e)[:60]))
+                    continue
+                check('%s in the deposit is what the page still produces'
+                      % f,
+                      fresh.returncode == 0
+                      and _comparable(fresh.stdout) == _comparable(held),
+                      'regenerate readings-deposit/%s and deposit a new '
+                      'version' % f)
+
     print("\nthe site does not link at things that are not there")
     dead = []
     for page in pages():
