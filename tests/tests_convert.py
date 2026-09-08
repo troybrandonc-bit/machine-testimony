@@ -13,6 +13,7 @@ this format exists to make visible.
 
 Copyright 2026 Garnet Taurus Ltd. MIT licensed.
 """
+import io
 import json
 import os
 import sys
@@ -129,6 +130,34 @@ def main():
     except ValueError as e:
         ok = "not an entry type" in str(e)
     check("an unknown entry type is refused where it is written", ok)
+
+    print()
+    print("the code published on /implement/ is code that runs")
+    # The page invites a stranger to copy this and tells them it works.
+    # Only /anchor/ has its commands extracted and run, so the Python on
+    # /implement/ is published untested. This covers the conversion snippet
+    # at least, by running the page's own text rather than a copy of it that
+    # could drift away from what a reader sees.
+    import html as _html
+    import re as _re
+    page = io.open(os.path.join(ROOT, "pages", "implement.html"),
+                   encoding="utf-8").read()
+    snips = [_html.unescape(m) for m in
+             _re.findall(r'<pre class="snip">(.*?)</pre>', page, _re.S)
+             if "testimony_convert" in m]
+    check("the page carries the conversion example", len(snips) == 1,
+          len(snips))
+    ran, err = False, ""
+    if snips:
+        code = snips[0].split("print(")[0]
+        ns = {"my_receipts": FOREIGN}
+        try:
+            exec(compile(code, "implement.html", "exec"), ns)
+            out = convert(FOREIGN, ns["approvals"])
+            ran = "identity_source" in out.missing
+        except Exception as e:              # noqa: BLE001
+            err = repr(e)
+    check("and it runs, and reports what the page says it reports", ran, err)
 
     print("\n%d passed, %d failed" % (PASS, FAIL))
     return 1 if FAIL else 0
