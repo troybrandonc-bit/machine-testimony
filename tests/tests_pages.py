@@ -843,16 +843,33 @@ def main():
           [x["answers"]["Q1"]["verdict"] for x in able])
     # The finding itself. If either of these stops being unanimous, the
     # sentence on the page becomes false, and this is where that surfaces.
-    check("none of the three requires the record to name who authorised",
-          all(x["answers"]["Q2"]["verdict"] == "absent" for x in able),
-          [(x["name"], x["answers"]["Q2"]["verdict"]) for x in able])
+    # Corrected 8 Sep 2026. This read "none of the three requires it" until
+    # Article 12(3)(d) was read properly: the logs of a remote biometric
+    # identification system must provide the identification of the natural
+    # persons who verified the result, pointing at Article 14(5)'s two named
+    # people. The requirement exists, drafted, and scoped to one row of Annex
+    # III. Partial is the honest verdict and the finding is stronger for it.
+    q2 = {x["name"]: x["answers"]["Q2"]["verdict"] for x in able}
+    check("exactly one of the three requires a record to name the person",
+          sorted(q2.values()) == ["absent", "absent", "partial"], q2)
+    check("and it is the law, for one category rather than in general",
+          q2.get("EU AI Act") == "partial", q2)
+    check("the note says which article and which Annex III category",
+          all(k in [x for x in able if x["name"] == "EU AI Act"][0]
+              ["answers"]["Q2"]["note"]
+              for k in ("12(3)(d)", "14(5)", "Annex III")))
     check("none requires it be shown unaltered by a third party",
           not [x for x in able if x["answers"]["Q3"]["verdict"] == "required"],
           [x["name"] for x in able
            if x["answers"]["Q3"]["verdict"] == "required"])
     check("the page states that finding",
-          "None of the three requires it to name the person who authorised an "
-          "action" in flat_ob)
+          "Only one of them requires a record to name the person, and only for "
+          "one category of system out of everything the law covers" in flat_ob)
+    # A correction to a published reading is recorded on the page rather than
+    # made quietly, on the same terms this project asks of everybody else.
+    check("and the page records that it previously said otherwise",
+          "An earlier version of this page said the Act contained no such "
+          "requirement at all" in flat_ob)
     check("the page names every instrument it read",
           all(x["name"] in ob for x in sc["subjects"]),
           [x["name"] for x in sc["subjects"] if x["name"] not in ob])
