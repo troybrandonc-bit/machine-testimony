@@ -572,9 +572,20 @@ def main() -> int:
         raise SystemExit("no JSON objects in %s" % sys.argv[1])
     args = sys.argv[2:]
     if "--against" in args:
-        # Imported here so the converter stays usable without it, and so a
-        # copied file does not fail on an import somebody did not take.
-        from criteria import against
+        # The instrument library is not in this repository. This file is
+        # free and stays free; the readings of particular frameworks are the
+        # part that is sold, and a copied converter must not break because
+        # they are absent.
+        try:
+            from criteria import against
+        except ImportError:
+            raise SystemExit(
+                "--against needs the instrument library, which is not part of "
+                "this repository." + chr(10)
+                + "What is here reads your records and reports what they can "
+                "and cannot answer:" + chr(10)
+                + "  python3 spec/testimony_convert.py %s --report"
+                % sys.argv[1])
         i = args.index("--against")
         which = args[i + 1] if i + 1 < len(args) else "eu-ai-act"
         try:
