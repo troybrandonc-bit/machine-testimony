@@ -922,6 +922,74 @@ def main():
         check("%s is credited on the governance page" % who, who in ch, who)
         check("and in the draft's acknowledgements", who in draft, who)
 
+    print("\nthe reading on explaining says what the assessments say")
+    # Every count on /explaining/ comes from the same subject files the register
+    # is built from, so the page cannot say one thing while the data says
+    # another. The three requirements are the ones that decide whether a
+    # deployer could reconstruct the main elements of a decision afterwards.
+    ex = io.open(os.path.join(PUB, "explaining", "index.html"),
+                 encoding="utf-8").read()
+    flat_ex = " ".join(ex.split())
+    sys.path.insert(0, os.path.join(ROOT, "census"))
+    import rubric as _rub                                     # noqa: E402
+    _reqs = {r.id: r for r in _rub.REQUIREMENTS}
+    _subs = [json.load(io.open(f, encoding="utf-8"))
+             for f in sorted(glob.glob(os.path.join(
+                 ROOT, "census", "subjects", "*.json")))]
+
+    def _tally(rid):
+        r = _reqs[rid]
+        pool = [d for d in _subs if r.applies_to in d.get("claims", [])]
+        c = collections.Counter(
+            (d["assessments"].get(rid) or {}).get("verdict") for d in pool)
+        return len(pool), c["present"], c["partial"], c["absent"]
+
+    for rid, row in (("R2.1", "The source a stored fact came from"),
+                     ("R2.2", "A fact the system inferred"),
+                     ("R2.4", "the disagreement is")):
+        n, p, pa, a = _tally(rid)
+        i = flat_ex.find(row)
+        check("%s: the page shows a row for it" % rid, i > 0, row)
+        if i > 0:
+            cells = re.findall(r">(\d+)<", flat_ex[i:i + 460])[:3]
+            check("%s: the row is %d/%d/%d as the assessments say"
+                  % (rid, p, pa, a),
+                  cells == [str(p), str(pa), str(a)], (cells, [p, pa, a]))
+
+    # The two sentences the page rests on, recomputed rather than trusted.
+    _, p21, _, _ = _tally("R2.1")
+    _, _, _, a24 = _tally("R2.4")
+    check("two of ten can say where a fact came from", p21 == 2, p21)
+    check("and eight cannot say afterwards that anything was disputed",
+          a24 == 8, a24)
+    check("the page states both",
+          "Two of ten can say where a fact came from" in flat_ex
+          and "Eight of ten cannot tell you afterwards" in flat_ex)
+
+    # The legal half. These are the claims that would do damage if they drifted,
+    # so each is held to the article it rests on and to the caveat beside it.
+    check("it quotes what Article 86 actually grants",
+          "clear and meaningful explanations of the role of the AI system in "
+          "the decision-making procedure and the main elements of the decision "
+          "taken" in flat_ex)
+    check("it names the one Annex III area Article 86 excepts",
+          "point 2, critical infrastructure" in flat_ex)
+    check("and the one area whose log content Article 12(3) specifies",
+          "Annex III point 1(a), remote biometric identification" in flat_ex)
+    # The date is a sharpener, not the claim. A page asserting a live legal
+    # obligation on an arguable reading is the failure this one is written to
+    # avoid, so the hedge is load-bearing and is held here.
+    check("it says Article 86 was not deferred, and which regulation deferred what",
+          "Regulation (EU) 2026/1744" in flat_ex
+          and "Chapter III Sections 1 to 3" in flat_ex)
+    check("and refuses to assert that it bites before December 2027",
+          "arguable and this page does not assert it" in flat_ex)
+    check("and says the finding does not depend on which reading is right",
+          "does not depend on which reading is right" in flat_ex)
+    check("it disclaims legal advice", "not legal advice" in flat_ex)
+    check("and it carries forward the correction from the other reading",
+          "was read and its scope was not" in flat_ex)
+
     print("\nthe site does not link at things that are not there")
     dead = []
     for page in pages():

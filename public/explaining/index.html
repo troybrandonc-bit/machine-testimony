@@ -3,23 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tamper-evident AI logs: what hash chains and timestamps prove &ndash; Machine Testimony</title>
-<meta name="description" content="What append-only storage, hash chains, signatures, timestamps and transparency logs each actually prove about an AI system's records, what none of them prove, and the one that costs nothing and works today.">
-<meta property="og:title" content="Tamper-evident AI logs: what hash chains and timestamps prove">
-<meta property="og:description" content="What append-only storage, hash chains, signatures, timestamps and transparency logs each actually prove about an AI system's records, what none of them prove, and the one that costs nothing and works today.">
+<title>The duty to explain is seven times wider than the duty to record &ndash; Machine Testimony</title>
+<meta name="description" content="Article 86 gives a person the right to the main elements of a decision an AI system took part in, across seven of the eight Annex III areas. Article 12 specifies what a log must contain for one of them. Ten deployed systems read against what answering would take: two can say where a stored fact came from, and eight cannot say afterwards that anything was ever in dispute.">
+<meta property="og:title" content="The duty to explain is seven times wider than the duty to record">
+<meta property="og:description" content="Article 86 gives a person the right to the main elements of a decision an AI system took part in, across seven of the eight Annex III areas. Article 12 specifies what a log must contain for one of them. Ten deployed systems read against what answering would take: two can say where a stored fact came from, and eight cannot say afterwards that anything was ever in dispute.">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://machinetestimony.org/tamper-evidence/">
+<meta property="og:url" content="https://machinetestimony.org/explaining/">
 <meta property="og:image" content="https://machinetestimony.org/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Tamper-evident AI logs: what hash chains and timestamps prove">
-<meta name="twitter:description" content="What append-only storage, hash chains, signatures, timestamps and transparency logs each actually prove about an AI system's records, what none of them prove, and the one that costs nothing and works today.">
+<meta name="twitter:title" content="The duty to explain is seven times wider than the duty to record">
+<meta name="twitter:description" content="Article 86 gives a person the right to the main elements of a decision an AI system took part in, across seven of the eight Annex III areas. Article 12 specifies what a log must contain for one of them. Ten deployed systems read against what answering would take: two can say where a stored fact came from, and eight cannot say afterwards that anything was ever in dispute.">
 <meta name="twitter:image" content="https://machinetestimony.org/og.png">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/icon.png" type="image/png" sizes="512x512">
 <link rel="apple-touch-icon" href="/icon.png">
-<link rel="canonical" href="https://machinetestimony.org/tamper-evidence/">
+<link rel="canonical" href="https://machinetestimony.org/explaining/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -248,170 +248,151 @@
 </div>
 <div class="wrap main">
   <div>
-    <p class="dateline">Technical note, 5 September 2026</p>
-    <h2 class="label">Proving a log was not altered</h2>
+    <p class="dateline">Reading, 8 September 2026</p>
+    <h2 class="label">Seven areas must explain a decision. One must record what it was.</h2>
 
     <div class="block">
-      <p>An automated system did something consequential, and somebody now
-        wants to know that the record of it is the record that was written at
-        the time. This is the part of AI record-keeping that is easiest to
-        claim and hardest to check, and most of what is written about it
-        answers a narrower question than the one being asked.</p>
+      <p>Two obligations in the same regulation, pointing in different
+        directions. One says a person may demand to be told the main elements
+        of a decision a machine took part in. The other says what the machine
+        must write down. They do not cover the same ground, and the gap between
+        them falls on the deployer.</p>
 
-      <p>Nothing here is specific to any format or product. The distinctions
-        apply to whatever you already log.</p>
+      <h3>What must be explained</h3>
 
-      <h3>First, the question underneath the question</h3>
-      <p><b>Altered by whom?</b> Almost every scheme in use protects against a
-        different party than the one people assume, and the difference decides
-        whether the record is worth anything in a dispute.</p>
-      <ul>
-        <li><b>Against accident and outsiders.</b> A hash of the record detects
-          corruption and detects somebody else editing it afterwards. This is
-          what most systems have and it is worth having.</li>
-        <li><b>Against the operator.</b> The party that wrote the record can
-          rewrite it and recompute any digest it computed itself. If the
-          question is "did the vendor change this", a digest the vendor
-          calculated answers nothing, however strong the hash.</li>
-      </ul>
-      <p>Internal audit asking about a team's own system, or a customer asking
-        about a supplier's, is always asking the second question. So is a court.</p>
+      <p><b>Article 86(1)</b> gives any affected person subject to a decision
+        taken by a deployer on the basis of a high-risk system's output, where
+        that decision produces legal effects or similarly significantly affects
+        them adversely, the right to obtain <i>"clear and meaningful
+        explanations of the role of the AI system in the decision-making
+        procedure and the main elements of the decision taken"</i>.</p>
 
-      <h3>What each mechanism actually proves</h3>
+      <p>It applies across Annex III <b>with one exception, point 2, critical
+        infrastructure</b>. So it reaches biometrics, education and vocational
+        training, employment and worker management, access to essential public
+        and private services and benefits, law enforcement, migration and
+        border control, and the administration of justice. Seven of the eight
+        areas, and every one of them about decisions taken about people.</p>
+
+      <h3>What must be recorded</h3>
+
+      <p>Article 12 requires the automatic recording of events and, at
+        Article 12(2), that logging enable the recording of events relevant to
+        three purposes: identifying risk, post-market monitoring, and the
+        deployer's own monitoring duty. <b>It specifies no content.</b></p>
+
+      <p>Content is specified once. <b>Article 12(3)</b> sets a minimum for
+        systems under Annex III point 1(a), remote biometric identification:
+        the period of each use, the reference database, the input data that
+        matched, and <i>"the identification of the natural persons involved in
+        the verification of the results"</i>. One area of the eight.</p>
+
       <div class="scroller">
       <table class="reg">
-        <thead><tr><th>Mechanism</th><th>Detects an outsider's edit</th>
-          <th>Detects the operator's edit</th><th>Cost</th></tr></thead>
+        <thead><tr><th>Annex III area</th><th>Must explain<br>Art 86</th><th>Log content specified<br>Art 12(3)</th></tr></thead>
         <tbody>
-          <tr><td class="s">Append-only storage</td><td class="v">partly</td>
-            <td class="v n">no</td><td class="d">free</td></tr>
-          <tr><td class="s">Hash of each entry</td><td class="v">yes</td>
-            <td class="v n">no</td><td class="d">free</td></tr>
-          <tr><td class="s">Hash chain</td><td class="v">yes</td>
-            <td class="v n">no</td><td class="d">free</td></tr>
-          <tr><td class="s">Digital signature</td><td class="v">yes</td>
-            <td class="v n">no, the key holder re-signs</td>
-            <td class="d">key management</td></tr>
-          <tr><td class="s">RFC 3161 timestamp</td><td class="v">yes</td>
-            <td class="v">yes, for time and content</td>
-            <td class="d">free, one HTTP call</td></tr>
-          <tr><td class="s">Transparency log</td><td class="v">yes</td>
-            <td class="v">yes, and detects omission</td>
-            <td class="d">infrastructure</td></tr>
+          <tr><td class="s">1(a) Remote biometric identification</td><td class="v">yes</td><td class="v">yes</td></tr>
+          <tr><td class="s">2 Critical infrastructure</td><td class="v n">excepted</td><td class="v n">no</td></tr>
+          <tr><td class="s">3 Education and vocational training</td><td class="v">yes</td><td class="v n">no</td></tr>
+          <tr><td class="s">4 Employment and worker management</td><td class="v">yes</td><td class="v n">no</td></tr>
+          <tr><td class="s">5 Essential services and benefits</td><td class="v">yes</td><td class="v n">no</td></tr>
+          <tr><td class="s">6 Law enforcement</td><td class="v">yes</td><td class="v n">no</td></tr>
+          <tr><td class="s">7 Migration and border control</td><td class="v">yes</td><td class="v n">no</td></tr>
+          <tr><td class="s">8 Justice and democratic processes</td><td class="v">yes</td><td class="v n">no</td></tr>
         </tbody>
       </table>
       </div>
 
-      <p><b>Append-only storage</b> is a property of your code path behaving.
-        It is a real control against the ordinary case and it is not evidence,
-        because whoever administers the database can still write to it.</p>
+      <p><b>A recruiter, a lender, a school, a police force or an immigration
+        officer must be able to explain the main elements of a decision, and is
+        told nothing about what to record in order to be able to.</b> The one
+        area where the regulation says what a log must contain is the one area
+        where it also requires the log to name the humans who checked.</p>
 
-      <p><b>A hash chain</b> makes each entry commit to the one before it, so
-        an edit in the middle breaks everything after. Strong against an
-        outsider and worth nothing against the party that can recompute the
-        whole chain, which is the party that wrote it.</p>
+      <h3>Could the software answer?</h3>
 
-      <p><b>A signature</b> binds the record to a key. Better, and it moves the
-        question rather than settling it: whoever holds the key can sign a
-        different record just as validly. It helps when the key is held
-        somewhere the operator cannot reach.</p>
+      <p>Explaining the main elements of a decision after the fact means being
+        able to say what the system held to be true, where that came from, and
+        whether anything contradicted it. Ten widely deployed agent memory and
+        agent framework systems were read at pinned commits against twenty
+        record-keeping requirements. Three of those requirements bear directly
+        on this.</p>
 
-      <p><b>An RFC 3161 timestamp</b> is the cheapest thing that changes the
-        answer. A Time Stamp Authority signs the pair of your digest and the
-        current time, with its own key. The operator cannot forge that
-        signature, cannot backdate it, and cannot alter the record without the
-        digest ceasing to match. Free authorities operate it, it underpins
-        qualified electronic timestamps under eIDAS, and a verifier checks it
-        with openssl rather than with anything of yours.</p>
+      <div class="scroller">
+      <table class="reg">
+        <thead><tr><th>What answering would take</th><th>Can</th><th>Partly</th><th>Cannot</th></tr></thead>
+        <tbody>
+          <tr><td class="d">The source a stored fact came from is recoverable by
+            following a link rather than by inference</td>
+            <td class="v">2</td><td class="v">6</td><td class="v n">2</td></tr>
+          <tr><td class="d">A fact the system inferred can be told from one it
+            was given <span class="mono">(of 6)</span></td>
+            <td class="v">3</td><td class="v">1</td><td class="v n">2</td></tr>
+          <tr><td class="d">When two stored facts disagreed, the disagreement is
+            itself queryable afterwards</td>
+            <td class="v">1</td><td class="v">1</td><td class="v n">8</td></tr>
+        </tbody>
+      </table>
+      </div>
 
-      <p><b>A transparency log</b> in the style of <a href="https://www.rfc-editor.org/rfc/rfc9162.html">RFC 9162</a> is stronger
-        again, because it also detects <i>omission</i>: a record that was never
-        submitted is visible as a gap. It is the right answer at scale and it
-        needs infrastructure somebody has to run.</p>
+      <p><b>Two of ten can say where a fact came from without inferring it.
+        Eight of ten cannot tell you afterwards that anything was ever in
+        dispute.</b> A deployer running one of those eight, asked under
+        Article 86 what the main elements of a decision were, has a system that
+        did not record whether it had contradictory information at the time.</p>
 
-      <h3>The cheap one, in full</h3>
-      <p>Hash the records you want to fix, ask an authority to sign the digest,
-        and keep the token beside them.</p>
+      <p>None of those ten is doing anything wrong. None was built against
+        Article 86, and most predate it. That is the point: the obligation
+        landed on deployers, and the software they bought was not designed to
+        answer it.</p>
 
-      <pre class="snip"># the digest of whatever you are fixing in time
-sha256sum records.jsonl
+      <h3>On the dates, and what is genuinely unsettled</h3>
 
-# ask an authority to sign it
-openssl ts -query -data records.jsonl -sha256 -cert -out request.tsq
-curl -s -H "Content-Type: application/timestamp-query" \
-  --data-binary @request.tsq http://timestamp.digicert.com > token.tsr
+      <p>Article 86 was <b>not</b> deferred. Regulation (EU) 2026/1744, the
+        digital omnibus on AI, deferred Chapter III Sections 1 to 3 for Annex
+        III high-risk systems to 2 December 2027. Article 86 sits in Chapter IX
+        and the omnibus does not touch it, so by Article 113 it has applied
+        since 2 August 2026.</p>
 
-# what it says
-openssl ts -reply -in token.tsr -text</pre>
+      <p><b>Whether it can be invoked before December 2027 is arguable and this
+        page does not assert it.</b> The right attaches to a decision taken on
+        the basis of a high-risk system listed in Annex III, and the
+        classification provisions that make a system such a thing were
+        themselves deferred. There is a reading on which the right is live now
+        and a reading on which it waits for the rest. That is a question for
+        lawyers, and this is not legal advice.</p>
 
-      <p>Anybody you later hand the records and the token to checks them
-        against their own certificate store, with no cooperation from you:</p>
+      <p>The finding does not depend on which reading is right. On the later
+        one, both obligations arrive together in December 2027 and the
+        asymmetry between them is identical: seven areas must be explained, one
+        has its record content specified. The date makes it more urgent. It is
+        not what makes it true.</p>
 
-      <pre class="snip">openssl ts -verify -in token.tsr -data records.jsonl \
-  -CAfile /etc/ssl/certs/ca-certificates.crt
+      <h3>What this does not show</h3>
 
-Verification: OK</pre>
+      <p>Two articles and three requirements, not an assessment of the
+        regulation or of any system. Nothing here says what an adequate
+        explanation is; that is for a court and for guidance that does not yet
+        exist. A system that scores badly on these three may be excellent, and
+        a deployer may be able to explain a decision from records kept outside
+        it entirely.</p>
 
-      <p>And what a failure looks like, which is the half nobody prints. One
-        byte changed anywhere in the file:</p>
+      <p>And a reading is wrong in the ordinary way readings are wrong. An
+        earlier reading on this site said the Act contained no requirement to
+        record the identity of a person, which was false, because Article 12(3)
+        was read and its scope was not. That correction is recorded on the page
+        that carried it rather than quietly made, and the same applies here.</p>
 
-      <pre class="snip">error:17800067:time stamp routines:ts_check_imprints:message imprint mismatch
-Verification: FAILED</pre>
+      <h3>Check it</h3>
 
-      <p>Note what that does and does not tell you. It says the file is not the
-        one the authority signed. It does not say who changed it, when, or
-        which byte, and it cannot distinguish a malicious edit from a trailing
-        newline an editor added on save. Hash a canonical form rather than the
-        file as it happens to sit on disk, or you will spend a morning
-        investigating whitespace.</p>
-
-      <p>That is the whole mechanism. The common mistakes are worth knowing
-        because they are silent: a DER integer that is not minimally encoded
-        produces a token strict parsers reject, and roughly half of hand-built
-        requests hit it depending on one random byte. If you build the request
-        yourself rather than with <code>openssl ts -query</code>, check your
-        output parses before you rely on it.</p>
-
-      <h3>What none of this proves</h3>
-      <p>That the record is true. A system can record precisely what it
-        believed, sign it, timestamp it, and be wrong about all of it. Integrity
-        protects the entry, not the claim inside it.</p>
-      <p>That the record is complete. Everything above fixes what you submitted.
-        Only a transparency log makes what you did <i>not</i> submit visible,
-        and even then only for records that were meant to be there.</p>
-      <p>That a different record was not produced and discarded. A timestamp
-        proves this one existed at that time, not that it was the only one.</p>
-      <p>Anyone selling you integrity as an answer to accuracy is selling you
-        the wrong thing, and the distinction is the first one an auditor will
-        make.</p>
-
-      <h3>A worked example you can check</h3>
-      <p>There is a record published at
-        <a href="/anchor/">a record you can check without us</a>, with its
-        token, its digest, and the three commands above run against real files.
-        It is in the Testimony Record format, which is one way to write these
-        things down and not the only one. The mechanism on this page works with
-        whatever you already log.</p>
+      <p>Article 86 and Article 12 are public. The per-system verdicts behind
+        the second table, each citing a file and a line at a full commit hash,
+        are at <a href="/register/">the register</a>, and the reading of what
+        four instruments require is at <a href="/obligation/">the
+        obligation</a>. The counts on this page are recomputed from the subject
+        files by the test suite rather than typed.</p>
     </div>
   </div>
-
-  <aside class="rail">
-    <h2 class="label">If you have to answer for a system</h2>
-    <p class="cont">These are the questions worth asking a supplier about what
-      their system records, with what a real answer looks like.<br>
-      <a href="/ask/">Questions to ask your AI supplier</a></p>
-
-    <h2 class="label">Where this comes from</h2>
-    <p class="cont">An assessment of eight agent systems against twenty
-      requirements. Seven of the eight could not tell you whether a past entry
-      had been altered.<br>
-      <a href="/register/">The register</a></p>
-
-    <hr>
-    <p class="cont"><a href="/anchor/">A record you can check without us</a><br>
-      <a href="/implement/">Implementing the format</a><br>
-      <a href="https://datatracker.ietf.org/doc/draft-clifford-testimony-record/">The specification</a></p>
-  </aside>
 </div>
 <footer class="foot">
   <div class="wrap">
