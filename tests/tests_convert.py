@@ -61,6 +61,11 @@ DECISION = Mapping("decision", {
 }, when=lambda r: r.get("event") == "tool_call")
 
 
+before_js = io.open(os.path.join(ROOT, "public", "review", "review.js"),
+                    encoding="utf-8", newline="").read() if os.path.exists(
+    os.path.join(ROOT, "public", "review", "review.js")) else ""
+
+
 def main():
     print("\nit reports what the source could not fill")
     APPROVAL = Mapping("approval", {
@@ -246,6 +251,50 @@ def main():
                      "2 of 4 are not in these rows"):
             check("and the page and the tool agree on %r" % line,
                   line in shown[0] and line in real)
+
+    print()
+    print("the browser reaches the same finding as the command line")
+    import subprocess, shutil
+    node = shutil.which("node")
+    js = os.path.join(ROOT, "public", "review", "review.js")
+    if not node:
+        print("  NOT VERIFIED: node is not installed, so the browser copy "
+              "was not run")
+    elif not os.path.exists(js):
+        check("public/review/review.js exists", False, js)
+    else:
+        # Regenerating has to reproduce the committed file, or the page is
+        # running something nobody generated.
+        gen = subprocess.run(
+            [sys.executable, os.path.join(ROOT, "spec",
+                                          "build_review_js.py")],
+            capture_output=True, text=True)
+        after = io.open(js, encoding="utf-8", newline="").read()
+        check("regenerating review.js reproduces the committed file",
+              gen.returncode == 0 and after == before_js,
+              gen.stderr[:120] or "the committed file is not what the "
+              "generator produces")
+
+        cases = {"a gate log": FOREIGN,
+                 "a sealed log": [dict(r, prev_hash="sha256:aa",
+                                       auth={"method": "oidc"})
+                                  for r in FOREIGN],
+                 "an empty file": []}
+        for name, rows in cases.items():
+            # pathToFileURL, because an absolute Windows path is not a URL
+            # and node refuses it with ERR_UNSUPPORTED_ESM_URL_SCHEME.
+            src = ("const u=require('url');"
+                   "import(u.pathToFileURL(process.argv[1]).href).then(m=>"
+                   "console.log(m.report(JSON.parse(process.argv[2]),"
+                   "process.argv[3])))")
+            r = subprocess.run([node, "-e", src, js, json.dumps(rows),
+                                "their-logs.jsonl"],
+                               capture_output=True, text=True)
+            got = r.stdout.replace(chr(13), "").rstrip(chr(10))
+            want = report(rows, "their-logs.jsonl")
+            check("%s reads the same in both" % name, got == want,
+                  (r.stderr[:120] or "") + " | js=" + got[:90]
+                  + " | py=" + want[:90])
 
     print("\n%d passed, %d failed" % (PASS, FAIL))
     return 1 if FAIL else 0
