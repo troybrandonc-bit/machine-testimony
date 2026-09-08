@@ -135,6 +135,12 @@ Emitter:
 Actor:
 : A JSON object carrying at least `id` and `kind`, where `kind` is one of
   `agent`, `human`, `system` or `connector`. It MAY carry `name` and `role`.
+  There is no string form of an Actor. A bare identifier, whether a name, an
+  email address or a string id, does not satisfy a member typed as an Actor,
+  even where it would resolve unambiguously to a real Actor object elsewhere in
+  the record. The failure mode this closes is not ambiguity: it is that a
+  resolvable-looking string is the case most likely to pass silent review, and
+  therefore the case a shape check exists to catch.
 
 Subject:
 : The thing a belief is about. Frequently a person.
@@ -715,9 +721,26 @@ specification's clarity but is not independent implementation in the sense that
 matters. There are two emitters: one for the author's own system, and one for
 LangGraph, which depends on that framework and on nothing of the author's.
 
-No implementation by another party is known. That is the honest state of it,
-and it is the thing a reader deciding whether to implement this should weigh
-most heavily.
+One implementation by another party is known. An author writing as
+babyblueviper1 wrote a validator from this document's text, without reading the
+reference implementation, and ran it against the published conformance corpus.
+It reached the same verdict on fifty-three of the fifty-four cases. On the
+fifty-fourth it disagreed and was right: three members defined here as an Actor
+were checked by the reference for presence and never for shape, so a bare string
+where an object belongs reached the second level in the reference validator and
+in the corpus that validator publishes.
+
+What that establishes is narrow and worth stating exactly. It is a validator and
+not an emitter, it was one person's work over one evening, and the corpus it was
+checked against is this document's own. What it does establish is that the text
+is sufficient to build a conforming implementation from without access to the
+author, which is the property the two validators above cannot demonstrate however
+carefully they are written, because both were written by the same reader of the
+same text.
+
+No independent emitter is known. That is the honest remaining state of it, and
+it is the thing a reader deciding whether to implement this should weigh most
+heavily.
 
 The reference validator is a single standard-library file with no network
 access, published under an MIT licence, so that a conformance claim can be
