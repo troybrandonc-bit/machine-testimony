@@ -1216,6 +1216,12 @@ def main():
         # unstyled. Converting it means teaching the generator about
         # page-scoped CSS, which is a change to every page, not to this one.
         "check",
+        # /review/ is generated too, but not from pages/ and not for that
+        # reason. It is built from /check/'s own shell by
+        # spec/build_review_page.py, so that two pages sharing a header, a
+        # footer and a file drop cannot drift apart. Its source is that script,
+        # and the suite checks that regenerating reproduces what is published.
+        "review",
     }
     sources = set()
     for f in os.listdir(os.path.join(ROOT, "pages")):
@@ -1286,6 +1292,41 @@ def main():
                for f in sorted(glob.glob(os.path.join(HERE, "tests_*.py")))
                if os.path.basename(f) not in workflow]
     check("no suite exists that CI never runs", not unwired, unwired)
+
+    print()
+    print("/review/ reads a file and sends it nowhere")
+    rev = os.path.join(PUB, "review", "index.html")
+    check("the page is published", os.path.exists(rev))
+    if os.path.exists(rev):
+        rev_html = io.open(rev, encoding="utf-8", newline="").read()
+        # The whole footing for running this over a client's log is that the
+        # log does not move. That is a claim on the face of the page, so it
+        # is checked like every other claim on a page here rather than being
+        # taken on the author's word.
+        for bad in ("fetch(", "XMLHttpRequest", "sendBeacon", "WebSocket",
+                    "<form", "action=", "EventSource"):
+            check("it cannot send the file anywhere: no %s" % bad,
+                  bad not in rev_html)
+        scripts = [l for l in rev_html.split(chr(10)) if "<script" in l]
+        check("and no script comes from anywhere but this origin",
+              not [l for l in scripts if "src=" in l]
+              and rev_html.count('"./review.js"') == 1, scripts)
+        check("it says on its face that nothing is uploaded",
+              "Nothing is uploaded" in rev_html or "nothing is uploaded" in rev_html)
+        check("and points at the rubric for what it is not",
+              'href="/assess/"' in rev_html)
+
+        for gen, target in (("build_review_js.py", "review.js"),
+                            ("build_review_page.py", "index.html")):
+            path = os.path.join(PUB, "review", target)
+            before = io.open(path, encoding="utf-8", newline="").read()
+            r = subprocess.run([sys.executable,
+                                os.path.join(ROOT, "spec", gen)],
+                               capture_output=True, text=True)
+            after = io.open(path, encoding="utf-8", newline="").read()
+            check("%s is what %s produces" % (target, gen),
+                  r.returncode == 0 and before == after,
+                  r.stderr[:120] or "regenerating changed the file")
 
     print("\n%d passed, %d failed" % (PASS, FAIL))
     return 1 if FAIL else 0

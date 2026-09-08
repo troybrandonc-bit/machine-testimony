@@ -284,13 +284,25 @@ def suggest(rows: list, entry_type: str) -> dict:
         if member in NOT_MAPPABLE:
             continue
         lookup = member + ".id" if member in ACTORS else member
-        want = SYNONYMS.get(lookup, (member,))
+        hit = match(seen, lookup)
+        if hit:
+            out[lookup] = hit
+    return out
+
+
+def match(seen: dict, member: str):
+    """The best candidate path for one member, and why it was picked.
+
+    Whole path, then leaf, then a loose overlap. Real logs nest, so
+    `auth.method` means the authentication method and its leaf alone means
+    something else entirely: `method` is also what a caller calls the
+    operation it invoked. Reading the path is what tells them apart.
+    """
+    if True:
+        want = SYNONYMS.get(member, (member,))
         best = None
-        # Whole path, then leaf, then a loose overlap. Real logs nest, so
-        # `auth.method` means the authentication method and its leaf alone
-        # means something else entirely: `method` is also what a caller calls
-        # the operation it invoked. Reading the path is what tells them apart.
         want_parts = [_parts(w) for w in want]
+        best = why = None
         for path, value in seen.items():
             leaf = path.split(".")[-1].lower()
             if _parts(path) in want_parts:
@@ -301,9 +313,7 @@ def suggest(rows: list, entry_type: str) -> dict:
                 break
             if _parts(leaf) & set(want):
                 best, why = path, "the name looks like it"
-        if best:
-            out[member + ".id" if member in ACTORS else member] = (best, why)
-    return out
+        return (best, why) if best else None
 
 
 def propose(rows: list, entry_type: str, when: str = "") -> str:
@@ -386,9 +396,10 @@ def _has_integrity(rows):
 
 def report(rows: list, name: str = "the file") -> str:
     """What this file can and cannot answer, and nothing about the system."""
-    found = {}
-    for t in ("approval", "decision", "evidence"):
-        found.update(suggest(rows, t))
+    seen = {}
+    for row in rows[:200]:
+        for path, value in _paths(row).items():
+            seen.setdefault(path, value)
     out = ["%d rows read from %s." % (len(rows), name), ""]
     out.append("Of the four questions somebody asks after something goes "
                "wrong:")
@@ -399,7 +410,7 @@ def report(rows: list, name: str = "the file") -> str:
             hit = _has_integrity(rows)
             where = hit
         else:
-            hit = found.get(member)
+            hit = match(seen, member)
             where = hit[0] if hit else None
         if where:
             out.append("  %-16s %s" % ("ANSWERABLE", question))

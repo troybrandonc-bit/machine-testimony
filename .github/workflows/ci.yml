@@ -576,6 +576,18 @@ jobs:
           git clone --depth 1 https://github.com/ietf-wg-scitt/examples.git             /tmp/scitt-examples
           cd /tmp/scitt-examples/test-vectors/scitt-cose
           shasum -a 256 -c SHA256SUMS
+      - name: The browser review page is what its generators produce
+        run: |
+          python spec/build_review_js.py
+          python spec/build_review_page.py
+          if ! git diff --quiet -- public/review; then
+            echo "::error::public/review is not what its generators produce."
+            echo "Edit spec/build_review_js.py or spec/build_review_page.py"
+            echo "and regenerate; never edit the published files by hand."
+            git --no-pager diff --stat -- public/review
+            exit 1
+          fi
+          echo "identical"
       - name: A SCITT receipt is read to the standard bytes alone can settle
         working-directory: tests
         env:
