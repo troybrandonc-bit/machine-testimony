@@ -365,7 +365,29 @@ python3 demo/what_your_log_cannot_answer.py</pre>
 
       <p>That list is a claim about your records, and you should not have to
         take it on trust any more than anyone should take a conformance level
-        on trust.
+        on trust. Point the converter at a file of them and it will tell you
+        which of the four you are missing, without you reading any of this
+        page first.</p>
+
+      <pre class="snip">python3 spec/testimony_convert.py your_records.jsonl approval
+
+approvals = Mapping('approval', {
+    "decision":          "approval.receipt_id",    # the name matches
+    "approver.id":       "approval.approver",      # the name matches
+    "approver.kind":     const("human"),           # from the member, not your data
+    # "identity_source": ???                       # nothing in your records looks like this
+})</pre>
+
+      <p>It read your field names and proposed the mapping. What it could not
+        find is the interesting half: nothing in that log says how the approver
+        was identified, so the record it would produce cannot say either. That
+        is the first item on the list above, arriving in one command rather
+        than after a reading.</p>
+
+      <p>The proposal is a guess from a name and says so on every line. Correct
+        it before you trust anything it produces, because a wrong mapping makes
+        a clean record that answers a question your system never answered. It
+        converts nothing on its own.
         <a href="https://github.com/troybrandonc-bit/machine-testimony/blob/main/spec/testimony_convert.py">testimony_convert.py</a>
         measures it instead. Declare which of your fields mean what, and it
         builds what it can and names every required field it had no value

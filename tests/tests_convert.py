@@ -144,7 +144,7 @@ def main():
                    encoding="utf-8").read()
     snips = [_html.unescape(m) for m in
              _re.findall(r'<pre class="snip">(.*?)</pre>', page, _re.S)
-             if "testimony_convert" in m]
+             if "from testimony_convert import" in m]
     check("the page carries the conversion example", len(snips) == 1,
           len(snips))
     ran, err = False, ""
@@ -158,6 +158,49 @@ def main():
         except Exception as e:              # noqa: BLE001
             err = repr(e)
     check("and it runs, and reports what the page says it reports", ran, err)
+
+    cli = [_html.unescape(m) for m in
+           _re.findall(r'<pre class="snip">(.*?)</pre>', page, _re.S)
+           if "testimony_convert.py" in m and "Mapping(" in m]
+    check("the page shows what the suggester actually prints", len(cli) == 1,
+          len(cli))
+    if cli:
+        from testimony_convert import propose
+        shown = cli[0]
+        real = propose(FOREIGN, "approval")
+        check("and every member the page shows is one the tool proposes",
+              all(k in real for k in ("decision", "approver.id",
+                                      "approver.kind", "identity_source")),
+              real)
+        check("including the one it says it cannot find",
+              "???" in shown and "???" in real)
+
+    print()
+    print("it proposes a mapping from their field names, and says it is a guess")
+    from testimony_convert import propose, suggest
+    got = suggest(FOREIGN, "decision")
+    check("an actor member expands to id and kind, never a bare string",
+          "proposed_by.id" in got and "proposed_by" not in got, sorted(got))
+    check("and finds the id under a name it was not given exactly",
+          got.get("proposed_by.id", ("",))[0] == "caller.agent_id", got)
+
+    text = propose(FOREIGN, "approval")
+    check("the proposal says on its face that it is not checked",
+          "SUGGESTED, not checked" in text and "guess" in text)
+    check("a member with no candidate is left commented out, not invented",
+          "identity_source" in text and "???" in text, text)
+    check("and the kind is marked as coming from the member, not the data",
+          "from the member, not your data" in text)
+
+    # The point of the whole exercise: the thing it cannot find in a gate's
+    # own log is how the approver was identified, which is the census finding
+    # arriving without anybody reading a specification.
+    check("what it cannot find in a real gate log is identity_source",
+          "identity_source" not in suggest(FOREIGN, "approval"),
+          sorted(suggest(FOREIGN, "approval")))
+
+    check("nothing is converted from a suggestion",
+          "convert(" not in propose(FOREIGN, "decision"))
 
     print("\n%d passed, %d failed" % (PASS, FAIL))
     return 1 if FAIL else 0
