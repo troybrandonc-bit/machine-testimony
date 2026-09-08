@@ -1,4 +1,40 @@
 {
+ "actor-has-no-id": {
+  "level": null,
+  "levels_met": {
+   "TR-1": false,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "an actor object that names nobody",
+  "scope": "record only",
+  "spec": "testimony-record/0.2"
+ },
+ "actor-is-a-bare-string": {
+  "level": null,
+  "levels_met": {
+   "TR-1": false,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "a belief whose asserted_by is a name rather than an actor",
+  "scope": "record only",
+  "spec": "testimony-record/0.2"
+ },
+ "actor-kind-invented": {
+  "level": null,
+  "levels_met": {
+   "TR-1": false,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "an actor whose kind is not one of the four",
+  "scope": "record only",
+  "spec": "testimony-record/0.2"
+ },
  "acts-without-decisions": {
   "level": "TR-2",
   "levels_met": {

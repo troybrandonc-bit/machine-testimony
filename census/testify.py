@@ -97,7 +97,13 @@ def record(subject: dict, token: bytes | None = None) -> list:
     """Every entry of the record, in the order it is written."""
     sid = subject["subject"]
     commit = subject.get("commit", "")
-    who = subject.get("assessed_by") or "unassigned"
+    # An Actor, not a name. An assessment is asserted by a person, and the
+    # format's whole point is that the record says which kind of thing made a
+    # claim: a verdict reached by a human reading source is not the same claim
+    # as one a model produced. The first version of this emitted the name as a
+    # bare string, which the specification does not allow and neither validator
+    # was checking until babyblueviper1 found it in machine-testimony#58.
+    who = {"id": subject.get("assessed_by") or "unassigned", "kind": "human"}
     day = subject.get("assessed_on") or "1970-01-01"
     at = subject["name"] + (" at " + commit[:12] if commit else "")
 

@@ -65,8 +65,13 @@ check("every requirement scored becomes a belief or is declared not applicable",
       len(beliefs) + len(by_id["sc"]["x-census-not-applicable"])
       == len(subject["assessments"]),
       (len(beliefs), len(subject["assessments"])))
-check("every belief names who asserted it",
-      all(b["asserted_by"] == subject["assessed_by"] for b in beliefs))
+# An Actor, not a name. The assessor is a person, and a record that said only
+# "Troy Brandon Clifford" would not say whether a human or a model reached the
+# verdict, which is the distinction the whole format turns on.
+check("every belief names who asserted it, as an actor",
+      all(b["asserted_by"] == {"id": subject["assessed_by"], "kind": "human"}
+          for b in beliefs),
+      beliefs[0]["asserted_by"] if beliefs else None)
 check("every belief cites evidence that is in the record",
       all(e in by_id for b in beliefs for e in b["evidence"]),
       [e for b in beliefs for e in b["evidence"] if e not in by_id])

@@ -1,6 +1,6 @@
 # The conformance corpus
 
-53 records and the verdict each one should get. If you are implementing the
+57 records and the verdict each one should get. If you are implementing the
 Testimony Record, this is how you find out whether you have finished.
 
 ```
@@ -24,7 +24,7 @@ a conformance claim you can only check with our software is worth nothing.
 
 ## What conformance means here
 
-Your implementation reaches the same verdict as the reference on all 53 cases.
+Your implementation reaches the same verdict as the reference on all 57 cases.
 
 It does not mean the same check names, the same wording, the same number of
 checks, or the same explanations. Those are this project's prose. A corpus that
@@ -33,8 +33,8 @@ file rather than whether you had implemented a specification, and an
 independent implementation is the entire point. The comparison is deliberately
 blind to everything except the answer.
 
-It is also not a certificate. It is a statement about 53 cases, and the
-specification is larger than any 53 cases.
+It is also not a certificate. It is a statement about 57 cases, and the
+specification is larger than any 57 cases.
 
 ## When you disagree
 
@@ -48,7 +48,7 @@ checks here exist because somebody said so.
 
 | | |
 |---|---|
-| no level | 12 cases: malformed JSON, unknown types, missing required members, invented enum values, reused ids, times that go backwards |
+| no level | 15 cases: malformed JSON, unknown types, missing required members, invented enum values, reused ids, times that go backwards, and a member declared to be an actor given as a name, as an object with no id, or with a kind nobody defined |
 | TR-1 | 6 cases: well formed, and failing something at TR-2 |
 | TR-2 | 12 cases: evidence that resolves, conflicts that keep both sides, resolutions that name what was kept |
 | TR-3 | 19 cases: gates, refusals that did not execute, approvals that name a person other than the proposer, provenance declared from somewhere the model cannot write, and actions whose effect the record cannot confirm |

@@ -284,8 +284,26 @@ def cases():
     advisory = [
         scope(acts=False),
         ev(),
-        bel(proposition="safe_to_execute", asserted_by="review.v4"),
+        # An Actor, not a name. The first version of this case wrote
+        # asserted_by as the bare string "review.v4", which the Conventions
+        # section does not allow and the reference validator did not catch.
+        bel(proposition="safe_to_execute",
+            asserted_by={"id": "review.v4", "kind": "system"}),
     ]
+    # An actor has to be an actor. Three members are declared to be one and
+    # nothing checked the shape until 8 Sep 2026, so a name where an object
+    # belongs passed two levels. A name says something produced the belief and
+    # not what kind of thing produced it, which is the distinction the format
+    # exists to keep: a claim asserted by a model and one asserted by a person
+    # are different claims. Found by a validator built from the prose alone.
+    add("actor-is-a-bare-string",
+        "a belief whose asserted_by is a name rather than an actor",
+        [scope(acts=False), ev(), bel(asserted_by="review.v4")])
+    add("actor-has-no-id", "an actor object that names nobody",
+        [scope(acts=False), ev(), bel(asserted_by={"kind": "system"})])
+    add("actor-kind-invented", "an actor whose kind is not one of the four",
+        [scope(acts=False), ev(), bel(asserted_by={"id": "x", "kind": "oracle"})])
+
     add("advisory-anchored-elsewhere",
         "a system that judges but does not act, anchored by a kind this "
         "validator cannot recompute",
