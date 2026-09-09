@@ -101,6 +101,43 @@
         <span class="mono">spec/build_profile.py</span> and it runs with no
         dependencies.</p>
 
+      <h3>What you can rely on, if you reference this</h3>
+      <p>Three questions decide whether anybody writes a unit into a document.
+        Can it change under me. Can it be withdrawn. Who decides. A page that
+        does not answer them is not offering a unit, whatever else it says.</p>
+
+      <table class="facts">
+        <tr><th>Frozen</th><td>The requirements of a published version never
+          change. A change to what the level requires is a <b>new version with
+          a new digest</b>. Version 1 keeps its digest and its meaning.</td></tr>
+        <tr><th>Resolvable</th><td>Every published version stays retrievable at
+          its own URL. Version 1 is at
+          <a href="/tr-3/v1.json"><span class="mono">/tr-3/v1.json</span></a>
+          and will still be there after version 2 exists. The list is
+          <span class="mono">spec/profiles/PUBLISHED.json</span>.</td></tr>
+        <tr><th>Irrevocable</th><td>CC BY 4.0 cannot be revoked by its own
+          terms while its conditions are followed. <b>That is the licence's
+          guarantee and not the author's</b>, which is the point: it does not
+          depend on this project continuing to exist or on anybody's
+          goodwill.</td></tr>
+        <tr><th>Checkable</th><td>You do not have to take any of the above on
+          trust. The digest is over the requirements, so recompute it. The
+          ledger is verified on every build, so editing a published version
+          fails rather than ships.</td></tr>
+      </table>
+
+      <p><b>What this is not.</b> It is not a promise that the level is right,
+        that it will be adopted, or that a later version will be compatible
+        with this one. A version supersedes rather than amends, and a reader
+        who wants the old meaning cites the old version. That is what the
+        versioned URL is for.</p>
+
+      <p>The guard that enforces this had a bug on the day it was written: it
+        compared the served file's own stated digest instead of recomputing it,
+        so editing a requirement while leaving the digest field alone passed.
+        Trusting an artifact's claim about its own integrity is the failure this
+        project reports in other systems. It now recomputes.</p>
+
       <h3>Where a profile like this fits</h3>
       <p>An evidence chain that evaluates a requirement owned by the relying
         party needs the relying party to have one. An agreement that conditions

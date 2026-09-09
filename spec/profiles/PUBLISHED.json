@@ -1,0 +1,11 @@
+{
+  "profile": "testimony-record/tr-3",
+  "published": [
+    {
+      "version": "1",
+      "digest": "sha256:74ead20bf296ef51729b4d2f6db71ee9e37af7b498b01f3895ce8603d7dfa49f",
+      "first_published": "2026-09-09",
+      "url": "https://machinetestimony.org/tr-3/v1.json"
+    }
+  ]
+}

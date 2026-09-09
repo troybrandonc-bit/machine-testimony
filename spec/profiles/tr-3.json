@@ -59,5 +59,12 @@
   "read_from": "the reference validator, spec/testimony_validate.py, run against spec/testimony-record-example.jsonl. The requirement list is generated, not transcribed.",
   "how_to_check": "python3 testimony_validate.py RECORD.jsonl --require TR-3. The validator is MIT licensed and carries no dependency on its author.",
   "licence": "CC BY 4.0",
-  "canonical_url": "https://machinetestimony.org/tr-3/"
+  "canonical_url": "https://machinetestimony.org/tr-3/",
+  "stability": {
+    "frozen": "The requirements of a published version never change. A change to what the level requires is a NEW version with a new digest, and the old version keeps its digest and its meaning.",
+    "resolvable": "Every published version stays retrievable at its own URL, listed in profiles/PUBLISHED.json. A reference to version 1 resolves to version 1 after version 2 exists.",
+    "irrevocable": "CC BY 4.0 cannot be revoked by its own terms while its conditions are followed. That is the licence's guarantee rather than the author's, which is the point: it does not depend on the author's continued goodwill or existence.",
+    "checkable": "The digest is over the requirements, so a party can prove for itself that a version has not moved. The ledger is verified on every build, so an edit to a published version fails rather than ships.",
+    "what_this_is_not": "It is not a promise that the level is right, that it will be adopted, or that a later version will be compatible with this one. A version supersedes rather than amends, and a reader who wants the old meaning cites the old version."
+  }
 }

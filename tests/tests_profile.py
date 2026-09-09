@@ -127,6 +127,62 @@ check("and explains what each word means",
 
 
 print("")
+print("the stability commitment is a guard and not a sentence")
+
+# Three questions decide whether anybody references a unit: can it change under
+# me, can it be withdrawn, who decides. The words are checked here and the
+# arithmetic behind them is checked below.
+st = doc.get("stability", {})
+for k in ("frozen", "resolvable", "irrevocable", "checkable",
+          "what_this_is_not"):
+    check("the profile states %s" % k, bool(st.get(k)))
+check("irrevocability rests on the LICENCE, not on the author",
+      "licence's guarantee rather than the author's" in st.get("irrevocable", ""))
+check("and it does not promise the level is right",
+      "not a promise that the level is right" in st.get("what_this_is_not", ""))
+
+LED = os.path.join(SPEC, "profiles", "PUBLISHED.json")
+check("there is a ledger of published versions", os.path.exists(LED))
+led = json.load(io.open(LED, encoding="utf-8")) if os.path.exists(LED) else {}
+pub = led.get("published", [])
+check("this version is in it",
+      any(e["version"] == doc["version"] for e in pub), pub)
+check("its ledger digest is this digest",
+      all(e["digest"] == doc["digest"] for e in pub
+          if e["version"] == doc["version"]))
+
+# The promise is that a citation of version 1 still resolves after version 2
+# exists. A version listed and not served is a reference that breaks.
+for e in pub:
+    vp = os.path.join(ROOT, "public", "tr-3", "v%s.json" % e["version"])
+    check("version %s is served at its own URL" % e["version"],
+          os.path.exists(vp))
+    if os.path.exists(vp):
+        was = json.load(io.open(vp, encoding="utf-8"))
+        core_v = {k: was.get(k) for k in ("profile", "version", "specification",
+                                          "level", "cumulative", "requirements")}
+        actual = "sha256:" + hashlib.sha256(
+            json.dumps(core_v, sort_keys=True, separators=(",", ":"),
+                       ensure_ascii=False).encode("utf-8")).hexdigest()
+        check("version %s still computes as it was published" % e["version"],
+              actual == e["digest"], "%s vs %s" % (actual, e["digest"]))
+
+# The guard's own first version read the served file's STATED digest, so
+# editing a requirement and leaving the digest alone passed a check whose only
+# job was to catch that. This is that regression.
+import build_profile as bpm
+tampered = dict(doc)
+tampered["requirements"] = [dict(r) for r in doc["requirements"]]
+tampered["requirements"][0]["basis"] = (
+    "attested" if doc["requirements"][0]["basis"] == "verified" else "verified")
+core_t = {k: tampered[k] for k in ("profile", "version", "specification",
+                                   "level", "cumulative", "requirements")}
+moved = "sha256:" + hashlib.sha256(bpm.canonical(core_t)).hexdigest()
+check("an edited requirement computes a different digest, stated or not",
+      moved != doc["digest"],
+      "the guard must recompute rather than read the file's own claim")
+
+print("")
 print("the page and the profile do not drift")
 
 pg = os.path.join(ROOT, "public", "tr-3", "index.html")
@@ -151,6 +207,14 @@ if os.path.exists(pg):
           "TR-4 alone does not establish this either" in page)
     check("and dates its own correction rather than silently fixing it",
           "was wrong when this page was first published" in page)
+    check("the page answers can-it-change-under-me",
+          "never change" in page and "new version with a new digest" in page)
+    check("the page answers can-it-be-withdrawn on the licence's terms",
+          "licence's guarantee and not the author's" in page)
+    check("the page links the versioned copy a citation would resolve to",
+          "/tr-3/v1.json" in page)
+    check("the page admits the guard's own bug rather than quietly fixing it",
+          "stated digest instead of recomputing" in page)
 
 print("")
 print("%d passed, %d failed" % (PASS, FAIL))

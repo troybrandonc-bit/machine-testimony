@@ -51,6 +51,17 @@ OUT = os.path.join(HERE, "profiles", "tr-3.json")
 # party that recomputes the digest from the served copy and a party that
 # recomputes it from the repository must get the same answer.
 SERVED = os.path.join(os.path.dirname(HERE), "public", "tr-3", "tr-3.json")
+# Every version ever published, kept at its own URL forever. A reference to a
+# version that stops resolving is a reference that breaks, and a unit whose
+# past meanings evaporate cannot be written into anything with a term longer
+# than a news cycle.
+VERSIONED = os.path.join(os.path.dirname(HERE), "public", "tr-3", "v%s.json")
+# The ledger is the promise made checkable. Saying version 1 is frozen is worth
+# what any promise is worth; a file recording its digest, checked on every
+# build, is worth something else. If a requirement in a published version is
+# ever edited, this fails loudly rather than shipping a number that has
+# quietly come to mean something different.
+LEDGER = os.path.join(HERE, "profiles", "PUBLISHED.json")
 EXAMPLE = os.path.join(HERE, "testimony-record-example.jsonl")
 
 PROFILE_ID = "testimony-record/tr-3"
@@ -87,6 +98,33 @@ BASIS_MEANS = {
     "verified": "checkable from the record itself by any party holding it",
     "attested": "asserted by the record's producer; a reader takes it on "
                 "trust or corroborates it elsewhere",
+}
+
+
+# The three questions anybody deciding whether to reference this asks, and
+# nothing on the page answered them until now: can it change under me, can it
+# be withdrawn, and who decides. A unit that cannot answer them is not a unit,
+# whatever else is true of it.
+STABILITY = {
+    "frozen": "The requirements of a published version never change. A change "
+              "to what the level requires is a NEW version with a new digest, "
+              "and the old version keeps its digest and its meaning.",
+    "resolvable": "Every published version stays retrievable at its own URL, "
+                  "listed in profiles/PUBLISHED.json. A reference to version 1 "
+                  "resolves to version 1 after version 2 exists.",
+    "irrevocable": "CC BY 4.0 cannot be revoked by its own terms while its "
+                   "conditions are followed. That is the licence's guarantee "
+                   "rather than the author's, which is the point: it does not "
+                   "depend on the author's continued goodwill or existence.",
+    "checkable": "The digest is over the requirements, so a party can prove "
+                 "for itself that a version has not moved. The ledger is "
+                 "verified on every build, so an edit to a published version "
+                 "fails rather than ships.",
+    "what_this_is_not": "It is not a promise that the level is right, that it "
+                        "will be adopted, or that a later version will be "
+                        "compatible with this one. A version supersedes rather "
+                        "than amends, and a reader who wants the old meaning "
+                        "cites the old version.",
 }
 
 
@@ -140,7 +178,78 @@ def build() -> dict:
                            "carries no dependency on its author.")
     doc["licence"] = "CC BY 4.0"
     doc["canonical_url"] = "https://machinetestimony.org/tr-3/"
+    doc["stability"] = STABILITY
     return doc
+
+
+def ledger() -> dict:
+    if os.path.exists(LEDGER):
+        return json.load(io.open(LEDGER, encoding="utf-8"))
+    return {"profile": PROFILE_ID, "published": []}
+
+
+def verify_ledger(doc, write=False) -> list:
+    """Every version ever published still says what it said. Returns problems.
+
+    This is the whole stability commitment, expressed as arithmetic instead of
+    as a sentence. The frozen claim is only worth something if editing a
+    published version is harder than not editing it.
+    """
+    led = ledger()
+    problems, seen = [], {e["version"]: e for e in led["published"]}
+    here = seen.get(doc["version"])
+
+    if here and here["digest"] != doc["digest"]:
+        problems.append(
+            "version %s was published as %s and now computes as %s. A "
+            "published version's requirements are frozen: this is a NEW "
+            "version, not an edit." % (doc["version"], here["digest"],
+                                       doc["digest"]))
+    elif not here:
+        if write:
+            led["published"].append({
+                "version": doc["version"], "digest": doc["digest"],
+                "first_published": _today(),
+                "url": "https://machinetestimony.org/tr-3/v%s.json"
+                       % doc["version"]})
+            io.open(LEDGER, "w", encoding="utf-8", newline=chr(10)).write(
+                json.dumps(led, indent=2) + chr(10))
+        else:
+            problems.append("version %s is not in the ledger" % doc["version"])
+
+    # A version listed and not served is a reference that breaks. The promise
+    # is that a citation of version 1 resolves after version 2 exists.
+    for e in led["published"]:
+        path = VERSIONED % e["version"]
+        if not os.path.exists(path):
+            problems.append("version %s is published and not served at %s"
+                            % (e["version"], os.path.basename(path)))
+            continue
+        was = json.load(io.open(path, encoding="utf-8"))
+        # RECOMPUTE. The first version of this read was["digest"], which is the
+        # served file's own claim about itself, so editing a requirement and
+        # leaving the digest field alone passed a guard whose entire purpose is
+        # to catch that. Trusting an artifact's statement about its own
+        # integrity is the exact failure this project reports in other systems,
+        # and it took ten minutes to write it here.
+        core = {k: was.get(k) for k in ("profile", "version", "specification",
+                                        "level", "cumulative", "requirements")}
+        actual = "sha256:" + hashlib.sha256(canonical(core)).hexdigest()
+        if actual != e["digest"]:
+            problems.append(
+                "the served copy of version %s computes as %s, the ledger says "
+                "%s. Its requirements have been edited." % (e["version"],
+                                                            actual, e["digest"]))
+        if was.get("digest") != actual:
+            problems.append(
+                "the served copy of version %s claims %s and computes as %s"
+                % (e["version"], was.get("digest"), actual))
+    return problems
+
+
+def _today() -> str:
+    import datetime as _dt
+    return _dt.datetime.now(_dt.timezone.utc).strftime("%Y-%m-%d")
 
 
 def main() -> int:
@@ -170,11 +279,23 @@ def main() -> int:
                 "the served copy differs from the repository copy, so two "
                 "parties recomputing the digest disagree." + chr(10))
             return 1
+        bad = verify_ledger(doc)
+        if bad:
+            sys.stderr.write(chr(10).join(bad) + chr(10))
+            return 1
         print("profile is current: " + doc["digest"])
+        print("versions published and still resolving: %s"
+              % ", ".join(e["version"] for e in ledger()["published"]))
         return 0
     io.open(OUT, "w", encoding="utf-8", newline=chr(10)).write(text)
     os.makedirs(os.path.dirname(SERVED), exist_ok=True)
     io.open(SERVED, "w", encoding="utf-8", newline=chr(10)).write(text)
+    io.open(VERSIONED % doc["version"], "w", encoding="utf-8",
+            newline=chr(10)).write(text)
+    bad = verify_ledger(doc, write=True)
+    if bad:
+        sys.stderr.write(chr(10).join(bad) + chr(10))
+        return 1
     print("%s  %d requirements" % (doc["digest"], len(doc["requirements"])))
     print("written to %s" % os.path.relpath(OUT, os.path.dirname(HERE)))
     return 0
