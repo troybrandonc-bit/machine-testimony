@@ -62,5 +62,3 @@ And a reading is wrong in the ordinary way readings are wrong. An earlier readin
 ### Check it
 
 Article 86 and Article 12 are public. The per-system verdicts behind the second table, each citing a file and a line at a full commit hash, are at [the register](/register/), and the reading of what four instruments require is at [the obligation](/obligation/). The counts on this page are recomputed from the subject files by the test suite rather than typed.
-
-Both readings are deposited together with a DOI, so the date on them is stamped by somebody other than their author: [10.5281/zenodo.22658916](https://doi.org/10.5281/zenodo.22658916). The deposit carries the same text as this page, generated from the same file, and it carries the correction above on its face.

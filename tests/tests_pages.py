@@ -592,6 +592,21 @@ def main():
                    if os.path.isdir(os.path.join(adir, d)))
     check("there are adapters to check", len(built) >= 4, built)
 
+    # Every adapter ships something a stranger can run. For four of the five
+    # this did not exist until 9 September, and writing the second one found a
+    # defect the suite, CI and five READMEs had all missed: write("-") opened a
+    # file literally named `-` everywhere except langgraph, which was the only
+    # one anybody had ever run. An example is the cheapest test there is and it
+    # is also the ask: "here is the spec" wants adoption, "here is a file that
+    # runs against your library" wants conversion.
+    #
+    # This only checks the file is present. Running them needs five frameworks
+    # installed, which CI does not have, so the release workflow runs them.
+    no_example = [d for d in built
+                  if not os.path.exists(os.path.join(adir, d, "example.py"))]
+    check("every adapter ships an example somebody can run",
+          not no_example, no_example)
+
     impl = io.open(os.path.join(PUB, "implement", "index.html"),
                    encoding="utf-8").read()
     missing = [d for d in built if "/adapters/" + d not in impl]

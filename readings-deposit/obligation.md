@@ -70,5 +70,3 @@ Only published text was read, at the versions named in the data. A criterion tha
 The four questions, the verdicts, the documents read and the reasoning for each are in [census/schemes/readings.json](https://github.com/troybrandonc-bit/machine-testimony/blob/main/census/schemes/readings.json). The counts on this page are recomputed from that file by the test suite rather than typed.
 
 The companion question, asked of the software rather than of the rules, is the [conformance census](/register/): of the eight systems there that take or gate actions, one can name the person who approved. And the specific failure where the approval is recorded but the action changes underneath it is [a separate reading](/approval-binding/).
-
-Both readings are deposited together with a DOI, so the date on them is stamped by somebody other than their author: [10.5281/zenodo.22658916](https://doi.org/10.5281/zenodo.22658916). The deposit carries the same text as this page, generated from the same file, and it carries the correction above on its face.
