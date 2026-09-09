@@ -112,6 +112,76 @@
         verdict cites a file and a line at a commit precisely so that being
         wrong is cheap to demonstrate.</p>
 
+
+      <h3>The second reading, 9 September 2026</h3>
+      <p>The question above is one leg of a wider one, and five parties arrived
+        at the wider version within a week of each other without citing one
+        another. So the same six frameworks were read again against five
+        requirements rather than one. <b>B2 below is the original question</b>,
+        carried over unchanged.</p>
+
+      <table class="facts">
+        <tr><th>B1</th><td>Is the material shown to the reviewer persisted, or
+          only displayed?</td></tr>
+        <tr><th>B2</th><td>Between being shown a call and it running, can the
+          arguments change?</td></tr>
+        <tr><th>B3</th><td>Can a reviewer who MODIFIED an action be told apart
+          from one who approved it as proposed?</td></tr>
+        <tr><th>B4</th><td>Is an approval bound to the specific call it
+          permitted, or to the tool?</td></tr>
+        <tr><th>B5</th><td>Does the record distinguish an action that was
+          permitted from one observed to run?</td></tr>
+      </table>
+
+      <div class="scroller">
+      <table class="reg">
+        <thead><tr><th>Framework</th><th>B1</th><th>B2</th><th>B3</th><th>B4</th><th>B5</th></tr></thead>
+        <tbody>
+          <tr><td class="s">LangGraph</td><td class="v">present</td><td class="v n">absent</td><td class="v">present</td><td class="v">partial</td><td class="v">partial</td></tr>
+          <tr><td class="s">OpenAI Agents SDK</td><td class="v">partial</td><td class="v">present</td><td class="v">present</td><td class="v">present</td><td class="v">partial</td></tr>
+          <tr><td class="s">Pydantic AI</td><td class="v">partial</td><td class="v">partial</td><td class="v n">absent</td><td class="v">present</td><td class="v">present</td></tr>
+          <tr><td class="s">Haystack</td><td class="v">partial</td><td class="v n">absent</td><td class="v">partial</td><td class="v">partial</td><td class="v n">absent</td></tr>
+          <tr><td class="s">CrewAI</td><td class="v n">absent</td><td class="v n">absent</td><td class="v n">absent</td><td class="v n">absent</td><td class="v">partial</td></tr>
+          <tr><td class="s">AutoGen</td><td class="v n">no pause</td><td class="v n">no pause</td><td class="v n">no pause</td><td class="v n">no pause</td><td class="v n">no pause</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <p><b>Two rows of the first reading above are now wrong</b>, and they are
+        corrected here rather than quietly left. Re-reading found both. Nobody
+        reported them.</p>
+
+      <p><b>CrewAI</b> was recorded as having no approval boundary at all. As of
+        1.15.20 it has <span class="mono">before_tool_call</span> hooks that can
+        block execution, so the questions now arise. A hook is handed
+        <span class="mono">tool_input</span> as a mutable dict, mutations
+        persist even when it blocks, and it returns one boolean. Reproduced:
+        shown 0 and 0, mutated in place to 41 and 1, executed 41 and 1, with
+        nothing recording that a mutation happened.</p>
+
+      <p><b>LangGraph</b> is close to the reverse of the impression the first
+        reading leaves. The checkpoint keeps the whole interrupt as a pending
+        write, so what was shown is retained verbatim, and the typed resume
+        value sits on the same checkpoint written by the same task. It is also
+        the only one of the six that <b>refuses</b> an ambiguous approval: with
+        several interrupts pending it will not accept a bare resume value and
+        names the requirement to specify which. B4 is partial only because the
+        interrupt id hashes the graph position and not the arguments.</p>
+
+      <p><b>Pydantic AI is the weakest on B3 and the strongest on B5</b>, which
+        is the argument for reading requirement by requirement instead of
+        forming an impression. Its message history states arguments that did not
+        execute, and it is the only subject whose record can say it does not
+        know whether an effect occurred.</p>
+
+      <h3>Check the second reading</h3>
+      <p>Every verdict, its locator, and which were reproduced rather than
+        reasoned about are in
+        <a href="https://github.com/troybrandonc-bit/machine-testimony/blob/main/census/binding/readings-2.json">census/binding/readings-2.json</a>,
+        against the rubric in
+        <a href="https://github.com/troybrandonc-bit/machine-testimony/blob/main/census/binding/rubric.py">binding/rubric.py</a>.
+        A suite holds the two to each other.</p>
+
       <h3>Check it</h3>
       <p>The commit, the two locators and the reasoning for each subject are in
         <a href="https://github.com/troybrandonc-bit/machine-testimony/blob/main/census/binding/readings.json">census/binding/readings.json</a>.

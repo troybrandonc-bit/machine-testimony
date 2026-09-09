@@ -172,5 +172,41 @@ check("and the fairness note that it is not a defect is still there",
       "fairness" in pyd["assessments"]["B3"])
 
 print("")
+print("the published page says what the data says")
+
+# The page is where anybody who is not reading JSON meets this reading, so a
+# verdict that differs between the two is the reading saying two things.
+# Scoped to the SECOND table: the first reading's rows have the same shape and
+# matching them instead is how this check first passed itself a wrong answer.
+import re as _re
+pg = os.path.join(ROOT, "public", "approval-binding", "index.html")
+check("the second reading is published", os.path.exists(pg))
+if os.path.exists(pg):
+    whole = _re.sub(r"\s+", " ", io.open(pg, encoding="utf-8").read())
+    MARK = "The second reading, 9 September 2026"
+    check("the page carries both readings, not one replacing the other",
+          MARK in whole and "bound" in whole.split(MARK)[0])
+    page = whole.split(MARK)[-1] if MARK in whole else ""
+    SHOW = {"present": "present", "partial": "partial", "absent": "absent",
+            "not_applicable": "no pause"}
+    bad = []
+    for s_ in subjects:
+        m = _re.search(r"<tr><td class=.s.>%s</td>(.*?)</tr>"
+                       % _re.escape(s_["name"]), page)
+        if not m:
+            bad.append((s_["name"], "no row in the second table"))
+            continue
+        got = _re.findall(r"<td class=.v[^>]*>([^<]*)</td>", m.group(1))
+        want = [SHOW[s_["assessments"][i]["verdict"]] for i in IDS]
+        if got != want:
+            bad.append((s_["name"], got, want))
+    check("every published verdict matches readings-2.json", not bad, bad[:2])
+    check("the page states that two rows of the first reading were wrong",
+          "two rows of the first reading above are now wrong" in page.lower())
+    check("the page names CrewAI as the corrected one", "CrewAI" in page)
+    check("the page says LangGraph refuses an ambiguous approval",
+          "refuses" in page and "ambiguous approval" in page)
+
+print("")
 print("%d passed, %d failed" % (PASS, FAIL))
 sys.exit(1 if FAIL else 0)
