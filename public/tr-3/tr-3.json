@@ -1,0 +1,63 @@
+{
+  "profile": "testimony-record/tr-3",
+  "version": "1",
+  "specification": "draft-clifford-testimony-record-02",
+  "level": "TR-3",
+  "cumulative": [
+    "TR-1",
+    "TR-2",
+    "TR-3"
+  ],
+  "requirements": [
+    {
+      "requirement": "the record contains at least one decision",
+      "basis": "verified"
+    },
+    {
+      "requirement": "the risk class is declared to come from outside the proposing model",
+      "basis": "attested"
+    },
+    {
+      "requirement": "a refused action did not execute",
+      "basis": "verified"
+    },
+    {
+      "requirement": "a decision does not contradict its own outcome",
+      "basis": "verified"
+    },
+    {
+      "requirement": "every refusal records its reason",
+      "basis": "verified"
+    },
+    {
+      "requirement": "an executed high-risk action has an approval entry",
+      "basis": "verified"
+    },
+    {
+      "requirement": "an approval names a person, other than the proposer, for a decision in the record",
+      "basis": "verified"
+    },
+    {
+      "requirement": "the approver's name is declared to come from authentication",
+      "basis": "attested"
+    }
+  ],
+  "digest": "sha256:74ead20bf296ef51729b4d2f6db71ee9e37af7b498b01f3895ce8603d7dfa49f",
+  "digest_covers": "profile, version, specification, level, cumulative and requirements, canonicalised with sorted keys and no whitespace. It does not cover the notes below, so correcting prose does not invalidate a reference.",
+  "purpose": "A record at TR-3 can show that an action which carried risk was gated by a named person who was not the party that proposed it.",
+  "basis_means": {
+    "verified": "checkable from the record itself by any party holding it",
+    "attested": "asserted by the record's producer; a reader takes it on trust or corroborates it elsewhere"
+  },
+  "does_not_establish": [
+    "that the decision was correct, reasonable or lawful",
+    "that the named approver is a particular real person, which is an identity-proofing question outside any record format",
+    "that the approver saw or understood what they approved, which is a property of the surface that rendered it and not of the record",
+    "that the record is complete, or that a different record was not also produced and discarded",
+    "that the record has not been altered by the party holding it, which is TR-4 and not this level"
+  ],
+  "read_from": "the reference validator, spec/testimony_validate.py, run against spec/testimony-record-example.jsonl. The requirement list is generated, not transcribed.",
+  "how_to_check": "python3 testimony_validate.py RECORD.jsonl --require TR-3. The validator is MIT licensed and carries no dependency on its author.",
+  "licence": "CC BY 4.0",
+  "canonical_url": "https://machinetestimony.org/tr-3/"
+}

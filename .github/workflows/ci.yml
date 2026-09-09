@@ -678,6 +678,19 @@ jobs:
           set +e; out=$(python tests_binding.py 2>&1); rc=$?; set -e
           echo "$out"
           [ $rc -eq 0 ] || { echo "::error::the binding census suite failed"; exit 1; }
+      # A profile exists so other people's documents can reference a short
+      # name instead of restating a definition. That is only safe while the
+      # name means what the validator does, so the requirement list is
+      # generated from the validator and this fails if the two diverge or if
+      # the served copy stops being byte-identical to the repository one.
+      - name: TR-3 means what the validator checks
+        run: |
+          set +e; out=$(python spec/build_profile.py --check 2>&1); rc=$?; set -e
+          echo "$out"
+          [ $rc -eq 0 ] || { echo "::error::the TR-3 profile is stale"; exit 1; }
+          set +e; out=$(cd tests && python tests_profile.py 2>&1); rc=$?; set -e
+          echo "$out"
+          [ $rc -eq 0 ] || { echo "::error::the profile suite failed"; exit 1; }
       - name: The shipped manifest is the manifest of the shipped files
         run: |
           before=$(python -c "import json,io;print(json.load(io.open('census/MANIFEST.json',encoding='utf-8'))['census_digest'])")

@@ -3,23 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Everyone requires the log. One row of Annex III requires it to name who approved &ndash; Machine Testimony</title>
-<meta name="description" content="A law, a certification scheme, a controls catalogue and a governance framework read against four questions. All three that specify a record require one to be kept. Only one requires it to say who authorised the action, for a single category of system, and none requires it to be checkable by anyone other than the party that wrote it.">
-<meta property="og:title" content="Everyone requires the log. One row of Annex III requires it to name who approved">
-<meta property="og:description" content="A law, a certification scheme, a controls catalogue and a governance framework read against four questions. All three that specify a record require one to be kept. Only one requires it to say who authorised the action, for a single category of system, and none requires it to be checkable by anyone other than the party that wrote it.">
+<title>TR-3, a named unit for whether an action was gated by a person &ndash; Machine Testimony</title>
+<meta name="description" content="TR-3 is a conformance level of the Testimony Record: a record at TR-3 can show that an action carrying risk was gated by a named person who was not the party that proposed it. Eight requirements, six checkable from the record and two attested, published with a digest so a contract, a rule or a protocol can reference the profile rather than restate it.">
+<meta property="og:title" content="TR-3, a named unit for whether an action was gated by a person">
+<meta property="og:description" content="TR-3 is a conformance level of the Testimony Record: a record at TR-3 can show that an action carrying risk was gated by a named person who was not the party that proposed it. Eight requirements, six checkable from the record and two attested, published with a digest so a contract, a rule or a protocol can reference the profile rather than restate it.">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://machinetestimony.org/obligation/">
+<meta property="og:url" content="https://machinetestimony.org/tr-3/">
 <meta property="og:image" content="https://machinetestimony.org/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Everyone requires the log. One row of Annex III requires it to name who approved">
-<meta name="twitter:description" content="A law, a certification scheme, a controls catalogue and a governance framework read against four questions. All three that specify a record require one to be kept. Only one requires it to say who authorised the action, for a single category of system, and none requires it to be checkable by anyone other than the party that wrote it.">
+<meta name="twitter:title" content="TR-3, a named unit for whether an action was gated by a person">
+<meta name="twitter:description" content="TR-3 is a conformance level of the Testimony Record: a record at TR-3 can show that an action carrying risk was gated by a named person who was not the party that proposed it. Eight requirements, six checkable from the record and two attested, published with a digest so a contract, a rule or a protocol can reference the profile rather than restate it.">
 <meta name="twitter:image" content="https://machinetestimony.org/og.png">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/icon.png" type="image/png" sizes="512x512">
 <link rel="apple-touch-icon" href="/icon.png">
-<link rel="canonical" href="https://machinetestimony.org/obligation/">
+<link rel="canonical" href="https://machinetestimony.org/tr-3/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -254,184 +254,121 @@
 </div>
 <div class="wrap main">
   <div>
-    <p class="dateline">Reading, 7 September 2026</p>
-    <h2 class="label">Everyone requires the log. One row of Annex III requires it to name who approved.</h2>
+    <p class="dateline">Profile, 9 September 2026</p>
+    <h2 class="label">TR-3: an action that carried risk was gated by a named
+      person</h2>
 
     <div class="block">
-      <p>From 2 December 2027, a deployer of a high-risk AI system in the
-        European Union must keep the logs its system generates. Article 12
-        says the system shall technically allow for the automatic recording
-        of events over its lifetime. Article 26(6) says the deployer shall
-        keep those logs for at least six months. Article 14 says a natural
-        person shall oversee the system.</p>
+      <p><b>TR-3</b> is a conformance level of the Testimony Record. A record
+        that reaches it can show that an action carrying risk was gated by a
+        named person, and that the person was not the one who proposed the
+        action.</p>
 
-      <p>None of those articles says what has to be in the record for it to
-        answer a question afterwards. So it is worth asking whether anything
-        else does. Four instruments were read against four questions.</p>
+      <p>It is published as a profile with a digest so that a document written
+        by somebody else can reference it rather than restate it. That is the
+        only reason this page exists. A rule, a contract, an insurance
+        condition, an audit programme or a protocol can say <b>TR-3</b> and
+        both parties know what was meant before they start arguing about it.</p>
 
-      <p class="callout"><b>Where these require a record of what an automated
-        system did, do they require it to say who authorised a consequential
-        action, and to be checkable by somebody other than the party that
-        produced it?</b></p>
+      <table class="facts">
+        <tr><th>Profile</th><td><span class="mono">testimony-record/tr-3</span>, version 1</td></tr>
+        <tr><th>Digest</th><td><span class="mono">sha256:74ead20bf296ef51729b4d2f6db71ee9e37af7b498b01f3895ce8603d7dfa49f</span></td></tr>
+        <tr><th>Specification</th><td><span class="mono">draft-clifford-testimony-record-02</span></td></tr>
+        <tr><th>Machine-readable</th><td><a href="/tr-3/tr-3.json"><span class="mono">machinetestimony.org/tr-3/tr-3.json</span></a>, byte-identical to <span class="mono">spec/profiles/tr-3.json</span></td></tr>
+        <tr><th>How to check</th><td><span class="mono">testimony_validate.py RECORD.jsonl --require TR-3</span></td></tr>
+        <tr><th>Licence</th><td>CC BY 4.0. The validator is MIT.</td></tr>
+      </table>
 
-      <h3>What the reading found</h3>
+      <h3>The eight requirements</h3>
+      <p>Levels are cumulative, so TR-3 includes TR-1 and TR-2. Six of the eight
+        are <b>verified</b>, meaning checkable from the record itself by anybody
+        holding it. Two are <b>attested</b>, meaning the producer asserts them
+        and a reader either takes them on trust or corroborates them elsewhere.
+        <b>That split is part of the profile</b>, because a profile that lists
+        eight requirements without saying which two rest on the producer's word
+        is selling six as eight.</p>
+
       <div class="scroller">
       <table class="reg">
-        <thead><tr>
-          <th>Instrument</th><th>Kind</th>
-          <th>Record<br>required</th><th>Who<br>authorised</th>
-          <th>Shown<br>unaltered</th><th>Retention<br>stated</th>
-        </tr></thead>
+        <thead><tr><th>Requirement</th><th>Basis</th></tr></thead>
         <tbody>
-          <tr><td class="s">EU AI Act</td><td class="d">law</td>
-            <td class="v">required</td><td class="v">partial</td>
-            <td class="v n">absent</td><td class="v">required</td></tr>
-          <tr><td class="s">ForHumanity</td><td class="d">certification scheme</td>
-            <td class="v">required</td><td class="v n">absent</td>
-            <td class="v">partial</td><td class="v">required</td></tr>
-          <tr><td class="s">CoSAI Risk Map</td><td class="d">controls catalogue</td>
-            <td class="v">required</td><td class="v n">absent</td>
-            <td class="v">partial</td><td class="v n">absent</td></tr>
-          <tr><td class="s">NIST AI RMF 1.0</td><td class="d">governance framework</td>
-            <td class="v">n/a</td><td class="v">n/a</td>
-            <td class="v">n/a</td><td class="v">n/a</td></tr>
+          <tr><td class="d">the record contains at least one decision</td><td class="s">verified</td></tr>
+          <tr><td class="d">the risk class is declared to come from outside the proposing model</td><td class="s n">attested</td></tr>
+          <tr><td class="d">a refused action did not execute</td><td class="s">verified</td></tr>
+          <tr><td class="d">a decision does not contradict its own outcome</td><td class="s">verified</td></tr>
+          <tr><td class="d">every refusal records its reason</td><td class="s">verified</td></tr>
+          <tr><td class="d">an executed high-risk action has an approval entry</td><td class="s">verified</td></tr>
+          <tr><td class="d">an approval names a person, other than the proposer, for a decision in the record</td><td class="s">verified</td></tr>
+          <tr><td class="d">the approver's name is declared to come from authentication</td><td class="s n">attested</td></tr>
         </tbody>
       </table>
       </div>
 
-      <p>Three of the four specify what a record must contain. All three
-        require one to be kept. <b>Only one of them requires a record to name
-        the person, and only for one category of system out of everything the
-        law covers. None of the three requires a record to be capable of being
-        shown unaltered by anyone other than its author.</b></p>
+      <p>The list is <b>generated from the reference validator</b> rather than
+        written out beside it. If a check is added, removed or renamed, the
+        profile changes and a test fails. A profile that says a level requires
+        something the validator does not check is a claim about a number, made
+        by the party who owns the number, that nobody can reproduce.</p>
 
-      <h3>The law has the gap too</h3>
-      <p>This is the part worth sitting with, and it is not that the
-        regulation forgot. It is that the regulation wrote the requirement,
-        once, and scoped it to a single row of Annex III.</p>
+      <h3>What TR-3 does not establish</h3>
+      <p>Stating this is not modesty. A profile that lists only what it
+        establishes will be cited as an assurance claim by the second time
+        somebody uses it.</p>
+      <ul>
+        <li>That the decision was correct, reasonable or lawful.</li>
+        <li>That the named approver is a particular real person. Identity
+          proofing sits outside any record format.</li>
+        <li>That the approver saw or understood what they approved. That is a
+          property of the surface that rendered it, and no record can carry
+          it.</li>
+        <li>That the record is complete, or that a different record was not
+          also produced and discarded.</li>
+        <li>That the record has not been altered by the party holding it. That
+          is <a href="/tamper-evidence/">TR-4</a>, and it is a different
+          level for a reason.</li>
+      </ul>
 
-      <p><b>Article 12(3)(d) obliges the logs of a remote biometric
-        identification system to provide "the identification of the natural
-        persons involved in the verification of the results".</b> It points at
-        Article 14(5), which requires the action to be "separately verified and
-        confirmed by at least two natural persons with the necessary
-        competence, training and authority". Two named people, identified in
-        the record. That is the requirement this reading exists to look for,
-        drafted and in force.</p>
+      <h3>Why a digest</h3>
+      <p>Because the documents that would reference this do not quote prose,
+        they reference an identifier and check it.</p>
 
-      <p>It applies to remote biometric identification and to nothing else.
-        Every other high-risk system falls under Article 12(2), which asks for
-        the recording of events relevant to three named purposes and specifies
-        no content whatsoever. So the drafters knew the requirement was needed,
-        knew how to word it, and did not extend it. A recruitment system, a
-        credit system or an agent acting on a medical file is obliged to log,
-        and obliged to nothing about who allowed what.</p>
+      <p>The digest is <span class="mono">sha256</span> over the profile's
+        canonical bytes: sorted keys, no whitespace, UTF-8, which is the same
+        canonicalisation RFC 8785 specifies and the same one the EMILIA Protocol
+        receipts use. It covers the profile identity, the specification, the
+        level and the requirement list. <b>It deliberately does not cover the
+        prose on this page</b>, so correcting a sentence does not invalidate
+        every reference to the profile.</p>
 
-      <p>The integrity half has no such exception. Across Articles 12, 14 and
-        26 there is not one occurrence of tamper, unaltered, integrity of the
-        log or independent verification. The logs must exist and must be kept
-        for six months. Nothing anywhere requires that a kept log can be shown
-        to be the one that was written.</p>
+      <p>Anybody can recompute it. The generator is
+        <span class="mono">spec/build_profile.py</span> and it runs with no
+        dependencies.</p>
 
-      <p>So a deployer outside that one category can be fully compliant with
-        Article 12 and Article 26, hand a regulator six months of logs, and be
-        unable to demonstrate either that a human approved a particular action
-        or that the file produced is the file recorded.</p>
+      <h3>Where a profile like this fits</h3>
+      <p>An evidence chain that evaluates a requirement owned by the relying
+        party needs the relying party to have one. An agreement that conditions
+        terms on evidence sufficiency has to reference the condition somehow. An
+        audit programme has to say what counts. A procurement question has to be
+        answerable yes or no.</p>
 
-      <p class="callout"><b>An earlier version of this page said the Act
-        contained no such requirement at all. That was wrong: Article 12(3)(d)
-        was read and its scope was not.</b> The correction is recorded here
-        rather than made silently, and the corrected finding is the stronger
-        one, because a requirement the drafters wrote and confined is harder to
-        explain away than one they never considered.</p>
+      <p>In each case the hard part is not the checking. It is that the parties
+        need a short name that means the same thing to both of them, published
+        by somebody who is not either of them, and checkable without asking that
+        somebody.</p>
 
-      <h3>ForHumanity has the vocabulary and spends it elsewhere</h3>
-      <p>Of everything read, the ForHumanity criteria are much the most
-        developed on record-keeping: roughly 1,300 uses of the word log across
-        five documents, and an Event Log established over twelve areas of an
-        agentic system including the orchestration layer, outcomes, a risk log
-        and a human interactions log.</p>
+      <p>That is what this is, and it is free, permanently, for the same reason
+        the specification and the validator are. A unit of measurement that its
+        author can withdraw is not a unit of measurement.</p>
 
-      <p>The Event Log is then defined as five components paraphrased from
-        ISO 27001: user ID, system activity, date and time, device and
-        location, and IP address. That answers which session acted. It does not
-        answer which person allowed it, and the phrase who approved does not
-        appear in the five documents.</p>
+      <h3>Corrections</h3>
+      <p>If a requirement here does not match what the validator does, that is a
+        bug and it is cheap to show: run the generator. If the level itself is
+        wrong, that is worth more than agreement and it changes this page, the
+        digest and the version.</p>
 
-      <p>The integrity vocabulary is present and properly defined. Data
-        Integrity is taken from NIST as data not altered in an unauthorised
-        manner, and Integrity as the degree to which a system prevents
-        unauthorised access or modification. Both are used only in test data
-        curation, where chain of custody is a step in the Data Curation
-        Report. The care is real, and it is aimed at the training data rather
-        than at the record of what the system did.</p>
-
-      <h3>Why a framework sits in the table as not applicable</h3>
-      <p>NIST AI RMF 1.0 contains no occurrence of log, logging,
-        record-keeping or audit trail. Reporting that as a finding would be
-        the error this reading exists to avoid. The framework organises risk
-        management into four functions and deliberately specifies no controls;
-        the suggested actions live in a separate companion Playbook. A
-        document that does not specify controls is not failing to specify one,
-        in the same way that a vector store is not failing to authorise
-        actions.</p>
-
-      <p>It is in the table so that the count of instruments that specify a
-        record is three rather than four, and so that the zero is visible
-        without being counted as a deficiency.</p>
-
-      <h3>One of them is already closing it</h3>
-      <p>CoSAI, the OASIS coalition, has a control requiring that an agent's
-        actions, tool use and reasoning be transparent and auditable through
-        logging, and a separate control requiring that all modifications to
-        runtime components be immutably recorded. That is immutability
-        required for configuration rather than for the action record, but the
-        idea is in the catalogue rather than absent from it.</p>
-
-      <p>More to the point, a risk filed there on 6 September 2026 states the
-        distinction directly: the audit trail is intact, and what is false is
-        the content of the report. That is the same defect, arrived at
-        independently. It is open at the time of reading.</p>
-
-      <h3>The one that could not be read</h3>
-      <p>ISO/IEC 42001 is the most widely referenced AI management standard
-        and its text is paywalled. A reading whose rule is that every verdict
-        cites the clause it rests on cannot assess what it has not read, so it
-        has no row. That the deployers governed by a standard cannot read it
-        without paying is recorded as a fact about the field rather than
-        scored as a verdict.</p>
-
-      <h3>What this does not show</h3>
-      <p>Four questions, not an assessment of whether any of these is good at
-        what it is for. Each of these instruments is doing a job, and none of
-        them set out to specify a record format. A scheme that answers no to
-        three questions here may be excellent at the thing it was written for.</p>
-
-      <p>Only published text was read, at the versions named in the data. A
-        criterion that exists in a draft, a working group or a later revision
-        is outside this. And a reading is wrong in the ordinary way readings
-        are wrong, which is why every verdict names the article, control or
-        criterion it rests on.</p>
-
-      <h3>Check it</h3>
-      <p>The four questions, the verdicts, the documents read and the reasoning
-        for each are in
-        <a href="https://github.com/troybrandonc-bit/machine-testimony/blob/main/census/schemes/readings.json">census/schemes/readings.json</a>.
-        The counts on this page are recomputed from that file by the test suite
-        rather than typed.</p>
-
-      <p>The companion question, asked of the software rather than of the
-        rules, is the <a href="/register/">conformance census</a>: of the eight
-        systems there that take or gate actions, one can name the person who
-        approved. And the specific failure where the approval is recorded but
-        the action changes underneath it is
-        <a href="/approval-binding/">a separate reading</a>.</p>
-
-      <p>Both readings are deposited together with a DOI, so the date on
-        them is stamped by somebody other than their author:
-        <a href="https://doi.org/10.5281/zenodo.22658916">10.5281/zenodo.22658916</a>.
-        The deposit carries the same text as this page, generated from the
-        same file, and it carries the correction above on its face.</p>
+      <p>The digest changing is not a small event. Anything referencing version
+        1 by digest continues to reference version 1, which is the point of
+        pinning it.</p>
     </div>
   </div>
 </div>

@@ -1,0 +1,124 @@
+<!--title: TR-3, a named unit for whether an action was gated by a person
+    desc: TR-3 is a conformance level of the Testimony Record: a record at TR-3 can show that an action carrying risk was gated by a named person who was not the party that proposed it. Eight requirements, six checkable from the record and two attested, published with a digest so a contract, a rule or a protocol can reference the profile rather than restate it.
+    slug: tr-3-->
+
+<div class="wrap main">
+  <div>
+    <p class="dateline">Profile, 9 September 2026</p>
+    <h2 class="label">TR-3: an action that carried risk was gated by a named
+      person</h2>
+
+    <div class="block">
+      <p><b>TR-3</b> is a conformance level of the Testimony Record. A record
+        that reaches it can show that an action carrying risk was gated by a
+        named person, and that the person was not the one who proposed the
+        action.</p>
+
+      <p>It is published as a profile with a digest so that a document written
+        by somebody else can reference it rather than restate it. That is the
+        only reason this page exists. A rule, a contract, an insurance
+        condition, an audit programme or a protocol can say <b>TR-3</b> and
+        both parties know what was meant before they start arguing about it.</p>
+
+      <table class="facts">
+        <tr><th>Profile</th><td><span class="mono">testimony-record/tr-3</span>, version 1</td></tr>
+        <tr><th>Digest</th><td><span class="mono">sha256:74ead20bf296ef51729b4d2f6db71ee9e37af7b498b01f3895ce8603d7dfa49f</span></td></tr>
+        <tr><th>Specification</th><td><span class="mono">draft-clifford-testimony-record-02</span></td></tr>
+        <tr><th>Machine-readable</th><td><a href="/tr-3/tr-3.json"><span class="mono">machinetestimony.org/tr-3/tr-3.json</span></a>, byte-identical to <span class="mono">spec/profiles/tr-3.json</span></td></tr>
+        <tr><th>How to check</th><td><span class="mono">testimony_validate.py RECORD.jsonl --require TR-3</span></td></tr>
+        <tr><th>Licence</th><td>CC BY 4.0. The validator is MIT.</td></tr>
+      </table>
+
+      <h3>The eight requirements</h3>
+      <p>Levels are cumulative, so TR-3 includes TR-1 and TR-2. Six of the eight
+        are <b>verified</b>, meaning checkable from the record itself by anybody
+        holding it. Two are <b>attested</b>, meaning the producer asserts them
+        and a reader either takes them on trust or corroborates them elsewhere.
+        <b>That split is part of the profile</b>, because a profile that lists
+        eight requirements without saying which two rest on the producer's word
+        is selling six as eight.</p>
+
+      <div class="scroller">
+      <table class="reg">
+        <thead><tr><th>Requirement</th><th>Basis</th></tr></thead>
+        <tbody>
+          <tr><td class="d">the record contains at least one decision</td><td class="s">verified</td></tr>
+          <tr><td class="d">the risk class is declared to come from outside the proposing model</td><td class="s n">attested</td></tr>
+          <tr><td class="d">a refused action did not execute</td><td class="s">verified</td></tr>
+          <tr><td class="d">a decision does not contradict its own outcome</td><td class="s">verified</td></tr>
+          <tr><td class="d">every refusal records its reason</td><td class="s">verified</td></tr>
+          <tr><td class="d">an executed high-risk action has an approval entry</td><td class="s">verified</td></tr>
+          <tr><td class="d">an approval names a person, other than the proposer, for a decision in the record</td><td class="s">verified</td></tr>
+          <tr><td class="d">the approver's name is declared to come from authentication</td><td class="s n">attested</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <p>The list is <b>generated from the reference validator</b> rather than
+        written out beside it. If a check is added, removed or renamed, the
+        profile changes and a test fails. A profile that says a level requires
+        something the validator does not check is a claim about a number, made
+        by the party who owns the number, that nobody can reproduce.</p>
+
+      <h3>What TR-3 does not establish</h3>
+      <p>Stating this is not modesty. A profile that lists only what it
+        establishes will be cited as an assurance claim by the second time
+        somebody uses it.</p>
+      <ul>
+        <li>That the decision was correct, reasonable or lawful.</li>
+        <li>That the named approver is a particular real person. Identity
+          proofing sits outside any record format.</li>
+        <li>That the approver saw or understood what they approved. That is a
+          property of the surface that rendered it, and no record can carry
+          it.</li>
+        <li>That the record is complete, or that a different record was not
+          also produced and discarded.</li>
+        <li>That the record has not been altered by the party holding it. That
+          is <a href="/tamper-evidence/">TR-4</a>, and it is a different
+          level for a reason.</li>
+      </ul>
+
+      <h3>Why a digest</h3>
+      <p>Because the documents that would reference this do not quote prose,
+        they reference an identifier and check it.</p>
+
+      <p>The digest is <span class="mono">sha256</span> over the profile's
+        canonical bytes: sorted keys, no whitespace, UTF-8, which is the same
+        canonicalisation RFC 8785 specifies and the same one the EMILIA Protocol
+        receipts use. It covers the profile identity, the specification, the
+        level and the requirement list. <b>It deliberately does not cover the
+        prose on this page</b>, so correcting a sentence does not invalidate
+        every reference to the profile.</p>
+
+      <p>Anybody can recompute it. The generator is
+        <span class="mono">spec/build_profile.py</span> and it runs with no
+        dependencies.</p>
+
+      <h3>Where a profile like this fits</h3>
+      <p>An evidence chain that evaluates a requirement owned by the relying
+        party needs the relying party to have one. An agreement that conditions
+        terms on evidence sufficiency has to reference the condition somehow. An
+        audit programme has to say what counts. A procurement question has to be
+        answerable yes or no.</p>
+
+      <p>In each case the hard part is not the checking. It is that the parties
+        need a short name that means the same thing to both of them, published
+        by somebody who is not either of them, and checkable without asking that
+        somebody.</p>
+
+      <p>That is what this is, and it is free, permanently, for the same reason
+        the specification and the validator are. A unit of measurement that its
+        author can withdraw is not a unit of measurement.</p>
+
+      <h3>Corrections</h3>
+      <p>If a requirement here does not match what the validator does, that is a
+        bug and it is cheap to show: run the generator. If the level itself is
+        wrong, that is worth more than agreement and it changes this page, the
+        digest and the version.</p>
+
+      <p>The digest changing is not a small event. Anything referencing version
+        1 by digest continues to reference version 1, which is the point of
+        pinning it.</p>
+    </div>
+  </div>
+</div>
