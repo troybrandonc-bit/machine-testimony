@@ -633,6 +633,17 @@ jobs:
           set +e; out=$(python tests_testify.py 2>&1); rc=$?; set -e
           echo "$out"
           [ $rc -eq 0 ] || { echo "::error::the assessment records failed"; exit 1; }
+      # A re-reading exists so somebody can see what moved, and the comparison
+      # is handed to whoever is being assessed. The ways it can be wrong are not
+      # symmetrical: reporting a change as an improvement is the one that does
+      # damage. Two shapes of that are checked, a move between two equally
+      # bad verdicts, and a verdict that moved while the commit did not.
+      - name: A comparison of two readings never flatters the newer one
+        working-directory: tests
+        run: |
+          set +e; out=$(python tests_compare.py 2>&1); rc=$?; set -e
+          echo "$out"
+          [ $rc -eq 0 ] || { echo "::error::the comparison suite failed"; exit 1; }
       - name: The shipped manifest is the manifest of the shipped files
         run: |
           before=$(python -c "import json,io;print(json.load(io.open('census/MANIFEST.json',encoding='utf-8'))['census_digest'])")
