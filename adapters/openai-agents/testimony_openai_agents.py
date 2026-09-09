@@ -75,6 +75,8 @@ from __future__ import annotations
 
 from typing import Any
 
+import sys
+
 import testimony_emit as _em
 
 Refused = _em.Refused
@@ -263,7 +265,18 @@ class Recorder:
         return self.rec.jsonl()
 
     def write(self, path) -> str:
+        """`-` or None writes to stdout, so the record can be piped.
+
+        The langgraph adapter has always done this and these four opened a file
+        literally named `-`. Nobody found it because nobody ran them: langgraph
+        is the only one of the five that shipped an example, and writing the
+        second example is what surfaced it. Consistency across adapters of one
+        project is worth more than the three lines it costs.
+        """
         text = self.jsonl()
+        if path in ("-", None):
+            sys.stdout.write(text)
+            return "-"
         with open(path, "w", encoding="utf-8", newline="\n") as f:
             f.write(text)
         return str(path)
