@@ -655,6 +655,17 @@ jobs:
           set +e; out=$(python tests_formats.py 2>&1); rc=$?; set -e
           echo "$out"
           [ $rc -eq 0 ] || { echo "::error::the declared mapping suite failed"; exit 1; }
+      # The witness exists to REFUSE. Everything else it does is a signature
+      # anybody can produce, so the suite is mostly negative cases and the
+      # proofs are generated rather than fixtures, because a verifier checked
+      # against its author's own hand-written proofs is checked against its
+      # author's own misreading.
+      - name: The reference witness refuses rather than signs
+        working-directory: tests
+        run: |
+          set +e; out=$(python tests_witness.py 2>&1); rc=$?; set -e
+          echo "$out"
+          [ $rc -eq 0 ] || { echo "::error::the witness suite failed"; exit 1; }
       - name: The shipped manifest is the manifest of the shipped files
         run: |
           before=$(python -c "import json,io;print(json.load(io.open('census/MANIFEST.json',encoding='utf-8'))['census_digest'])")

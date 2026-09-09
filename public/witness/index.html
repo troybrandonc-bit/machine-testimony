@@ -3,23 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Verify an AI record was not altered, without the vendor &ndash; Machine Testimony</title>
-<meta name="description" content="A published AI agent audit record, anchored to an RFC 3161 Time Stamp Authority. Three commands verify it, none of them ours.">
-<meta property="og:title" content="Verify an AI record was not altered, without the vendor">
-<meta property="og:description" content="A published AI agent audit record, anchored to an RFC 3161 Time Stamp Authority. Three commands verify it, none of them ours.">
+<title>Six things a witness has to do before its signature is worth anything &ndash; Machine Testimony</title>
+<meta name="description" content="A transparency log's operator can show you any tree head they like. A witness signs the head it saw, so showing two heads to two people stops being free. Six criteria for when that is worth something, and a reference witness that meets five of them and fails the sixth on purpose.">
+<meta property="og:title" content="Six things a witness has to do before its signature is worth anything">
+<meta property="og:description" content="A transparency log's operator can show you any tree head they like. A witness signs the head it saw, so showing two heads to two people stops being free. Six criteria for when that is worth something, and a reference witness that meets five of them and fails the sixth on purpose.">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://machinetestimony.org/anchor/">
+<meta property="og:url" content="https://machinetestimony.org/witness/">
 <meta property="og:image" content="https://machinetestimony.org/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Verify an AI record was not altered, without the vendor">
-<meta name="twitter:description" content="A published AI agent audit record, anchored to an RFC 3161 Time Stamp Authority. Three commands verify it, none of them ours.">
+<meta name="twitter:title" content="Six things a witness has to do before its signature is worth anything">
+<meta name="twitter:description" content="A transparency log's operator can show you any tree head they like. A witness signs the head it saw, so showing two heads to two people stops being free. Six criteria for when that is worth something, and a reference witness that meets five of them and fails the sixth on purpose.">
 <meta name="twitter:image" content="https://machinetestimony.org/og.png">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/icon.png" type="image/png" sizes="512x512">
 <link rel="apple-touch-icon" href="/icon.png">
-<link rel="canonical" href="https://machinetestimony.org/anchor/">
+<link rel="canonical" href="https://machinetestimony.org/witness/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -253,142 +253,162 @@
 </div>
 <div class="wrap main">
   <div>
-    <p class="dateline">Reference record, 5 September 2026</p>
-    <h2 class="label">A record you can check without us</h2>
+    <p class="dateline">Criteria, 9 September 2026</p>
+    <h2 class="label">What a witness has to do before its cosignature is worth
+      anything</h2>
 
     <div class="block">
-      <p>A record's integrity digest is computed by whoever wrote the record.
-        It detects an outsider's edit, which is worth having, and it establishes
-        nothing about the writer: anybody able to change the entries can
-        recompute the digest over the changed ones and hand you a file that
-        agrees with itself.</p>
+      <p>A transparency log's operator can show you any tree head they like. A
+        <b>witness</b> is a second party that signs the head it saw, so that
+        showing two different heads to two different people stops being free.
+        That is the whole mechanism. It is worth exactly as much as the witness
+        is careful and independent, and nothing more.</p>
 
-      <p>The record below closes that. Its digest is signed by a Time Stamp
-        Authority, under that authority's own key, at a time nobody here
-        chose. Three commands check it. None of them is ours, and none of them
-        needs anything from this site except the two files.</p>
+      <p>These six criteria exist because three separate parties ran into the
+        same missing thing inside a week, none of them citing the others, and
+        none of them blocked on cryptography.</p>
 
-      <h3>The files</h3>
-      <p><a href="/anchor/record.jsonl">record.jsonl</a> is thirteen entries: a
-        support agent that reads four sources, finds two systems of record
-        disagreeing about a customer's balance, refuses to close the account,
-        and issues a smaller refund that a named person approved. It is a
-        worked example rather than a real customer, and everything in it is
-        invented except the anchor.</p>
-
-      <p><a href="/anchor/anchor.tsr">anchor.tsr</a> is the timestamp token,
-        as returned by the authority.</p>
-
-      <table class="facts">
-        <tr><th>Digest</th>
-          <td>sha256:34bf5a95693e32fe9bb9a8f4975ea1807d309855e9f09bbb0f3d6cb05606b6e8</td></tr>
-        <tr><th>Authority</th><td>http://timestamp.digicert.com</td></tr>
-        <tr><th>Signed at</th><td>2026-09-05T14:31:54Z</td></tr>
-        <tr><th>Covers</th><td>12 entries, named in the record</td></tr>
+      <table class="reg">
+        <thead><tr><th>Who</th><th>What they said</th></tr></thead>
+        <tbody>
+          <tr><td class="s">EMILIA Protocol, issue #302, July 2026</td>
+            <td class="d">Their reference cosigner ships and
+              <b>no operators run it</b>. Standing up independent operators
+              "costs money and needs partners", named as the lead's gate. A
+              witness layer with no witnesses.</td></tr>
+          <tr><td class="s">A practitioner running daily batch anchoring, on
+            langchain-ai/langgraph#8636</td>
+            <td class="d">For SOC 2 and ISO 42001 audits, reviewers asked "who
+              signs this?" before they asked anything about hash chains. A
+              third-party signature carried more audit weight than a longer
+              self-maintained chain.</td></tr>
+          <tr><td class="s">An independent implementer of this project's own
+            format</td>
+            <td class="d">Built a separate verifier rather than trust the one
+              that shipped with the specification, for the same reason.</td></tr>
+        </tbody>
       </table>
 
-      <h3>One: recompute the digest</h3>
-      <p>The digest is over the twelve entries the record's integrity entry
-        names, each written as JSON with its members in order and no spare
-        whitespace, joined by newlines. Nothing here reads the digest; it
-        computes one and you compare.</p>
+      <p>Nobody is short of a signing library. What is missing is any written
+        statement of what an acceptable witness is, so there is no way to tell a
+        useful one from a decorative one, and therefore no way to ask somebody
+        to become one.</p>
 
-      <pre class="snip">python3 -c '
-import hashlib, json, sys
-e = [json.loads(l) for l in open("record.jsonl") if l.strip()]
-b = [x for x in e if x["type"] != "integrity"]
-c = [json.dumps(x, sort_keys=True, separators=(",", ":")) for x in b]
-print(hashlib.sha256("\n".join(c).encode()).hexdigest())'</pre>
+      <h3>The precedent, which is exact</h3>
+      <p>Certificate Transparency works because a browser publishes a log
+        policy: how many logs, how independent they must be, what disqualifies
+        one. The infrastructure was built by many parties. The policy was one
+        document. This is that document for authorization and testimony
+        evidence, and it is published free and Creative Commons licensed for the
+        same reason the specification is. A rule only its author can apply is
+        not a rule.</p>
 
-      <h3>Two: read what the token is over</h3>
-      <pre class="snip">openssl ts -reply -in anchor.tsr -text</pre>
+      <h3>The six</h3>
+      <div class="scroller">
+      <table class="reg">
+        <thead><tr><th></th><th>The question</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td class="s">W1</td>
+            <td class="d">Is the witness independent of the party whose conduct
+              the log would be evidence about?</td>
+            <td class="d">The only one that cannot be fixed with better
+              software. A witness run or quietly funded by the log operator
+              produces a signature that verifies perfectly and establishes
+              nothing, because the question a witness answers is whether a
+              second party would notice.</td></tr>
+          <tr><td class="s">W2</td>
+            <td class="d">Does it publish what its signature does and does not
+              establish?</td>
+            <td class="d">A cosignature will be handed to somebody in a dispute
+              by the party it favours. If the only account of what it means
+              comes from that party, the witness has lent its name to a claim it
+              never made.</td></tr>
+          <tr><td class="s">W3</td>
+            <td class="d">Does it verify that the head it is signing is
+              consistent with the head it signed before?</td>
+            <td class="d">The load-bearing one. A witness that signs whatever it
+              is handed is a rubber stamp, and a rubber stamp with a key is
+              worse than no witness because it manufactures the appearance of
+              scrutiny. Refusal has to be the default: a witness that fails open
+              turns an outage into a silent gap in exactly the period somebody
+              later asks about.</td></tr>
+          <tr><td class="s">W4</td>
+            <td class="d">Can different witnesses' cosignatures be compared, so
+              a split view is detectable?</td>
+            <td class="d">One witness cannot detect equivocation; it can only be
+              lied to less cheaply. The property appears when views can be set
+              side by side, which is why gossip exists in CT and why EMILIA
+              built equivocation detection. A cosignature reachable only through
+              the party it is evidence against is independence in name.</td></tr>
+          <tr><td class="s">W5</td>
+            <td class="d">Can a third party verify a cosignature years later
+              without the witness's cooperation?</td>
+            <td class="d">A witness is a long-lived promise made by a
+              short-lived service. If the signature stops being checkable when
+              the service stops, the evidence had a shorter life than the
+              obligation it was collected for, and nobody finds out until the
+              dispute.</td></tr>
+          <tr><td class="s">W6</td>
+            <td class="d">Has it said what happens when it stops?</td>
+            <td class="d">Every witness stops eventually, and one that stops
+              without notice makes every record anchored to it unverifiable,
+              retroactively. Stating the terms is cheap, and the parties most
+              eager to be a witness are the ones least likely to still
+              exist.</td></tr>
+        </tbody>
+      </table>
+      </div>
 
-      <p>The <code>Message data</code> it prints is the same digest. That is
-        the binding between the token and this record rather than some other
-        one. It is not yet a statement about who issued the token, which is
-        step three and needs a certificate rather than a comparison. The
-        reference validator stops here, and says so: it reports the binding as
-        verified and the authority's issuance as attested, because it carries
-        no certificate store of its own.</p>
+      <h3>A reference witness, and what it fails</h3>
+      <p>Criteria are cheap to write and easy to write unimplementably, so
+        <span class="mono">spec/witness.py</span> implements them in about two
+        hundred lines with no dependencies. It keeps the last head it signed for
+        a log, requires an RFC 9162 consistency proof to sign a new one, and
+        <b>refuses</b> when the proof is missing, malformed, or does not verify.
+        Missing is not treated as a lesser failure than wrong.</p>
 
-      <h3>Three: check the signature against your own roots</h3>
-      <p>Use your system's certificate store, not one we supply. On Debian or
-        Ubuntu it is the path below; on a Mac with Homebrew's OpenSSL it is
-        usually <code>/opt/homebrew/etc/openssl@3/cert.pem</code>.</p>
+      <p>The proofs it is tested against are generated rather than written by
+        hand, because a verifier checked only against fixtures its own author
+        produced is checked against its own misreading. All 136 old and new size
+        pairs up to sixteen leaves round-trip, and a forked tree, an absent
+        proof, a proof of a different tree, a mangled node, a shrinking tree and
+        an unchanged size with a changed root are each refused.</p>
 
-      <pre class="snip">openssl ts -verify -in anchor.tsr \
-  -digest 34bf5a95693e32fe9bb9a8f4975ea1807d309855e9f09bbb0f3d6cb05606b6e8 \
-  -CAfile /etc/ssl/certs/ca-certificates.crt</pre>
+      <p><b>It fails W6 completely and on purpose.</b> There is no operator, no
+        notice period, and no undertaking that anything stays verifiable. Every
+        cosignature it emits says so in a field of its own. It is a reference
+        implementation in the sense that OMEM is the reference implementation of
+        the record format: the thing that proves the rule can be followed, not
+        the thing anybody should depend on.</p>
 
-      <pre class="snip">Verification: OK</pre>
+      <p>Saying that plainly is the point. A witness that overstates its own
+        durability is the failure W6 exists to name, and publishing one that
+        quietly did so while these criteria said otherwise would discredit the
+        criteria rather than the witness.</p>
 
-      <p>At that point you have checked, without trusting this site, that a
-        third party signed this exact set of bytes at that time.</p>
+      <h3>What this is not</h3>
+      <p><b>It is not an offer to witness anybody's log.</b> W6 is the reason,
+        and it is the honest one.</p>
 
-      <h3>What that does and does not establish</h3>
-      <p>It establishes that the record existed in exactly this form at
-        2026-09-05T14:31:54Z, and that it has not changed since.</p>
+      <p><b>It is not a certification.</b> Nothing here approves or lists a
+        witness. The criteria are questions with published answers, and anybody
+        may apply them, including to the reference witness above, which is why
+        it is scored here rather than exempted.</p>
 
-      <p>It does not establish that the record is true. It does not establish
-        that it is complete. It does not establish that a different record was
-        not produced at the same time and discarded. A timestamp fixes bytes
-        and a time, and a page that let you infer more from it would be making
-        the mistake this project exists to point at.</p>
+      <p><b>It is not finished.</b> W4 in particular is a property of a set of
+        witnesses and not of any one of them, so a single witness cannot meet it
+        however well it is built. That is stated in every cosignature the
+        reference implementation emits.</p>
 
-      <p>The record says as much in its own integrity entry, in a
-        <code>does_not_prove</code> member, so a reader who has the file and
-        not this page is told the same thing.</p>
-
-      <h3>Anchoring your own</h3>
-      <p>The tool is one standard-library file, MIT licensed, with no
-        dependencies. It builds the request by hand rather than asking you to
-        install a certificate library to emit one entry.</p>
-
-      <pre class="snip">python3 testimony_anchor.py record.jsonl &gt;&gt; record.jsonl
-python3 testimony_validate.py record.jsonl</pre>
-
-      <p>Both are in the
-        <a href="https://github.com/troybrandonc-bit/machine-testimony">specification
-        repository</a>. You can also
-        <a href="/check/">check a record in the browser</a>, which runs the
-        same checks in a second implementation and never uploads anything.</p>
-
-      <h3>What was wrong here until today</h3>
-      <p>Until 5 September 2026 the validator did not recompute digests. It
-        checked that an integrity entry carried one. A record could reach the
-        top level with a digest of sixty-four zeros, and an anchored record
-        could carry a real, correctly signed token over some entirely different
-        record.</p>
-
-      <p>Two further things came out of fixing it. The specification had never
-        said how a digest is computed, so no independent implementer could have
-        recomputed one; that is now written down. And the two implementations
-        of the rule in this author's own repositories had never agreed with
-        each other, because one of them left the default spacing in its JSON.
-        Neither was noticed for as long as nothing checked.</p>
-
-      <p>They are recorded here rather than quietly repaired, on the same
-        reasoning the rest of this applies to everybody else: a system that
-        cannot show what it got wrong is asking to be taken on trust.</p>
+      <h3>Corrections</h3>
+      <p>The criteria are in <span class="mono">spec/witness_criteria.py</span>,
+        the implementation in <span class="mono">spec/witness.py</span>, and the
+        suite that holds them to each other in
+        <span class="mono">tests/tests_witness.py</span>. If a criterion is
+        wrong, or is met by something that should not count, that is cheap to
+        demonstrate and it changes this page and the date on it.</p>
     </div>
   </div>
-
-  <aside class="rail">
-    <h2 class="label">The files</h2>
-    <p class="cont"><a href="/anchor/record.jsonl">record.jsonl</a><br>
-      <a href="/anchor/anchor.tsr">anchor.tsr</a></p>
-
-    <h2 class="label">What each check rests on</h2>
-    <p class="cont">Recomputing the digest and reading the token are settled
-      from the files. The record's claim that its risk classes came from a
-      registry is not, and the browser validator marks it as an attestation
-      rather than counting it as proof.</p>
-
-    <hr>
-    <p class="cont"><a href="/check/">Check a record</a><br>
-      <a href="https://datatracker.ietf.org/doc/draft-clifford-testimony-record/">The specification, as an Internet-Draft</a><br>
-      <a href="/census/2026-09/">Eight systems, assessed</a></p>
-  </aside>
 </div>
 <footer class="foot">
   <div class="wrap">

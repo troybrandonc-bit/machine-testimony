@@ -1609,6 +1609,38 @@ def main():
         check("the page names the misreading that motivated it",
               "subject_ref" in flat and "6-1-1701(15)(a)" in flat)
 
+    # /witness/ publishes criteria that other people are meant to apply, so the
+    # page and the criteria module are held to each other. A criterion that
+    # exists in one and not the other is a rule nobody can follow.
+    print()
+    print("/witness/ says what the criteria say")
+    import witness_criteria as wcr
+
+    wp = os.path.join(PUB, "witness", "index.html")
+    check("the page exists", os.path.exists(wp))
+    if os.path.exists(wp):
+        page = _re.sub(r"\s+", " ", io.open(wp, encoding="utf-8").read())
+        for c in wcr.CRITERIA:
+            check("%s is on the page" % c.id,
+                  ">%s<" % c.id in page or (" %s " % c.id) in page)
+        check("the page carries every criterion and no more",
+              page.count("<tr><td class=\"s\">W") == len(wcr.CRITERIA),
+              page.count("<tr><td class=\"s\">W"))
+
+        # The reference witness fails W6 on purpose. If the page ever stops
+        # saying so, the criteria have been quietly discredited by their own
+        # implementation, which is the exact failure W6 describes.
+        check("the page says the reference witness fails W6 deliberately",
+              "fails W6" in page)
+        check("and that it is not an offer to witness anything",
+              "not an offer to witness" in page)
+        # W4 cannot be met by any single witness. A page that implied otherwise
+        # would be selling something nobody can buy.
+        check("the page says one witness cannot meet W4",
+              "single witness cannot meet it" in page)
+        check("the page names all three parties the criteria came from",
+              "#302" in page and "8636" in page)
+
     print("\n%d passed, %d failed" % (PASS, FAIL))
     return 1 if FAIL else 0
 
