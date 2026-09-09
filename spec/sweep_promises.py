@@ -41,10 +41,18 @@ the one that gets misread:
 WHAT IT STILL DOES NOT DO, stated because the alternative is somebody finding
 out by running it.
 
-It does not read the definitions. It reports which members carry a definition
-the validator never consults, and a human still decides whether that definition
-asserts anything at all. Turning "asserts a property" into data is the
-remaining half, and it is prose work, member by member.
+It does not read the definitions, and it never will. `assertions.json` holds
+what each definition claims, written down by a person, member by member. That
+is the judgement half and it cannot be computed: deciding whether "a stable
+identifier" asserts something a checker could test is a reading of prose. It is
+written as data so it can be argued with and so the comparison runs, which is
+the only thing that makes it better than an opinion.
+
+**Disagreeing with an entry in assertions.json is the point of it existing.**
+The file is one person's reading of his own draft, which is the weakest link
+in the whole sweep, and the reason to publish it rather than to hold it. A
+member with no entry is reported separately, because the sweep cannot speak
+for what nobody has read.
 
 The draft is parsed as markdown definition lists, `name:` on one line and `: `
 on the next. That is a shape rather than a schema, so a member written another
@@ -58,11 +66,13 @@ from __future__ import annotations
 import ast
 import io
 import os
+import json
 import re
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 VALIDATOR = os.path.join(HERE, "testimony_validate.py")
 DRAFT = os.path.join(HERE, "draft-clifford-testimony-record-02.md")
+ASSERTIONS = os.path.join(HERE, "assertions.json")
 
 # Tables that declare a member exists without reading its value.
 DECLARING_TABLES = ("REQUIRED", "OPTIONAL", "ENUMS", "ACTOR_KINDS")
@@ -160,10 +170,18 @@ def read_values() -> set:
     return out
 
 
+def asserted() -> dict:
+    """What each member's definition claims, read by a person and written
+    down so a program can use it. The judgement half of the sweep."""
+    doc = json.load(io.open(ASSERTIONS, encoding="utf-8"))
+    return doc.get("members", {})
+
+
 def sweep() -> list:
     spec_members = defined()
     read = read_values() | indirect()
     enums = enumerated()
+    claims = asserted()
     rows = []
     for m in sorted(spec_members):
         if m in enums:
@@ -172,32 +190,46 @@ def sweep() -> list:
             state = "read"
         else:
             state = "NOT READ"
-        rows.append((m, state, spec_members[m]))
+        entry = claims.get(m) or {}
+        rows.append((m, state, spec_members[m],
+                     entry.get("asserts"), entry.get("note"),
+                     m in claims))
     return rows
 
 
 def main() -> int:
     rows = sweep()
-    bare = [r for r in rows if r[1] == "NOT READ"]
+    missing = [r[0] for r in rows if not r[5]]
+    unkept = [r for r in rows if r[3] and r[1] == "NOT READ"]
 
-    print("Members the draft defines, and what the validator does with each.")
+    print("Members the draft defines, what the validator does with each,")
+    print("and whether the definition claims anything a check could test.")
     print()
     w = max(len(r[0]) for r in rows)
-    for m, state, _ in rows:
-        print("  %-*s  %s" % (w, m, state))
+    for m, state, _text, claim, _note, _known in rows:
+        print("  %-*s  %-10s %s" % (w, m, state,
+                                    "asserts" if claim else "-"))
 
     print()
-    print("%d members defined in the draft, %d value-checked, %d not read."
-          % (len(rows), len(rows) - len(bare), len(bare)))
-    print()
-    if bare:
-        print("CANDIDATES. Each needs a check, a reworded definition, or a")
-        print("stated limit. None is a defect until somebody decides which,")
-        print("and the third reads as unfinished work when it is not.")
+    print("%d members. %d assert a property. %d of those are not read."
+          % (len(rows), sum(1 for r in rows if r[3]), len(unkept)))
+
+    if missing:
         print()
-        for m, _, text in bare:
+        print("NO ASSERTION RECORDED, so the sweep cannot speak for these:")
+        print("  " + ", ".join(missing))
+
+    if unkept:
+        print()
+        print("CANDIDATES: a definition claims something and no line of the")
+        print("validator reads the value. Each needs a check, a reworded")
+        print("definition, or a stated limit. None is a defect until then.")
+        for m, _s, _t, claim, note, _k in unkept:
+            print()
             print("  %s" % m)
-            print("      %s" % text[:94])
+            print("      asserts: %s" % claim)
+            if note:
+                print("      %s" % note)
     return 0
 
 

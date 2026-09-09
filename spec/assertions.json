@@ -1,0 +1,106 @@
+{
+  "about": "What each member's definition in the draft asserts beyond its type, as data, so a program can compare it against what the validator actually reads. The second half of the sweep described on machine-testimony#85.",
+  "draft": "draft-clifford-testimony-record-02.md",
+  "written": "2026-09-09",
+  "how_to_read": [
+    "`asserts` is a property the definition claims and a checker could in principle test. Null means the definition claims nothing beyond the member's type and presence, which is the honest answer for most members and is not a criticism of them.",
+    "A member with a non-null `asserts` whose value the validator never reads is a CANDIDATE, not a defect. Three resolutions are legitimate: add a check, reword the definition, or state the limit. See sweep_promises.py.",
+    "`asserts` is a reading of prose by a person. It is the judgement half of the sweep and it is exactly what could not be computed. Disagreeing with an entry here is the point of writing it down."
+  ],
+  "members": {
+    "spec": {
+      "asserts": "all entries in one record name the same version",
+      "note": "Stated with MUST in the definition itself."
+    },
+    "type": {"asserts": null},
+    "id": {
+      "asserts": "unique within the record, and never reused in a later record from the same emitter",
+      "note": "The second half is the interesting one. Uniqueness within a record is checkable from the record; non-reuse ACROSS records by the same emitter is not, because a validator sees one record. That is a stated limit rather than a missing check, and it is not currently stated as one."
+    },
+    "at": {
+      "asserts": "the write time, not the time any described fact held, and entries appear in non-decreasing order of it",
+      "note": "Partly checkable: ordering is, and the TR-4 anchor bounds it. That it is the WRITE time cannot be established from inside the record at all, which is machine-testimony#49 and is a stated limit."
+    },
+    "acts": {"asserts": null},
+    "declared_by": {
+      "asserts": "it is an Actor",
+      "note": "CANDIDATE. The actor-shape check reads ACTOR_FIELDS, which covers belief, decision and approval only, so this one is never checked to be actor-shaped. Same defect machine-testimony#59 closed for the other three."
+    },
+    "polarity": {"asserts": null},
+    "state": {
+      "asserts": "it is the state as at write time, and the entry is never edited, a later entry supersedes it",
+      "note": "Append-only is checked structurally elsewhere. That the value was true AT write time is not establishable from the record."
+    },
+    "asserted_by": {"asserts": "it is an Actor"},
+    "evidence": {
+      "asserts": "the identifiers name evidence entries, and an empty array asserts the belief is ungrounded and must be representable",
+      "note": "Both checked: cited evidence must exist, and the empty array is valid."
+    },
+    "kind": {"asserts": null},
+    "source": {
+      "asserts": "it is a stable identifier, so two records citing the same material can be recognised as citing the same material",
+      "note": "CANDIDATE, and the known one. machine-testimony#85 proposes rewording rather than checking, because `digest` already performs the identity operation the word implies."
+    },
+    "digest": {
+      "asserts": "a cited source can be shown unchanged without the record carrying its content",
+      "note": "The format cannot verify this alone: it needs the material, which is deliberately not in the record. A stated limit, and it is what makes the member worth having."
+    },
+    "excerpt": {"asserts": null},
+    "redacted": {
+      "asserts": "the citation still stands despite the content being withheld",
+      "note": "CANDIDATE by the sweep, but the assertion is about how a reader should treat the entry rather than a property of the value. Probably resolves as no change."
+    },
+    "sides": {
+      "asserts": "two or more belief identifiers, every one present in the record as a belief entry",
+      "note": "Checked."
+    },
+    "resolution": {
+      "asserts": "null is a valid and often honest value, meaning nothing resolved the disagreement",
+      "note": "Checked structurally."
+    },
+    "action_type": {"asserts": null},
+    "risk_class": {"asserts": null},
+    "risk_source": {
+      "asserts": "it names where the class came from, and the named sources are ones the proposing model cannot write to",
+      "note": "The list is checked. That the named source is genuinely outside model control is a claim about the deployment, not about the record, and is a stated limit."
+    },
+    "proposed_by": {"asserts": "it is an Actor"},
+    "verdict": {"asserts": null},
+    "executed": {
+      "asserts": "the system OBSERVED the action run, and a refused decision must not record it true",
+      "note": "The refused-and-executed contradiction is checked. Observation itself is attested."
+    },
+    "outcome": {
+      "asserts": "what the record claims about the effect, as distinct from what the system observed",
+      "note": "Enumerated and checked against `executed`."
+    },
+    "reason": {"asserts": "present where the verdict is refused"},
+    "inputs": {
+      "asserts": "the identifiers name beliefs the decision rested on",
+      "note": "CANDIDATE, and the new one. Nothing resolves them, while `evidence` identifiers ARE resolved at TR-2 by 'cited evidence exists in the record' and `sides` and `covers` are both required to be present. The format resolves three kinds of identifier reference and not this one, and nothing states why."
+    },
+    "approval": {
+      "asserts": "required where risk_class is high and executed is true",
+      "note": "Checked."
+    },
+    "decision": {
+      "asserts": "the identifier names a decision present in the record",
+      "note": "Checked."
+    },
+    "approver": {"asserts": "an Actor whose kind is human"},
+    "identity_source": {
+      "asserts": "where the approver's identity was obtained, named from a closed list",
+      "note": "The list is checked. Whether the identity truly came from there is attested, and disclosed as such by the verified/attested split."
+    },
+    "method": {"asserts": null},
+    "scheme": {"asserts": null},
+    "covers": {
+      "asserts": "the identifiers name entries present in the record, in the order they are hashed",
+      "note": "Checked, including the ordering, since the digest is recomputed."
+    },
+    "anchor": {
+      "asserts": "its evidential value does not depend on the emitter",
+      "note": "Checked for rfc3161 and scitt, where the token is verified over the record's digest. For other kinds it is a stated limit."
+    }
+  }
+}
