@@ -627,6 +627,26 @@ def main():
               not _re.search(r"\bretain", text, _re.I),
               "the text now contains it; the reading needs redoing")
 
+    # Illinois is the third row and rests on the same shape of claim: two
+    # quotations and a count of zero. The act was read from the Internet
+    # Archive because ilga.gov refused every connection on 9 Sep, so the
+    # committed copy is the only thing standing between this page and a
+    # claim nobody can check.
+    il = os.path.join(ROOT, "census", "sources", "il-pa-103-0804.txt")
+    if os.path.exists(il) and os.path.exists(us_page):
+        ilt = _re.sub(r"\s+", " ",
+                      io.open(il, encoding="utf-8").read())
+        page = io.open(us_page, encoding="utf-8").read()
+        missing = [q for q in
+                   ("THAT HAS THE EFFECT OF SUBJECTING EMPLOYEES",
+                    "FAIL TO PROVIDE NOTICE TO AN EMPLOYEE")
+                   if q in page and q.lower() not in ilt.lower()]
+        check("the Illinois quotations are in the act as archived",
+              not missing, missing)
+        check("the Illinois act still does not use the word record",
+              not _re.search(r"\brecord", ilt, _re.I),
+              "it now does; the Illinois row needs redoing")
+
     print("\nevery page closes the banner before the page begins")
     # The banner is navy with near-white text. Left open it wraps the whole
     # document, and every generated page on this site rendered that way from
