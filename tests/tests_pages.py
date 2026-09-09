@@ -530,6 +530,43 @@ def main():
     check("the reading still records the Act as partial, not absent",
           "partial" in ob, "the table no longer says partial anywhere")
 
+    print("\nthe Colorado reading quotes the act it cites")
+    # /colorado/ rests entirely on five quotations from a signed statute and a
+    # claim about three words the act does NOT contain. Both halves are cheap to
+    # get wrong in an edit and expensive to be wrong about in public, and the
+    # source is a PDF nobody is going to re-read by hand. The extracted text is
+    # committed beside the page for exactly that reason.
+    #
+    # Page furniture is stripped before comparing: the signed PDF breaks pages
+    # mid-sentence and prints "PAGE 10-SENATE BILL 26-189" inside the retention
+    # provision, which made the first run of this check report a correct quote
+    # as a misquote.
+    co_src = os.path.join(ROOT, "census", "sources", "co-sb26-189.txt")
+    co_page = os.path.join(PUB, "colorado", "index.html")
+    if os.path.exists(co_src) and os.path.exists(co_page):
+        act = _re.sub(r"\s+", " ",
+                      io.open(co_src, encoding="utf-8").read())
+        act = _re.sub(r"PAGE\s*\d+\s*-\s*SENA\s*TE\s*BILL\s*26-189",
+                      "", act)
+        act = _re.sub(r"\s+", " ", act)
+        page = io.open(co_page, encoding="utf-8").read()
+        quoted = _re.findall(r"&ldquo;([A-Z][^&]{10,400})&rdquo;", page)
+        bad = []
+        for q in quoted:
+            q = _re.sub(r"<[^>]+>", "", q)
+            for part in [x.strip() for x in
+                         _re.sub(r"\s+", " ", q).split("...")]:
+                if part and part not in act:
+                    bad.append(part[:60])
+        check("every quotation on /colorado/ is in the signed act",
+              quoted and not bad, bad)
+
+        # The finding is partly an absence, so the absence is checked too.
+        present = [w for w in ("REVIEWER", "NATURAL PERSON")
+                   if w in act.upper()]
+        check("the words the page says are absent are still absent",
+              not present, present)
+
     print("\nevery page closes the banner before the page begins")
     # The banner is navy with near-white text. Left open it wraps the whole
     # document, and every generated page on this site rendered that way from
