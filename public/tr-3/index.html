@@ -323,9 +323,16 @@
           it.</li>
         <li>That the record is complete, or that a different record was not
           also produced and discarded.</li>
-        <li>That the record has not been altered by the party holding it. That
-          is <a href="/tamper-evidence/">TR-4</a>, and it is a different
-          level for a reason.</li>
+        <li>That the record has not been altered by the party holding it.
+          <a href="/tamper-evidence/">TR-4</a> is the integrity level, and
+          <b>TR-4 alone does not establish this either.</b> TR-4 means
+          Verifiable: a reader can recompute the arithmetic. A hash chain
+          computed by the emitter satisfies it, and anybody who can rewrite the
+          entries can recompute that chain. Only TR-4 carrying an
+          <b>external anchor</b>, whose evidence is held by somebody other than
+          the emitter, speaks to alteration by the party holding the record.
+          This sentence was wrong when this page was first published on
+          9 September 2026 and said TR-4 covered it.</li>
       </ul>
 
       <h3>Why a digest</h3>

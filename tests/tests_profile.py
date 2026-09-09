@@ -104,6 +104,18 @@ for want in ("identity", "complete", "altered"):
 check("it points at TR-4 rather than absorbing it",
       any("TR-4" in d for d in doc["does_not_establish"]))
 
+# The first version of this page said alteration by the holder "is TR-4", which
+# overclaims TR-4. TR-4 is Verifiable: a reader can recompute the arithmetic,
+# and a hash chain the emitter computed is recomputable by anybody who can
+# rewrite the entries. All five published adapter examples reach TR-4 with
+# scheme hash-chain and anchor null, so the weakest permitted scheme is what a
+# reader meets first. Only an external anchor speaks to the holder.
+alter = [d for d in doc["does_not_establish"] if "altered by the party" in d]
+check("the residual does not hand alteration-by-the-holder to TR-4", alter
+      and "does not establish this either" in alter[0], alter[:1])
+check("and says an EXTERNAL ANCHOR is what covers it",
+      alter and "EXTERNAL ANCHOR" in alter[0])
+
 # The verified/attested split is the honest part of the profile. Hiding it
 # would sell six checkable requirements as eight.
 att = [r["requirement"] for r in doc["requirements"] if r["basis"] == "attested"]
@@ -135,6 +147,10 @@ if os.path.exists(pg):
           "does not cover the prose" in page)
     check("the page does not claim the level proves the approver is real",
           "identity proofing sits outside" in page.lower())
+    check("the page does not hand alteration-by-the-holder to TR-4",
+          "TR-4 alone does not establish this either" in page)
+    check("and dates its own correction rather than silently fixing it",
+          "was wrong when this page was first published" in page)
 
 print("")
 print("%d passed, %d failed" % (PASS, FAIL))

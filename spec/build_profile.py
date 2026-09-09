@@ -72,8 +72,12 @@ DOES_NOT_ESTABLISH = (
     "property of the surface that rendered it and not of the record",
     "that the record is complete, or that a different record was not also "
     "produced and discarded",
-    "that the record has not been altered by the party holding it, which is "
-    "TR-4 and not this level",
+    "that the record has not been altered by the party holding it. TR-4 is "
+    "the level for integrity, and TR-4 alone does not establish this either: "
+    "it means a reader can recompute the arithmetic, and a hash chain "
+    "computed by the emitter is recomputable by anyone who can rewrite the "
+    "entries. Only TR-4 with an EXTERNAL ANCHOR, whose evidence is held by "
+    "somebody other than the emitter, speaks to alteration by the holder",
 )
 
 # Where a requirement rests on the record's own say-so rather than on something
