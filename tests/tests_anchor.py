@@ -246,6 +246,50 @@ def main():
     check("it says what a timestamp does not prove",
           "does_not_prove" in a and "true" in a["does_not_prove"])
 
+    # THE CLOCK ALLOWANCE, both sides of it.
+    #
+    # The `at <= genTime` check shipped 7 September with no allowance, and the
+    # first record anchored moments after being written failed it: this
+    # machine's clock runs seconds ahead of DigiCert's, so entries were, by the
+    # authority's clock, from the future. RFC 3161's Accuracy field exists for
+    # this and DigiCert leaves it unspecified, so the allowance is a judgement
+    # and these two cases are what hold it honest.
+    seen_at = a["anchored_at"]
+    base = ta._dt.datetime.strptime(seen_at, "%Y-%m-%dT%H:%M:%SZ")
+
+    def shifted(secs):
+        """The same anchored record with every covered entry moved later."""
+        at = (base + ta._dt.timedelta(seconds=secs)).strftime(
+            "%Y-%m-%dT%H:%M:%SZ")
+        rows = [dict(e, at=at) for e in body] + [dict(entry, at=at)]
+        return tv.validate(as_text(rows)).as_dict()
+
+    def clockcheck(res):
+        for c in res["checks"]:
+            if c["level"] == "TR-4" and "post-dates the anchor" in c["check"]:
+                return c
+        return None
+
+    near = clockcheck(shifted(2))
+    check("two seconds ahead of the authority passes", near and near["ok"],
+          "a clock is allowed to be wrong; this is every machine")
+    check("and the measured offset is reported rather than discarded",
+          near and "2 seconds ahead" in near["detail"],
+          near["detail"][:80] if near else "no check")
+
+    far = clockcheck(shifted(4000))
+    check("an hour ahead of the authority fails", far and not far["ok"],
+          "past some point the clock is not the explanation")
+    check("and the failure says how far ahead, not just that it is",
+          far and "4000 seconds after" in far["detail"],
+          far["detail"][:80] if far else "no check")
+
+    # The number is the point. `at` is authored by the emitter and nothing else
+    # in a record checks it against anything outside; this is the one place a
+    # third party's clock sits beside it, which is what #44 was about.
+    check("the offset is reported even when nothing is wrong",
+          clockcheck(shifted(0)) is not None)
+
     check("the digest is over exactly what covers names",
           entry["digest"] == "sha256:" + ta.digest_of(body)
           and entry["covers"] == [x["id"] for x in body])
