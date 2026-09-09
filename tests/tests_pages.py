@@ -1561,6 +1561,54 @@ def main():
                   r.returncode == 0 and before == after,
                   r.stderr[:120] or "regenerating changed the file")
 
+    # /formats/ is the registry's public face and it reads other people's work,
+    # so the page and the declarations behind it are held to each other the way
+    # /eu-ai-act/ and the instrument tables are. A page that says a format
+    # carries something the declaration does not is a claim about somebody else
+    # nobody can check.
+    print()
+    print("/formats/ says what the declarations say")
+    sys.path.insert(0, os.path.join(ROOT, "spec"))
+    import formats as fm
+
+    fp = os.path.join(PUB, "formats", "index.html")
+    check("the page exists", os.path.exists(fp))
+    if os.path.exists(fp):
+        page = io.open(fp, encoding="utf-8").read()
+        flat = _re.sub(r"\s+", " ", page)
+
+        for fmt in fm.DECLARED.values():
+            check("%s is named on the page" % fmt.id, fmt.name in flat)
+            check("%s says where it was read" % fmt.id, fmt.where in flat)
+
+        # Every declared field path is on the page. A path that moved in the
+        # declaration and not here is the drift this check exists for.
+        gone = [(f.id, s, v) for f in fm.DECLARED.values()
+                for s, v in f.signals.items()
+                if not isinstance(v, tuple) and v not in flat]
+        check("every declared field path appears on the page", not gone, gone)
+
+        check("no format is on the page that is not declared",
+              flat.count("Read at") == 1,
+              "the source table is the only place a format is introduced")
+
+        # The disclosure is the whole basis for anybody trusting this page, so
+        # it is a test and not an intention.
+        check("the page discloses that it grades its own author's format",
+              "maintained by the author of this page" in flat)
+        check("the page names where its own format is the weaker one",
+              "worse than one of them" in flat)
+        # Counting filled cells would compare what the formats are FOR. The
+        # page has to refuse the scoreline out loud, because a reader who
+        # wants one will otherwise construct it from the table.
+        check("the page refuses to be read as a score",
+              "It is not a score" in flat)
+        # The misread that caused the declared layer to exist is named on the
+        # page. If it is ever removed, the page is claiming a rigour it did
+        # not always have.
+        check("the page names the misreading that motivated it",
+              "subject_ref" in flat and "6-1-1701(15)(a)" in flat)
+
     print("\n%d passed, %d failed" % (PASS, FAIL))
     return 1 if FAIL else 0
 
