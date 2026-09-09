@@ -666,6 +666,18 @@ jobs:
           set +e; out=$(python tests_witness.py 2>&1); rc=$?; set -e
           echo "$out"
           [ $rc -eq 0 ] || { echo "::error::the witness suite failed"; exit 1; }
+      # The second binding census reads six frameworks against five
+      # requirements. This does not check a verdict is right, which nothing
+      # automated can. It checks the things that make a wrong verdict cheap
+      # to find: the rubric's vocabulary, a locator on every verdict that
+      # rests on code, and that the corrections to the first reading are
+      # stated where a reader comparing the two will look.
+      - name: Every binding verdict is one a reader can check
+        working-directory: tests
+        run: |
+          set +e; out=$(python tests_binding.py 2>&1); rc=$?; set -e
+          echo "$out"
+          [ $rc -eq 0 ] || { echo "::error::the binding census suite failed"; exit 1; }
       - name: The shipped manifest is the manifest of the shipped files
         run: |
           before=$(python -c "import json,io;print(json.load(io.open('census/MANIFEST.json',encoding='utf-8'))['census_digest'])")

@@ -2,12 +2,82 @@
   "read_on": "2026-09-09",
   "read_by": "Troy Brandon Clifford",
   "question": "Can a record relate what a reviewer was shown, what they approved, and what executed? Five requirements, defined in binding/rubric.py.",
-  "status": "IN PROGRESS. One of six subjects read. The others carry B2 verdicts from the first binding reading in readings.json and have not yet been read against B1, B3, B4 or B5. A partial census that says which parts are done is a measurement; one that fills the gaps by inference is not.",
+  "status": "COMPLETE. All six subjects read against B1, B3, B4 and B5. B2 is carried from the first binding reading in readings.json, with its vocabulary mapped: bound becomes present, unbound becomes absent, no_boundary becomes not_applicable.",
   "method": {
-    "how": "Published source read at a pinned commit, plus a reproduction run against the installed library. Where a claim is about what a record contains, it was produced and inspected rather than reasoned about.",
-    "limits": "Five questions about one relation. It says nothing about whether a framework is well built, and none of these were designed to answer this. A framework scoring absent is not failing a test it was taking."
+    "how": "Installed libraries read at the pinned versions below, plus reproductions run against them. Where a claim is about what a record CONTAINS, it was produced and inspected rather than reasoned about, and the note says which.",
+    "limits": "Five questions about one relation. It says nothing about whether a framework is well built, and none of these were designed to answer this. A framework scoring absent is not failing a test it was taking.",
+    "correction": "Two rows of the FIRST binding reading are now wrong and are corrected here rather than quietly left. CrewAI was recorded as having no approval boundary at all; version 1.15.20 has before_tool_call hooks that can block execution. Haystack and LangGraph were both recorded as unbound on B2 and both turn out to carry considerably more than that implied on the other four questions. Re-reading found this. Nobody reported it."
   },
   "subjects": [
+    {
+      "name": "LangGraph",
+      "repo": "langchain-ai/langgraph",
+      "package": "langgraph 1.2.11",
+      "assessments": {
+        "B1": {
+          "verdict": "present",
+          "locator": "checkpoint pending_writes, channel __interrupt__",
+          "note": "REPRODUCED. A graph paused with interrupt(value) stores the whole Interrupt object as a pending write on the paused checkpoint, so the material displayed is retained verbatim rather than by reference. Inspecting the InMemorySaver after a resume, the checkpoint still carries the full value including the description text shown to the reviewer. This is the strongest B1 of the six and it is a by-product of the checkpointer rather than an audit feature.",
+          "limits": "Read against InMemorySaver. Durable savers implement the same pending-write protocol but were not run. Checkpoints are also deletable and subject to whatever retention the deployer configures, so the record lives exactly as long as the thread does."
+        },
+        "B2": {
+          "verdict": "absent",
+          "locator": "carried from readings.json",
+          "note": "Carried unchanged from the first binding reading, where the verdict was unbound and was documented in the framework's own docstring rather than discovered."
+        },
+        "B3": {
+          "verdict": "present",
+          "locator": "checkpoint pending_writes, channel __resume__; langgraph/prebuilt/interrupt.py HumanResponse",
+          "note": "REPRODUCED. A reviewer shown {'ticket': 0, 'amount': 0} resumed with {'type': 'edit', 'args': {'ticket': 41, 'amount': 1}}. The tool executed 41 and 1, and the checkpoint retains BOTH the __interrupt__ write carrying what was shown and the __resume__ write carrying the typed decision, on the same checkpoint, written by the same task id. HumanResponse types the outcome as accept, ignore, response or edit, so a modification is a different value and not an approval with different arguments.",
+          "consequence": "This is the requirement pydantic-ai fails and LangGraph passes, which is the reverse of the first reading's overall impression of the two."
+        },
+        "B4": {
+          "verdict": "partial",
+          "locator": "langgraph/types.py Interrupt.from_ns; langgraph/pregel/_loop.py:917",
+          "note": "REPRODUCED, in both directions. With two interrupts pending, Command(resume='OK') is REFUSED with an error naming the requirement to specify the interrupt id. That is better than any other subject: an approval cannot float to an unnamed call. But Interrupt.from_ns computes the id as xxh3_128_hexdigest(ns), a hash of the graph namespace ALONE, so two different values at the same graph position produce the same id. Confirmed directly: Interrupt.from_ns({'amount': 1}, 'review:abc') and Interrupt.from_ns({'amount': 82000}, 'review:abc') return an identical id.",
+          "consequence": "The approval names a specific PAUSE and not a specific set of arguments. The binding to arguments is recoverable, because the __interrupt__ write sits on the same checkpoint, so a consumer reconstructs it rather than reading it off the approval. That is the partial condition exactly, and it is langchain-ai/langgraph#8304."
+        },
+        "B5": {
+          "verdict": "partial",
+          "locator": "checkpoint channel_values",
+          "note": "Execution shows up as the state having advanced: the result channel carries the tool's return and the next checkpoint carries the new values. There is no fact saying an action was permitted but not observed to run, and no way for the record to say it does not know. Inferred from the absence of an error, which is the partial condition."
+        }
+      }
+    },
+    {
+      "name": "OpenAI Agents SDK",
+      "repo": "openai/openai-agents-python",
+      "package": "openai-agents 0.22.1",
+      "assessments": {
+        "B1": {
+          "verdict": "partial",
+          "locator": "agents/run_state.py RunState.to_json; agents/items.py ToolApprovalItem",
+          "note": "RunState.to_json serialises approvals, tool_invocations and pending_input, so a paused run persists and the ToolApprovalItem carries the raw ResponseFunctionToolCall. What was ELIGIBLE to be shown is therefore recoverable from a serialised state. Nothing records the rendering or a digest of it, so two integrations displaying the same call very differently produce identical records."
+        },
+        "B2": {
+          "verdict": "present",
+          "locator": "carried from readings.json",
+          "note": "Carried unchanged: both sides read one ResponseFunctionToolCall and nothing between them rewrites it."
+        },
+        "B3": {
+          "verdict": "present",
+          "locator": "agents/run_state.py RunState.approve, RunState.reject",
+          "note": "Present BY CONSTRUCTION rather than by a field, and the distinction matters. The SDK offers approve and reject and no modify path at all, so a reviewer cannot alter arguments and then allow them. A different action is necessarily a different call. reject additionally carries an optional rejection_message, so a refusal can say why. Scoring this absent because there is no modify vocabulary would report a failure where there is a design decision that makes the failure impossible.",
+          "fairness": "The same reasoning applied to EMILIA Protocol's receipts on machinetestimony.org/formats/, and it should be applied consistently or not at all."
+        },
+        "B4": {
+          "verdict": "present",
+          "locator": "agents/run_context.py RunContextWrapper.is_tool_approved, get_approval_status",
+          "note": "Approvals are keyed by tool name and call_id, is_tool_approved(tool_name, call_id) resolves per call, and get_approval_status raises ModelBehaviorError on an empty call_id rather than proceeding. A different call cannot satisfy an approval.",
+          "limits": "always_approve and always_reject create a standing decision recorded under the bare tool name, which any later call of that tool satisfies. That is a deliberate opt-in and not the default, and it is the one way this subject can be made to behave like the others."
+        },
+        "B5": {
+          "verdict": "partial",
+          "locator": "agents/items.py ToolCallOutputItem",
+          "note": "A ToolCallOutputItem carries the output of a call, so an execution leaves a trace distinct from the approval. There is no outcome vocabulary separating a denial from a runtime failure from an unknown, so a call that was permitted and never observed to run is indistinguishable from one that has not happened yet. Inferred from the presence of an output."
+        }
+      }
+    },
     {
       "name": "Pydantic AI",
       "repo": "pydantic/pydantic-ai",
@@ -36,10 +106,107 @@
           "note": "Approvals are a mapping keyed by tool_call_id, and filter_deferred_results keeps only those whose id is in the requested set, so an approval names the specific call it permits and a different call cannot satisfy it."
         },
         "B5": {
-          "verdict": "pending",
-          "note": "Not yet read. Left as pending rather than inferred from the presence of a ToolReturnPart, which would be exactly the reasoning this rubric exists to distrust."
+          "verdict": "present",
+          "locator": "pydantic_ai/messages.py BaseToolReturnPart.outcome",
+          "note": "NOW READ, having been left pending rather than inferred. outcome is a Literal of success, failed, denied and interrupted. denied separates a deliberate policy refusal from a runtime error, and interrupted means the call produced no result because the run was interrupted, synthesised during message-history repair. That is the only subject of the six where the record can say it does not know whether the effect occurred, which is the present condition as written.",
+          "consequence": "Pydantic AI is the weakest of the six on B3 and the strongest on B5. A single overall impression of any of these frameworks would have got both wrong, which is the argument for reading requirement by requirement."
         }
       }
+    },
+    {
+      "name": "Haystack",
+      "repo": "deepset-ai/haystack",
+      "package": "haystack-ai, hooks/human_in_the_loop",
+      "assessments": {
+        "B1": {
+          "verdict": "partial",
+          "locator": "hooks/human_in_the_loop/types/protocol.py ConfirmationUI.get_user_confirmation",
+          "note": "The UI is handed tool_name, tool_description and tool_params, so what was put in front of the reviewer is well defined at the boundary. What survives is ToolExecutionDecision, which carries final_tool_params and NOT the parameters originally proposed, so the record keeps what was decided rather than what was shown."
+        },
+        "B2": {
+          "verdict": "absent",
+          "locator": "carried from readings.json",
+          "note": "Carried unchanged: a tool reading from state executes with arguments the confirming person never saw."
+        },
+        "B3": {
+          "verdict": "partial",
+          "locator": "hooks/human_in_the_loop/dataclasses.py ConfirmationUIResult, ToolExecutionDecision",
+          "note": "The framework has the vocabulary and then loses it. ConfirmationUIResult.action is documented as confirm, reject or modify, with new_tool_params alongside. The object that is serialisable and survives, ToolExecutionDecision, reduces that to execute as a bool, plus an optional free-text feedback field whose docstring says modification details can go there. So a modification is expressible in prose and not as an outcome.",
+          "consequence": "This is the boolean-approval failure one layer in, and it is more interesting than a framework that never modelled modify at all: somebody wrote the three actions down and the persisted artifact kept one bit."
+        },
+        "B4": {
+          "verdict": "partial",
+          "locator": "hooks/human_in_the_loop/dataclasses.py ToolExecutionDecision.tool_call_id",
+          "note": "tool_call_id is on the decision, which is what B4 asks for, and it is Optional with a default of None. An approval that omits it names a tool and not a call, and nothing in the type refuses that."
+        },
+        "B5": {
+          "verdict": "absent",
+          "locator": "hooks/human_in_the_loop/dataclasses.py ToolExecutionDecision.execute",
+          "note": "execute is a permission and there is no corresponding observation. Nothing in the confirmation types records that the tool then ran, so permitted and ran are the same fact."
+        }
+      }
+    },
+    {
+      "name": "CrewAI",
+      "repo": "crewAIInc/crewAI",
+      "package": "crewai 1.15.20",
+      "assessments": {
+        "B1": {
+          "verdict": "absent",
+          "locator": "crewai/hooks/tool_hooks.py ToolCallHookContext",
+          "note": "CORRECTION TO THE FIRST READING. CrewAI was recorded as having no approval boundary at all, on the basis that step_callback fires after a step. Version 1.15.20 has before_tool_call hooks, dispatched through run_before_tool_call_hooks at crew_agent_executor.py:984, and a hook can block execution by raising HookAborted. The boundary now exists, so these four questions now arise. On this one the answer is that the hook receives tool_input as a mutable dict and nothing on the hook path persists what a reviewer was shown."
+        },
+        "B2": {
+          "verdict": "absent",
+          "locator": "crewai/hooks/tool_hooks.py, ToolCallHookContext.tool_input",
+          "note": "Re-read rather than carried, because the first reading said the question did not arise. It does now, and the answer is that arguments can change: tool_input is mutated IN PLACE by design, and the module docstring states that mutations persist even when a hook blocks."
+        },
+        "B3": {
+          "verdict": "absent",
+          "locator": "crewai/hooks/tool_hooks.py run_before_tool_call_hooks",
+          "note": "REPRODUCED against 1.15.20. A before_tool_call hook was shown {'ticket': 0, 'amount': 0}, set ctx.tool_input to {'ticket': 41, 'amount': 1} in place, and returned without blocking. run_before_tool_call_hooks returned False, meaning not blocked, and the tool executed 41 and 1. The hook returns a single boolean for blocked or not blocked, so approving as proposed and rewriting the arguments produce the identical return value and nothing records that a mutation occurred."
+        },
+        "B4": {
+          "verdict": "absent",
+          "locator": "crewai/hooks/tool_hooks.py",
+          "note": "There is no approval artifact to bind. The hook returns a bool and the context is a per-call object held in memory, so there is nothing carrying a call identity that a later reader could check."
+        },
+        "B5": {
+          "verdict": "partial",
+          "locator": "crewai/events/types/tool_usage_events.py ToolUsageStartedEvent, ToolUsageFinishedEvent",
+          "note": "The best-instrumented of the six on this question and it is not connected to the approval path. Started and finished are separate events, the finished event carries started_event_id linking the two, plus started_at, finished_at, failure, from_cache and output. Execution is therefore an observed fact rather than an inference. It is partial rather than present because a permitted call that never ran leaves a started event and no finished event, which reads as an in-flight call rather than as an unknown, and because nothing ties either event to a hook decision.",
+          "limits": "The event field lists were read from the pydantic models. The events were not observed firing through a full crew run, which needs a model provider."
+        }
+      }
+    },
+    {
+      "name": "AutoGen",
+      "repo": "microsoft/autogen",
+      "package": "autogen-core 0.7.5",
+      "assessments": {
+        "B1": {
+          "verdict": "not_applicable",
+          "note": "the framework has no approval pause of its own"
+        },
+        "B2": {
+          "verdict": "not_applicable",
+          "note": "the framework has no approval pause of its own"
+        },
+        "B3": {
+          "verdict": "not_applicable",
+          "note": "the framework has no approval pause of its own"
+        },
+        "B4": {
+          "verdict": "not_applicable",
+          "note": "the framework has no approval pause of its own"
+        },
+        "B5": {
+          "verdict": "not_applicable",
+          "note": "the framework has no approval pause of its own"
+        }
+      },
+      "checked": "Searched autogen-core 0.7.5 for requires_approval, ApprovalRequest, approval and human_in_the_loop. Zero files match any of them. Unlike CrewAI, which moved, this row is unchanged from the first reading and was rechecked rather than assumed.",
+      "fairness": "not_applicable and not absent. The question does not arise until somebody builds an approval pause on top, and marking it a failure would report a gap where there is a scope decision."
     }
   ]
 }

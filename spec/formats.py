@@ -197,6 +197,79 @@ DECLARED = {
         },
     ),
 
+    "otel-gen-ai-span": Format(
+        id="otel-gen-ai-span",
+        name="OpenTelemetry GenAI span",
+        where="open-telemetry/semantic-conventions-genai, model/gen-ai/registry.yaml",
+        read_on="2026-09-09",
+        detect=("resourceSpans",),
+        signals={
+            "write_time": "startTimeUnixNano",
+            "activity": "gen_ai.tool.name",
+            "decision_ref": "gen_ai.tool.call.id",
+            "approver": (
+                ABSENT,
+                "the counted reason this format is here. Seventy two "
+                "`gen_ai.*` attributes on 9 September 2026, and a search of "
+                "all of them for approver, human, authorisation, oversight, "
+                "review, principal, consent and actor returns nothing. "
+                "`gen_ai.agent.id` is the agent's own identifier and reporting "
+                "it as the approver would tell a reader they can say who "
+                "approved when what they have is the agent approving itself."),
+            "identity_source": (
+                ABSENT,
+                "no attribute records how any identity was resolved, which "
+                "follows from there being no identity of a human to resolve"),
+            "verdict": (
+                ABSENT,
+                "nothing distinguishes an action that was permitted from one "
+                "that was refused. `gen_ai.tool.call.result` carries what came "
+                "back, which is not the same fact"),
+            "reason": (ABSENT, "no attribute carries why anything was refused"),
+            "risk_source": (
+                ABSENT, "no risk classification, so nothing to source"),
+            "integrity": (
+                ABSENT,
+                "a span export is not tamper-evident and is not trying to be. "
+                "Spans pass through a collector that can drop, sample and "
+                "rewrite them by design, so a span that arrives is not "
+                "evidence that a span was emitted"),
+            "evidence_link": (
+                ABSENT,
+                "nothing records what was put in front of a person, because "
+                "no person appears"),
+            "subject": (
+                ABSENT,
+                "no attribute names who or what a decision was about"),
+            "user_id": (
+                ABSENT,
+                "`gen_ai.conversation.id` identifies a conversation, not the "
+                "account or session that acted, and using it as one would be "
+                "the same error as reading `gen_ai.agent.id` as an approver"),
+            "device": (ABSENT, "not in the GenAI conventions"),
+            "ip": (ABSENT, "not in the GenAI conventions"),
+        },
+        notes={
+            "why it is in this table": "Because it is the format most "
+                                       "deployers already emit. The other "
+                                       "three ask somebody to adopt "
+                                       "something; this one is the pipe an "
+                                       "enterprise already has, which makes "
+                                       "what it cannot carry the most "
+                                       "consequential absence here.",
+            "not a criticism": "OpenTelemetry is a telemetry carrier and does "
+                               "not claim to be an oversight record. The "
+                               "finding is that a deployer whose logs are "
+                               "spans has no attribute to put an approver in, "
+                               "so the gap is in what they can produce rather "
+                               "than in anybody's implementation.",
+            "count": "Seventy two, re-counted 9 September 2026 from "
+                     "registry.yaml. It was sixty one the day before against "
+                     "the old location in open-telemetry/semantic-conventions, "
+                     "so re-count rather than cite this.",
+        },
+    ),
+
     "scitt-receipt": Format(
         id="scitt-receipt",
         name="SCITT transparent statement receipt",

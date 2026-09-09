@@ -506,9 +506,16 @@ def report(rows: list, name: str = "the file") -> str:
 # agent that invents its own trail will not be used. So this reads that pipe
 # rather than asking anybody to leave it.
 #
-# What it finds there is the point. As of 8 September 2026 the GenAI semantic
-# conventions carry sixty one `gen_ai.*` attributes and none of them names who
-# authorised an action: no approver, no authorisation, no human oversight. The
+# What it finds there is the point. Re-counted 9 September 2026: the GenAI
+# semantic conventions now live in their own repository,
+# open-telemetry/semantic-conventions-genai, and `model/gen-ai/registry.yaml`
+# carries seventy two `gen_ai.*` attributes. The count was sixty one the day
+# before, against the old location, so the conventions are growing quickly and
+# this number is worth re-counting rather than citing.
+#
+# What has not changed is that none of them names who authorised an action:
+# searching all seventy two for approver, human, authorisation, oversight,
+# review, principal, consent and actor returns nothing. The
 # only appearance of approval in the reference agent scenario is a decorator
 # switching it off. So a span export can be complete, correctly parsed and
 # properly integrated, and still be unable to say who approved, which is a

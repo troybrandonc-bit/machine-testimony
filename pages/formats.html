@@ -1,5 +1,5 @@
 <!--title: Which record formats can evidence a human review, and which cannot
-    desc: A registry that can read only one record format is that format's marketing department. This is a reading of three: the Testimony Record, the EMILIA Protocol authorization receipt and the SCITT transparent statement receipt, mapped signal by signal against what an obligation asks a record to show. The format maintained by the author of this page is in the table and is worse than one of the others on two rows.
+    desc: A registry that can read only one record format is that format's marketing department. This reads four: the Testimony Record, the EMILIA Protocol authorization receipt, the OpenTelemetry GenAI span and the SCITT transparent statement receipt, mapped signal by signal against what an obligation asks a record to show. The OpenTelemetry conventions carry seventy two gen_ai attributes and not one of them names who approved anything. The format maintained by the author of this page is in the table and is worse than one of the others on two rows.
     slug: formats-->
 
 <div class="wrap main">
@@ -14,16 +14,16 @@
         format, so the answer to them should not depend on which format a
         deployer happens to have bought.</p>
 
-      <p>This page reads three record formats against the same set of
+      <p>This page reads four record formats against the same set of
         questions, and says for each one where the answer lives, or that it
-        does not live anywhere. <b>One of the three is maintained by the author
+        does not live anywhere. <b>One of the four is maintained by the author
         of this page.</b> It is in the table on the same terms as the others,
         graded by the same code, and it is worse than one of them on two rows.
         That is stated here rather than left to be found, because a reading
         published by an interested party is worth exactly what its disclosure
         is worth.</p>
 
-      <h3>The three</h3>
+      <h3>The four</h3>
       <table class="reg">
         <thead><tr><th>Format</th><th>Read at</th><th>What it is for</th></tr></thead>
         <tbody>
@@ -35,6 +35,11 @@
             <td class="d"><span class="mono">draft-schrock-ep-authorization-receipts-12</span></td>
             <td class="d">An evidence artifact binding an enrolled approver key
               to one canonical action before it executes.</td></tr>
+          <tr><td class="s">OpenTelemetry GenAI span</td>
+            <td class="d"><span class="mono">open-telemetry/semantic-conventions-genai, model/gen-ai/registry.yaml</span></td>
+            <td class="d">Telemetry. Not an oversight record and not trying to
+              be, and it is here because it is what most deployers already
+              emit.</td></tr>
           <tr><td class="s">SCITT transparent statement receipt</td>
             <td class="d"><span class="mono">RFC 9943</span></td>
             <td class="d">A proof that a statement was registered in an
@@ -51,74 +56,130 @@
 
       <div class="scroller">
       <table class="reg">
-        <thead><tr><th>What an obligation asks</th><th>Testimony Record</th><th>EMILIA receipt</th><th>SCITT receipt</th></tr></thead>
+        <thead><tr><th>What an obligation asks</th><th>Testimony Record</th><th>EMILIA receipt</th><th>OTel GenAI span</th><th>SCITT receipt</th></tr></thead>
         <tbody>
-          <tr><td class="s">who intervened</td>
+          <tr>
+            <td class="s">who intervened</td>
             <td class="d"><span class="mono">approver.id</span></td>
             <td class="d"><span class="mono">payload.reviewer_id</span></td>
+            <td class="d n">absent: <b>seventy two</b> <span class="mono">gen_ai.*</span> attributes on 9 September 2026 and not one for an approver. <span class="mono">gen_ai.agent.id</span> is the agent itself</td>
             <td class="d n">absent: the issuer of a statement is not the
               person who approved an action</td></tr>
-          <tr><td class="s">where that identity was resolved from</td>
+          <tr>
+            <td class="s">where that identity was resolved from</td>
             <td class="d"><span class="mono">identity_source</span></td>
             <td class="d"><b>by construction:</b> the receipt is a
               user-verified WebAuthn assertion under an enrolled key</td>
+            <td class="d n">absent: no human identity to resolve</td>
             <td class="d n">absent</td></tr>
-          <tr><td class="s">when each row was written</td>
+          <tr>
+            <td class="s">when each row was written</td>
             <td class="d"><span class="mono">at</span></td>
             <td class="d"><span class="mono">payload.reviewed_at</span></td>
+            <td class="d"><span class="mono">startTimeUnixNano</span></td>
             <td class="d"><span class="mono">iat</span></td></tr>
-          <tr><td class="s">what a stated conclusion rested on</td>
+          <tr>
+            <td class="s">what a stated conclusion rested on</td>
             <td class="d"><span class="mono">source</span></td>
             <td class="d n">absent: the receipt commits to the action, not to
               what the reviewer was shown of it</td>
+            <td class="d n">absent: no person appears, so nothing records what was put in front of one</td>
             <td class="d n">absent</td></tr>
-          <tr><td class="s">whether an action was permitted or refused</td>
+          <tr>
+            <td class="s">whether an action was permitted or refused</td>
             <td class="d"><span class="mono">verdict</span></td>
             <td class="d"><span class="mono">payload.decision.outcome</span></td>
+            <td class="d n">absent: <span class="mono">gen_ai.tool.call.result</span> is what came back, which is a different fact</td>
             <td class="d n">absent</td></tr>
-          <tr><td class="s">why a refusal was refused</td>
+          <tr>
+            <td class="s">why a refusal was refused</td>
             <td class="d"><span class="mono">reason</span></td>
             <td class="d"><span class="mono">payload.decision.principal_reasons</span></td>
-            <td class="d n">absent</td></tr>
-          <tr><td class="s">where an action's risk class came from</td>
-            <td class="d"><span class="mono">risk_source</span></td>
             <td class="d n">absent</td>
             <td class="d n">absent</td></tr>
-          <tr><td class="s">anything that would show the rows unaltered</td>
+          <tr>
+            <td class="s">where an action's risk class came from</td>
+            <td class="d"><span class="mono">risk_source</span></td>
+            <td class="d n">absent</td>
+            <td class="d n">absent</td>
+            <td class="d n">absent</td></tr>
+          <tr>
+            <td class="s">anything that would show the rows unaltered</td>
             <td class="d"><span class="mono">digest</span></td>
             <td class="d"><b>by construction:</b> a signature over RFC 8785
               canonical bytes committing to the action hash</td>
+            <td class="d n">absent: a collector may drop, sample and rewrite spans by design, so a span that arrives is not evidence one was emitted</td>
             <td class="d"><b>by construction:</b> an inclusion proof against an
               append-only log</td></tr>
-          <tr><td class="s">what the system did</td>
+          <tr>
+            <td class="s">what the system did</td>
             <td class="d"><span class="mono">action_type</span></td>
             <td class="d"><span class="mono">payload.decision.decision_type</span></td>
+            <td class="d"><span class="mono">gen_ai.tool.name</span></td>
             <td class="d n">absent</td></tr>
-          <tr><td class="s">who or what the record is about</td>
+          <tr>
+            <td class="s">who or what the record is about</td>
             <td class="d"><span class="mono">subject</span></td>
             <td class="d"><span class="mono">payload.decision.subject_ref</span></td>
+            <td class="d n">absent</td>
             <td class="d"><span class="mono">sub</span></td></tr>
-          <tr><td class="s">which decision this attaches to</td>
+          <tr>
+            <td class="s">which decision this attaches to</td>
             <td class="d"><span class="mono">decision</span></td>
             <td class="d"><span class="mono">payload.decision_digest</span></td>
+            <td class="d"><span class="mono">gen_ai.tool.call.id</span></td>
             <td class="d n">absent</td></tr>
-          <tr><td class="s">which user or session acted</td>
+          <tr>
+            <td class="s">which user or session acted</td>
             <td class="d n">absent: no member names the session as distinct
               from the approver</td>
             <td class="d n">absent: the approver is named, the session is
               not</td>
+            <td class="d n">absent: <span class="mono">gen_ai.conversation.id</span> is a conversation, not an account</td>
             <td class="d n">absent</td></tr>
-          <tr><td class="s">the device or location it acted from</td>
+          <tr>
+            <td class="s">the device or location it acted from</td>
             <td class="d n">absent</td>
             <td class="d n">absent</td>
+            <td class="d n">absent</td>
             <td class="d n">absent</td></tr>
-          <tr><td class="s">the network address it acted from</td>
+          <tr>
+            <td class="s">the network address it acted from</td>
+            <td class="d n">absent</td>
             <td class="d n">absent</td>
             <td class="d n">absent</td>
             <td class="d n">absent</td></tr>
         </tbody>
       </table>
       </div>
+
+      <h3>The column that matters most is the emptiest</h3>
+      <p>Three of these four ask a deployer to adopt something. The fourth is
+        the pipe an enterprise already has: almost everybody running agents in
+        production is already emitting OpenTelemetry, because that is where
+        their traces go.</p>
+
+      <p>Counted on 9 September 2026 from
+        <span class="mono">model/gen-ai/registry.yaml</span>, the GenAI
+        semantic conventions carry <b>seventy two</b>
+        <span class="mono">gen_ai.*</span> attributes. Searching all seventy two
+        for approver, human, authorisation, oversight, review, principal,
+        consent and actor returns <b>nothing</b>. There is
+        <span class="mono">gen_ai.agent.id</span>, which is the agent's own
+        identifier, and reading that as an approver would tell a reader they
+        can say who approved when what they have is the agent approving
+        itself.</p>
+
+      <p>The count was sixty one on 8 September, against the old location in
+        <span class="mono">open-telemetry/semantic-conventions</span> before the
+        GenAI conventions moved to their own repository. The conventions are
+        growing quickly, so re-count this rather than cite it.</p>
+
+      <p>This is not a criticism of OpenTelemetry, which is a telemetry carrier
+        and has never claimed to be an oversight record. It is a statement about
+        what a deployer whose logs are spans can produce, which is a different
+        thing and a more consequential one, because it is not a choice they made
+        about oversight. It is a gap they will discover when somebody asks.</p>
 
       <p>The SCITT column is mostly absent and that is not a criticism. A
         transparency receipt is not trying to answer these questions. Read its
