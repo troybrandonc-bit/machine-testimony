@@ -1,0 +1,45 @@
+{
+  "read_on": "2026-09-09",
+  "read_by": "Troy Brandon Clifford",
+  "question": "Can a record relate what a reviewer was shown, what they approved, and what executed? Five requirements, defined in binding/rubric.py.",
+  "status": "IN PROGRESS. One of six subjects read. The others carry B2 verdicts from the first binding reading in readings.json and have not yet been read against B1, B3, B4 or B5. A partial census that says which parts are done is a measurement; one that fills the gaps by inference is not.",
+  "method": {
+    "how": "Published source read at a pinned commit, plus a reproduction run against the installed library. Where a claim is about what a record contains, it was produced and inspected rather than reasoned about.",
+    "limits": "Five questions about one relation. It says nothing about whether a framework is well built, and none of these were designed to answer this. A framework scoring absent is not failing a test it was taking."
+  },
+  "subjects": [
+    {
+      "name": "Pydantic AI",
+      "repo": "pydantic/pydantic-ai",
+      "package": "pydantic-ai-slim 2.42.0",
+      "assessments": {
+        "B1": {
+          "verdict": "partial",
+          "locator": "message history, ToolCallPart",
+          "note": "The arguments proposed to the reviewer persist in the message history as a ToolCallPart, so what was eligible to be shown is recoverable. Nothing records the rendering itself, or a digest of it, so two integrations displaying the same call very differently produce identical records."
+        },
+        "B2": {
+          "verdict": "partial",
+          "locator": "pydantic_ai/_deferred.py:103-109",
+          "note": "Carried over unchanged from the first binding reading. They can differ, and the framework supplies the mechanism: ToolApproved carries override_args, so it already understands that what was approved and what was proposed can differ. Whether an integration uses it is the integration's choice."
+        },
+        "B3": {
+          "verdict": "absent",
+          "locator": "pydantic_ai/_tool_execution.py:673-676",
+          "note": "REPRODUCED rather than reasoned about. _validate_approved_call does `validate_call = dataclasses.replace(call, args=approved.override_args)`, which builds a new call for execution and leaves the original untouched. Run against 2.42.0: the reviewer was shown {'ticket': 0, 'amount': 0}, approved with override_args {'ticket': 41, 'amount': 1}, and the tool executed the override. The message history then records ToolCallPart args {'ticket': 0, 'amount': 0} and a ToolReturnPart reading 'refunded 1 on ticket 41'. The executed arguments appear nowhere as a call. They survive only inside the return content, which is whatever string the tool happened to produce.",
+          "consequence": "A reader of that history concludes the agent called issue_refund(0, 0). An approval and a modification are not merely indistinguishable: the record positively states arguments that did not execute.",
+          "fairness": "This is not a defect in override_args, which is a validation and execution mechanism and works. The message history is a model-context artifact rather than an audit log, and pydantic-ai does not claim otherwise. The finding is that deployers use it as one."
+        },
+        "B4": {
+          "verdict": "present",
+          "locator": "pydantic_ai/_deferred.py, DeferredToolResults.approvals",
+          "note": "Approvals are a mapping keyed by tool_call_id, and filter_deferred_results keeps only those whose id is in the requested set, so an approval names the specific call it permits and a different call cannot satisfy it."
+        },
+        "B5": {
+          "verdict": "pending",
+          "note": "Not yet read. Left as pending rather than inferred from the presence of a ToolReturnPart, which would be exactly the reasoning this rubric exists to distrust."
+        }
+      }
+    }
+  ]
+}
