@@ -328,7 +328,8 @@ reason:
 : REQUIRED where the verdict is `refused`.
 
 inputs:
-: OPTIONAL. Identifiers of the beliefs the decision rested on.
+: OPTIONAL. Identifiers of the beliefs the decision rested on. Every one of
+  them MUST be present in the record as a belief entry.
 
 approval:
 : The identifier of an approval entry. REQUIRED where `risk_class` is `high`

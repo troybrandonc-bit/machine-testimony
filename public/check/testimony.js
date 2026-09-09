@@ -93,7 +93,10 @@ const ENUMS = [
  * right, and a port of the Python could never have found it, because a port
  * inherits the reading rather than the text. */
 const ACTOR_FIELDS = {
+    // machine-testimony#86: `scope` carries `declared_by`, defined as an
+    // Actor, and this map had three keys so the check never reached it.
     belief: "asserted_by", decision: "proposed_by", approval: "approver",
+    scope: "declared_by",
 };
 const ACTOR_KINDS = new Set(["agent", "human", "system", "connector"]);
 const ATTESTED = new Set([
@@ -623,6 +626,15 @@ export function validate(text) {
             if (str(byId.get(str(ev))?.type) !== "evidence")
                 dangling.push(`line ${b._line}: cites ${JSON.stringify(ev)}`);
     add("TR-2", "cited evidence exists in the record", dangling.length === 0, dangling.slice(0, 3).join("; "));
+    // machine-testimony#87. Three reference-shaped members were resolved
+    // and `inputs` was not, though it is the only one that says what a
+    // decision rested on.
+    const stray = [];
+    for (const d of of("decision"))
+        for (const b of arr(d.inputs))
+            if (str(byId.get(str(b))?.type) !== "belief")
+                stray.push(`line ${d._line}: inputs cites ${JSON.stringify(b)}`);
+    add("TR-2", "a decision's inputs name beliefs in the record", stray.length === 0, stray.slice(0, 3).join("; "));
     const conflicts = of("conflict");
     const thin = conflicts.filter((c) => arr(c.sides).length < 2);
     add("TR-2", "each conflict names at least two sides", thin.length === 0, `${thin.length} conflict(s) with fewer than two sides`);
