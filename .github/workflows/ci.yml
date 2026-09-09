@@ -644,6 +644,17 @@ jobs:
           set +e; out=$(python tests_compare.py 2>&1); rc=$?; set -e
           echo "$out"
           [ $rc -eq 0 ] || { echo "::error::the comparison suite failed"; exit 1; }
+      # The registry reads formats it did not write, so the thing that can go
+      # wrong is reporting a guess the way it reports a reading. This suite
+      # holds the two apart, and pins the specific misread that caused it: a
+      # field called `subject_ref` matching a signal called `source` on
+      # nothing but the fragment they share.
+      - name: A guessed mapping is never reported as a declared one
+        working-directory: tests
+        run: |
+          set +e; out=$(python tests_formats.py 2>&1); rc=$?; set -e
+          echo "$out"
+          [ $rc -eq 0 ] || { echo "::error::the declared mapping suite failed"; exit 1; }
       - name: The shipped manifest is the manifest of the shipped files
         run: |
           before=$(python -c "import json,io;print(json.load(io.open('census/MANIFEST.json',encoding='utf-8'))['census_digest'])")

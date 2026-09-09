@@ -272,15 +272,35 @@ ACTORS = {"proposed_by": "agent", "asserted_by": "agent",
           "approver": "human", "declared_by": "system"}
 
 
-def _paths(row, prefix=""):
-    """Every dotted path to a scalar in one row."""
+def _paths(row, prefix="", lists=False):
+    """Every dotted path to a scalar in one row.
+
+    `lists` is off by default and on for discovery. A list-valued field was
+    invisible here until 9 September 2026: reading an EMILIA authorization
+    receipt against Colorado reported that it carried no reason for an adverse
+    outcome, while the record held `payload.decision.principal_reasons` with
+    two of them. Any format that states more than one reason states them as a
+    list, so this was not an EMILIA problem.
+
+    It stays off for `suggest` and `emit` on purpose. Discovering a
+    list-valued path is useful; proposing it as the mapping for a member that
+    must hold a string would build a record the validator then rejects, and
+    trading a silent miss for a confident wrong answer is the trade this whole
+    layer exists to refuse.
+    """
     out = {}
     if isinstance(row, dict):
         for k, v in row.items():
             here = prefix + k
             if isinstance(v, dict):
-                out.update(_paths(v, here + "."))
-            elif not isinstance(v, (list, tuple)):
+                out.update(_paths(v, here + ".", lists))
+            elif isinstance(v, (list, tuple)):
+                if lists:
+                    out[here] = v
+                    for item in v:
+                        if isinstance(item, dict):
+                            out.update(_paths(item, here + ".", lists))
+            else:
                 out[here] = v
     return out
 
