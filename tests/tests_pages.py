@@ -474,6 +474,31 @@ def main():
     check("and it names no product it is selling",
           "OMEM" not in uw and "omem" not in uw.lower())
 
+    # This page quoted Zhu twice without attribution until machine-testimony#55,
+    # and it is read by the people it quotes. It now also quotes Armilla on why
+    # applications get declined. A quote separated from its source by a later
+    # copy edit is the same defect again, so each one is tied to the name and
+    # the link here rather than to somebody remembering.
+    #
+    # Searched over whitespace-flattened HTML, because a quoted sentence wraps
+    # across source lines and neither of these phrases occurs contiguously in
+    # the file. Written the naive way first, this guard passed by finding
+    # nothing, which is the failure mode a guard is supposed to prevent.
+    flat = _re.sub(r"\s+", " ", uw)
+    QUOTED = [("too thin to support risk transfer", "Philip Dawson",
+               "armilla.ai/resources/"),
+              ("where reasonably available", "Zhu", "arxiv.org")]
+    seen_quote = False
+    for phrase, who, link in QUOTED:
+        if phrase in flat:
+            seen_quote = True
+            check("the %r quote is still attributed to %s" % (phrase[:28], who),
+                  who in flat and link in flat,
+                  "name present: %s, link present: %s"
+                  % (who in flat, link in flat))
+    check("the page still quotes somebody, so the guard above ran",
+          seen_quote, "no known quotation found: the attribution guard is dead")
+
 
     print("\nevery page closes the banner before the page begins")
     # The banner is navy with near-white text. Left open it wraps the whole
