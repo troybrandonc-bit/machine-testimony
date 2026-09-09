@@ -8,6 +8,20 @@
     <h2 class="label">Implementing it</h2>
 
     <div class="block">
+      <p class="callout"><b>If you are already on LangGraph, CrewAI, AutoGen, OpenAI
+        Agents or Pydantic AI, this is two commands and you do not have to read
+        the rest of this page.</b> Each adapter ships an example that runs against
+        the real library, needs no API key and no network, and produces a record
+        that reaches TR-4.</p>
+      <pre class="snip">python3 adapters/pydantic-ai/example.py &gt; record.jsonl
+python3 spec/testimony_validate.py record.jsonl</pre>
+      <p>Forty lines of ordinary framework code, plus a recorder and a function
+        where your approval queue goes. Read that file and you have seen the
+        whole shape. <a href="#already">The five, and the seam each one uses</a>,
+        are at the foot of this page.</p>
+    </div>
+
+    <div class="block">
       <p>Until today this site explained the format and left you to write it.
         That is a project: work out the required members from prose, get the
         digest rule right unaided, and find out whether you have finished by
@@ -209,10 +223,12 @@ required fields your records had no value for:
       <a href="https://github.com/troybrandonc-bit/machine-testimony/blob/main/spec/testimony_validate.py">testimony_validate.py</a><br>
       <a href="https://github.com/troybrandonc-bit/machine-testimony/tree/main/conformance">the conformance corpus</a></p>
 
-    <h2 class="label">Already in a framework</h2>
+    <h2 class="label" id="already">Already in a framework</h2>
     <p class="cont">One file each, depending on that framework and on nothing
       of ours. Each names the seam it found, because they are not
-      alike.</p>
+      alike. <b>Every one ships an <code>example.py</code> you can run</b>,
+      which is the fastest way to see what a record looks like coming out of
+      the framework you already use rather than out of a specification.</p>
     <p class="cont"><a href="https://github.com/troybrandonc-bit/machine-testimony/tree/main/adapters/langgraph">LangGraph</a>,
       on interrupt and resume<br>
       <a href="https://github.com/troybrandonc-bit/machine-testimony/tree/main/adapters/crewai">CrewAI</a>,

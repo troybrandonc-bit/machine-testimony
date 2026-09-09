@@ -607,6 +607,28 @@ def main():
     check("every adapter ships an example somebody can run",
           not no_example, no_example)
 
+    # /implement/ now opens by telling a reader on one of five frameworks that
+    # a record is two commands away, and prints one of them. A page that names a
+    # path is making a claim, and the claim was false for four of the five
+    # until 9 September. This checks the command it prints still resolves to a
+    # file, and that every framework it names has one.
+    impl_src = io.open(os.path.join(ROOT, "pages", "implement.html"),
+                       encoding="utf-8").read()
+    shown = _re.findall(r"adapters/([a-z-]+)/example\.py", impl_src)
+    check("the command /implement/ prints names a real example",
+          shown and all(os.path.exists(
+              os.path.join(adir, d, "example.py")) for d in shown),
+          shown)
+
+    NAMED = {"LangGraph": "langgraph", "CrewAI": "crewai",
+             "AutoGen": "autogen", "OpenAI Agents": "openai-agents",
+             "Pydantic AI": "pydantic-ai"}
+    claimed = [d for label, d in NAMED.items() if label in impl_src]
+    lacking = [d for d in claimed
+               if not os.path.exists(os.path.join(adir, d, "example.py"))]
+    check("every framework /implement/ names has a runnable example",
+          not lacking, lacking)
+
     impl = io.open(os.path.join(PUB, "implement", "index.html"),
                    encoding="utf-8").read()
     missing = [d for d in built if "/adapters/" + d not in impl]
