@@ -500,6 +500,36 @@ def main():
           seen_quote, "no known quotation found: the attribution guard is dead")
 
 
+    print("\nno summary of the obligation reading outranks its own table")
+    # The reading found that the Act requires the approver's identity exactly
+    # once, for Annex III point 1(a), and its table has carried `partial` for
+    # that cell since the correction. The title, the heading, the meta
+    # description and the llms.txt entry all still said nobody requires it,
+    # and those are what a search result, a social card and an assistant
+    # actually quote. The careful paragraph was four screens below.
+    #
+    # A summary that contradicts the table it summarises is the failure this
+    # whole project is about, committed on its own site, so it is checked
+    # rather than remembered.
+    ob = io.open(os.path.join(PUB, "obligation", "index.html"),
+                 encoding="utf-8").read()
+    surfaces = [("the obligation page", ob)]
+    lp = os.path.join(PUB, "llms.txt")
+    if os.path.exists(lp):
+        surfaces.append(("llms.txt", io.open(lp, encoding="utf-8").read()))
+
+    ABSOLUTES = ("Nobody requires it to name who approved",
+                 "None requires it to say who authorised",
+                 "no requirement that the record say which person")
+    for what, text in surfaces:
+        hits = [a for a in ABSOLUTES if a in text]
+        check("%s does not claim nobody requires the approver" % what,
+              not hits, hits)
+
+    # And the cell those summaries were contradicting is still what it says.
+    check("the reading still records the Act as partial, not absent",
+          "partial" in ob, "the table no longer says partial anywhere")
+
     print("\nevery page closes the banner before the page begins")
     # The banner is navy with near-white text. Left open it wraps the whole
     # document, and every generated page on this site rendered that way from
