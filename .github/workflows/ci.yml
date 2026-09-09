@@ -150,7 +150,10 @@ jobs:
                              check=True, stdout=subprocess.DEVNULL)
               whl = sorted(glob.glob(os.path.join(d, "dist", "*.whl")))[-1]
               names = zipfile.ZipFile(whl).namelist()
-              need = [mod, "testimony_validate.py"]
+              # testimony_anchor is what the example's --anchor path imports,
+              # and it imports canonical/digest_of from the validator. A wheel
+              # with one and not the other fails in a user's terminal.
+              need = [mod, "testimony_validate.py", "testimony_anchor.py"]
               # The three newer adapters import the emitter. LangGraph's does
               # not, and requiring it there would be asking for a file it has
               # no use for.
@@ -691,6 +694,16 @@ jobs:
           set +e; out=$(cd tests && python tests_profile.py 2>&1); rc=$?; set -e
           echo "$out"
           [ $rc -eq 0 ] || { echo "::error::the profile suite failed"; exit 1; }
+      # Five standalone packages each carry their own copy of the anchored
+      # path, because each must install without the others. Duplication is
+      # the price of that and drift is the price of duplication, so the five
+      # copies are held byte-identical here.
+      - name: The five examples agree, and say what an unanchored record is not
+        working-directory: tests
+        run: |
+          set +e; out=$(python tests_examples.py 2>&1); rc=$?; set -e
+          echo "$out"
+          [ $rc -eq 0 ] || { echo "::error::the examples suite failed"; exit 1; }
       - name: The shipped manifest is the manifest of the shipped files
         run: |
           before=$(python -c "import json,io;print(json.load(io.open('census/MANIFEST.json',encoding='utf-8'))['census_digest'])")

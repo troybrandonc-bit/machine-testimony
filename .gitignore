@@ -26,3 +26,10 @@ adapters/openai-agents/dist/
 adapters/pydantic-ai/testimony_validate.py
 adapters/pydantic-ai/testimony_emit.py
 adapters/pydantic-ai/dist/
+
+# The anchor module is bundled at build time for the same reason the validator is.
+adapters/langgraph/testimony_anchor.py
+adapters/crewai/testimony_anchor.py
+adapters/autogen/testimony_anchor.py
+adapters/openai-agents/testimony_anchor.py
+adapters/pydantic-ai/testimony_anchor.py

@@ -22,7 +22,11 @@ import shutil
 
 from hatchling.builders.hooks.plugin.interface import BuildHookInterface
 
-BUNDLE = ("testimony_validate.py", "testimony_emit.py")
+BUNDLE = ("testimony_validate.py", "testimony_emit.py",
+          # The anchored path is the one an example has to be able to SHOW.
+          # It imports canonical and digest_of from the validator, so a
+          # wheel carrying one and not the other installs an ImportError.
+          "testimony_anchor.py")
 
 
 class BundleSpec(BuildHookInterface):
