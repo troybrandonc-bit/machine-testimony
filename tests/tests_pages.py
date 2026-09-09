@@ -526,6 +526,30 @@ def main():
         check("%s does not claim nobody requires the approver" % what,
               not hits, hits)
 
+    # The guard above looks for the OLD wording and found nothing, which is how
+    # a botched replacement passed it. Correcting the llms.txt entry prefixed the
+    # new title onto a line that still carried the old lead, so line 50 read
+    # "Everyone requires the log. Everyone requires the log. One row of Annex
+    # III...". impartshadow read it live and reported it; no check here had any
+    # opinion about it, because absence of the wrong sentence is not presence of
+    # a right one.
+    #
+    # llms.txt is the surface a model quotes without ever seeing the table, so a
+    # mangled line there travels further than one on the page.
+    if os.path.exists(lp):
+        txt = io.open(lp, encoding="utf-8").read()
+        dupes = []
+        for line in txt.split(chr(10)):
+            head = line.split("](")[0].lstrip("- [")
+            if len(head) < 12 or len(head) > 200:
+                continue
+            for end in (". ", "? "):
+                first = head.split(end)[0] + end.strip()
+                if len(first) > 10 and head.count(first) > 1:
+                    dupes.append(first)
+        check("no llms.txt title repeats its own opening sentence",
+              not dupes, dupes)
+
     # And the cell those summaries were contradicting is still what it says.
     check("the reading still records the Act as partial, not absent",
           "partial" in ob, "the table no longer says partial anywhere")

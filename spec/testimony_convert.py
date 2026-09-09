@@ -413,10 +413,24 @@ INTEGRITY_HINTS = ("digest", "hash", "sha256", "checksum", "signature",
 
 
 def _has_integrity(rows):
-    for path in _paths(rows[0] if rows else {}):
-        leaf = path.split(".")[-1].lower()
-        if leaf in INTEGRITY_HINTS or (_parts(leaf) & set(INTEGRITY_HINTS)):
-            return path
+    """Where in these rows anything would show them unaltered.
+
+    Scans the rows rather than the first one. It read `rows[0]` alone until
+    9 September 2026, which is sound for telemetry, where every row has the
+    same shape, and wrong for the format's own records, where it is not: a
+    Testimony Record opens with a scope entry and carries its integrity entry
+    last, so a record conforming at TR-4 was reported as having nothing that
+    could show it unaltered. The instrument library reads this, so a deployer
+    with the one thing being asked about was told they lacked it.
+
+    Capped like `_seen` is, because a large file should not be read twice over
+    to answer a yes or no.
+    """
+    for row in rows[:200]:
+        for path in _paths(row):
+            leaf = path.split(".")[-1].lower()
+            if leaf in INTEGRITY_HINTS or (_parts(leaf) & set(INTEGRITY_HINTS)):
+                return path
     return None
 
 
