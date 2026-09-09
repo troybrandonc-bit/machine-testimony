@@ -591,6 +591,42 @@ def main():
         check("the words the page says are absent are still absent",
               not present, present)
 
+    print("\nthe United States reading counts what the texts contain")
+    # /united-states/ rests on four word counts over the Local Law 144 text,
+    # and the whole argument turns on two of them being small: record once, and
+    # retain not at all. A typed count is the fourth kind of stale number this
+    # repository has had, so it is recomputed from the committed source rather
+    # than trusted.
+    us_page = os.path.join(PUB, "united-states", "index.html")
+    ll144 = os.path.join(ROOT, "census", "sources", "nyc-ll144.txt")
+    if os.path.exists(us_page) and os.path.exists(ll144):
+        text = _re.sub(r"\s+", " ",
+                       io.open(ll144, encoding="utf-8").read())
+        page = io.open(us_page, encoding="utf-8").read()
+        wrong = []
+        for word in ("audit", "notice", "record", "retain"):
+            n = len(_re.findall(r"\b" + word, text, _re.I))
+            claim = _re.search(
+                r"<span class=\"mono\">" + word
+                + r"</span>[^<]{0,40}?(\d+|does not occur|once)",
+                page, _re.I)
+            if not claim:
+                continue
+            said = claim.group(1).lower()
+            got = {"once": 1, "does not occur": 0}.get(said, None)
+            got = int(said) if got is None and said.isdigit() else got
+            if got is not None and got != n:
+                wrong.append("%s: page says %s, text has %d"
+                             % (word, said, n))
+        check("every Local Law 144 count on /united-states/ is what the"
+              " text holds", not wrong, wrong)
+
+        # The argument is that one instrument requires no record at all. If a
+        # future amendment adds one, this is the first thing that should fail.
+        check("Local Law 144 still does not use the word retain",
+              not _re.search(r"\bretain", text, _re.I),
+              "the text now contains it; the reading needs redoing")
+
     print("\nevery page closes the banner before the page begins")
     # The banner is navy with near-white text. Left open it wraps the whole
     # document, and every generated page on this site rendered that way from
