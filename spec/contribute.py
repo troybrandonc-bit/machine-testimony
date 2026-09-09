@@ -76,11 +76,29 @@ def lexicon(path_or_url: str = LEXICON_URL) -> frozenset:
 
 
 def beliefs(entries: list) -> dict:
-    """Subject to the propositions it held, and whether it affirmed them.
+    """Subject to the propositions it held, and whether it held them true.
 
     The last belief about a subject and proposition wins, because a record is
     append-only and a later entry is a later observation rather than a second
     opinion.
+
+    **`state` decides the position and `polarity` flips it**, which is not the
+    same as reading `polarity` alone. A belief carrying `believed_false` with
+    polarity `affirm` affirms that the proposition is FALSE, and counting it as
+    a positive is the exact inversion of what the record says. The first version
+    of this file did precisely that, and against a record using
+    `believed_false` it would have contributed counts that were the opposite of
+    the observation, which is the way a shared resource gets poisoned by
+    somebody acting carefully.
+
+    **`contradicted` and `unknown` are SKIPPED, never resolved.** A system
+    holding two irreconcilable positions, or none, has no stated position, and
+    picking one for it would be inventing an opinion the record deliberately
+    declined to have. The same reason absence is not counted.
+
+    Both rules are what `commons_contribute.py` already does at the other end.
+    Two paths producing different counts from the same record would be worse
+    than having only one.
     """
     held = {}
     for e in entries:
@@ -89,9 +107,11 @@ def beliefs(entries: list) -> dict:
         s, p = e.get("subject"), e.get("proposition")
         if not isinstance(s, str) or not isinstance(p, str):
             continue
-        if e.get("state") in ("unknown",):
+        state = e.get("state")
+        if state not in ("believed_true", "believed_false"):
             continue
-        held.setdefault(s, {})[p] = (e.get("polarity") == "affirm")
+        negative = (state == "believed_false") ^ (e.get("polarity") == "deny")
+        held.setdefault(s, {})[p] = not negative
     return held
 
 

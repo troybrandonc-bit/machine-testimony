@@ -94,6 +94,51 @@ def main():
         check("the base rate is a rate, never a count",
               0.0 <= p["consequent_base"] <= 1.0, p["consequent_base"])
 
+    print("\na position comes from state, and polarity only flips it")
+    # This suite passed over a real inversion. Every belief it built left
+    # `state` at its default of believed_true, and with that fixed, reading
+    # polarity alone and reading state-flipped-by-polarity agree on every row.
+    # The defect was invisible because the fixture never used the member that
+    # carries the meaning.
+    #
+    # `commons_contribute.py` at the other end computes
+    # negative = (state == "believed_false") ^ (polarity == "deny"), and two
+    # paths disagreeing about the same record would be worse than one path.
+    rs = em.Record()
+    rs.scope(acts=False, description="states")
+    ev = rs.evidence(kind="api", source="crm://y")
+    A = {"id": "a", "kind": "agent"}
+    CASES = [
+        # state, polarity, what the record says, the position it states
+        ("believed_true", "affirm", "affirms it is true", True),
+        ("believed_true", "deny", "denies it is true", False),
+        ("believed_false", "affirm", "affirms it is FALSE", False),
+        ("believed_false", "deny", "denies it is false", True),
+    ]
+    for i, (st, pol, _say, _want) in enumerate(CASES):
+        rs.belief(subject="s%d" % i, proposition="accepts", asserted_by=A,
+                  evidence=[ev], polarity=pol, state=st)
+    for st in ("contradicted", "unknown"):
+        rs.belief(subject="skip-" + st, proposition="accepts", asserted_by=A,
+                  evidence=[ev], polarity="affirm", state=st)
+    rs.seal()
+    ents = [json.loads(l) for l in rs.jsonl().split(chr(10)) if l.strip()]
+    held = ct.beliefs(ents)
+
+    for i, (st, pol, say, want) in enumerate(CASES):
+        got = held.get("s%d" % i, {}).get("accepts")
+        check("%s with polarity %s %s, so it counts as %s"
+              % (st, pol, say, "held" if want else "denied"),
+              got is want, "got %r, wanted %r" % (got, want))
+
+    # The row where reading polarity alone gives the opposite of the record.
+    check("reading polarity alone would have inverted the believed_false row",
+          held.get("s2", {}).get("accepts") is False and CASES[2][1] == "affirm")
+
+    for st in ("contradicted", "unknown"):
+        check("a %s belief states no position and is skipped, not resolved"
+              % st, "skip-" + st not in held, held.get("skip-" + st))
+
     print("\nand it refuses rather than guessing")
     r2 = subprocess.run([sys.executable,
                          os.path.join(ROOT, "spec", "contribute.py"),
