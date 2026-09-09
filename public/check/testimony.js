@@ -93,8 +93,8 @@ const ENUMS = [
  * right, and a port of the Python could never have found it, because a port
  * inherits the reading rather than the text. */
 const ACTOR_FIELDS = {
-    // machine-testimony#86: `scope` carries `declared_by`, defined as an
-    // Actor, and this map had three keys so the check never reached it.
+    // machine-testimony#86: `scope` carries `declared_by`, defined as an Actor,
+    // and this map had three keys so the shape check never reached it.
     belief: "asserted_by", decision: "proposed_by", approval: "approver",
     scope: "declared_by",
 };
@@ -626,9 +626,9 @@ export function validate(text) {
             if (str(byId.get(str(ev))?.type) !== "evidence")
                 dangling.push(`line ${b._line}: cites ${JSON.stringify(ev)}`);
     add("TR-2", "cited evidence exists in the record", dangling.length === 0, dangling.slice(0, 3).join("; "));
-    // machine-testimony#87. Three reference-shaped members were resolved
-    // and `inputs` was not, though it is the only one that says what a
-    // decision rested on.
+    // machine-testimony#87. Three reference-shaped members were resolved and
+    // `inputs` was not, though it is the only one that says what a decision
+    // rested on.
     const stray = [];
     for (const d of of("decision"))
         for (const b of arr(d.inputs))
