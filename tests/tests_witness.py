@@ -197,6 +197,18 @@ check("it declares itself a reference implementation",
 # The HMAC fallback is symmetric: anybody who can verify can forge. It exists
 # so the refusal logic runs without cryptography installed, and it must never
 # be mistaken for a witness.
+# W7 in the artifact, not only in the criteria. A scope filed in a policy
+# document the reader does not have is not a scope.
+check("the cosignature carries its observation scope",
+      body.get("observation_scope") in w.SCOPES)
+check("and says in words what that scope means",
+      body.get("observation_scope_means") == w.SCOPES[body["observation_scope"]])
+check("this witness admits it watched nothing happen",
+      body["observation_scope"] == "received"
+      and "watched nothing" in body["observation_scope_means"],
+      "it is handed a head over a network; claiming to observe an effect "
+      "would be the overclaim W7 exists to catch")
+
 check("a symmetric fallback names itself as not a witness",
       grew["alg"] == "ed25519" or "NOT A WITNESS" in grew["alg"],
       grew["alg"])
@@ -205,9 +217,19 @@ check("a symmetric fallback names itself as not a witness",
 print("")
 print("the criteria are stated so they can be argued with")
 
-check("six criteria", len(wc.CRITERIA) == 6, len(wc.CRITERIA))
-check("ids are W1 to W6",
-      [c.id for c in wc.CRITERIA] == ["W%d" % i for i in range(1, 7)])
+check("seven criteria", len(wc.CRITERIA) == 7, len(wc.CRITERIA))
+check("ids are W1 to W7",
+      [c.id for c in wc.CRITERIA] == ["W%d" % i for i in range(1, 8)])
+
+# W7 arrived from outside, one day after the criteria were published, from two
+# parties who did not cite each other. If the attribution is ever dropped, the
+# criteria stop being a record of who found what.
+w7 = [c for c in wc.CRITERIA if c.id == "W7"][0]
+check("W7 credits both parties who raised it",
+      "GitSerge-crypto" in w7.why and "HarperZ9" in w7.why)
+check("W7 says W2 is not enough on its own", "W2 requires" in w7.why)
+check("W7 names the same hole in this project's own format",
+      "same hole" in w7.why and "machine-testimony#90" in w7.why)
 check("every criterion says why it exists",
       all(len(c.why) > 120 for c in wc.CRITERIA),
       [c.id for c in wc.CRITERIA if len(c.why) <= 120])

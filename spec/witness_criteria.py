@@ -161,6 +161,32 @@ CRITERIA = [
         "to be a witness are the ones least likely to still exist. That "
         "includes this project, which is why the reference witness published "
         "alongside these criteria fails this one on purpose and says so."),
+
+    Criterion(
+        "W7",
+        "Does the cosignature state what the witness OBSERVED, as distinct "
+        "from what it received?",
+        "the cosignature names its observation scope: that the witness saw the "
+        "external effect, saw a response from the invoked interface, or "
+        "received the signing party's assertion and nothing more",
+        "the scope is discoverable from the witness's documentation but does "
+        "not travel with the signature",
+        "Added 10 September 2026. Two parties raised it on the same day in "
+        "different repositories, neither citing the other. @GitSerge-crypto on "
+        "langchain-ai/langgraph#7844 proposed bilateral signing, an agent "
+        "signature countersigned by an independent witness. @HarperZ9, writing "
+        "for Zain Harper at Flywheel, answered that a countersignature needs an "
+        "observation scope, because observing the effect, observing a tool "
+        "response, and receiving the agent's assertion are different evidence "
+        "sources even when one signing scheme covers all three. "
+        "W2 requires a witness to publish what its signature does not "
+        "establish, which is the negative half and is not enough here: a "
+        "reader holding one cosignature needs to know which of the three it "
+        "is, and a policy document filed elsewhere does not tell them. "
+        "This project's own format has the same hole. `outcome` says whether "
+        "an effect is claimed confirmed, unconfirmed or not attempted, and "
+        "nothing anywhere says on what basis, which is "
+        "machine-testimony#90.")
 ]
 
 

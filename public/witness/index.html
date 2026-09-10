@@ -305,7 +305,7 @@
         same reason the specification is. A rule only its author can apply is
         not a rule.</p>
 
-      <h3>The six</h3>
+      <h3>The seven</h3>
       <div class="scroller">
       <table class="reg">
         <thead><tr><th></th><th>The question</th><th>Why</th></tr></thead>
@@ -357,9 +357,39 @@
               retroactively. Stating the terms is cheap, and the parties most
               eager to be a witness are the ones least likely to still
               exist.</td></tr>
+          <tr><td class="s">W7</td>
+            <td class="d">Does the cosignature state what the witness
+              OBSERVED, as distinct from what it received?</td>
+            <td class="d"><b>Added 10 September 2026, the day after these
+              criteria were published.</b> Two parties raised it on the same
+              day in different repositories, neither citing the other: a
+              proposal for bilateral signing, and the answer that a
+              countersignature needs an observation scope, because observing
+              the effect, observing a tool response, and receiving the signing
+              party's assertion are different evidence sources even when one
+              signing scheme covers all three. W2 is the negative half and is
+              not enough: a reader holding one cosignature needs to know which
+              of the three it is, and a policy filed elsewhere does not tell
+              them.</td></tr>
         </tbody>
       </table>
       </div>
+
+      <p>The reference witness meets W7 by admitting the weakest answer.
+        It is handed a tree head over a network and watches nothing happen, so
+        every cosignature it emits carries
+        <span class="mono">observation_scope: received</span> and, in words,
+        that it received the signing party's assertion and nothing more.
+        Claiming to have observed an effect would be exactly the overclaim W7
+        exists to catch.</p>
+
+      <p><b>This project's own record format has the same hole.</b> A decision
+        entry says whether an effect is <span class="mono">confirmed</span>,
+        <span class="mono">unconfirmed</span> or
+        <span class="mono">not_attempted</span>, and nothing anywhere says on
+        what basis. That is
+        <a href="https://github.com/troybrandonc-bit/machine-testimony/issues/90">machine-testimony#90</a>
+        and it is open.</p>
 
       <h3>A reference witness, and what it fails</h3>
       <p>Criteria are cheap to write and easy to write unimplementably, so

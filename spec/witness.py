@@ -54,6 +54,21 @@ import sys
 ATTESTS = ("this tree head, for this log, at this size, was observed by this "
            "witness at this time, and is consistent with the head this witness "
            "previously signed for the same log")
+
+# W7, added 10 September 2026 after two parties raised it on the same day.
+# A cosignature has to say WHICH of these it is, travelling with the signature
+# rather than filed in a policy document the reader does not have. This witness
+# is handed a tree head over a network; it does not watch anything happen. That
+# is the weakest of the three and saying so is the criterion.
+OBSERVATION_SCOPE = "received"
+SCOPES = {
+    "effect": "the witness observed the external effect itself",
+    "response": "the witness observed a response from the invoked interface, "
+                "which establishes the call completed and not that the effect "
+                "occurred",
+    "received": "the witness received the signing party's assertion and "
+                "nothing more. It watched nothing happen.",
+}
 DOES_NOT_ATTEST = (
     "that the entries are true",
     "that the log is complete",
@@ -263,6 +278,8 @@ def cosign(head: dict, state_path: str, proof: list = None,
     body = {"statement": STATEMENT, "log": head["log"],
             "tree_size": size, "root": head["root"],
             "observed_at": at or _now(), "attests": ATTESTS,
+            "observation_scope": OBSERVATION_SCOPE,
+            "observation_scope_means": SCOPES[OBSERVATION_SCOPE],
             "does_not_attest": list(DOES_NOT_ATTEST)}
     signer, pub, alg = _key(state_path)
     sig = signer(canonical(body))
