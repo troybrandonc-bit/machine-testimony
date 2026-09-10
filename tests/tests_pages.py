@@ -647,6 +647,84 @@ def main():
               not _re.search(r"\brecord", ilt, _re.I),
               "it now does; the Illinois row needs redoing")
 
+    # California is two instruments and two sources, and the page quotes both
+    # heavily. Rather than list the quotations here and have the list go stale,
+    # every quotation on the page is checked against the union of the five
+    # committed texts. A quotation that is on the page and in none of them is
+    # either a misquote or a claim from a source nobody can check, and both
+    # should fail.
+    us_sources = [os.path.join(ROOT, "census", "sources", f) for f in
+                  ("co-sb26-189.txt", "nyc-ll144.txt", "il-pa-103-0804.txt",
+                   "ca-feha-ads.txt", "ca-ccpa-admt.txt")]
+    have = [f for f in us_sources if os.path.exists(f)]
+    if os.path.exists(us_page) and len(have) == len(us_sources):
+        corpus = " ".join(
+            _re.sub(r"\s+", " ", io.open(f, encoding="utf-8",
+                                         errors="replace").read())
+            for f in have)
+        corpus = _re.sub(r"PAGE\s*\d+\s*-\s*SENA\s*TE\s*BILL\s*26-189",
+                         "", corpus)
+        corpus = _re.sub(
+            r"CA PRIVACY PROTECTION AGENCY - TEXT OF REGULATIONS[^)]*\)"
+            r" Page \d+ of \d+", "", corpus)
+        corpus = _re.sub(r"\s+", " ", corpus)
+        page = io.open(us_page, encoding="utf-8").read()
+        quoted = _re.findall(r"&ldquo;([^&]{8,400})&rdquo;", page)
+        bad = []
+        for q in quoted:
+            q = _re.sub(r"<[^>]+>", "", q)
+            q = _re.sub(r"\s+", " ", q).strip()
+            if q and q not in corpus:
+                bad.append(q[:70])
+        check("every quotation on /united-states/ is in one of the five"
+              " committed texts", quoted and not bad, bad)
+
+    # The California FEHA row is an absence claim: four years of records and
+    # nothing asking who or whether it was edited. Six words carry it.
+    feha = os.path.join(ROOT, "census", "sources", "ca-feha-ads.txt")
+    if os.path.exists(feha) and os.path.exists(us_page):
+        ft = _re.sub(r"\s+", " ", io.open(feha, encoding="utf-8",
+                                          errors="replace").read())
+        present = [w for w in ("reviewer", "natural person", "oversight",
+                               "tamper", "integrity", "unaltered")
+                   if _re.search(w, ft, _re.I)]
+        check("the words the FEHA section says are absent are still absent",
+              not present, present)
+        check("the FEHA four-year record category is still named",
+              "selection criteria, automated-decision system data" in ft)
+
+    # The California privacy row is the opposite claim and needs the opposite
+    # check: the page says this instrument DOES define the reviewer, so the
+    # three properties have to be there, and the counts it prints have to
+    # recompute. `reviewer` and `human reviewer` being equal is the sentence
+    # "every reviewer here is a human one", and it is the only claim on this
+    # page that would survive a careless edit while becoming false.
+    ccpa = os.path.join(ROOT, "census", "sources", "ca-ccpa-admt.txt")
+    if os.path.exists(ccpa) and os.path.exists(us_page):
+        ct = _re.sub(r"\s+", " ", io.open(ccpa, encoding="utf-8",
+                                          errors="replace").read())
+        wrong = []
+        for word, want in (("reviewer", 6), ("human reviewer", 6),
+                           ("integrity", 5), (r"\bapprove", 3)):
+            n = len(_re.findall(word, ct, _re.I))
+            if n != want:
+                wrong.append("%s: reading says %d, text has %d"
+                             % (word, want, n))
+        check("the counts the California privacy section prints recompute",
+              not wrong, wrong)
+        check("every reviewer in the privacy regulations is a human one",
+              len(_re.findall("reviewer", ct, _re.I))
+              == len(_re.findall("human reviewer", ct, _re.I)))
+        gone = [w for w in ("tamper", "unaltered", "audit trail")
+                if _re.search(w, ct, _re.I)]
+        check("and it still asks nothing of the record itself", not gone, gone)
+        check("the three properties of human involvement are still there",
+              "Human involvement requires the human reviewer to" in ct
+              and "Have the authority to make or change the decision based on"
+                  " their analysis" in ct)
+        check("the appeal exception still designates a reviewer",
+              "Designate a human reviewer" in ct)
+
     print("\nevery page closes the banner before the page begins")
     # The banner is navy with near-white text. Left open it wraps the whole
     # document, and every generated page on this site rendered that way from
