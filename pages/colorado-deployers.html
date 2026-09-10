@@ -1,0 +1,170 @@
+<!--title: Colorado SB 26-189: can your AI stack produce the record you have to keep?
+    desc: From 1 January 2027 a Colorado deployer must give a consumer meaningful human review and keep records for three years. Ten widely deployed agent systems were read at pinned commits against what that requires. Of the eight that take or gate actions, one can name the person who approved one. This page says which stacks can produce the record, which cannot, and what changes it.
+    slug: colorado-deployers-->
+
+<div class="wrap main">
+  <div>
+    <p class="dateline">For deployers, 10 September 2026</p>
+    <h2 class="label">What your stack can show on 1 January, and what it
+      cannot</h2>
+
+    <div class="block">
+      <p>From <b>1 January 2027</b>, a deployer of automated decision-making
+        technology in Colorado must give a consumer an opportunity for
+        meaningful human review of an adverse decision, and must keep records
+        of compliance for <b>three years</b>. That is section 6-1-1703 of
+        Senate Bill 26-189, and it is the earliest deadline of its kind
+        anywhere.</p>
+
+      <p>Every advisory you will read between now and then tells you what the
+        law requires. This one tells you something else, and as far as we can
+        establish nobody else is measuring it: <b>whether the software you
+        already bought can produce the record.</b></p>
+
+      <p class="dateline">The Attorney General's proposed rules were filed 11
+        August 2026 and are not final. A revised draft is due by 23 September
+        and the hearing is 26 October, so the detail below may move. The
+        statutory duty in 6-1-1703 does not.</p>
+
+      <h3>The measurement</h3>
+      <p>In August and September 2026, ten widely deployed agent and
+        agent-memory systems were read at pinned commits against twenty
+        record-keeping requirements, with every verdict published next to the
+        file and line it rests on. Eight of the ten take or gate consequential
+        actions.</p>
+
+      <table class="facts">
+        <tr><th>1 of 8</th><td>can identify the person who approved an
+          action</td></tr>
+        <tr><th>6 of 8</th><td>cannot identify anyone: the structure carrying
+          what a human decided has no field for which human decided it</td></tr>
+        <tr><th>1 of 8</th><td>could not be determined from outside the
+          vendor</td></tr>
+      </table>
+
+      <p>The one that can is the reference implementation maintained by the
+        author of this page, which is disclosed here rather than left to be
+        found. The finding is not that these are bad systems. None of them was
+        built to answer this, and until 2026 nobody asked them to.</p>
+
+      <h3>If you run one of these, this is what it does today</h3>
+      <p>Six agent frameworks were read again on the narrower question of
+        whether a record can relate what a reviewer was shown, what they
+        approved, and what actually executed.</p>
+
+      <div class="scroller">
+      <table class="reg">
+        <thead><tr><th>Framework</th><th>What was shown</th><th>Approved or modified</th><th>Bound to the call</th></tr></thead>
+        <tbody>
+          <tr><td class="s">LangGraph</td>
+            <td class="d">retained in the checkpoint</td>
+            <td class="d">typed, so an edit is distinguishable</td>
+            <td class="d">partial: the id names the graph position, not the arguments</td></tr>
+          <tr><td class="s">OpenAI Agents SDK</td>
+            <td class="d">recoverable, not the rendering</td>
+            <td class="d">no modify path exists, so the two cannot be confused</td>
+            <td class="d">bound to the call id</td></tr>
+          <tr><td class="s">Pydantic AI</td>
+            <td class="d">recoverable, not the rendering</td>
+            <td class="d n">absent: the history states arguments that did not execute</td>
+            <td class="d">bound to the call id</td></tr>
+          <tr><td class="s">Haystack</td>
+            <td class="d">the decision keeps the final parameters, not the proposed ones</td>
+            <td class="d n">the vocabulary exists and the persisted object keeps one bool</td>
+            <td class="d">optional call id</td></tr>
+          <tr><td class="s">CrewAI</td>
+            <td class="d n">nothing on the approval path persists it</td>
+            <td class="d n">a hook mutates the arguments in place and returns one bool</td>
+            <td class="d n">no approval artifact to bind</td></tr>
+          <tr><td class="s">AutoGen</td>
+            <td class="d">no approval pause in core, so the question does not arise</td>
+            <td class="d">as above</td>
+            <td class="d">as above</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <p>Every verdict has a locator and a version, and several were reproduced
+        by running the code rather than reasoned about. They are at
+        <a href="/approval-binding/">the approval binding reading</a>, free to
+        reuse and free to dispute.</p>
+
+      <h3>What changes it, and it is smaller than you think</h3>
+      <p>Adapters exist for five of these frameworks. They are MIT licensed,
+        published on PyPI, and they do one thing: make the approval carry the
+        identity your authentication layer already knows, and write a record
+        that anybody can check.</p>
+
+      <p class="mono">pip install testimony-langgraph</p>
+
+      <p>Measured rather than claimed. A record produced through any of the five
+        adapters, read against the eleven Colorado obligations this project has
+        published a reading of:</p>
+
+      <table class="facts">
+        <tr><th>6</th><td>obligations the record could evidence</td></tr>
+        <tr><th>1</th><td>it could not: section 6-1-1701(15)(c), that the
+          reviewer does not default to the system output. No single record
+          shows this. A population of them does.</td></tr>
+        <tr><th>4</th><td>are not facts about a record at all, and are set
+          aside rather than reported as failures</td></tr>
+      </table>
+
+      <p>Those four are worth being clear about, because an advisory that
+        counts them against you is selling something. Designation, training and
+        authority live in your HR and identity systems, and the enumerated
+        records in 6-1-1703 are about the software's version identifiers and
+        changelogs. No record format produces any of them and none should
+        claim to.</p>
+
+      <h3>What this does not do</h3>
+      <p>It does not make you compliant, and nobody selling you software can.
+        Whether an obligation is met is a judgement somebody qualified makes on
+        evidence. This gathers the evidence, and it is honest about the parts
+        it cannot reach.</p>
+
+      <p>It is not legal advice. It is a reading of a public act and a
+        measurement of public software, both published with their dates so you
+        can check them or pay somebody to disagree with them.</p>
+
+      <h3>Doing it yourself, for nothing</h3>
+      <p>Everything above is free and stays free. The
+        <a href="/implement/">two-file route</a> takes an afternoon. You can
+        <a href="/check/">check a record</a> in your browser, which uploads
+        nothing, and <a href="/review/">read your own logs</a> the same way.
+        The <a href="/assess/">rubric</a> is Creative Commons and you may run
+        it against your own suppliers and never tell us.</p>
+
+      <h3>Or have it read for you</h3>
+      <p>A <b>Colorado readiness reading</b>: your records, or the stack you
+        run, assessed against the published reading of SB 26-189, item by item.
+        You get an evidence pack containing the reading, the record it rests
+        on, a digest over it, and the commands to recompute every number in it
+        using a validator published elsewhere. <b>Your auditor can reproduce
+        every figure without trusting us or you.</b></p>
+
+      <p>It contains no telemetry: the reading records which obligations were
+        evidenced and by which field name, never the field's contents, so the
+        pack can leave your infrastructure when the data it was derived from
+        cannot.</p>
+
+      <p>The first three are free, and that is a trade rather than a discount:
+        these instruments have never run against a real estate, your data will
+        find what a fixture cannot, and a reference name is worth more than a
+        first year of fees. It is said plainly here so nobody has to guess.</p>
+
+      <p><b>Ask:</b>
+        <a href="mailto:troy@machinetestimony.com?subject=Colorado%20readiness%20reading">troy@machinetestimony.com</a>.
+        Tell us which frameworks you run and whether you already keep records.
+        If the answer is that you do not need this, we will say so.</p>
+
+      <h3>Sources</h3>
+      <p>The act, as signed, is at
+        <a href="https://leg.colorado.gov/bills/sb26-189">leg.colorado.gov/bills/sb26-189</a>,
+        and the rulemaking is at <a href="https://coag.gov/ai/">coag.gov/ai</a>.
+        The reading of the act is at <a href="/colorado/">/colorado/</a>, the
+        per-system verdicts at <a href="/register/">/register/</a>, and the
+        conformance level the records reach at <a href="/tr-3/">/tr-3/</a>.</p>
+    </div>
+  </div>
+</div>

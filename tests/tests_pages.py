@@ -1646,6 +1646,51 @@ def main():
     # The sitemap rotted silently until 10 September 2026, when it carried 19
     # URLs against 24 published pages, and every one of the six missing was
     # built in the preceding two days, the Colorado reading among them.
+    # /colorado-deployers/ is the one page somebody reads while deciding to
+    # spend money, so its numbers are held to the readings they come from. A
+    # sales page that drifts from its own evidence is the thing this project
+    # reports in other people's systems.
+    print()
+    print("the deployer page says what the readings say")
+    dp = os.path.join(PUB, "colorado-deployers", "index.html")
+    check("the deployer page is published", os.path.exists(dp))
+    if os.path.exists(dp):
+        d = _re.sub(r"\s+", " ", io.open(dp, encoding="utf-8").read())
+
+        # The census: 8 of 10 act, 1 can name the approver. Same numbers as
+        # /register/ and /underwriting/ or somebody has edited a claim.
+        check("it uses the census counts, not rounder ones",
+              "1 of 8" in d and "6 of 8" in d and "1 of 10" not in d)
+
+        # The binding census, six frameworks, and the verdicts must match
+        # readings-2.json rather than being retold more favourably.
+        bind = json.load(io.open(os.path.join(ROOT, "census", "binding",
+                                              "readings-2.json"),
+                                 encoding="utf-8"))
+        for sub in bind["subjects"]:
+            check("%s is on the deployer page" % sub["name"],
+                  sub["name"] in d)
+        pyd = [x for x in bind["subjects"] if x["name"] == "Pydantic AI"][0]
+        check("pydantic-ai is still reported as failing B3 here",
+              pyd["assessments"]["B3"]["verdict"] == "absent"
+              and "did not execute" in d)
+
+        # The disclosure. The one system that can name an approver is the
+        # author's own, and a page selling a reading must say so.
+        check("it discloses that the passing system is the author's own",
+              "maintained by the author of this page" in d)
+        check("it says what the offer does not do",
+              "does not make you compliant" in d)
+        check("it names the four obligations no record can answer",
+              "not facts about a record at all" in d)
+        check("it says the free route exists and stays free",
+              "free and stays free" in d)
+        # The proposed rules are not final and the page must not imply they are.
+        check("it says the proposed rules are not final",
+              "are not final" in d and "23 September" in d)
+        check("there is a way to make contact",
+              "mailto:troy@machinetestimony.com" in d)
+
     print()
     print("everything published is findable")
     sys.path.insert(0, os.path.join(ROOT, "spec"))

@@ -3,23 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Verify an AI record was not altered, without the vendor &ndash; Machine Testimony</title>
-<meta name="description" content="A published AI agent audit record, anchored to an RFC 3161 Time Stamp Authority. Three commands verify it, none of them ours.">
-<meta property="og:title" content="Verify an AI record was not altered, without the vendor">
-<meta property="og:description" content="A published AI agent audit record, anchored to an RFC 3161 Time Stamp Authority. Three commands verify it, none of them ours.">
+<title>Colorado SB 26-189: can your AI stack produce the record you have to keep? &ndash; Machine Testimony</title>
+<meta name="description" content="From 1 January 2027 a Colorado deployer must give a consumer meaningful human review and keep records for three years. Ten widely deployed agent systems were read at pinned commits against what that requires. Of the eight that take or gate actions, one can name the person who approved one. This page says which stacks can produce the record, which cannot, and what changes it.">
+<meta property="og:title" content="Colorado SB 26-189: can your AI stack produce the record you have to keep?">
+<meta property="og:description" content="From 1 January 2027 a Colorado deployer must give a consumer meaningful human review and keep records for three years. Ten widely deployed agent systems were read at pinned commits against what that requires. Of the eight that take or gate actions, one can name the person who approved one. This page says which stacks can produce the record, which cannot, and what changes it.">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://machinetestimony.org/anchor/">
+<meta property="og:url" content="https://machinetestimony.org/colorado-deployers/">
 <meta property="og:image" content="https://machinetestimony.org/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Verify an AI record was not altered, without the vendor">
-<meta name="twitter:description" content="A published AI agent audit record, anchored to an RFC 3161 Time Stamp Authority. Three commands verify it, none of them ours.">
+<meta name="twitter:title" content="Colorado SB 26-189: can your AI stack produce the record you have to keep?">
+<meta name="twitter:description" content="From 1 January 2027 a Colorado deployer must give a consumer meaningful human review and keep records for three years. Ten widely deployed agent systems were read at pinned commits against what that requires. Of the eight that take or gate actions, one can name the person who approved one. This page says which stacks can produce the record, which cannot, and what changes it.">
 <meta name="twitter:image" content="https://machinetestimony.org/og.png">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/icon.png" type="image/png" sizes="512x512">
 <link rel="apple-touch-icon" href="/icon.png">
-<link rel="canonical" href="https://machinetestimony.org/anchor/">
+<link rel="canonical" href="https://machinetestimony.org/colorado-deployers/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -255,142 +255,169 @@
 </div>
 <div class="wrap main">
   <div>
-    <p class="dateline">Reference record, 5 September 2026</p>
-    <h2 class="label">A record you can check without us</h2>
+    <p class="dateline">For deployers, 10 September 2026</p>
+    <h2 class="label">What your stack can show on 1 January, and what it
+      cannot</h2>
 
     <div class="block">
-      <p>A record's integrity digest is computed by whoever wrote the record.
-        It detects an outsider's edit, which is worth having, and it establishes
-        nothing about the writer: anybody able to change the entries can
-        recompute the digest over the changed ones and hand you a file that
-        agrees with itself.</p>
+      <p>From <b>1 January 2027</b>, a deployer of automated decision-making
+        technology in Colorado must give a consumer an opportunity for
+        meaningful human review of an adverse decision, and must keep records
+        of compliance for <b>three years</b>. That is section 6-1-1703 of
+        Senate Bill 26-189, and it is the earliest deadline of its kind
+        anywhere.</p>
 
-      <p>The record below closes that. Its digest is signed by a Time Stamp
-        Authority, under that authority's own key, at a time nobody here
-        chose. Three commands check it. None of them is ours, and none of them
-        needs anything from this site except the two files.</p>
+      <p>Every advisory you will read between now and then tells you what the
+        law requires. This one tells you something else, and as far as we can
+        establish nobody else is measuring it: <b>whether the software you
+        already bought can produce the record.</b></p>
 
-      <h3>The files</h3>
-      <p><a href="/anchor/record.jsonl">record.jsonl</a> is thirteen entries: a
-        support agent that reads four sources, finds two systems of record
-        disagreeing about a customer's balance, refuses to close the account,
-        and issues a smaller refund that a named person approved. It is a
-        worked example rather than a real customer, and everything in it is
-        invented except the anchor.</p>
+      <p class="dateline">The Attorney General's proposed rules were filed 11
+        August 2026 and are not final. A revised draft is due by 23 September
+        and the hearing is 26 October, so the detail below may move. The
+        statutory duty in 6-1-1703 does not.</p>
 
-      <p><a href="/anchor/anchor.tsr">anchor.tsr</a> is the timestamp token,
-        as returned by the authority.</p>
+      <h3>The measurement</h3>
+      <p>In August and September 2026, ten widely deployed agent and
+        agent-memory systems were read at pinned commits against twenty
+        record-keeping requirements, with every verdict published next to the
+        file and line it rests on. Eight of the ten take or gate consequential
+        actions.</p>
 
       <table class="facts">
-        <tr><th>Digest</th>
-          <td>sha256:34bf5a95693e32fe9bb9a8f4975ea1807d309855e9f09bbb0f3d6cb05606b6e8</td></tr>
-        <tr><th>Authority</th><td>http://timestamp.digicert.com</td></tr>
-        <tr><th>Signed at</th><td>2026-09-05T14:31:54Z</td></tr>
-        <tr><th>Covers</th><td>12 entries, named in the record</td></tr>
+        <tr><th>1 of 8</th><td>can identify the person who approved an
+          action</td></tr>
+        <tr><th>6 of 8</th><td>cannot identify anyone: the structure carrying
+          what a human decided has no field for which human decided it</td></tr>
+        <tr><th>1 of 8</th><td>could not be determined from outside the
+          vendor</td></tr>
       </table>
 
-      <h3>One: recompute the digest</h3>
-      <p>The digest is over the twelve entries the record's integrity entry
-        names, each written as JSON with its members in order and no spare
-        whitespace, joined by newlines. Nothing here reads the digest; it
-        computes one and you compare.</p>
+      <p>The one that can is the reference implementation maintained by the
+        author of this page, which is disclosed here rather than left to be
+        found. The finding is not that these are bad systems. None of them was
+        built to answer this, and until 2026 nobody asked them to.</p>
 
-      <pre class="snip">python3 -c '
-import hashlib, json, sys
-e = [json.loads(l) for l in open("record.jsonl") if l.strip()]
-b = [x for x in e if x["type"] != "integrity"]
-c = [json.dumps(x, sort_keys=True, separators=(",", ":")) for x in b]
-print(hashlib.sha256("\n".join(c).encode()).hexdigest())'</pre>
+      <h3>If you run one of these, this is what it does today</h3>
+      <p>Six agent frameworks were read again on the narrower question of
+        whether a record can relate what a reviewer was shown, what they
+        approved, and what actually executed.</p>
 
-      <h3>Two: read what the token is over</h3>
-      <pre class="snip">openssl ts -reply -in anchor.tsr -text</pre>
+      <div class="scroller">
+      <table class="reg">
+        <thead><tr><th>Framework</th><th>What was shown</th><th>Approved or modified</th><th>Bound to the call</th></tr></thead>
+        <tbody>
+          <tr><td class="s">LangGraph</td>
+            <td class="d">retained in the checkpoint</td>
+            <td class="d">typed, so an edit is distinguishable</td>
+            <td class="d">partial: the id names the graph position, not the arguments</td></tr>
+          <tr><td class="s">OpenAI Agents SDK</td>
+            <td class="d">recoverable, not the rendering</td>
+            <td class="d">no modify path exists, so the two cannot be confused</td>
+            <td class="d">bound to the call id</td></tr>
+          <tr><td class="s">Pydantic AI</td>
+            <td class="d">recoverable, not the rendering</td>
+            <td class="d n">absent: the history states arguments that did not execute</td>
+            <td class="d">bound to the call id</td></tr>
+          <tr><td class="s">Haystack</td>
+            <td class="d">the decision keeps the final parameters, not the proposed ones</td>
+            <td class="d n">the vocabulary exists and the persisted object keeps one bool</td>
+            <td class="d">optional call id</td></tr>
+          <tr><td class="s">CrewAI</td>
+            <td class="d n">nothing on the approval path persists it</td>
+            <td class="d n">a hook mutates the arguments in place and returns one bool</td>
+            <td class="d n">no approval artifact to bind</td></tr>
+          <tr><td class="s">AutoGen</td>
+            <td class="d">no approval pause in core, so the question does not arise</td>
+            <td class="d">as above</td>
+            <td class="d">as above</td></tr>
+        </tbody>
+      </table>
+      </div>
 
-      <p>The <code>Message data</code> it prints is the same digest. That is
-        the binding between the token and this record rather than some other
-        one. It is not yet a statement about who issued the token, which is
-        step three and needs a certificate rather than a comparison. The
-        reference validator stops here, and says so: it reports the binding as
-        verified and the authority's issuance as attested, because it carries
-        no certificate store of its own.</p>
+      <p>Every verdict has a locator and a version, and several were reproduced
+        by running the code rather than reasoned about. They are at
+        <a href="/approval-binding/">the approval binding reading</a>, free to
+        reuse and free to dispute.</p>
 
-      <h3>Three: check the signature against your own roots</h3>
-      <p>Use your system's certificate store, not one we supply. On Debian or
-        Ubuntu it is the path below; on a Mac with Homebrew's OpenSSL it is
-        usually <code>/opt/homebrew/etc/openssl@3/cert.pem</code>.</p>
+      <h3>What changes it, and it is smaller than you think</h3>
+      <p>Adapters exist for five of these frameworks. They are MIT licensed,
+        published on PyPI, and they do one thing: make the approval carry the
+        identity your authentication layer already knows, and write a record
+        that anybody can check.</p>
 
-      <pre class="snip">openssl ts -verify -in anchor.tsr \
-  -digest 34bf5a95693e32fe9bb9a8f4975ea1807d309855e9f09bbb0f3d6cb05606b6e8 \
-  -CAfile /etc/ssl/certs/ca-certificates.crt</pre>
+      <p class="mono">pip install testimony-langgraph</p>
 
-      <pre class="snip">Verification: OK</pre>
+      <p>Measured rather than claimed. A record produced through any of the five
+        adapters, read against the eleven Colorado obligations this project has
+        published a reading of:</p>
 
-      <p>At that point you have checked, without trusting this site, that a
-        third party signed this exact set of bytes at that time.</p>
+      <table class="facts">
+        <tr><th>6</th><td>obligations the record could evidence</td></tr>
+        <tr><th>1</th><td>it could not: section 6-1-1701(15)(c), that the
+          reviewer does not default to the system output. No single record
+          shows this. A population of them does.</td></tr>
+        <tr><th>4</th><td>are not facts about a record at all, and are set
+          aside rather than reported as failures</td></tr>
+      </table>
 
-      <h3>What that does and does not establish</h3>
-      <p>It establishes that the record existed in exactly this form at
-        2026-09-05T14:31:54Z, and that it has not changed since.</p>
+      <p>Those four are worth being clear about, because an advisory that
+        counts them against you is selling something. Designation, training and
+        authority live in your HR and identity systems, and the enumerated
+        records in 6-1-1703 are about the software's version identifiers and
+        changelogs. No record format produces any of them and none should
+        claim to.</p>
 
-      <p>It does not establish that the record is true. It does not establish
-        that it is complete. It does not establish that a different record was
-        not produced at the same time and discarded. A timestamp fixes bytes
-        and a time, and a page that let you infer more from it would be making
-        the mistake this project exists to point at.</p>
+      <h3>What this does not do</h3>
+      <p>It does not make you compliant, and nobody selling you software can.
+        Whether an obligation is met is a judgement somebody qualified makes on
+        evidence. This gathers the evidence, and it is honest about the parts
+        it cannot reach.</p>
 
-      <p>The record says as much in its own integrity entry, in a
-        <code>does_not_prove</code> member, so a reader who has the file and
-        not this page is told the same thing.</p>
+      <p>It is not legal advice. It is a reading of a public act and a
+        measurement of public software, both published with their dates so you
+        can check them or pay somebody to disagree with them.</p>
 
-      <h3>Anchoring your own</h3>
-      <p>The tool is one standard-library file, MIT licensed, with no
-        dependencies. It builds the request by hand rather than asking you to
-        install a certificate library to emit one entry.</p>
+      <h3>Doing it yourself, for nothing</h3>
+      <p>Everything above is free and stays free. The
+        <a href="/implement/">two-file route</a> takes an afternoon. You can
+        <a href="/check/">check a record</a> in your browser, which uploads
+        nothing, and <a href="/review/">read your own logs</a> the same way.
+        The <a href="/assess/">rubric</a> is Creative Commons and you may run
+        it against your own suppliers and never tell us.</p>
 
-      <pre class="snip">python3 testimony_anchor.py record.jsonl &gt;&gt; record.jsonl
-python3 testimony_validate.py record.jsonl</pre>
+      <h3>Or have it read for you</h3>
+      <p>A <b>Colorado readiness reading</b>: your records, or the stack you
+        run, assessed against the published reading of SB 26-189, item by item.
+        You get an evidence pack containing the reading, the record it rests
+        on, a digest over it, and the commands to recompute every number in it
+        using a validator published elsewhere. <b>Your auditor can reproduce
+        every figure without trusting us or you.</b></p>
 
-      <p>Both are in the
-        <a href="https://github.com/troybrandonc-bit/machine-testimony">specification
-        repository</a>. You can also
-        <a href="/check/">check a record in the browser</a>, which runs the
-        same checks in a second implementation and never uploads anything.</p>
+      <p>It contains no telemetry: the reading records which obligations were
+        evidenced and by which field name, never the field's contents, so the
+        pack can leave your infrastructure when the data it was derived from
+        cannot.</p>
 
-      <h3>What was wrong here until today</h3>
-      <p>Until 5 September 2026 the validator did not recompute digests. It
-        checked that an integrity entry carried one. A record could reach the
-        top level with a digest of sixty-four zeros, and an anchored record
-        could carry a real, correctly signed token over some entirely different
-        record.</p>
+      <p>The first three are free, and that is a trade rather than a discount:
+        these instruments have never run against a real estate, your data will
+        find what a fixture cannot, and a reference name is worth more than a
+        first year of fees. It is said plainly here so nobody has to guess.</p>
 
-      <p>Two further things came out of fixing it. The specification had never
-        said how a digest is computed, so no independent implementer could have
-        recomputed one; that is now written down. And the two implementations
-        of the rule in this author's own repositories had never agreed with
-        each other, because one of them left the default spacing in its JSON.
-        Neither was noticed for as long as nothing checked.</p>
+      <p><b>Ask:</b>
+        <a href="mailto:troy@machinetestimony.com?subject=Colorado%20readiness%20reading">troy@machinetestimony.com</a>.
+        Tell us which frameworks you run and whether you already keep records.
+        If the answer is that you do not need this, we will say so.</p>
 
-      <p>They are recorded here rather than quietly repaired, on the same
-        reasoning the rest of this applies to everybody else: a system that
-        cannot show what it got wrong is asking to be taken on trust.</p>
+      <h3>Sources</h3>
+      <p>The act, as signed, is at
+        <a href="https://leg.colorado.gov/bills/sb26-189">leg.colorado.gov/bills/sb26-189</a>,
+        and the rulemaking is at <a href="https://coag.gov/ai/">coag.gov/ai</a>.
+        The reading of the act is at <a href="/colorado/">/colorado/</a>, the
+        per-system verdicts at <a href="/register/">/register/</a>, and the
+        conformance level the records reach at <a href="/tr-3/">/tr-3/</a>.</p>
     </div>
   </div>
-
-  <aside class="rail">
-    <h2 class="label">The files</h2>
-    <p class="cont"><a href="/anchor/record.jsonl">record.jsonl</a><br>
-      <a href="/anchor/anchor.tsr">anchor.tsr</a></p>
-
-    <h2 class="label">What each check rests on</h2>
-    <p class="cont">Recomputing the digest and reading the token are settled
-      from the files. The record's claim that its risk classes came from a
-      registry is not, and the browser validator marks it as an attestation
-      rather than counting it as proof.</p>
-
-    <hr>
-    <p class="cont"><a href="/check/">Check a record</a><br>
-      <a href="https://datatracker.ietf.org/doc/draft-clifford-testimony-record/">The specification, as an Internet-Draft</a><br>
-      <a href="/census/2026-09/">Eight systems, assessed</a></p>
-  </aside>
 </div>
 <footer class="foot">
   <div class="wrap">
