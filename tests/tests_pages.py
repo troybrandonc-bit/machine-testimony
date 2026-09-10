@@ -655,19 +655,30 @@ def main():
     # should fail.
     us_sources = [os.path.join(ROOT, "census", "sources", f) for f in
                   ("co-sb26-189.txt", "nyc-ll144.txt", "il-pa-103-0804.txt",
-                   "ca-feha-ads.txt", "ca-ccpa-admt.txt")]
+                   "ca-feha-ads.txt", "ca-ccpa-admt.txt", "tx-hb149.txt",
+                   "ut-ai-policy-act.txt")]
     have = [f for f in us_sources if os.path.exists(f)]
     if os.path.exists(us_page) and len(have) == len(us_sources):
-        corpus = " ".join(
-            _re.sub(r"\s+", " ", io.open(f, encoding="utf-8",
-                                         errors="replace").read())
-            for f in have)
-        corpus = _re.sub(r"PAGE\s*\d+\s*-\s*SENA\s*TE\s*BILL\s*26-189",
-                         "", corpus)
-        corpus = _re.sub(
-            r"CA PRIVACY PROTECTION AGENCY - TEXT OF REGULATIONS[^)]*\)"
-            r" Page \d+ of \d+", "", corpus)
-        corpus = _re.sub(r"\s+", " ", corpus)
+        # Page furniture has to go BEFORE the text is flattened, because most
+        # of it is only identifiable as a whole line: Utah's enrolled copies
+        # number every line, so a quotation running over a line break carries
+        # a line number inside it, and once the newlines are gone there is no
+        # way to tell that number from one in a sentence.
+        def _clean(path):
+            raw = io.open(path, encoding="utf-8", errors="replace").read()
+            raw = _re.sub(r"(?m)^\s*-\s*\d+\s*-\s*$", " ", raw)
+            raw = _re.sub(r"(?m)^\s*(?:Enrolled Copy\s*)?S\.B\. \d+"
+                          r"(?:\s*Enrolled Copy)?\s*$", " ", raw)
+            raw = _re.sub(r"(?m)^\s*\d{1,4}\s+", " ", raw)
+            flat = _re.sub(r"\s+", " ", raw)
+            flat = _re.sub(
+                r"PAGE\s*\d+\s*-\s*SENA\s*TE\s*BILL\s*26-189", "", flat)
+            flat = _re.sub(
+                r"CA PRIVACY PROTECTION AGENCY - TEXT OF REGULATIONS[^)]*\)"
+                r" Page \d+ of \d+", "", flat)
+            return _re.sub(r"\s+", " ", flat)
+
+        corpus = " ".join(_clean(f) for f in have)
         page = io.open(us_page, encoding="utf-8").read()
         quoted = _re.findall(r"&ldquo;([^&]{8,400})&rdquo;", page)
         bad = []
@@ -676,7 +687,7 @@ def main():
             q = _re.sub(r"\s+", " ", q).strip()
             if q and q not in corpus:
                 bad.append(q[:70])
-        check("every quotation on /united-states/ is in one of the five"
+        check("every quotation on /united-states/ is in one of the seven"
               " committed texts", quoted and not bad, bad)
 
     # The California FEHA row is an absence claim: four years of records and
@@ -724,6 +735,46 @@ def main():
                   " their analysis" in ct)
         check("the appeal exception still designates a reviewer",
               "Designate a human reviewer" in ct)
+
+    # Texas and Utah are absence claims of the strongest kind: the page says
+    # both instruments ask a record for nothing. An amendment that adds a
+    # record duty to either would make the page wrong in the direction that
+    # matters, so the words are checked rather than the reading remembered.
+    tx = os.path.join(ROOT, "census", "sources", "tx-hb149.txt")
+    if os.path.exists(tx) and os.path.exists(us_page):
+        tt = _re.sub(r"\s+", " ", io.open(tx, encoding="utf-8",
+                                          errors="replace").read())
+        gone = [w for w in ("audit", "reviewer", "tamper", "unaltered")
+                if _re.search(r"\b" + w, tt, _re.I)]
+        check("Texas still uses none of the four words the page says it does"
+              " not", not gone, gone)
+        # The single sentence the Texas reading turns on.
+        check("Texas still says disparate impact alone does not show intent",
+              "a disparate impact is not sufficient by itself to demonstrate"
+              " an intent to discriminate" in tt)
+        n = len(_re.findall(r"\brecord", tt, _re.I))
+        check("Texas still uses the word record four times", n == 4,
+              "counted %d" % n)
+
+    ut = os.path.join(ROOT, "census", "sources", "ut-ai-policy-act.txt")
+    if os.path.exists(ut) and os.path.exists(us_page):
+        ut_t = io.open(ut, encoding="utf-8", errors="replace").read()
+        ut_t = _re.sub(r"(?m)^\s*-\s*\d+\s*-\s*$", " ", ut_t)
+        ut_t = _re.sub(r"(?m)^\s*(?:Enrolled Copy\s*)?S\.B\. \d+"
+                       r"(?:\s*Enrolled Copy)?\s*$", " ", ut_t)
+        ut_t = _re.sub(r"(?m)^\s*\d{1,4}\s+", " ", ut_t)
+        ut_t = _re.sub(r"\s+", " ", ut_t)
+        gone = [w for w in ("reviewer", "natural person", "tamper",
+                            "unaltered", "integrity")
+                if _re.search(r"\b" + w, ut_t, _re.I)]
+        check("Utah still uses none of the five words the page says it does"
+              " not", not gone, gone)
+        n = len(_re.findall(r"\bretain", ut_t, _re.I))
+        check("Utah still has exactly one retention duty", n == 1,
+              "counted %d" % n)
+        check("and it is still the one written by a rule or an agreement",
+              "A participant shall retain records as required by office rule"
+              " or the participation agreement" in ut_t)
 
     print("\nevery page closes the banner before the page begins")
     # The banner is navy with near-white text. Left open it wraps the whole
