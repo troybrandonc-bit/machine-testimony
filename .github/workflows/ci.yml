@@ -704,6 +704,15 @@ jobs:
           set +e; out=$(python tests_examples.py 2>&1); rc=$?; set -e
           echo "$out"
           [ $rc -eq 0 ] || { echo "::error::the examples suite failed"; exit 1; }
+      # A page nothing points at is a page nobody finds, and the ones that
+      # matter here are the ones a compliance deadline sends people looking
+      # for. The sitemap was hand-maintained and had rotted to 19 URLs
+      # against 24 pages before this existed.
+      - name: Everything published is in the sitemap
+        run: |
+          set +e; out=$(python spec/build_sitemap.py --check 2>&1); rc=$?; set -e
+          echo "$out"
+          [ $rc -eq 0 ] || { echo "::error::the sitemap is stale"; exit 1; }
       - name: The shipped manifest is the manifest of the shipped files
         run: |
           before=$(python -c "import json,io;print(json.load(io.open('census/MANIFEST.json',encoding='utf-8'))['census_digest'])")

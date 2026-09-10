@@ -1641,6 +1641,41 @@ def main():
         check("the page names all three parties the criteria came from",
               "#302" in page and "8636" in page)
 
+    # A page nothing points at is a page nobody finds, and the pages that
+    # matter most here are the ones a deadline sends somebody looking for.
+    # The sitemap rotted silently until 10 September 2026, when it carried 19
+    # URLs against 24 published pages, and every one of the six missing was
+    # built in the preceding two days, the Colorado reading among them.
+    print()
+    print("everything published is findable")
+    sys.path.insert(0, os.path.join(ROOT, "spec"))
+    import build_sitemap as bs
+
+    r = subprocess.run([sys.executable,
+                        os.path.join(ROOT, "spec", "build_sitemap.py"),
+                        "--check"], capture_output=True, text=True)
+    check("the sitemap is what the published pages produce", r.returncode == 0,
+          (r.stderr or r.stdout)[:200])
+
+    sm = io.open(os.path.join(PUB, "sitemap.xml"), encoding="utf-8").read()
+    listed = set(_re.findall(r"<loc>([^<]*)</loc>", sm))
+    want = {"https://machinetestimony.org/" + (x + "/" if x else "")
+            for x in bs.pages()}
+    check("every published page is in the sitemap", want <= listed,
+          sorted(want - listed)[:5])
+
+    # llms.txt is NOT generated: its entries carry descriptions somebody had to
+    # write, and a generated one would be a list of titles. So it is held
+    # complete instead, the same bargain the instrument tables make.
+    lt = io.open(os.path.join(PUB, "llms.txt"), encoding="utf-8").read()
+    top = [x for x in bs.pages() if x and "/" not in x]
+    absent = [x for x in top if "/%s/" % x not in lt]
+    check("every top-level page is named in llms.txt", not absent, absent)
+
+    check("robots.txt points at the sitemap",
+          "machinetestimony.org/sitemap.xml" in
+          io.open(os.path.join(PUB, "robots.txt"), encoding="utf-8").read())
+
     print("\n%d passed, %d failed" % (PASS, FAIL))
     return 1 if FAIL else 0
 

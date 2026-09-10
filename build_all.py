@@ -101,6 +101,20 @@ def main() -> int:
         if not run(os.path.join("spec", s)):
             failed.append(s)
 
+    # The sitemap is generated last, from what is now on disk. It was hand
+
+    # maintained until 10 September 2026 and had rotted to 19 URLs against
+
+    # 24 pages, so the pages a deadline sends somebody looking for were the
+
+    # ones no crawler had been told about.
+
+    subprocess.run([sys.executable,
+
+                    os.path.join(HERE, "spec", "build_sitemap.py")],
+
+                   check=True)
+
     print("rebuilt %d pages" % built)
     for f in failed:
         print("  PROBLEM: %s" % f)
