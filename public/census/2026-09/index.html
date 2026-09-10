@@ -99,6 +99,16 @@
   .abstract p{font-size:15.5px;line-height:1.58;margin:0 0 11px;color:var(--body)}
   .abstract p:last-child{margin-bottom:0}
   .kw{font-size:14.5px;color:var(--muted);margin:16px 0 0}
+  /* Currency. A reader arriving here from the standing register finds eight
+     systems where the register has ten, and nothing on the page told them
+     why. The paper is not edited for that: it is dated, deposited and cited,
+     and a later assessment is a new entry. What was missing was the pointer. */
+  .since{max-width:34rem;margin:24px auto 0;padding:13px 0 0;
+    border-top:2px solid var(--band);font-size:14.5px;line-height:1.55;
+    color:var(--body)}
+  .since b{color:var(--ink)}
+  .since p{margin:0 0 9px}
+  .since p:last-child{margin-bottom:0}
   .abrule{border:0;border-top:1px solid var(--rule-soft);margin:30px 0 0}
 
   /* body */
@@ -293,6 +303,36 @@
   <p class="affil">Machine Testimony</p>
 
   <hr class="titlerule">
+
+  <div class="since">
+  <p><b>Since publication.</b> This paper was published on 4 September 2026 and
+    is not edited. Two things have happened to the work it reports, and a reader
+    should know both before comparing it with anything newer.</p>
+  <p><b>Two more systems were assessed on 6 September 2026</b>, Haystack and
+    Pydantic AI, bringing the standing count to ten. They are not in the tables
+    below and they were never meant to be: this is a dated reading of eight. The
+    current reading of all ten is the standing register at
+    <a href="/register/">machinetestimony.org/register/</a>, which is where a
+    reader who wants the present state should go.</p>
+  <p><b>The fourth level's wording was amended on 8 September 2026</b>, after
+    Jason Keirstead put it to the CSA AARM working group that tamper-evidence
+    was being asked of the wrong layer: an SDK emits records rather than storing
+    them, and requiring an emitter to be a ledger is not implementable. He was
+    right about the wording, and the requirement now asks whether anything a
+    system does would let alteration be detected afterwards, at whatever layer
+    holds or emits the record. <b>Every verdict in the tables below was then
+    rechecked against the amended wording and none of them changed.</b> Of the
+    thirty verdicts at this level, twenty one never depended on which layer
+    would carry it, nine cite a state-persistence component and are the ones the
+    objection bears on, and one of those nine is a <i>present</i>. The
+    correction is recorded because it was made, not because it moved anything.
+    </p>
+  <p>The rule this follows is the one in the census manifest and it has not
+    changed: a system that later gains a capability recorded here as absent has
+    not made this document wrong, because the assessment was of a commit that
+    still exists and still reads the same way. A later assessment is a new entry
+    with a new date, never an edit to this one.</p>
+  </div>
 
   <div class="abstract">
   <h2>Abstract</h2>

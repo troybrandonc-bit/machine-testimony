@@ -540,5 +540,71 @@ check("and refuses a preview of the verdict, on both",
       all("no sight of the verdict before it" in f.lower()
           for f in (flat_a, flat_r)))
 
+print("\nthe published paper still says what the subject files say")
+# The paper is a dated deposit with a DOI and it is not edited, which makes it
+# exactly the kind of document that drifts from its own data without anybody
+# noticing, because nobody regenerates it. On 10 September 2026 a reader
+# compared it against the standing register, found eight systems where the
+# register has ten, and concluded the paper was wrong. It was not: all 160
+# cells matched. But nothing here could have said so, and answering took an
+# afternoon of diffing rather than a second of running a check.
+#
+# If a subject is re-read and the paper is not reissued, this fails and names
+# the cell. The fix then is a new dated paper, never an edit to this one.
+paper = os.path.join(ROOT, "public", "census", "2026-09", "index.html")
+if not os.path.exists(paper):
+    check("the September paper is published", False, paper)
+else:
+    raw = io.open(paper, encoding="utf-8").read()
+    flat = re.sub(r"\s+", " ",
+                  re.sub(r"<[^>]+>", " ",
+                         re.sub(r"(?is)<(script|style)[^>]*>.*?</\1>", " ",
+                                raw)))
+    COLS = ["AutoGen", "CrewAI", "Graphiti", "LangGraph", "Letta", "mem0",
+            "OMEM", "OpenAI SDK"]
+    SLUG = {"AutoGen": "autogen", "CrewAI": "crewai", "Graphiti": "graphiti",
+            "LangGraph": "langgraph", "Letta": "letta-code", "mem0": "mem0",
+            "OMEM": "omem", "OpenAI SDK": "openai-agents"}
+    WORD = {"present": "yes", "absent": "no", "partial": "part",
+            "undetermined": "?", None: "n/a"}
+
+    published = {}
+    for m in re.finditer(r"\b(R[1-4]\.\d)\b((?: (?:yes|no|part|n/a|\?)){8})",
+                         flat):
+        published[m.group(1)] = m.group(2).split()
+    check("the paper prints twenty requirement rows", len(published) == 20,
+          "found %d" % len(published))
+
+    current, absent = {}, []
+    for col in COLS:
+        f = os.path.join(ROOT, "census", "subjects", SLUG[col] + ".json")
+        if not os.path.exists(f):
+            absent.append(SLUG[col])
+            continue
+        for rid, v in json.load(io.open(f, encoding="utf-8"))["assessments"].items():
+            got = v.get("verdict") if isinstance(v, dict) else v
+            current.setdefault(rid, {})[col] = WORD.get(got, str(got))
+    check("every system in the paper still has a subject file", not absent,
+          absent)
+
+    wrong = []
+    for rid in sorted(published):
+        for i, col in enumerate(COLS):
+            was, now = published[rid][i], current.get(rid, {}).get(col, "n/a")
+            if was != now:
+                wrong.append("%s %s: paper %s, subjects %s"
+                             % (rid, col, was, now))
+    check("all 160 published verdicts match the subject files", not wrong,
+          wrong)
+
+    # A reader who lands on a dated paper and then on the standing register has
+    # to be able to tell an older reading from a wrong one without asking.
+    for phrase, why in (
+            ("Two more systems were assessed", "it points at the newer ones"),
+            ('href="/register/"', "it links to the standing register"),
+            ("none of them changed", "it says the recheck moved nothing"),
+            ("Jason Keirstead", "it credits the objection by name")):
+        check("the currency note %s" % why, phrase in raw)
+
 print("\n%d passed, %d failed" % (PASS, FAIL))
 sys.exit(1 if FAIL else 0)
