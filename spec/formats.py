@@ -94,7 +94,13 @@ class Format:
 # that invents one fails a test instead of silently never matching.
 SIGNALS = ("write_time", "evidence_link", "verdict", "reason", "risk_source",
            "approver", "identity_source", "integrity", "user_id", "device",
-           "ip", "activity", "subject", "decision_ref")
+           "ip", "activity", "subject", "decision_ref",
+           # Added 10 September 2026 for EU AI Act Article 86, which asks for
+           # the main elements of a decision. These two are the axis that
+           # actually separates these formats: three of the four are records of
+           # an AUTHORISATION and one is a record of what a system held to be
+           # true and what contradicted it.
+           "proposition", "conflict")
 
 
 DECLARED = {
@@ -121,6 +127,8 @@ DECLARED = {
             "activity": "action_type",
             "subject": "subject",
             "decision_ref": "decision",
+            "proposition": "proposition",
+            "conflict": "sides",
             "user_id": (ABSENT,
                         "no member names the session or account that acted, as "
                         "distinct from the approver who intervened"),
@@ -175,6 +183,16 @@ DECLARED = {
                 "separate draft about it, "
                 "draft-schrock-ep-presentation-binding-00."),
             "risk_source": (ABSENT, "no risk classification in the receipt"),
+            "proposition": (
+                ABSENT,
+                "a receipt commits to an ACTION. There is no member for what "
+                "the system held to be true, because the receipt is not a "
+                "record of reasoning, and it does not claim to be."),
+            "conflict": (
+                ABSENT,
+                "nothing records that two facts disagreed. This and the row "
+                "above are the half of the question EP does not answer, and "
+                "the half this project's format exists for."),
             "user_id": (ABSENT, "the approver is named; the session is not"),
             "device": (ABSENT, "not in the receipt body"),
             "ip": (ABSENT, "not in the receipt body"),
@@ -241,6 +259,12 @@ DECLARED = {
             "subject": (
                 ABSENT,
                 "no attribute names who or what a decision was about"),
+            "proposition": (
+                ABSENT,
+                "a span records that a call happened, never what was believed"),
+            "conflict": (
+                ABSENT,
+                "no attribute records that two things disagreed"),
             "user_id": (
                 ABSENT,
                 "`gen_ai.conversation.id` identifies a conversation, not the "
@@ -299,6 +323,8 @@ DECLARED = {
             "device": (ABSENT, "not part of the receipt"),
             "ip": (ABSENT, "not part of the receipt"),
             "decision_ref": (ABSENT, "not part of the receipt"),
+            "proposition": (ABSENT, "not part of the receipt"),
+            "conflict": (ABSENT, "not part of the receipt"),
         },
         notes={
             "what it is for": "A transparency receipt is a carrier and an "
