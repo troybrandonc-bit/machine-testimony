@@ -19,9 +19,10 @@ name: Release an adapter
 #   owner: troybrandonc-bit          repo: machine-testimony
 #   workflow: release-adapter.yml    environment: pypi-testimony-<adapter>
 #
-# Configured: testimony-langgraph.
-# STILL TO CONFIGURE before their first tag: testimony-crewai,
-# testimony-autogen, testimony-openai-agents, testimony-pydantic-ai.
+# Configured: all five. Each was released through this workflow at 0.1.0 on
+# 4 to 6 September 2026, so the publisher exists on each PyPI project and a new
+# tag needs nothing set up. The note that four were still pending was left
+# stale after they were done.
 
 on:
   push:
