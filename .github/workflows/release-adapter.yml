@@ -206,7 +206,7 @@ jobs:
               ]
               es.append({'spec': S, 'type': 'integrity', 'id': 'i1', 'at': at,
                          'scheme': 'hash-chain', 'covers': ['s1', 'd1', 'a1'],
-                         'digest': tv.digest_of(es)})
+                         'digest': 'sha256:' + tv.digest_of(es)})
               text = ''.join(json.dumps(e) + chr(10) for e in es)
           
           open('out.jsonl', 'w', newline=chr(10)).write(text)
