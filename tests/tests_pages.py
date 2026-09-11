@@ -573,6 +573,30 @@ def main():
         act = _re.sub(r"PAGE\s*\d+\s*-\s*SENA\s*TE\s*BILL\s*26-189",
                       "", act)
         act = _re.sub(r"\s+", " ", act)
+        # The page reads three documents now: the signed act, the proposed
+        # rules filed 11 August 2026 and the Notice of Proposed Rulemaking
+        # that asks which Materially Influence standard to adopt. A quotation
+        # has to be in one of them, not specifically in the act, and widening
+        # this is not loosening it: a sentence from the rules was previously
+        # reported as a misquote of a statute it was never claiming to quote.
+        # `act` stays the signed act alone, because the absence claims below
+        # are about the act and nothing else. Widening it broke that check on
+        # the first attempt: the rules say "reviewer" constantly, so folding
+        # them in made the page's true statement about the statute read false.
+        sources = act
+        for extra in ("co-admt-proposed-rules.txt",
+                      "co-admt-notice-of-hearing.txt"):
+            f = os.path.join(ROOT, "census", "sources", extra)
+            if os.path.exists(f):
+                sources += " " + _re.sub(
+                    r"\s+", " ",
+                    io.open(f, encoding="utf-8", errors="replace").read())
+        # The rules were extracted from a .docx and carry split words such as
+        # "Consequential D ecision". That is an artifact of the extraction and
+        # not a difference in the document, so the comparison ignores spacing
+        # entirely. It still catches a misquote, because different words do not
+        # become the same words when the spaces come out.
+        squashed = _re.sub(r"\s+", "", sources)
         page = io.open(co_page, encoding="utf-8").read()
         quoted = _re.findall(r"&ldquo;([A-Z][^&]{10,400})&rdquo;", page)
         bad = []
@@ -580,9 +604,9 @@ def main():
             q = _re.sub(r"<[^>]+>", "", q)
             for part in [x.strip() for x in
                          _re.sub(r"\s+", " ", q).split("...")]:
-                if part and part not in act:
+                if part and part not in sources and                         _re.sub(r"\s+", "", part) not in squashed:
                     bad.append(part[:60])
-        check("every quotation on /colorado/ is in the signed act",
+        check("every quotation on /colorado/ is in a committed source",
               quoted and not bad, bad)
 
         # The finding is partly an absence, so the absence is checked too.
