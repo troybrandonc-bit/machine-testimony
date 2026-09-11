@@ -617,10 +617,14 @@ ENUMS = {
     ("approval", "disposition"): {"approved", "modified", "overrode"},
 }
 
-# A disposition that changed something owes what it changed. Approving as
-# proposed needs no such member; saying you modified an action and not saying
-# to what is the rubber stamp with extra words.
-CHANGED = {"modified", "overrode"}
+# `modified` owes what it changed. The other two do not, and the reason is not
+# leniency. `approved` changed nothing. `overrode` reversed the decision, and
+# the reversal is already recorded as `verdict: refused` on the decision it
+# points at, so demanding a prose restatement of it would add a field whose
+# only possible content is a worse copy of a fact already there. Narrowed after
+# the LangGraph adapter test refused a refusal for failing to say what it had
+# changed, which was the check being wrong rather than the record.
+CHANGED = {"modified"}
 
 
 def validate(text: str) -> Report:
@@ -984,7 +988,7 @@ def validate(text: str) -> Report:
                 a.get("changed") or "").strip():
             silent.append(f"line {a['_line']}: disposition "
                           f"{a['disposition']!r} without `changed`")
-    r.add("TR-3", "an approval that changed the action says what it changed",
+    r.add("TR-3", "an approval that modified the action says what it changed",
           not silent, "; ".join(silent[:3]), basis="verified",
           since="testimony-record/0.3")
 

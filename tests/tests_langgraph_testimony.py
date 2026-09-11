@@ -21,6 +21,8 @@ import subprocess
 import sys
 import tempfile
 
+NL = chr(10)
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.normpath(os.path.join(HERE, ".."))
 ADAPTER = os.path.join(ROOT, "adapters", "langgraph")
@@ -152,7 +154,45 @@ def main():
     check("the message explains why it is worth nothing",
           "worth nothing" in msg, msg)
 
-    print("\na refusal is recorded as faithfully as a permission")
+    print("\na modification is not an approval with different arguments")
+    # The value a boolean cannot carry, and the one Colorado's proposed Rule 7.7
+    # asks for twice. Before this, a reviewer who rewrote a refund amount and
+    # one who waved the original through produced the same record.
+    graph = example.build()
+    rec = recorder()
+    rec.invoke(graph, {"ticket": 12}, CFG("modified"))
+    proposed = dict(rec._pending["args"] or {})
+    rec.modify(graph, CFG("modified"), approver=HUMAN,
+               identity_source="auth-session", args={"ticket": 12, "amount": 1})
+    entries = rec.record()
+    dec = [e for e in entries if e["type"] == "decision"][0]
+    app = [e for e in entries if e["type"] == "approval"][0]
+    check("the approval says it was modified",
+          app.get("disposition") == "modified", app.get("disposition"))
+    check("it names what moved", bool(str(app.get("changed") or "").strip()),
+          app.get("changed"))
+    check("the decision records the arguments that ran",
+          dec.get("args") == {"ticket": 12, "amount": 1}, dec.get("args"))
+    check("and keeps what was proposed, so the two can be compared",
+          dec.get("proposed_args") == proposed,
+          "%r vs %r" % (dec.get("proposed_args"), proposed))
+    check("a modification is distinguishable from an approval",
+          app.get("disposition") != "approved")
+    r = tv.validate(NL.join(json.dumps(e) for e in entries))
+    check("a modified record still reaches TR-4", r.level == "TR-4",
+          "%s: %s" % (r.level, [c["check"] for lvl in tv.LEVELS
+                                for c in r.failures(lvl)]))
+    graph = example.build()
+    rec = recorder()
+    rec.invoke(graph, {"ticket": 12}, CFG("nochange"))
+    same = dict(rec._pending["args"] or {})
+    ok, msg = raises(ValueError, rec.modify, graph, CFG("nochange"),
+                     approver=HUMAN, identity_source="auth-session", args=same)
+    check("modify() refuses unchanged arguments", ok, msg)
+    check("and says it is approve() instead", "approve()" in msg, msg)
+    rec._pending = None
+
+    print("a refusal is recorded as faithfully as a permission")
     graph = example.build()
     rec = recorder()
     rec.invoke(graph, {"ticket": 12}, CFG("refused"))

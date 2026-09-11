@@ -86,6 +86,20 @@ class UntrustedIdentity(Exception):
     """The approver's identity came from somewhere the model can write."""
 
 
+def _changed(was, now) -> str:
+    """Name the fields that moved, without printing the values.
+
+    The values are already in the record twice, as `proposed_args` and `args`.
+    Repeating them in prose invites the two to disagree, and a summary that can
+    contradict the thing it summarises is worse than no summary.
+    """
+    if not isinstance(was, dict) or not isinstance(now, dict):
+        return "arguments replaced"
+    keys = sorted(set(was or {}) | set(now or {}))
+    moved = [k for k in keys if (was or {}).get(k) != (now or {}).get(k)]
+    return ", ".join(moved) if moved else "arguments replaced"
+
+
 class UnclassifiedAction(Exception):
     """The action is not in the risk table, and guessing is not allowed."""
 
@@ -216,7 +230,8 @@ class Recorder:
                         proposed_by=d["proposed_by"], verdict="permitted",
                         executed=True, args=d["args"])
         aid = self._add("approval", decision=did, approver=dict(approver),
-                        identity_source=identity_source, method="langgraph-resume")
+                        identity_source=identity_source,
+                        method="langgraph-resume", disposition="approved")
         # The decision points back at its approval so a reader does not have to
         # scan the file to find out whether a high-risk action had one.
         for e in self.entries:
@@ -226,6 +241,56 @@ class Recorder:
 
         from langgraph.types import Command
         return graph.invoke(Command(resume=resume), config, **kw)
+
+    def modify(self, graph, config, *, approver: dict, identity_source: str,
+               args: dict, reason: str | None = None, **kw):
+        """Change the pending action's arguments, then permit and resume.
+
+        The one a boolean cannot express. LangGraph resumes with a typed
+        `HumanResponse`, so a reviewer who edits the arguments is a different
+        outcome here and not an approval carrying different values, and this
+        writes that difference down: the decision records the arguments that
+        actually ran, and the approval records `disposition: modified` with
+        `changed` naming what moved.
+
+        Without it, a reviewer who rewrote a refund amount and one who waved the
+        original through produce the same record. Three of the five frameworks
+        with an approval step still cannot tell those apart, which is measured
+        rather than asserted, at machinetestimony.org/approval-binding/.
+
+        `args` is what will run. What was proposed is kept as `proposed_args` on
+        the decision, because a record of a modification that does not say what
+        was there before is a record of an approval with extra words.
+        """
+        d = self._require_pending()
+        self._check_approver(approver, identity_source, d)
+        if not isinstance(args, dict):
+            raise ValueError("args must be a mapping of the arguments that "
+                             "will actually run")
+        was = d["args"]
+        if args == was:
+            raise ValueError(
+                "modify() was given the arguments that were already proposed. "
+                "Nothing changed, so this is approve(), and recording it as a "
+                "modification would misdescribe the review.")
+
+        did = self._add("decision", action_type=d["action_type"],
+                        risk_class=d["risk_class"], risk_source=d["risk_source"],
+                        proposed_by=d["proposed_by"], verdict="permitted",
+                        executed=True, args=args, proposed_args=was)
+        aid = self._add("approval", decision=did, approver=dict(approver),
+                        identity_source=identity_source,
+                        method="langgraph-resume", disposition="modified",
+                        changed=_changed(was, args),
+                        **({"reason": reason} if reason else {}))
+        for e in self.entries:
+            if e["id"] == did:
+                e["approval"] = aid
+        self._pending = None
+
+        from langgraph.types import Command
+        return graph.invoke(
+            Command(resume={"type": "edit", "args": args}), config, **kw)
 
     def refuse(self, graph, config, *, reason: str, approver: dict | None = None,
                identity_source: str | None = None, resume=False, **kw):
@@ -244,7 +309,8 @@ class Recorder:
                         executed=False, reason=reason, args=d["args"])
         if approver is not None:
             self._add("approval", decision=did, approver=dict(approver),
-                      identity_source=identity_source, method="langgraph-resume")
+                      identity_source=identity_source,
+                      method="langgraph-resume", disposition="overrode")
         self._pending = None
 
         from langgraph.types import Command

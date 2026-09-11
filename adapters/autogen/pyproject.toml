@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "testimony-autogen"
-version = "0.1.0"
+version = "0.2.0"
 description = "Emit a Testimony Record from an AutoGen workbench, so the record can say who approved an action and what was refused."
 readme = "README.md"
 requires-python = ">=3.9"
