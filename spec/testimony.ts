@@ -107,6 +107,12 @@ const ENUMS: [string, string, string[]][] = [
   ["observation", "basis",
     ["effect-observed", "response-received", "asserted"]],
   ["observation", "result", ["supports", "contradicts", "inconclusive"]],
+  // Colorado's proposed Rule 7.7 asks TWICE whether a reviewer approved,
+  // MODIFIED or overrode, and makes it evidentiary. `decision.verdict` is
+  // the SYSTEM's gate and has no room for the middle value, so a reviewer
+  // who changed an action before allowing it was recorded as approving it
+  // unchanged. machine-testimony#88. New in 0.3.
+  ["approval", "disposition", ["approved", "modified", "overrode"]],
 ];
 
 export type Entry = Record<string, unknown> & { _line?: number };
@@ -782,6 +788,17 @@ export function validate(text: string): Report {
     "an approval names a person, other than the proposer, for a decision in " +
     "the record",
     badApprover.length === 0, badApprover.slice(0, 3).join("; "));
+
+  /* A modification that does not say what it modified is not a record of a
+   * modification. `approved` owes nothing, which is the point: the vocabulary
+   * exists so the two cases stop producing the same entry. */
+  const CHANGED_DISPOSITIONS = new Set(["modified", "overrode"]);
+  const changedSilent: string[] = [];
+  for (const a of approvals)
+    if (CHANGED_DISPOSITIONS.has(str(a.disposition)) && !str(a.changed).trim())
+      changedSilent.push(`line ${a._line}: disposition ${JSON.stringify(str(a.disposition))} without \`changed\``);
+  add("TR-3", "an approval that changed the action says what it changed",
+    changedSilent.length === 0, changedSilent.slice(0, 3).join("; "));
 
   /* ── observation: on what basis the record claims an effect (0.3) ───────
    *

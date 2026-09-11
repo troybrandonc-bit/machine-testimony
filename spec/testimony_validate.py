@@ -590,7 +590,22 @@ ENUMS = {
     ("observation", "basis"): {"effect-observed", "response-received",
                                "asserted"},
     ("observation", "result"): {"supports", "contradicts", "inconclusive"},
+    # Colorado's proposed Rule 7.7 asks TWICE whether a reviewer approved,
+    # MODIFIED or overrode the output, and then makes it evidentiary: an
+    # override that fully reverses a decision "indicates that human review was
+    # meaningful". `decision.verdict` is permitted or refused, which is the
+    # SYSTEM's gate and has no room for the middle value, so a reviewer who
+    # changed an action before allowing it was recorded as having approved it
+    # unchanged. That was machine-testimony#88, disclosed in the Colorado
+    # comment and in the testimony before it was fixed, and three of five agent
+    # frameworks read still cannot emit it. New in 0.3 with `observation`.
+    ("approval", "disposition"): {"approved", "modified", "overrode"},
 }
+
+# A disposition that changed something owes what it changed. Approving as
+# proposed needs no such member; saying you modified an action and not saying
+# to what is the rubber stamp with extra words.
+CHANGED = {"modified", "overrode"}
 
 
 def validate(text: str) -> Report:
@@ -944,6 +959,18 @@ def validate(text: str) -> Report:
     r.add("TR-1", "an observation that claims to have looked says what at, and "
                   "who looked", not unbacked,
           "; ".join(unbacked[:3]), basis="verified")
+
+    # A modification that does not say what it modified is not a record of a
+    # modification. `approved` owes nothing, which is the point: the vocabulary
+    # exists so that the two cases stop producing the same entry.
+    silent = []
+    for a in approvals:
+        if a.get("disposition") in CHANGED and not str(
+                a.get("changed") or "").strip():
+            silent.append(f"line {a['_line']}: disposition "
+                          f"{a['disposition']!r} without `changed`")
+    r.add("TR-3", "an approval that changed the action says what it changed",
+          not silent, "; ".join(silent[:3]), basis="verified")
 
     unsourced = []
     for a in approvals:
