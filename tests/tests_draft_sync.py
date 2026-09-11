@@ -30,6 +30,13 @@ sys.path.insert(0, os.path.join(ROOT, "spec"))
 
 import testimony_validate as tv  # noqa: E402
 
+# The draft documents the released versions. A type introduced in a version the
+# specification has not published yet is exempt from these checks and from
+# nothing else, which is how the validator is allowed to run ahead of a document
+# that lives on the IETF datatracker. When 0.3 is released, RELEASED gains it
+# and every check below starts applying without anybody editing this file.
+DOCUMENTED = tv.TYPES - tv.UNRELEASED_TYPES
+
 _drafts = sorted(glob.glob(os.path.join(ROOT, "spec", "draft-*-[0-9][0-9].md")))
 if not _drafts:
     raise SystemExit("no draft source in spec/")
@@ -148,21 +155,24 @@ def main():
     print("entry types")
     secs = sections(text)
     check("the draft defines a section per entry type",
-          set(secs) == tv.TYPES,
-          "draft has %s, validator has %s" % (sorted(secs), sorted(tv.TYPES)))
+          set(secs) == DOCUMENTED,
+          "draft has %s, validator documents %s"
+          % (sorted(secs), sorted(DOCUMENTED)))
 
     # The type list also appears inline, in the 'type' member's definition. A
     # reader implementing from the draft copies that line, so it has to be the
     # same set as the sections below it rather than an older version of them.
     m = re.search(r"^type:\n:\s*One of (.+?)\.\s*$", text, re.M | re.S)
     inline = set(re.findall(r"`([a-z]+)`", m.group(1))) if m else set()
-    check("the inline type list matches the validator", inline == tv.TYPES,
+    check("the inline type list matches the validator", inline == DOCUMENTED,
           "inline %s" % sorted(inline))
 
     documented = {t: defs(sec) for t, sec in secs.items()}
 
     print("\nrequired members")
     for t, required in sorted(tv.REQUIRED.items()):
+        if t in tv.UNRELEASED_TYPES:
+            continue
         missing = [f for f in required if f not in documented.get(t, {})]
         check("%s documents every member the validator requires" % t,
               not missing, "undocumented: %s" % missing)
@@ -190,6 +200,8 @@ def main():
 
     print("\nenumerated values")
     for (t, field), allowed in sorted(tv.ENUMS.items()):
+        if t in tv.UNRELEASED_TYPES or (t, field) in tv.UNRELEASED_MEMBERS:
+            continue
         body = documented.get(t, {}).get(field, "")
         quoted = set(re.findall(r"`([a-z_\-]+)`", body))
         check("%s.%s lists exactly the allowed values" % (t, field),

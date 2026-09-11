@@ -51,7 +51,13 @@ print("the number means what the validator does")
 # is a claim about a number that the code does not support.
 text = io.open(os.path.join(SPEC, "testimony-record-example.jsonl"),
                encoding="utf-8").read()
-live = [c for c in tv.validate(text).as_dict()["checks"] if c["level"] == "TR-3"]
+# A check introduced in a version the specification has not published is not a
+# requirement of a published profile. Version 1's requirements are frozen, and
+# counting a 0.3 check among them would report the published document as wrong
+# for carrying exactly what it was published carrying.
+_report = tv.validate(text)
+live = [c for c in _report.as_dict()["checks"]
+        if c["level"] == "TR-3" and c["check"] not in _report.unreleased]
 check("the requirement count matches the validator",
       len(doc["requirements"]) == len(live),
       "%d published, %d in the validator" % (len(doc["requirements"]), len(live)))

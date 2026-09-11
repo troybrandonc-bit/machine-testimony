@@ -198,7 +198,9 @@ def main():
     # Adding one to the specification without teaching the reader is silent,
     # so it is checked here rather than noticed by an auditor.
     known = set(re.findall(r'case "([a-z]+)":', chk))
-    missing = sorted(tv.TYPES - known)
+    # An unreleased type has no sentence yet because it has no published
+    # specification to explain. It gains one when RELEASED gains its version.
+    missing = sorted(tv.TYPES - tv.UNRELEASED_TYPES - known)
     check("every entry type the specification defines has a sentence",
           not missing, "no case for: %s" % missing)
     print("")
