@@ -30,10 +30,19 @@ import re
 import sys
 
 SPEC = "testimony-record/0.2"
-SPECS = ("testimony-record/0.1", "testimony-record/0.2")
+SPECS = ("testimony-record/0.1", "testimony-record/0.2",
+         "testimony-record/0.3")
 LEVELS = ["TR-1", "TR-2", "TR-3", "TR-4"]
 TYPES = {"belief", "evidence", "conflict", "decision", "approval", "integrity",
-         "scope"}
+         "scope", "observation"}
+
+# `observation` is new in 0.3 and is NOT a known type before it. Adding a
+# type to the global set would otherwise change what an 0.2 record means:
+# one carrying an observation would start passing checks written for a
+# version that had never heard of it. machine-testimony#91 says no old
+# record may be silently upgraded or demoted, and this is the half of that
+# rule the validator can enforce.
+TYPES_FROM = {"observation": "testimony-record/0.3"}
 
 # `scope` exists because this validator was refusing a level to systems that
 # had earned it. TR-3 required at least one decision entry, on the reasoning
@@ -529,7 +538,8 @@ def _parse(text: str) -> tuple[list[dict], list[str]]:
 # against the dispatch before this was written.
 ACTOR_FIELDS = {"belief": "asserted_by", "decision": "proposed_by",
                 "approval": "approver",
-                "scope": "declared_by"}
+                "scope": "declared_by",
+                "observation": "observer"}
 ACTOR_KINDS = {"agent", "human", "system", "connector"}
 
 REQUIRED = {
@@ -540,6 +550,10 @@ REQUIRED = {
     "decision": ("action_type", "risk_class", "proposed_by", "verdict", "executed"),
     "approval": ("decision", "approver"),
     "integrity": ("scheme", "digest"),
+    # `basis` is deliberately NOT required. An omitted basis is unknown,
+    # never `asserted`: absence does not distinguish an observation that
+    # was made and left out from one that never happened. @HarperZ9 on #90.
+    "observation": ("decision", "claim"),
 }
 ENUMS = {
     ("belief", "polarity"): {"affirm", "deny"},
@@ -557,6 +571,13 @@ ENUMS = {
     # contradictions it makes expressible are checked below.
     ("decision", "outcome"): {"confirmed", "not_attempted", "unconfirmed"},
     ("integrity", "scheme"): {"replay", "hash-chain", "signature", "external-anchor"},
+    # Three descriptions of what was observed, NOT three trust levels and
+    # not a ladder. A forged target-state read claims `effect-observed`
+    # while establishing less than an honest `response-received`, so these
+    # must never be mapped onto TR-1..TR-4. @HarperZ9 corrected me on this.
+    ("observation", "basis"): {"effect-observed", "response-received",
+                               "asserted"},
+    ("observation", "result"): {"supports", "contradicts", "inconclusive"},
 }
 
 
@@ -855,6 +876,62 @@ def validate(text: str) -> Report:
                   "decision in the record", not bad_approver,
           "; ".join(bad_approver[:3]),
           basis="verified")
+
+    # ── observation: on what basis the record claims an effect (0.3) ─────
+    #
+    # `observation` is to `outcome` what `approval` is to `verdict`: a separate
+    # entry that references the thing it concerns, carries an Actor, and keeps
+    # the provenance of a claim beside the claim rather than inside it. The
+    # reason it is not a member on `decision` is @HarperZ9's: a later
+    # observation written back onto a decision would rewrite an entry and
+    # whatever digest covers it, so the format would be asking an emitter to
+    # break its own integrity claim in order to become more honest.
+    #
+    # What these checks CANNOT establish, and the draft has to say so out loud:
+    # that the source is authentic, that the observer observed anything, or
+    # that the observer is independent of the proposer. A different Actor id is
+    # not independence. Shape is all that is verified here.
+    observations = by_type["observation"]
+
+    early = [o for o in observations
+             if (o.get("spec") or r.spec) != TYPES_FROM["observation"]]
+    r.add("TR-1", "an observation appears only in a version that defines it",
+          not early,
+          "; ".join(f"line {o['_line']}: observation in "
+                    f"{o.get('spec') or r.spec!r}" for o in early[:3]),
+          basis="verified")
+
+    dangling = []
+    for o in observations:
+        if by_id.get(o.get("decision") or "", {}).get("type") != "decision":
+            dangling.append(f"line {o['_line']}: observes a decision not in "
+                            f"the record")
+        for ev in o.get("evidence") or []:
+            if by_id.get(ev, {}).get("type") != "evidence":
+                dangling.append(f"line {o['_line']}: evidence {ev!r} does not "
+                                f"resolve")
+    r.add("TR-1", "an observation resolves to a decision and to its evidence",
+          not dangling, "; ".join(dangling[:3]), basis="verified")
+
+    # An observation-based basis is a claim to have looked at something, so it
+    # owes both the thing looked at and who looked. `asserted` owes neither,
+    # and an empty evidence array stays expressible for it: an assertion with
+    # nothing behind it is a legitimate state, and the point of the vocabulary
+    # is that it has to say so.
+    OBSERVED = {"effect-observed", "response-received"}
+    unbacked = []
+    for o in observations:
+        if o.get("basis") not in OBSERVED:
+            continue
+        if not (o.get("evidence") or []):
+            unbacked.append(f"line {o['_line']}: basis {o['basis']!r} with no "
+                            f"evidence")
+        if not str((o.get("observer") or {}).get("id") or "").strip():
+            unbacked.append(f"line {o['_line']}: basis {o['basis']!r} names no "
+                            f"observer")
+    r.add("TR-1", "an observation that claims to have looked says what at, and "
+                  "who looked", not unbacked,
+          "; ".join(unbacked[:3]), basis="verified")
 
     unsourced = []
     for a in approvals:
