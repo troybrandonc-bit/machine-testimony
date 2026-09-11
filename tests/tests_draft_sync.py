@@ -200,7 +200,7 @@ def main():
 
     print("\nenumerated values")
     for (t, field), allowed in sorted(tv.ENUMS.items()):
-        if t in tv.UNRELEASED_TYPES:
+        if t in tv.UNRELEASED_TYPES or (t, field) in tv.UNRELEASED_MEMBERS:
             continue
         body = documented.get(t, {}).get(field, "")
         quoted = set(re.findall(r"`([a-z_\-]+)`", body))

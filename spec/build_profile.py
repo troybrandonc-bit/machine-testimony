@@ -137,10 +137,17 @@ def canonical(obj) -> bytes:
 def requirements() -> list:
     """The TR-3 checks, read out of the validator rather than transcribed."""
     text = io.open(EXAMPLE, encoding="utf-8").read()
-    res = tv.validate(text).as_dict()
+    report = tv.validate(text)
+    res = report.as_dict()
     out = []
     for c in res["checks"]:
         if c["level"] != "TR-3":
+            continue
+        # A requirement of a version the specification has not published is not
+        # a requirement of this profile. Version 1's requirements are frozen
+        # and a 0.3 check appearing in them would be an edit to a published
+        # digest, which this build refuses elsewhere and should not cause here.
+        if c["check"] in report.unreleased:
             continue
         out.append({"requirement": c["check"], "basis": c["basis"]})
     # A record that declares it does not act takes a different TR-3 path, so

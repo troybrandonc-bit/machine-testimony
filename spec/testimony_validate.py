@@ -56,6 +56,14 @@ RELEASED = ("testimony-record/0.1", "testimony-record/0.2")
 UNRELEASED_TYPES = frozenset(
     t for t, v in TYPES_FROM.items() if v not in RELEASED)
 
+# The same thing one level down. `approval` is released and
+# `approval.disposition` is not, which the type-level set above cannot express.
+# Without this the draft asks for an enum the specification has not published
+# and the check that holds them to each other is right to fail.
+MEMBERS_FROM = {("approval", "disposition"): "testimony-record/0.3"}
+UNRELEASED_MEMBERS = frozenset(
+    k for k, v in MEMBERS_FROM.items() if v not in RELEASED)
+
 # `scope` exists because this validator was refusing a level to systems that
 # had earned it. TR-3 required at least one decision entry, on the reasoning
 # that a record with no decisions cannot demonstrate a gate. True, and it meant
@@ -461,13 +469,14 @@ def _declared(value: object, allowed: set) -> str:
 
 class Report:
     def __init__(self):
+        self.unreleased: set = set()
         self.checks: list[dict] = []
         self.level: str | None = None
         self.spec: str = SPEC
         self.scope: str = "acts"
 
     def add(self, level: str, name: str, ok: bool, detail: str = "", *,
-            basis: str):
+            basis: str, since: str | None = None):
         """Record a check and, as importantly, what kind of check it was.
 
         `verified` means a reader can confirm it from the record alone:
@@ -481,6 +490,12 @@ class Report:
         """
         if basis not in ("verified", "attested"):
             raise ValueError("basis must be 'verified' or 'attested'")
+        # A check introduced in a version the specification has not published
+        # is not a requirement of the published one. Kept off `checks` so the
+        # JSON report stays byte-identical to the TypeScript port's, and read
+        # by build_profile instead.
+        if since is not None and since not in RELEASED:
+            self.unreleased.add(name)
         self.checks.append({"level": level, "check": name, "ok": ok,
                             "detail": detail, "basis": basis})
 
@@ -970,7 +985,8 @@ def validate(text: str) -> Report:
             silent.append(f"line {a['_line']}: disposition "
                           f"{a['disposition']!r} without `changed`")
     r.add("TR-3", "an approval that changed the action says what it changed",
-          not silent, "; ".join(silent[:3]), basis="verified")
+          not silent, "; ".join(silent[:3]), basis="verified",
+          since="testimony-record/0.3")
 
     unsourced = []
     for a in approvals:
