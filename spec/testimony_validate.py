@@ -44,6 +44,18 @@ TYPES = {"belief", "evidence", "conflict", "decision", "approval", "integrity",
 # rule the validator can enforce.
 TYPES_FROM = {"observation": "testimony-record/0.3"}
 
+# Which of SPECS the published specification actually documents. The validator
+# is allowed to run ahead of the draft, because a draft on the IETF datatracker
+# is a slower and more public thing to change than a check, and publishing an
+# unsettled design as normative text is worse than lagging. Everything a
+# released type gets, an unreleased one also gets: shape, enums, the version
+# gate, and the drift comparison between the two validators. The only thing it
+# does not get is a promise, and RELEASED is where that line is drawn so it is
+# a fact the tests can read rather than something somebody remembers.
+RELEASED = ("testimony-record/0.1", "testimony-record/0.2")
+UNRELEASED_TYPES = frozenset(
+    t for t, v in TYPES_FROM.items() if v not in RELEASED)
+
 # `scope` exists because this validator was refusing a level to systems that
 # had earned it. TR-3 required at least one decision entry, on the reasoning
 # that a record with no decisions cannot demonstrate a gate. True, and it meant
