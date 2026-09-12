@@ -1,0 +1,2088 @@
+FIRST SESSION  FORTY-SECOND LEGISLATURE
+Bill 64 
+(2021, chapter 25)
+An Act to modernize legislative 
+provisions as regards the protection 
+of personal information
+Introduced 12 June 2020  
+Passed in principle 20 October 2020  
+Passed 21 September 2021  
+Assented to 22 September 2021
+Québec Official Publisher
+2021
+EXPLANATORY NOTES
+This Act modernizes the framework applicable to the protection 
+of personal information in various Acts, including the Act respecting 
+Access to documents held by public bodies and the Protection of 
+personal information and the Act respecting the protection of personal 
+information in the private sector.
+Rules are introduced in both of those Acts concerning how public 
+bodies and enterprises handle incidents affecting the confidentiality 
+of personal information. Under the Act, such bodies and enterprises 
+must publish governance rules regarding personal information, or 
+information relating to the governance policies and practices 
+regarding such information, and those that collect personal information 
+through technological means must publish and disseminate a 
+confidentiality policy. In addition, the Act introduces a requirement 
+in those Acts to conduct a privacy impact assessment in certain 
+circumstances, including regarding any project to acquire, develop 
+or overhaul an information system or electronic service delivery 
+system involving the collection, use, release, keeping or destruction 
+of personal information.
+The Act clarifies various requirements relating to the consent 
+required before personal information is collected, used or released. 
+A public body or an enterprise that makes a request for consent in 
+writing must do so separately from any other information provided 
+to the person concerned. The consent necessary for certain uses or 
+releases of sensitive personal information must be given expressly. 
+Furthermore, the consent of the person having parental authority or 
+of the tutor must be obtained to collect, use or release personal 
+information concerning a minor under 14 years of age.
+In addition, the Act requires public bodies and enterprises to 
+provide certain information to the person concerned when they collect 
+personal information using technology that includes functions 
+allowing the person concerned to be identified, located or profiled, 
+or when they use personal information to render a decision based 
+exclusively on an automated processing of such information. It 
+establishes a person’s right to access certain computerized personal 
+information concerning him or her in a structured, commonly used 
+technological format or to require such information to be released 
+3
+to a third person. In addition, under the Act, public bodies and 
+entreprises that collect personal information when offering to the 
+public a technological product or service having privacy settings are 
+required to ensure that those settings provide the highest level of 
+confidentiality by default.
+The Act amends the conditions on which public bodies and 
+enterprises may release personal information without the consent of 
+the persons concerned to a person or body wishing to use the 
+information for study or research purposes or for the production of 
+statistics. The Act also clarifies the conditions applicable to other 
+releases of personal information for which the consent of the person 
+concerned is not necessary, such as a release of such information 
+outside Québec, or to the spouse or a close relative of a deceased 
+person, or by one enterprise to another for the purpose of concluding 
+a commercial transaction.
+The Act clarifies the obligations of public bodies and enterprises 
+regarding the keeping of personal information, and provides in 
+particular for the possibility of anonymizing such information.
+The Act amends the composition of the Commission d’accès à 
+l’information and adjusts its functions and powers.
+The Act amends the penal provisions applicable for a contravention 
+of the law, in particular by raising the amount of the fines.
+More specifically, the Act amends the Act respecting Access to 
+documents held by public bodies and the Protection of personal 
+information to set out rules regarding the establishment within public 
+bodies of a committee on access to information and the protection of 
+personal information.
+The Act also amends the Act respecting the protection of personal 
+information in the private sector to create the function of person in 
+charge of the protection of personal information within enterprises , 
+withdraws from those enterprises the possibility of communicating 
+nominative lists without the consent of the persons concerned, and 
+updates the rules governing the use of personal information for 
+commercial or philanthropic prospection purposes.
+The Act grants rights to a person to whom personal information 
+relates, including the right to require that such information cease to 
+be disseminated or that any hyperlink attached to the person’s name 
+providing access to the information by a technological means be  
+de-indexed or re-indexed.
+4
+The Act updates the obligations imposed on personal information 
+agents, provides for the possibility for the Commission d’accès à 
+l’information to impose monetary administrative penalties, and sets 
+out the terms for recovering and claiming the amounts owing.
+The Act also amends the Election Act to make the political 
+parties, independent Members and independent candidates governed 
+by that Act subject to certain provisions of the Act respecting the 
+protection of personal information in the private sector, while 
+providing for exceptions.
+The Act also amends the Act to prevent and fight sexual violence 
+in higher education institutions to require those institutions to 
+communicate information to persons who have filed a complaint.
+Lastly, the Act contains amending, transitional and final 
+provisions.
+LEGISLATION AMENDED BY THIS ACT:
+– Act respecting Access to documents held by public bodies and the 
+Protection of personal information (chapter A-2.1);
+– Financial Administration Act (chapter A-6.001);
+– Tax Administration Act (chapter A-6.002);
+– Health Insurance Act (chapter A-29);
+– Act to establish a legal framework for information technology 
+(chapter C-1.1);
+– Act respecting elections and referendums in municipalities 
+(chapter E-2.2);
+– Act respecting school elections to elect certain members of the 
+boards of directors of English-language school service centres 
+(chapter E-2.3);
+– Election Act (chapter E-3.3);
+– Act respecting the Institut de la statistique du Québec 
+(chapter I-13.011);
+– Act respecting La Financière agricole du Québec (chapter L-0.1);
+5
+– Act respecting the Ministère de l’Emploi et de la Solidarité sociale 
+and the Commission des partenaires du marché du travail 
+(chapter M-15.001);
+– Act respecting the sectoral parameters of certain fiscal measures 
+(chapter P-5.1);
+– Act respecting the sharing of certain health information 
+(chapter P-9.0001);
+– Act to prevent and fight sexual violence in higher education 
+institutions (chapter P-22.1);
+– Act respecting the protection of personal information in the private 
+sector (chapter P-39.1);
+– Animal Health Protection Act (chapter P-42);
+– Act respecting the legal publicity of enterprises (chapter P-44.1);
+– Act respecting the Régie de l’assurance maladie du Québec 
+(chapter R-5);
+– Act respecting the Government and Public Employees Retirement 
+Plan (chapter R-10);
+– Act respecting occupational health and safety (chapter S-2.1);
+– Public Health Act (chapter S-2.2);
+– Act respecting health services and social services (chapter S-4.2);
+– Act respecting health services and social services for Cree Native 
+persons (chapter S-5);
+– Credit Assessment Agents Act (2020, chapter 21).
+
+Bill 64
+AN ACT TO MODERNIZE LEGISLATIVE PROVISIONS AS 
+REGARDS THE PROTECTION OF PERSONAL INFORMATION
+THE PARLIAMENT OF QUÉBEC ENACTS AS FOLLOWS:
+ACT RESPECTING ACCESS TO DOCUMENTS HELD BY PUBLIC 
+BODIES AND THE PROTECTION OF PERSONAL INFORMATION
+1. The Act respecting Access to documents held by public bodies and the 
+Protection of personal information (chapter A-2.1) is amended by replacing 
+section 8 by the following sections:
+“8. The person exercising the highest authority within a public body shall 
+see to ensuring that this Act is implemented and complied with within the body. 
+That person shall exercise the function of person in charge of access to 
+documents and the function of person in charge of the protection of personal 
+information.
+All or part of those functions may be delegated in writing to a member of 
+the public body or of its board of directors, as the case may be, or to a member 
+of the management personnel. That person must be able to exercise them 
+autonomously.
+Where the person exercising the highest authority within a public body does 
+not exercise those functions himself, he must see to it that such exercise is 
+facilitated.
+The public body must, as soon as possible, notify the Commission in writing 
+of the title, contact information and starting date of the person who exercises 
+the function of person in charge of access to documents and those of the person 
+who exercises the function of person in charge of the protection of personal 
+information.
+“8.1. Within a public body, a committee on access to information and the 
+protection of personal information is responsible for supporting the body in 
+the exercise of its responsibilities and the performance of its obligations under 
+this Act. The committee shall also exercise the functions entrusted to it by 
+this Act.
+8
+The committee is under the responsibility of the person exercising the highest 
+authority within the public body or, in the case of a government department, 
+of the deputy minister and, in the case of a municipality, a professional order 
+or a school board, of the director general. It is composed of the person in charge 
+of access to documents, the person in charge of the protection of personal 
+information and any other person whose expertise is required, including, if 
+applicable, the person responsible for information security and the person 
+responsible for document management.
+A government regulation may exempt a public body from the obligation to 
+establish such a committee or modify a body’s obligations according to criteria 
+it defines.”
+2. Section 41.2 of the Act is amended by inserting “person or” after “to a” 
+in subparagraph 3 of the first paragraph.
+3. Section 43 of the Act is amended
+(1) by adding the following sentence at the end of the first paragraph: “If it is 
+in writing, it may be made in a technological format.”;
+(2) by replacing “designated by him” in the third paragraph by “to whom 
+that function has been delegated”.
+4. Section 47 of the Act is amended
+(1) by replacing “cannot be notified by mail but will be informed” in 
+subparagraph 7 of the first paragraph by “will be notified”;
+(2) by replacing “thereof by mail” in the second paragraph by “of the 
+extension in writing”.
+5. Section 49 of the Act is amended
+(1) by replacing “by mail” in the first paragraph by “by sending it to him 
+in writing”;
+(2) by replacing “by mail” in the second paragraph by “in accordance with 
+the first paragraph”;
+(3) by replacing “by mail” and “mailed” in the fourth paragraph by “in 
+writing” and “sent”, respectively.
+6. Section 50 of the Act is amended by adding the following sentence at the 
+end: “If an applicant so requests, the person in charge must also help him 
+understand the decision.”
+9
+7. The Act is amended by adding the following section before section 53:
+“52.2. A public body is responsible for protecting the personal information 
+it holds.”
+8. Section 53 of the Act is amended by striking out “; in the case of a minor, 
+consent may also be given by the person having parental authority” in 
+paragraph 1.
+9. The Act is amended by inserting the following section after section 53:
+“53.1. Consent under this Act must be clear, free and informed and be 
+given for specific purposes. It must be requested for each such purpose, in clear 
+and simple language. If the request for consent is made in writing, it must be 
+presented separately from any other information provided to the person 
+concerned. If the person concerned so requests, assistance must be provided 
+to help him understand the scope of the consent requested.
+The consent of a minor under 14 years of age is given by the person having 
+parental authority or by the tutor. The consent of a minor 14 years of age or 
+over is given by the minor, by the person having parental authority or by 
+the tutor.
+Consent is valid only for the time necessary to achieve the purposes for 
+which it was requested.
+Consent not given in accordance with this Act is without effect.”
+10. Section 54 of the Act is amended by inserting “directly or indirectly” 
+before “allows”.
+11. Section 55 of the Act is amended by adding the following sentence at the 
+end of the first paragraph: “Nor is personal information concerning the 
+performance of duties within an enterprise by the person concerned, such as 
+the person’s name, title and duties, as well as the address, email address and 
+telephone number of the person’s place of work.”
+12. Section 57 of the Act is amended
+(1) in the first paragraph,
+(a) by inserting “, email address” after “address” in subparagraphs 1 and  2;
+(b) by replacing “a member, the board of directors or the management 
+personnel of a public body” in subparagraph 1 by “a member of a public body, 
+its board of directors or its management personnel”;
+(2) by inserting “person or” after “work of a” in the second paragraph.
+10
+13. Section 59 of the Act is amended
+(1) by adding the following sentence at the end of the first paragraph: “Such 
+consent must be given expressly when it concerns sensitive personal 
+information.”;
+(2) in the second paragraph,
+(a) by replacing “tel renseignement sans le consentement de cette personne” 
+in the introductory clause in the French text by “renseignement personnel sans 
+le consentement de la personne concernée”;
+(b) by inserting “person or” after “to a” in subparagraph 3;
+(c) by striking out subparagraph 5;
+(d) by replacing “61, 66, 67, 67.1, 67.2, 68 and 68.1” in subparagraph 8 by 
+“61, 63.8, 66, 67, 67.1, 67.2, 67.2.1 and 68”;
+(3) by adding the following paragraph at the end:
+“For the purposes of this Act, personal information is sensitive if, due to its 
+nature, in particular its medical, biometric or otherwise intimate nature, or the 
+context of its use or release, it entails a high level of reasonable expectation of 
+privacy.”
+14. Section 60 of the Act is amended
+(1) by replacing “must refuse to” in the third paragraph by “must not”;
+(2) by striking out “following a request made” in the fourth paragraph.
+15. The Act is amended by inserting the following sections after section 63.2:
+“63.3. A public body must publish on its website governance rules 
+regarding personal information. Such rules must be approved by its committee 
+on access to information and the protection of personal information.
+The rules may be in the form of a policy, directive or guide and must, in 
+particular, define the roles and responsibilities of the members of its personnel 
+throughout the life cycle of such information and provide a process for dealing 
+with complaints regarding the protection of the information. They must include 
+a description of the training and awareness activities offered by the public body 
+to its personnel regarding the protection of personal information.
+11
+The rules must also include the protective measures to be taken in respect 
+of the personal information collected or used as part of a survey, including an 
+assessment of
+(1) the necessity of conducting the survey; and
+(2) the ethical aspect of the survey, taking into account, in particular, the 
+sensitivity of the personal information collected and the purposes for which it 
+is to be used.
+A government regulation may determine the content and terms of those rules.
+“63.4. A public body that collects personal information through 
+technological means must publish on its website a confidentiality policy drafted 
+in clear and simple language and disseminate it by any appropriate means to 
+reach the persons concerned. It must do the same for the notice required for 
+any amendment to such a policy.
+A government regulation may determine the content and terms of the policy 
+and the notice.
+“63.5. A public body must conduct a privacy impact assessment for any 
+project to acquire, develop or overhaul an information system or electronic 
+service delivery system involving the collection, use, release, keeping or 
+destruction of personal information.
+For the purposes of such an assessment, the public body must consult its 
+committee on access to information and the protection of personal information 
+from the outset of the project.
+The public body must also ensure that the project allows computerized 
+personal information collected from the person concerned to be released to 
+him in a structured, commonly used technological format.
+The conduct of a privacy impact assessment under this Act must be 
+proportionate to the sensitivity of the information concerned, the purposes for 
+which it is to be used, the quantity and distribution of the information and the 
+medium on which it is stored.
+“63.6. The committee may, at any stage of a project referred to in 
+section 63.5, suggest personal information protection measures applicable to 
+the project, such as
+(1) the appointment of a person to be responsible for implementing the 
+personal information protection measures;
+(2) measures to protect the personal information in any document relating 
+to the project, such as specifications or a contract;
+12
+(3) a description of the project participants’ responsibilities with regard to 
+the protection of personal information; or
+(4) training activities for project participants on the protection of personal 
+information.
+“63.7. A public body that collects personal information when offering 
+to the public a technological product or service having privacy settings must 
+ensure that those settings provide the highest level of confidentiality by default, 
+without any intervention by the person concerned.
+The first paragraph does not apply to privacy settings for browser cookies.
+“63.8. A public body that has cause to believe that a confidentiality 
+incident involving personal information it holds has occurred must take 
+reasonable measures to reduce the risk of injury and to prevent new incidents 
+of the same  nature.
+If the incident presents a risk of serious injury, the public body must promptly 
+notify the Commission. It must also notify any person whose personal 
+information is concerned by the incident, failing which the Commission may 
+order it to do so. It may also notify any person or body that could reduce the 
+risk, by releasing to the person or body only the personal information necessary 
+for that purpose without the consent of the person concerned. In the latter case, 
+the person in charge of the protection of personal information must record the 
+release of the information.
+Despite the second paragraph, a person whose personal information is 
+concerned by the incident need not be notified so long as doing so could hamper 
+an investigation conducted by a person or body responsible by law for the 
+prevention, detection or repression of crime or statutory offences.
+A government regulation may determine the content and terms of the notices 
+provided for in this section.
+“63.9. For the purposes of this Act, “confidentiality incident” means
+(1) access not authorized by law to personal information;
+(2) use not authorized by law of personal information;
+(3) release not authorized by law of personal information; or
+(4) loss of personal information or any other breach of the protection of 
+such information.
+13
+“63.10. In assessing the risk of injury to a person whose personal 
+information is concerned by a confidentiality incident, a public body must 
+consider, in particular, the sensitivity of the information concerned, the 
+anticipated consequences of its use and the likelihood that such information 
+will be used for injurious purposes. The body must also consult the person in 
+charge of the protection of personal information within the body.
+“63.11. A public body must keep a register of confidentiality incidents. 
+A government regulation may determine the content of the register.
+A copy of the register must be sent to the Commission at its request.”
+16. Section 64 of the Act is amended by replacing the third paragraph by 
+the following paragraphs:
+“The collection of information referred to in the second paragraph must be 
+preceded by a privacy impact assessment and carried out under a written 
+agreement that is sent to the Commission. The agreement comes into force 
+30 days after it is received by the Commission.
+The agreement must indicate
+(1) the identity of the public body collecting the information and of the 
+public body on whose behalf it is collected;
+(2) the purposes for which the information is collected;
+(3) the nature or type of information collected;
+(4) the means by which the information is collected;
+(5) the measures for ensuring the protection of the information;
+(6) the intervals at which the information is collected; and
+(7) the duration of the agreement.”
+17. The Act is amended by inserting the following section after section 64:
+“64.1. The personal information concerning a minor under 14 years of 
+age may not be collected from him without the consent of the person having 
+parental authority or of the tutor, unless collecting the information is clearly 
+for the minor’s benefit.”
+14
+18. Section 65 of the Act is amended
+(1) by replacing the first two paragraphs by the following paragraphs:
+“Anyone who collects personal information from the person concerned on 
+behalf of a public body must, when the information is collected and subsequently 
+on request, inform that person
+(1) of the name of the public body on whose behalf the information is 
+collected;
+(2) of the purposes for which the information is collected;
+(3) of the means by which the information is collected;
+(4) of whether the request is mandatory or optional;
+(5) of the consequences for the person concerned or for the third person, as 
+the case may be, for refusing to reply to the request or, if applicable, for 
+withdrawing consent to the release or use of the information collected pursuant 
+to an optional request; and
+(6) of the rights of access and correction provided by law.
+If applicable, the person concerned is informed of the name of the third 
+person collecting the information on behalf of the public body, the name of the 
+third persons or categories of third persons to whom it is necessary to release 
+the information for the purposes referred to in subparagraph 2 of the first 
+paragraph, and the possibility that the information could be released outside 
+Québec.
+On request, the person concerned is also informed of the personal information 
+collected from him, the categories of persons who have access to the information 
+within the public body, the duration of the period of time the information will 
+be kept, and the contact information of the person in charge of the protection 
+of personal information.”;
+(2) by striking out “introduce himself and” in the third paragraph;
+(3) by inserting “person or” after “by a” in the fifth paragraph.
+19. The Act is amended by inserting the following sections after section 65:
+“65.0.1. In addition to the information that must be provided in accordance 
+with section 65, anyone who collects personal information from the person 
+concerned using technology that includes functions allowing the person 
+concerned to be identified, located or profiled must first inform the person
+(1) of the use of such technology; and
+15
+(2) of the means available to activate the functions that allow a person to 
+be identified, located or profiled.
+“Profiling” means the collection and use of personal information to assess 
+certain characteristics of a natural person, in particular for the purpose of 
+analyzing that person’s work performance, economic situation, health, personal 
+preferences, interests or behaviour.
+“65.0.2. Any person who provides his personal information in accordance 
+with section 65 consents to its use and its release for the purposes referred to 
+in subparagraph  2 of the first paragraph of that section.”
+20. Section 65.1 of the Act is amended
+(1) by replacing the first two paragraphs by the following paragraphs:
+“Unless the person concerned gives his consent, personal information may 
+not be used within a public body except for the purposes for which it was 
+collected. Such consent must be given expressly when it concerns sensitive 
+personal information.
+A public body may, however, use personal information for another purpose 
+without the consent of the person concerned, but only
+(1) if it is used for purposes consistent with the purposes for which it was 
+collected;
+(2) if it is clearly used for the benefit of the person concerned;
+(3) if its use is necessary for the application of an Act in Québec, whether 
+or not the law explicitly provides for its use; or
+(4) if its use is necessary for study or research purposes or for the production 
+of statistics, and the information is de-identified.”;
+(2) by adding the following paragraphs at the end:
+“For the purposes of this Act, personal information is de-identified if it no 
+longer allows the person concerned to be directly identified.
+A public body that uses de-identified information must take reasonable 
+measures to limit the risk of someone identifying a natural person using  
+de-identified information.”
+21. The Act is amended by inserting the following section after section 65.1:
+“65.2. A public body that uses personal information to render a decision 
+based exclusively on an automated processing of such information must inform 
+the person concerned accordingly not later than at the time it informs the person 
+of the decision.
+16
+It must also inform the person concerned, at the latter’s request,
+(1) of the personal information used to render the decision;
+(2) of the reasons and the principal factors and parameters that led to the 
+decision; and
+(3) of the right of the person concerned to have the personal information 
+used to render the decision corrected.
+The person concerned must be given the opportunity to submit observations 
+to a member of the personnel of the public body who is in a position to review 
+the decision.”
+22. Section 67.2 of the Act is amended by replacing the last paragraph by 
+the following paragraph:
+“Subparagraph 2 of the second paragraph does not apply if the mandatary 
+or the person performing the contract is another public body or a member of 
+a professional order.”
+23. The Act is amended by inserting the following sections after section 67.2:
+“67.2.1. A public body may release personal information without the 
+consent of the persons concerned to a person or body wishing to use the 
+information for study or research purposes or for the production of statistics.
+The information may be released if a privacy impact assessment concludes that
+(1) the objective of the study or research or of the production of statistics 
+can be achieved only if the information is released in a form allowing the 
+persons concerned to be identified;
+(2) it is unreasonable to require the person or body to obtain the consent of 
+the persons concerned;
+(3) the objective of the study or research or of the production of statistics 
+outweighs, with regard to the public interest, the impact of releasing and using 
+the information on the privacy of the persons concerned;
+(4) the personal information is used in such a manner as to ensure 
+confidentiality; and
+(5) only the necessary information is released.
+17
+“67.2.2. A person or body wishing to use personal information for study 
+or research purposes or for the production of statistics must
+(1) request it in writing;
+(2) enclose a detailed presentation of the research activities with the request;
+(3) state the grounds supporting fulfillment of the criteria set out in 
+subparagraphs 1 to 5 of the second paragraph of section 67.2.1;
+(4) mention all the persons and bodies to whom or which the person or body 
+is making a similar request for the purposes of the same study or research or 
+production of statistics;
+(5) if applicable, describe the different technologies that will be used to 
+process the information; and
+(6) if applicable, submit the documented decision of a research ethics 
+committee relating to the study or research or the production of statistics.
+“67.2.3. A public body that releases personal information in accordance 
+with section 67.2.1 must first enter into an agreement with the person or body 
+to whom or which the information is to be sent that stipulates, among other 
+things, that the information
+(1) may be made accessible only to persons who need to know it to exercise 
+their functions and who have signed a confidentiality agreement;
+(2) may not be used for purposes other than those specified in the detailed 
+presentation of the research activities;
+(3) may not be matched with any other information file that has not been 
+provided for in the detailed presentation of the research activities; and
+(4) may not be released, published or otherwise distributed in a form 
+allowing the persons concerned to be identified.
+The agreement must also
+(1) specify the information that must be provided to the persons concerned 
+if personal information concerning them is used to contact them to participate 
+in the study or research;
+(2) provide for measures for ensuring the protection of the personal 
+information;
+(3) determine a preservation period for the personal information;
+(4) set out the obligation to notify the public body of the destruction of the 
+personal information; and
+18
+(5) provide that the public body and the Commission must be informed 
+without delay
+(a) of non-compliance with any condition set out in the agreement;
+(b) of any failure to comply with the protection measures provided for in 
+the agreement; and
+(c) of any event that could breach the confidentiality of the information.
+The agreement must be sent to the Commission and comes into force 30 days 
+after it is received by the Commission.”
+24. Section 67.3 of the Act is amended by replacing “68 and 68.1” in the 
+first paragraph by “67.2.1 and 68”.
+25. Section 68 of the Act is amended
+(1) by inserting the following paragraph after the first paragraph:
+“The information may be released if a privacy impact assessment 
+concludes that
+(1) the intended objective can be achieved only if the information is released 
+in a form allowing the person concerned to be identified;
+(2) it is unreasonable to require obtaining the consent of the person 
+concerned;
+(3) the objective for which the release of the information is required 
+outweighs, with regard to the public interest, the impact of releasing and using 
+the information on the privacy of the person concerned;  and
+(4) the personal information is used in such a manner as to ensure 
+confidentiality.”;
+(2) by adding the following paragraph at the end:
+“The agreement must be sent to the Commission and comes into force 30 days 
+after it is received by the Commission.”
+26. Sections 68.1 and 70 of the Act are repealed.
+19
+27. Section 70.1 of the Act is replaced by the following section:
+“70.1. Before releasing personal information outside Québec, a public 
+body must conduct a privacy impact assessment. The body must, in particular, 
+take into account
+(1) the sensitivity of the information;
+(2) the purposes for which it is to be used;
+(3) the protection measures, including those that are contractual, that would 
+apply to it; and
+(4) the legal framework applicable in the State in which the information 
+would be released, including the personal information protection principles 
+applicable in that State.
+The information may be released if the assessment establishes that it would 
+receive adequate protection, in particular in light of generally recognized 
+principles regarding the protection of personal information. The release of the 
+information must be the subject of a written agreement that takes into account, 
+in particular, the results of the assessment and, if applicable, the terms agreed 
+on to mitigate the risks identified in the assessment.
+The same applies where the public body entrusts a person or body outside 
+Québec with the task of collecting, using, releasing or keeping such information 
+on its behalf.
+This section does not apply to a release of information under subparagraph 4 
+of the second paragraph of section 59 or under subparagraph 1.1 of the first 
+paragraph of section 68. Nor does it apply to a release of information within 
+the scope of an international commitment referred to in Chapter III of the Act 
+respecting the Ministère des Relations internationales (chapter M-25.1.1), a 
+release of information within the scope of an agreement referred to in 
+Chapter III.1 or III.2 of that Act, or a communication of information under 
+section 133 of the Public Health Act (chapter S-2.2).”
+28. Section 73 of the Act is amended
+(1) by inserting “, or anonymize it to use it for public interest purposes” 
+after “destroy the information”;
+(2) by adding the following paragraphs at the end:
+“For the purposes of this Act, information concerning a natural person is 
+anonymized if it is, at all times, reasonably foreseeable in the circumstances 
+that it irreversibly no longer allows the person to be identified directly or 
+indirectly.
+20
+Information anonymized under this Act must be anonymized according to 
+generally accepted best practices and according to the criteria and terms 
+determined by regulation.”
+29. Section 79 of the Act is amended
+(1) by replacing “63.1 to 66” in the first paragraph by “63.1 to 63.4, 64 
+to 66”;
+(2) by replacing “63.1 to 66, 67.3 and 67.4 and 71 to 76” in the second 
+paragraph by “63.1 to 63.4, 64 to 66, 67.3, 67.4 and 71 to 76”.
+30. Section 84 of the Act is amended by inserting the following paragraph 
+after the second paragraph:
+“Unless doing so raises serious practical difficulties, computerized personal 
+information collected from the applicant, and not created or inferred using 
+personal information concerning him, must, at his request, be released to him 
+in a structured, commonly used technological format. The information must 
+also be released, at the applicant’s request, to any person or body authorized 
+by law to collect such information.”
+31. The Act is amended by inserting the following section after section 88:
+“88.0.1. A public body may release personal information that it holds 
+concerning a deceased person to the spouse or a close relative of the person if 
+knowledge of the information could help the applicant in the grieving process 
+and if the deceased person did not record in writing his refusal to grant such a 
+right of access.”
+32. Section 88.1 of the Act is amended by inserting “Subject to section 88.0.1,” 
+at the beginning.
+33. Section 94 of the Act is amended
+(1) by replacing “or the person having parental authority even if the minor 
+child is deceased” in the first paragraph by “the person having parental authority 
+even if the minor child is deceased, or the spouse or close relative of a deceased 
+person in accordance with section 88.0.1”;
+(2) by replacing “designated by him” in the third paragraph by “to whom 
+that function was delegated”.
+34. Section 98 of the Act is amended by replacing “thereof by mail” in the 
+second paragraph by “of the extension in writing”.
+35. Section 100 of the Act is amended by adding the following sentence at 
+the end: “If an applicant so requests, the person in charge must also help him 
+understand the decision.”
+21
+36. Section 104 of the Act is amended
+(1) by replacing “five” and “a vice-chair” in the first paragraph by “six” and 
+“two vice-chairs”, respectively;
+(2) by inserting the following paragraph after the first paragraph:
+“One of the vice-chairs is responsible for the oversight division and must 
+have expertise in the field of information technology, and another vice-chair 
+is responsible for the adjudicative division.”;
+(3) by striking out “and the vice-chair” in the second paragraph.
+37. Section 107.1 of the Act is repealed.
+38. Section 108 of the Act is replaced by the following section: 
+“108. If the chair is absent or unable to act or if the office of chair is 
+vacant, the President of the National Assembly may, with the consent of the 
+Prime Minister and the Leader of the Official Opposition in the Assembly and 
+after consulting the other leaders of the parliamentary groups within the 
+meaning of the Standing Orders of the National Assembly, designate a  
+vice-chair of the Commission or, if there is no vice-chair or the vice-chairs are 
+absent or unable to act, another member of the Commission to act in the place 
+of the chair for the duration of the absence or inability to act or, if the office 
+is vacant, for a period not exceeding 18 months.
+If a vice-chair of the Commission is absent or unable to act or if the office 
+of the vice-chair is vacant, the President of the National Assembly may, with 
+the consent of the Prime Minister and the Leader of the Official Opposition in 
+the Assembly and after consulting the other leaders of the parliamentary groups 
+within the meaning of the Standing Orders of the National Assembly, designate 
+another member of the Commission to act in the place of the vice-chair for the 
+duration of the absence or inability to act or, if the office is vacant, for a period 
+not exceeding 18 months.” 
+39. Section 109 of the Act is amended 
+(1) by inserting “and after consulting the other leaders of the parliamentary 
+groups within the meaning of the Standing Orders of the National Assembly” 
+after “in the Assembly” in the first paragraph;
+(2) by replacing “second” in the second paragraph by “third”.
+40. The Act is amended by inserting the following sections after section 110:
+“110.0.1. The chair may delegate all or some of the chair’s powers and 
+duties to a vice-chair.
+22
+“110.0.2. In addition to the powers and duties that may otherwise be 
+assigned to him or that may be delegated to him by the chair, a vice-chair
+(1) assists and advises the chair in the exercise of the chair’s functions; and
+(2) performs his administrative functions under the chair’s authority.”
+41. Section 118 of the Act is amended
+(1) by replacing “to the designated Minister” in the first paragraph by “the 
+minister responsible for the administration of this Act”;
+(2) by inserting “and with any other subject the Minister may submit to the 
+Commission” at the end of the fourth paragraph.
+42. Section 120 of the Act is amended by replacing “designated Minister” 
+in the first paragraph by “minister responsible for the administration of this Act”.
+43. Section 122 of the Act is replaced by the following section:
+“122. The functions and powers of the Commission provided for in this 
+division are exercised by the chair, the vice-chair responsible for the oversight 
+division and the members assigned to that division.”
+44. Section 122.1 of the Act is amended by inserting “, in particular by using 
+awareness tools” at the end of the second paragraph.
+45. Section 123 of the Act is amended by adding the following paragraphs 
+at the end:
+“(7) conduct or commission research, inventories, studies or analyses;
+“(8) issue opinions regarding proposed legislation and plans to develop 
+information systems; and
+“(9) develop guidelines to facilitate the application of this Act and the Act 
+respecting the protection of personal information in the private sector 
+(chapter P-39.1), in particular with regard to consent.”
+46. Section 125 of the Act is repealed.
+47. Section 127 of the Act is amended by replacing “an interested” in the 
+introductory clause of the first paragraph by “a”.
+23
+48. The Act is amended by inserting the following sections after section 127:
+“127.1. The Commission may, by a formal demand notified by any 
+appropriate method, require any person, whether subject to this Act or not, to 
+file, within a reasonable time specified in the demand, any information or 
+document to verify compliance with this Act or the regulations.
+The person to whom the demand is made shall comply with it within the 
+specified time regardless of whether the person has already filed such 
+information or documents pursuant to a similar demand or pursuant to an 
+obligation under this Act or the regulations.
+“127.2. The Commission may, when a confidentiality incident is brought 
+to its attention, order any person, after giving him the opportunity to submit 
+observations, to take any measure to protect the rights of the persons concerned 
+that are granted to them by this Act, for the time and on the conditions the 
+Commission determines. It may, in particular, order that the personal information 
+involved be returned to the public body or destroyed.
+If a person to whom an order applies was not given prior notice because, in 
+the opinion of the Commission, urgent action is required or there is a danger 
+of irreparable injury being caused, the person may, within the time specified 
+in the order, submit observations so that the order may be reviewed by the 
+Commission.”
+49. Section 129 of the Act is amended
+(1) by inserting the following paragraph after the second paragraph:
+“Where the inquiry concerns an agreement sent under the law to the 
+Commission, the Commission may make any order against a public body that 
+is a party to the agreement that it considers appropriate for protecting the rights 
+granted by this Act to the persons to whom the information relates.”;
+(2) in the third paragraph,
+(a) by replacing “order it to” by “recommend or order that the public body”;
+(b) by inserting “within the reasonable time limit the Commission specifies” 
+at the end.  
+50. The Act is amended by inserting the following section after section 129:
+“129.1. Any order issued by the Commission’s oversight division becomes 
+executory in the same manner as a decision referred to in section 144.”
+24
+51. Section 130.2 of the Act is amended
+(1) by replacing “the third paragraph” in the first paragraph by “the third 
+and fourth paragraphs”;
+(2) in the second paragraph,
+(a) by inserting “2,” after “paragraphs 1,”;
+(b) by replacing “sections 123.1 and 125” by “section 123.1”.
+52. Section 133 of the Act is amended
+(1) by striking out “or after making an order”;
+(2) by replacing “or set out the situation in its annual report” by “, set out 
+the situation in its annual report or inform the public accordingly”.
+53. Section 134.1 of the Act is replaced by the following section:
+“134.1. The functions and powers of the Commission provided for in this 
+division are exercised by the chair, the vice-chair responsible for the adjudicative 
+division and the members assigned to that division.”
+54. The Act is amended by inserting the following sections after section  134.2:
+“134.3. When exercising the functions and powers provided for in this 
+division, the Commission and its members are vested with the powers and 
+immunity of commissioners appointed under the Act respecting public inquiry 
+commissions (chapter C-37), except the power to order imprisonment.
+“134.4. The parties to a proceeding must ensure that their actions, their 
+pleadings and the means of proof they use are proportionate, in terms of the 
+cost and time involved, to the nature and complexity of the matter and the 
+purpose of the application.
+The Commission must do likewise in managing each proceeding it is 
+assigned. It must ensure that the measures and acts it orders or authorizes are 
+in keeping with that principle of proportionality, while having regard to the 
+proper administration of justice.”
+55. Section 136 of the Act is amended by replacing “mailing” in the first 
+paragraph by “date of transmission”.
+56. Section 137 of the Act is amended by replacing “mail” in the fourth 
+paragraph by “sending a written notice”.
+25
+57. Section 137.1 of the Act is amended
+(1) in the first paragraph,
+(a) by replacing “applications” and “an application” by “requests” and “a 
+request”, respectively;
+(b) by adding the following sentence at the end: “It may also limit the scope 
+of the applicant’s request or extend the time limit within which the public body 
+must reply.”;
+(2) by replacing “applications” in the second paragraph by “requests”;
+(3) by adding the following paragraph at the end:
+“The public body’s application must be filed, from the date the applicant’s 
+most recent request was received, within the same time limit as would be 
+applicable to the processing of a request under section 47 or 98.”
+58. Section 137.2 of the Act is amended by adding the following paragraph 
+at the end:
+“In such cases, the Commission may prohibit a person from bringing an 
+application except with the authorization of and subject to the conditions 
+determined by the chair of the Commission. It may, in the same manner, prohibit 
+a person from presenting a pleading in an ongoing proceeding.”
+59. The Act is amended by inserting the following section after section  137.3:
+“137.4. The Commission may, at any stage of the proceeding, use 
+technological means that are available to both the parties and itself. It may, 
+even on its own initiative, order that such means be used by the parties. If the 
+Commission considers it necessary, it may also, despite an agreement between 
+the parties, require a person to appear in person at a hearing, conference or 
+examination.”
+60. Section 139 of the Act is amended by inserting “136,” after “135,”.
+61. The heading of Chapter V of the Act is amended by adding “AND 
+CONTESTATION” at the end.
+62. Section 147 of the Act is amended
+(1) by striking out “, including an order of the Commission issued following 
+an investigation,”;
+26
+(2) by adding the following paragraph at the end:
+“The person may also contest before a judge of the Court of Québec an order 
+issued by the Commission’s oversight division.”
+63. Section 149 of the Act is amended
+(1) by replacing “the date the parties receive the final decision” in the second 
+paragraph by “notification of the final decision”;
+(2) by adding the following paragraph at the end:
+“The proceeding to contest an order issued by the Commission’s oversight 
+division must be filed at the office of the Court of Québec within 30 days after 
+notification of the order and must specify the questions that ought to be 
+examined.”
+64. Section 150 of the Act is amended by adding the following paragraph 
+at the end:
+“The filing of the proceeding to contest an order issued by the Commission’s 
+oversight division does not suspend the execution of the order. However, on a 
+motion heard and judged on an urgent basis, a judge of the Court of Québec 
+may order otherwise because of the urgency of the situation or the risk of 
+serious and irreparable injury.”
+65. Section 151 of the Act is amended
+(1) by replacing “contested decision and the documents related to the 
+contestation” in the second paragraph by “decision appealed from and the 
+accompanying documents”;
+(2) by adding the following paragraph at the end:
+“The contestation of an order issued by the Commission’s oversight division 
+must be served on the Commission and, if applicable, on the other parties, 
+within 10 days after its filing at the office of the Court of Québec. The secretary 
+of the Commission shall send a copy of the contested order and the accompanying 
+documents to the office of the Court, to serve as a joint record.”
+66. Section 152 of the Act is amended by adding the following paragraph 
+at the end:
+“The contestation is governed by the rules of the Code of Civil Procedure 
+that are applicable in first instance.”
+27
+67. Section 155 of the Act is amended, in the first paragraph,
+(1) by striking out “the rules may provide for the establishment of a 
+committee to be responsible for supporting the public body in carrying out its 
+responsibilities, and entrust functions to persons other than the person in charge 
+of access to documents or the protection of personal information;” in 
+subparagraph 3.1;
+(2) by inserting the following subparagraphs after subparagraph 3.1:
+“(4) exempting a public body from the obligation to establish the committee 
+provided for in section 8.1 or modify a body’s obligations under that section 
+according to criteria it defines;
+“(5) determining the content and terms of the governance rules provided 
+for in section 63.3;
+“(6) determining the content and terms of the policy provided for in 
+section 63.4;
+“(6.1) determining the content and terms of the notices provided for in 
+section 63.8;
+“(6.2) determining the content of the register provided for in section 63.11;
+“(6.3) for the purposes of section 73, determining the criteria and terms 
+applicable to the anonymization of personal information;”.
+68. Section 156 of the Act is amended
+(1) by replacing “designated minister” by “minister responsible for the 
+administration of this Act”;
+(2) by inserting “made under this Act” after “draft regulation”.
+69. Sections 158 to 162 of the Act are replaced by the following sections:
+“158. Anyone who
+(1) denies or impedes access to a document or information that is accessible 
+by law, in particular by destroying, modifying or concealing the document or 
+by unduly delaying its release,
+(2) grants access to a document to which the law does not allow access or 
+to which a public body refuses access in accordance with the law,
+(3) informs a person of the existence of information he does not have the 
+right to be informed of under the law,
+28
+(4) hinders the person in charge of access to documents or the protection 
+of personal information in the performance of his functions,
+(5) collects, uses, keeps or destroys personal information in contravention 
+of the law,
+(6) fails to report, where required to do so, a confidentiality incident to the 
+Commission or to the persons concerned, or
+(7) fails to comply with the conditions set out in an agreement entered into 
+under section 67.2.3 
+commits an offence and is liable to a fine of $1,000 to $10,000 in the case of 
+a natural person and of $3,000 to $30,000 in all other  cases.
+“159. Anyone who
+(1) releases personal information in contravention of the law,
+(2) identifies or attempts to identify a natural person using de-identified 
+information without the authorization of the public body holding the information 
+or using anonymized information,
+(3) impedes the progress of an inquiry or inspection of the Commission or 
+the hearing of an application by the Commission by providing it with false or 
+inaccurate information, by omitting to provide information it requires or 
+otherwise,
+(4) refuses or neglects to comply, within the prescribed time, with a demand 
+sent under section 127.1,
+(5) fails to comply with an order of the Commission, or
+(6) does not take the security measures necessary to ensure the protection 
+of the personal information in accordance with section 63.1
+commits an offence and is liable to a fine of $5,000 to $100,000 in the case of 
+a natural person and of $15,000 to $150,000 in all other cases.
+“160. In determining the penalty, the judge shall take into account the 
+following factors, among others:
+(1) the nature, seriousness, repetitiveness and duration of the offence;
+(2) the sensitivity of the personal information concerned by the offence;
+(3) whether the offender acted intentionally or was negligent or reckless;
+(4) the foreseeable character of the offence or the failure to follow 
+recommendations or warnings to prevent it;
+29
+(5) the offender’s attempts to cover up the offence or failure to try to mitigate 
+its consequences;
+(6) whether the offender failed to take reasonable measures to prevent the 
+commission of the offence;
+(7) whether the offender obtained or intended to obtain an increase in 
+revenues or a decrease in expenses by committing the offence or by omitting 
+to take measures to prevent it; and
+(8) the number of persons concerned by the offence and the risk of injury 
+to which they are exposed.”
+70. The Act is amended by inserting the following sections after section 164:
+“164.1. In the case of a subsequent offence, the fines under this division 
+are doubled.
+“164.2. All penal proceedings must be instituted within five years of the 
+commission of the offence.”
+71. Section 167 of the Act is replaced by the following section:
+“167. Where the unlawful infringement of a right recognized by Chapter III 
+causes injury and the infringement is intentional or results from a gross fault, 
+the court shall award punitive damages of not less than $1,000.”
+72. Section 174 of the Act is amended by replacing “the Commission” in 
+the second paragraph by “the Commission’s oversight division”.
+73. Section 179 of the Act is amended by replacing “2011” in the first 
+paragraph by “2026”.
+FINANCIAL ADMINISTRATION ACT
+74. Section 44 of the Financial Administration Act (chapter A-6.001) is 
+repealed.
+TAX ADMINISTRATION ACT
+75. Section 31.1.7 of the Tax Administration Act (chapter A-6.002) is 
+repealed.
+76. Section 69.8 of the Act is amended by replacing “, 68, 68.1 and  70” in 
+the last paragraph by “and 68”.
+77. Section 71 of the Act is amended by replacing “, 68, 68.1 and 70” in the 
+last paragraph by “and 68”.
+30
+HEALTH INSURANCE ACT
+78. Section 65.0.2 of the Health Insurance Act (chapter A-29) is amended 
+by replacing the second paragraph by the following paragraph:
+“The agreement shall be sent to the Commission d’accès à l’information 
+and comes into force 30 days after it is received by the Commission.”
+79. Section 67 of the Act is amended by replacing “authorized by the 
+Commission d’accès à l’information” in the ninth paragraph by “or to a body 
+to enable the person or body, in accordance with sections 67.2.1 to 67.2.3 of 
+the Act respecting Access to documents held by public bodies and the Protection 
+of personal information,”.
+ACT TO ESTABLISH A LEGAL FRAMEWORK FOR INFORMATION 
+TECHNOLOGY
+80. Section 44 of the Act to establish a legal framework for information 
+technology (chapter C-1.1) is amended by replacing “, except with the express 
+consent of the person concerned. Where consent is obtained, only” and “be 
+recorded” in the first paragraph by “except where such verification or 
+confirmation has been previously disclosed to the Commission d’accès à 
+l’information and except with the express consent of the person concerned. 
+Only” and “then be used”, respectively.
+81. Section 45 of the Act is amended by replacing the first paragraph by the 
+following paragraph:
+“The creation of a database of biometric characteristics and measurements 
+must be disclosed to the Commission d’accès à l’information promptly and 
+not later than 60 days before it is brought into service.”
+ACT RESPECTING ELECTIONS AND REFERENDUMS IN 
+MUNICIPALITIES
+82. Section 659 of the Act respecting elections and referendums in 
+municipalities (chapter E-2.2) is amended by replacing “70” in the third 
+paragraph by “68”.
+ACT RESPECTING SCHOOL ELECTIONS TO ELECT CERTAIN 
+MEMBERS OF THE BOARDS OF DIRECTORS OF  
+ENGLISH-LANGUAGE SCHOOL SERVICE CENTRES
+83. Section 282 of the Act respecting school elections to elect certain 
+members of the boards of directors of English-language school service centres 
+(chapter E-2.3) is amended by replacing both occurrences of “70” by “68”.
+31
+ELECTION ACT
+84. Section 40.38.3 of the Election Act (chapter E-3.3) is amended by 
+replacing “must undertake” in the second paragraph by “receives it after 
+undertaking”.
+85. Section 40.42 of the Act is amended 
+(1) by replacing “the second paragraph” in the first paragraph by “the second 
+and fourth paragraphs”;
+(2) by adding the following paragraph at the end:
+“The Chief Electoral Officer may enter into an agreement, in accordance 
+with sections 67.2.1 to 67.2.3 of the Act respecting Access to documents held 
+by public bodies and the Protection of personal information (chapter A-2.1), 
+to communicate personal information contained in the permanent list of electors 
+to a person or body wishing to use the information for study or research purposes 
+or for the production of statistics.”
+86. The Act is amended by inserting the following title after section 127.21:
+“TITLE III.1
+“PROTECTION OF THE PERSONAL INFORMATION OF ELECTORS
+“127.22. Subject to any provision that is inconsistent with this Act, the 
+Act respecting the protection of personal information in the private sector 
+(chapter P-39.1), except sections 4, 5, 12, 23 and 27 to 60, applies to the personal 
+information of electors held by a political party, an independent Member or an 
+independent candidate.
+Every political party shall designate, from among its officers, the person 
+who is to exercise the function of person in charge of the protection of personal 
+information.
+For the purposes of the Act respecting the protection of personal information 
+in the private sector and of this Title, the party authority is considered to form 
+an integral part of a political party.
+“127.23. A political party, an independent Member and an independent 
+candidate may collect only the personal information of electors that is necessary 
+for election or political financing purposes, or for the purposes of a political 
+activity within the meaning of section 88, in accordance with this Act. They 
+may use such personal information only for those same purposes.
+In addition, they may not collect or use personal information without the 
+consent of the person concerned.”
+32
+87. Section 146 of the Act is amended by adding the following sentence at 
+the end of the second paragraph: “A candidate receives the lists after undertaking 
+in writing to take appropriate measures to protect the confidentiality of the lists 
+and to ensure that they are used solely for the purposes provided for by this Act.”
+88. Section 551.1.1 of the Act is amended by inserting “collects,” after 
+“Every person who” and by replacing “$1,000 to $10,000 in the case of a 
+natural person, and of $3,000 to $30,000 in the case of a legal person” by 
+“$5,000 to $50,000 in the case of a natural person, and of $15,000 to $150,000 
+in all other cases”.
+89. Section 551.2 of the Act is amended by replacing “$10,000, in the case 
+of a natural person, and of $10,000 to $30,000, in the case of a legal person” 
+by “$50,000 in the case of a natural person, and of $15,000 to $150,000 in all 
+other cases”.
+90. Section 570 of the Act is amended by striking out the second paragraph.
+ACT RESPECTING THE INSTITUT DE LA STATISTIQUE DU QUÉBEC
+91. Section 13.5 of the Act respecting the Institut de la statistique du Québec 
+(chapter I-13.011), enacted by section 71 of chapter 15 of the statutes of 2021, 
+is replaced by the following section:
+“13.5. Designated information is communicated for research purposes by 
+the Institut to a researcher attached to a public body in accordance with this 
+chapter despite sections 67.2.1 to 67.2.3 of the Act respecting Access to 
+documents held by public bodies and the Protection of personal information 
+(chapter A-2.1).”
+92. Section 13.6 of the Act, enacted by section 71 of chapter 15 of the statutes 
+of 2021, is amended by striking out “the first paragraph of” in the introductory 
+clause.
+ACT RESPECTING LA FINANCIÈRE AGRICOLE DU QUÉBEC
+93. Section 28 of the Act respecting La Financière agricole du Québec 
+(chapter L-0.1) is amended by replacing the last paragraph by the following 
+paragraph:
+“The agreement shall be sent to the Commission d’accès à l’information 
+and comes into force 30 days after it is received by the Commission.”
+33
+ACT RESPECTING THE MINISTÈRE DE L’EMPLOI ET DE LA 
+SOLIDARITÉ SOCIALE AND THE COMMISSION DES PARTENAIRES 
+DU MARCHÉ DU TRA V AIL
+94. Section 8 of the Act respecting the Ministère de l’Emploi et de la 
+Solidarité sociale and the Commission des partenaires du marché du travail 
+(chapter M-15.001) is amended by replacing the second paragraph by the 
+following paragraph:
+“The agreement must be sent to the Commission d’accès à l’information 
+and comes into force 30 days after it is received by the Commission.”
+ACT RESPECTING THE SECTORAL PARAMETERS OF CERTAIN 
+FISCAL MEASURES
+95. Section 31 of the Act respecting the sectoral parameters of certain fiscal 
+measures (chapter P-5.1) is amended by striking out the second paragraph.
+96. Section 32 of the Act is replaced by the following section:
+“32. Communication of information to the Minister of Finance for a 
+purpose mentioned in section 31 and in accordance with that section or on the 
+initiative of a responsible minister or body referred to in that section need not 
+be recorded in the register provided for in section 41.3 of the Act respecting 
+Access to documents held by public bodies and the Protection of personal 
+information (chapter A-2.1).”
+ACT RESPECTING THE SHARING OF CERTAIN HEALTH 
+INFORMATION
+97. Section 106 of the Act respecting the sharing of certain health information 
+(chapter P-9.0001) is amended by replacing subparagraph 4 of the first 
+paragraph by the following subparagraph:
+“(4) a person or body that may, in accordance with sections 67.2.1 to 67.2.3 
+of the Act respecting Access to documents held by public bodies and the 
+Protection of personal information (chapter A-2.1), use the information for 
+study or research purposes or for the production of statistics in the health and 
+social services  field.”
+98. Section 107 of the Act is repealed.
+ACT TO PREVENT AND FIGHT SEXUAL VIOLENCE IN HIGHER 
+EDUCATION INSTITUTIONS
+99. Section 4 of the Act to prevent and fight sexual violence in higher 
+education institutions (chapter P-22.1) is amended by adding the following 
+paragraph at the end:
+34
+“At the request of a person who has filed a complaint, the educational 
+institution must communicate to the person the information relating to the 
+follow-up that has been given to the complaint, namely, whether or not a penalty 
+has been imposed as well as the details and terms of the penalty, if applicable.”
+ACT RESPECTING THE PROTECTION OF PERSONAL INFORMATION 
+IN THE PRIV ATE SECTOR
+100. Section 1 of the Act respecting the protection of personal information 
+in the private sector (chapter P-39.1) is amended
+(1) by inserting “, whether the enterprise keeps the information itself or 
+through the agency of a third person,” after “information” in the second 
+paragraph;
+(2) by inserting “and to that held by a political party, an independent Member 
+or an independent candidate to the extent provided for by the Election Act 
+(chapter E-3.3)” after “(chapter C-26)” in the third paragraph;
+(3) by adding the following sentence at the end of the fifth paragraph: “Nor 
+do they apply to personal information concerning the performance of duties 
+within an enterprise by the person concerned, such as the person’s name, title 
+and duties, as well as the address, email address and telephone number of the 
+person’s place of work.”
+101. The Act is amended by inserting the following section after section 1:
+“1.1. For the purposes of this Act, any person who collects personal 
+information relating to another person for a serious and legitimate reason is 
+deemed to be establishing a file within the meaning of the Civil Code and the 
+rights concerning such a file conferred by articles 35 to 40 of that Code apply 
+to the personal information collected.”
+102. Section 2 of the Act is amended by inserting “directly or indirectly” 
+before “allows”.
+103. The Act is amended by inserting the following division after section  3:
+“DIVISION I.1
+“RESPONSIBILITIES RELATING TO PROTECTION OF PERSONAL 
+INFORMATION
+“3.1. Any person carrying on an enterprise is responsible for protecting 
+the personal information held by the person.
+35
+Within the enterprise, the person exercising the highest authority shall see 
+to ensuring that this Act is implemented and complied with. That person shall 
+exercise the function of person in charge of the protection of personal 
+information; he may delegate all or part of that function in writing to any person.
+The title and contact information of the person in charge of the protection 
+of personal information must be published on the enterprise’s website or, if the 
+enterprise does not have a website, be made available by any other 
+appropriate  means.
+“3.2. Any person carrying on an enterprise must establish and implement 
+governance policies and practices regarding personal information that ensure 
+the protection of such information. Such policies and practices must, in 
+particular, provide a framework for the keeping and destruction of the 
+information, define the roles and responsibilities of the members of its personnel 
+throughout the life cycle of the information and provide a process for dealing 
+with complaints regarding the protection of the information. The policies and 
+practices must also be proportionate to the nature and scope of the enterprise’s 
+activities and be approved by the person in charge of the protection of personal 
+information.
+Detailed information about those policies and practices, in particular as 
+concerns the content required under the first paragraph, must be published in 
+simple and clear language on the enterprise’s website or, if the enterprise does 
+not have a website, made available by any other appropriate  means.
+“3.3. Any person carrying on an enterprise must conduct a privacy impact 
+assessment for any project to acquire, develop or overhaul an information 
+system or electronic service delivery system involving the collection, use, 
+communication, keeping or destruction of personal information.
+For the purposes of such an assessment, the person must consult the person 
+in charge of the protection of personal information within the enterprise from 
+the outset of the project.
+The person must also ensure that the project allows computerized personal 
+information collected from the person concerned to be communicated to him 
+in a structured, commonly used technological format.
+The conduct of a privacy impact assessment under this Act must be 
+proportionate to the sensitivity of the information concerned, the purposes for 
+which it is to be used, the quantity and distribution of the information and the 
+medium on which it is  stored.
+“3.4. The person in charge of the protection of personal information may, 
+at any stage of a project referred to in section 3.3, suggest personal information 
+protection measures applicable to the project, such as
+(1) the appointment of a person to be responsible for implementing the 
+personal information protection measures;
+36
+(2) measures to protect the personal information in any document relating 
+to the project;
+(3) a description of the project participants’ responsibilities with regard to 
+the protection of personal information; or
+(4) training activities for project participants on the protection of personal 
+information.
+“3.5. Any person carrying on an enterprise who has cause to believe that 
+a confidentiality incident involving personal information the person holds has 
+occurred must take reasonable measures to reduce the risk of injury and to 
+prevent new incidents of the same nature.
+If the incident presents a risk of serious injury, the person carrying on an 
+enterprise must promptly notify the Commission d’accès à l’information 
+established by section 103 of the Act respecting Access to documents held by 
+public bodies and the Protection of personal information (chapter A-2.1). He 
+must also notify any person whose personal information is concerned by the 
+incident, failing which the Commission may order him to do so. He may also 
+notify any person or body that could reduce the risk, by communicating to the 
+person or body only the personal information necessary for that purpose without 
+the consent of the person concerned. In the latter case, the person in charge of 
+the protection of personal information must record the communication of the 
+information.
+Despite the second paragraph, a person whose personal information is 
+concerned by the incident need not be notified so long as doing so could hamper 
+an investigation conducted by a person or body responsible by law for the 
+prevention, detection or repression of crime or statutory offences.
+A government regulation may determine the content and terms of the notices 
+provided for in this section.
+“3.6. For the purposes of this Act, “confidentiality incident” means
+(1) access not authorized by law to personal information;
+(2) use not authorized by law of personal information;
+(3) communication not authorized by law of personal information; or
+(4) loss of personal information or any other breach of the protection of 
+such information.
+“3.7. In assessing the risk of injury to a person whose personal information 
+is concerned by a confidentiality incident, a person carrying on an enterprise 
+must consider, in particular, the sensitivity of the information concerned, the 
+37
+anticipated consequences of its use and the likelihood that such information 
+will be used for injurious purposes. The person must also consult the person 
+in charge of the protection of personal information within the enterprise.
+“3.8. A person carrying on an enterprise must keep a register of 
+confidentiality incidents. A government regulation may determine the content 
+of the register.
+A copy of the register must be sent to the Commission at its request.”
+104. Section 4 of the Act is replaced by the following sections:
+“4. Any person carrying on an enterprise who, for a serious and legitimate 
+reason, collects personal information on another person must determine the 
+purposes for collecting the information before doing so.
+“4.1. The personal information concerning a minor under 14 years of age 
+may not be collected from him without the consent of the person having parental 
+authority or of the tutor, unless collecting the information is clearly for the 
+minor’s benefit.”
+105. Section 5 of the Act is amended by replacing the first paragraph by the 
+following paragraph:
+“Any person collecting personal information on another person may collect 
+only the information necessary for the purposes determined before collecting it.”
+106. Section 7 of the Act is amended by replacing the first two paragraphs 
+by the following paragraph:
+“Any person collecting personal information from another person carrying 
+on an enterprise must, at the request of the person concerned, inform the latter 
+of the source of the information.”
+107. Section 8 of the Act is replaced by the following sections:
+“8. Any person who collects personal information from the person 
+concerned must, when the information is collected and subsequently on request, 
+inform that person
+(1) of the purposes for which the information is collected;
+(2) of the means by which the information is collected;
+(3) of the rights of access and rectification provided by law; and
+(4) of the person’s right to withdraw consent to the communication or use 
+of the information collected.
+38
+If applicable, the person concerned is informed of the name of the third 
+person for whom the information is being collected, the name of the third 
+persons or categories of third persons to whom it is necessary to communicate 
+the information for the purposes referred to in subparagraph 1 of the first 
+paragraph, and the possibility that the information could be communicated 
+outside Québec.
+On request, the person concerned is also informed of the personal information 
+collected from him, the categories of persons who have access to the information 
+within the enterprise, the duration of the period of time the information will 
+be kept, and the contact information of the person in charge of the protection 
+of personal information.
+The information must be provided to the person concerned in clear and 
+simple language, regardless of the means used to collect the personal information.
+“8.1. In addition to the information that must be provided in accordance 
+with section 8, any person who collects personal information from the person 
+concerned using technology that includes functions allowing the person 
+concerned to be identified, located or profiled must first inform the person
+(1) of the use of such technology; and
+(2) of the means available to activate the functions that allow a person to 
+be identified, located or profiled.
+“Profiling” means the collection and use of personal information to assess 
+certain characteristics of a natural person, in particular for the purpose of 
+analyzing that person’s work performance, economic situation, health, personal 
+preferences, interests or behaviour.
+“8.2. Any person who collects personal information through technological 
+means must publish on the enterprise’s website, if applicable, a confidentiality 
+policy drafted in clear and simple language and disseminate it by any appropriate 
+means to reach the persons concerned. The person must do the same for the 
+notice required for any amendment to such a policy.
+“8.3. Any person who provides his personal information in accordance 
+with section 8 consents to its use and its communication for the purposes 
+referred to in subparagraph  1 of the first paragraph of that section.”
+108. The Act is amended by inserting the following section after section 9:
+“9.1. Any person carrying on an enterprise who collects personal 
+information when offering to the public a technological product or service 
+having privacy settings must ensure that those settings provide the highest level 
+of confidentiality by default, without any intervention by the person concerned.
+The first paragraph does not apply to privacy settings for browser cookies.”
+39
+109. Section 11 of the Act is amended
+(1) by replacing “file” by “personal information”;
+(2) by adding the following paragraph at the end:
+“The information used to make such a decision is kept for at least one year 
+following the decision.”
+110. Sections 12 to 14 of the Act are replaced by the following sections:
+“12. Unless the person concerned gives his consent, personal information 
+may not be used within the enterprise except for the purposes for which it was 
+collected. Such consent must be given expressly when it concerns sensitive 
+personal information.
+Personal information may, however, be used for another purpose without 
+the consent of the person concerned, but only
+(1) if it is used for purposes consistent with the purposes for which it was 
+collected;
+(2) if it is clearly used for the benefit of the person concerned;
+(3) if its use is necessary for the purpose of preventing and detecting fraud 
+or of assessing and improving protection and security measures;
+(4) if its use is necessary for the purpose of providing or delivering a product 
+or providing a service requested by the person concerned; or
+(5) if its use is necessary for study or research purposes or for the production 
+of statistics and if the information is de-identified.
+In order for a purpose to be consistent within the meaning of subparagraph 1 
+of the second paragraph, it must have a direct and relevant connection with the 
+purposes for which the information was collected. However, commercial or 
+philanthropic prospection may not be considered a consistent purpose.
+For the purposes of this Act, personal information is
+(1) de-identified if it no longer allows the person concerned to be directly 
+identified;
+(2) sensitive if, due to its nature, in particular its medical, biometric or 
+otherwise intimate nature, or the context of its use or communication, it entails 
+a high level of reasonable expectation of privacy.
+40
+Every person carrying on an enterprise who uses de-identified information 
+must take reasonable measures to limit the risk of someone identifying a natural 
+person using de-identified information.
+“12.1. Any person carrying on an enterprise who uses personal information 
+to render a decision based exclusively on an automated processing of such 
+information must inform the person concerned accordingly not later than at 
+the time it informs the person of the decision.
+He must also inform the person concerned, at the latter’s request,
+(1) of the personal information used to render the decision;
+(2) of the reasons and the principal factors and parameters that led to the 
+decision; and
+(3) of the right of the person concerned to have the personal information 
+used to render the decision corrected.
+The person concerned must be given the opportunity to submit observations 
+to a member of the personnel of the enterprise who is in a position to review 
+the decision.
+“13. No person may communicate to a third person the personal information 
+he holds on another person, unless the person concerned consents to, or this 
+Act provides for, such communication.
+Such consent must be given expressly when it concerns sensitive personal 
+information.
+“14. Consent under this Act must be clear, free and informed and be given 
+for specific purposes. It must be requested for each such purpose, in clear and 
+simple language. If the request for consent is made in writing, it must be 
+presented separately from any other information provided to the person 
+concerned. If the person concerned so requests, assistance is provided to help 
+him understand the scope of the consent requested.
+The consent of a minor under 14 years of age is given by the person having 
+parental authority or by the tutor. The consent of a minor 14 years of age or 
+over is given by the minor, by the person having parental authority or by 
+the tutor.
+Consent is valid only for the time necessary to achieve the purposes for 
+which it was requested.
+Consent not given in accordance with this Act is without effect.”
+41
+111. Section 17 of the Act is replaced by the following section:
+“17. Before communicating personal information outside Québec, a person 
+carrying on an enterprise must conduct a privacy impact assessment. The person 
+must, in particular, take into account
+(1) the sensitivity of the information;
+(2) the purposes for which it is to be used;
+(3) the protection measures, including those that are contractual, that would 
+apply to it; and
+(4) the legal framework applicable in the State in which the information 
+would be communicated, including the personal information protection 
+principles applicable in that State.
+The information may be communicated if the assessment establishes that it 
+would receive adequate protection, in particular in light of generally recognized 
+principles regarding the protection of personal information. The communication 
+of the information must be the subject of a written agreement that takes into 
+account, in particular, the results of the assessment and, if applicable, the terms 
+agreed on to mitigate the risks identified in the assessment.
+The same applies where the person carrying on an enterprise entrusts a person 
+or body outside Québec with the task of collecting, using, communicating or 
+keeping such information on his behalf.
+This section does not apply to a communication of information under 
+subparagraph 7 of the first paragraph of section 18.”
+112. Section 18 of the Act is amended
+(1) in the first paragraph,
+(a) by striking out “contained in a file” in the introductory clause;
+(b) by inserting “person or” before “body responsible” in subparagraph 3;
+(c) by inserting the following subparagraph after subparagraph 7:
+“(7.1) to a person or body in accordance with sections 18.1 to 18.4;”;
+(d) by replacing “is authorized to use” in subparagraph 8 by “may use”;
+(e) by striking out subparagraph 10;
+42
+(2) in the second paragraph,
+(a) by replacing “10” by “9.1”;
+(b) by striking out the last sentence.
+113. Section 18.1 of the Act is amended
+(1) by striking out “included in a file” in the first paragraph;
+(2) by striking out the last sentence of the fourth paragraph.
+114. Section 18.2 of the Act is amended by striking out “contained in a file” 
+in the first paragraph.
+115. The Act is amended by inserting the following sections after section 18.2:
+“18.3. A person carrying on an enterprise may, without the consent of 
+the person concerned, communicate personal information to any person or 
+body if the information is necessary for carrying out a mandate or performing 
+a contract of enterprise or for services entrusted to that person or body by the 
+person carrying on an enterprise.
+In such a case, the person carrying on an enterprise must
+(1) entrust the mandate or contract in writing; and
+(2) specify in the mandate or contract the measures the mandatary or the 
+person performing the contract must take to protect the confidentiality of the 
+personal information communicated, to ensure that the information is used 
+only for carrying out the mandate or performing the contract and to ensure that 
+the mandatary or person does not keep the information after the expiry of the 
+mandate or contract. A person or body carrying out a mandate or performing 
+a contract of enterprise or for services referred to in the first paragraph must 
+notify the person in charge of the protection of personal information without 
+delay of any violation or attempted violation by any person of any obligation 
+concerning the confidentiality of the information communicated, and must also 
+allow the person in charge of the protection of personal information to conduct 
+any verification relating to confidentiality requirements.
+Subparagraph 2 of the second paragraph does not apply if the mandatary or 
+the person performing the contract is a public body within the meaning of the 
+Act respecting Access to documents held by public bodies and the Protection 
+of personal information (chapter A-2.1) or a member of a professional order.
+“18.4. Where the communication of personal information is necessary 
+for concluding a commercial transaction to which a person carrying on an 
+enterprise intends to be a party, the person may communicate such information, 
+without the consent of the person concerned, to the other party to the transaction.
+43
+An agreement must first be entered into with the other party that stipulates, 
+among other things, that the latter undertakes
+(1) to use the information only for concluding the commercial transaction;
+(2) not to communicate the information without the consent of the person 
+concerned, unless authorized to do so by this Act;
+(3) to take the measures required to protect the confidentiality of the 
+information; and
+(4) to destroy the information if the commercial transaction is not concluded 
+or if using the information is no longer necessary for concluding the commercial 
+transaction.
+Where the commercial transaction has been concluded and the other party 
+wishes to continue using the information or to communicate it, that party may 
+use or communicate it only in accordance with this Act. Within a reasonable 
+time after the commercial transaction is concluded, that party must notify the 
+person concerned that it now holds personal information concerning him 
+because of the transaction.
+For the purposes of this section, “commercial transaction” means the 
+alienation or leasing of all or part of an enterprise or of its assets, a modification 
+of its legal structure by merger or otherwise, the obtaining of a loan or any 
+other form of financing by the enterprise or of a security taken to guarantee 
+any of its obligations.”
+116. Section 19 of the Act is amended by replacing “the file held” in the first 
+paragraph by “the personal information held”.
+117. Section 20 of the Act is replaced by the following section:
+“20. In the carrying on of an enterprise, authorized employees or agents 
+may have access to personal information without the consent of the person 
+concerned only if the information is needed for the performance of their duties.”
+118. Section 21 of the Act is replaced by the following sections:
+“21. A person carrying on an enterprise may communicate personal 
+information without the consent of the persons concerned to a person or body 
+wishing to use the information for study or research purposes or for the 
+production of statistics.
+The information may be communicated if a privacy impact assessment 
+concludes that
+(1) the objective of the study or research or of the production of statistics 
+can be achieved only if the information is communicated in a form allowing 
+the persons concerned to be identified;
+44
+(2) it is unreasonable to require the person or body to obtain the consent of 
+the persons concerned;
+(3) the objective of the study or research or of the production of statistics 
+outweighs, with regard to the public interest, the impact of communicating and 
+using the information on the privacy of the persons concerned;
+(4) the personal information is used in such a manner as to ensure 
+confidentiality; and
+(5) only the necessary information is communicated.
+“21.0.1. A person or body wishing to use personal information for study 
+or research purposes or for the production of statistics must
+(1) request it in writing;
+(2) enclose a detailed presentation of the research activities with the request;
+(3) state the grounds supporting fulfillment of the criteria set out in 
+subparagraphs 1 to 5 of the second paragraph of section 21;
+(4) mention all the persons and bodies to whom or which the person or body 
+is making a similar request for the purposes of the same study or research or 
+production of statistics;
+(5) if applicable, describe the different technologies that will be used to 
+process the information; and
+(6) if applicable, send the documented decision of a research ethics 
+committee relating to the study or research or the production of statistics.
+“21.0.2. A person who communicates personal information in accordance 
+with section 21 must first enter into an agreement with the person or body to 
+whom or which the information is to be sent that stipulates, among other things, 
+that the information
+(1) may be made accessible only to persons who need to know it to exercise 
+their functions and who have signed a confidentiality agreement;
+(2) may not be used for purposes other than those specified in the detailed 
+presentation of the research activities;
+(3) may not be matched with any other information file that has not been 
+provided for in the detailed presentation of the research activities; and
+(4) may not be communicated, published or otherwise distributed in a form 
+allowing the persons concerned to be identified.
+45
+The agreement must also
+(1) specify the information that must be provided to the persons concerned 
+if personal information concerning them is used to contact them to participate 
+in the study or research;
+(2) provide for measures for ensuring the protection of the personal 
+information;
+(3) determine a preservation period for the personal information;
+(4) set out the obligation to notify the person who communicates the personal 
+information of its destruction; and
+(5) provide that the person who communicates the personal information and 
+the Commission must be informed without delay
+(a) of non-compliance with any condition set out in the agreement;
+(b) of any failure to comply with the protection measures provided for in 
+the agreement; and
+(c) of any event that could breach the confidentiality of the information.
+The agreement must be sent to the Commission and comes into force 30 days 
+after it is received by the Commission.”
+119. Sections 22 to 26 of the Act are replaced by the following:
+“22. Any person carrying on an enterprise who uses personal information 
+for commercial or philanthropic prospection purposes must identify himself 
+to the person whom he is addressing and inform that person of his right to 
+withdraw his consent to the personal information concerning him being used 
+for such purposes.
+If the person concerned withdraws his consent regarding such use, the 
+personal information must cease to be used for those purposes.
+“§3. — Destruction or anonymization
+“23. Where the purposes for which personal information was collected 
+or used are achieved, the person carrying on an enterprise must destroy the 
+information, or anonymize it to use it for serious and legitimate purposes, 
+subject to any preservation period provided for by an  Act.
+For the purposes of this Act, information concerning a natural person is 
+anonymized if it is, at all times, reasonably foreseeable in the circumstances 
+that it irreversibly no longer allows the person to be identified directly or 
+indirectly.
+46
+Information anonymized under this Act must be anonymized according to 
+generally accepted best practices and according to the criteria and terms 
+determined by regulation.”
+120. Section 27 of the Act is amended by replacing the first paragraph by 
+the following paragraphs:
+“Every person carrying on an enterprise who holds personal information on 
+another person must, at the request of the person concerned, confirm the 
+existence of the personal information, communicate it to the person and allow 
+him to obtain a copy of it.
+At the applicant’s request, computerized personal information must be 
+communicated in the form of a written and intelligible transcript.
+Unless doing so raises serious practical difficulties, computerized personal 
+information collected from the applicant, and not created or inferred using 
+personal information concerning him, must, at his request, be communicated 
+to him in a structured, commonly used technological format. The information 
+must also be communicated, at the applicant’s request, to any person or body 
+authorized by law to collect such information.”
+121. Section 28 of the Act is replaced by the following sections:
+“28. In addition to the rights provided under the first paragraph of 
+article 40 of the Civil Code, any person may, if personal information concerning 
+him is inaccurate, incomplete or equivocal, or if collecting, communicating or 
+keeping it are not authorized by law, require that the information be rectified.
+“28.1. The person to whom personal information relates may require any 
+person carrying on an enterprise to cease disseminating that information or to 
+de-index any hyperlink attached to his name that provides access to the 
+information by a technological means, if the dissemination of the information 
+contravenes the law or a court order.
+The person may do likewise, or may require that the hyperlink providing 
+access to the information be re-indexed, where the following conditions are met:
+(1) the dissemination of the information causes the person concerned serious 
+injury in relation to his right to the respect of his reputation or privacy;
+(2) the injury is clearly greater than the interest of the public in knowing 
+the information or the interest of any person in expressing himself freely; and
+(3) the cessation of dissemination, re-indexation or de-indexation requested 
+does not exceed what is necessary for preventing the perpetuation of the injury.
+In assessing the criteria set out in the second paragraph, the following, in 
+particular, must be taken into account:
+47
+(1) the fact that the person concerned is a public figure;
+(2) the fact that the information concerns the person at the time the person 
+is a minor;
+(3) the fact that the information is up to date and accurate;
+(4) the sensitivity of the information;
+(5) the context in which the information is disseminated;
+(6) the time elapsed between the dissemination of the information and the 
+request made under this section; and
+(7) where the information concerns a criminal or penal procedure, the 
+obtaining of a pardon or the application of a restriction on the accessibility of 
+records of the courts of justice.
+Sections 30, 32 and 34 apply, with the necessary modifications, to a request 
+made under this section. When granting such a request, the person in charge 
+of the protection of personal information shall attest, in his written reply under 
+section 32, to the cessation of the dissemination of the personal information 
+or to the de-indexation or the re-indexation of the hyperlink.”
+122. Section 29 of the Act is amended by replacing both occurrences of 
+“files” by “personal information”.
+123. Section 30 of the Act is amended
+(1) by replacing “or the person having parental authority even if the minor 
+child is dead” in the first paragraph by “, the person having parental authority 
+even if the minor child is deceased, or the spouse or a close relative of the 
+deceased person in accordance with section 40.1”;
+(2) by inserting the following paragraph after the first paragraph:
+“Such a request must be addressed to the person in charge of the protection 
+of personal information. If the request is not sufficiently precise or if a person 
+requires it, the person in charge must assist in identifying the information sought.”;
+(3) by replacing “correction” in the second paragraph in the French text by 
+“rectification”.
+124. Section 32 of the Act is amended by replacing the first paragraph by 
+the following paragraph:
+“The person in charge of the protection of personal information must reply 
+in writing to the request for access or rectification, promptly and not later than 
+30 days after the date the request is received.”
+48
+125. Section 33 of the Act is amended by replacing “the personal information 
+contained in a file” in the first paragraph by “personal information”.
+126. Section 34 of the Act is replaced by the following section:
+“34. The person in charge of the protection of personal information must 
+give the reasons for any refusal to grant a request and indicate the provision 
+of law on which the refusal is based, the remedies available to the applicant 
+under this Act and the time limit for exercising them. If the applicant so requests, 
+the person in charge must also help him understand the refusal.”
+127. Section 35 of the Act is amended by replacing “the person holding a 
+file” and “that personal information has been deleted” by “the person in charge 
+of the protection of personal information” and “of the deletion of personal 
+information”, respectively.
+128. Section 40 of the Act is amended by striking out “who holds a file on 
+another person”.
+129. The Act is amended by inserting the following section after section 40:
+“40.1. A person carrying on an enterprise may communicate personal 
+information that he holds concerning a deceased person to the spouse or a close 
+relative of the person if knowledge of the information could help the applicant 
+in the grieving process and if the deceased person did not record in writing his 
+refusal to grant such a right of access.”
+130. Section 41 of the Act is amended
+(1) by replacing “A” by “Subject to section 40.1, a”;
+(2) by striking out “who holds a file on another person”.
+131. Section 42 of the Act is amended by replacing “25” by “28.1”.
+132. Section 46 of the Act is amended
+(1) by adding the following sentence at the end of the first paragraph: “The 
+person may also request the Commission to limit the scope of the applicant’s 
+request or extend the time limit within which he must reply.”;
+(2) by adding the following paragraph at the end:
+“A request made under the first paragraph must be sent to the Commission 
+within the same time limit as would be applicable to the processing of a request 
+under section 32, from the date the applicant’s most recent request was received.”
+49
+133. Section 52 of the Act is amended by adding the following paragraph 
+at the end:
+“In such cases, the Commission may prohibit a person from bringing an 
+application except with the authorization of and subject to the conditions 
+determined by the chair of the Commission. It may, in the same manner, prohibit 
+a person from presenting a pleading in an ongoing proceeding.”
+134. Section 53 of the Act is amended by replacing “holding the file” and 
+“that the file” by “holding the personal information” and “that it”, respectively.
+135. Section 56 of the Act is repealed.
+136. Section 58 of the Act is replaced by the following section:
+“58. A decision of the Commission prescribing a particular course of 
+action to a party is enforceable 30 days after its receipt by the parties.
+A decision prohibiting a course of action to a party is enforceable from its 
+delivery to the party concerned.
+From the time a decision becomes enforceable, a certified copy of the decision 
+may be filed by the Commission or a party in the office of the clerk of the 
+Superior Court of the district of Montréal or Québec or of the district where 
+the head office, business establishment or residence of a party is situated.
+The filing confers on the decision the same force and effect as a judgment 
+of the Superior Court.”
+137. The heading of subdivision 3 of Division V of the Act is amended by 
+adding “and contestation ” at the end.
+138. Section 61 of the Act is amended by adding the following paragraph 
+at the end:
+“The person may also contest before a judge of the Court of Québec an order 
+issued by the Commission’s oversight division.”
+139. Section 63 of the Act is amended
+(1) by replacing “the date the parties receive the final decision” in the second 
+paragraph by “notification of the final decision”;
+(2) by adding the following paragraph at the end:
+“The proceeding to contest an order issued by the Commission’s oversight 
+division is filed at the office of the Court of Québec within 30 days after 
+notification of the order and must specify the questions which ought to be 
+examined.”
+50
+140. Section 64 of the Act is amended by adding the following paragraph 
+at the end:
+“The filing of the proceeding to contest an order issued by the Commission’s 
+oversight division does not suspend the execution of the order. However, on a 
+motion heard and judged on an urgent basis, a judge of the Court of Québec 
+may order otherwise because of the urgency of the situation or the risk of 
+serious and irreparable injury.”
+141. Section 65 of the Act is amended
+(1) by replacing “contested decision and the documents related to the 
+contestation” in the second paragraph by “decision appealed from and the 
+accompanying documents”;
+(2) by adding the following paragraph at the end:
+“The contestation of an order issued by the Commission’s oversight division 
+must be served on the Commission and, if applicable, on the other parties, 
+within 10 days after its filing at the office of the Court of Québec. The secretary 
+of the Commission shall send a copy of the contested order and the accompanying 
+documents to the office of the Court to serve as a joint record.”
+142. Section 67 of the Act is amended by adding the following paragraph 
+at the end:
+“The contestation is governed by the rules of the Code of Civil Procedure 
+that are applicable in first instance.”
+143. Section 71 of the Act is amended by inserting “, and that it is 
+communicated in accordance with this Act” at the end.
+144. Section 72 of the Act is amended 
+(1) by replacing subparagraphs 1 to 3 of the first paragraph by the following 
+subparagraphs:
+“(1) the name, address and email address of the agent and, in the case of a 
+legal person, the address of its head office and the names and addresses of its 
+directors;
+“(2) the address, email address and telephone number of each establishment 
+of the agent in Québec;
+“(3) the title and contact information of the person in charge of the protection 
+of personal information;
+“(4) the method of operation provided for in section 71;
+51
+“(5) the rules of conduct provided for in section 78; and
+“(6) the other measures taken to ensure the confidentiality and security of 
+personal information in accordance with this Act.”;
+(2) by replacing the second paragraph by the following paragraph:
+“Every personal information agent must inform the Commission of any 
+change in the information referred to in the first paragraph no later than 30 days 
+following the change. If applicable, the agent must also promptly inform the 
+Commission of the expected termination of the agent’s activities.”
+145. Section 74 of the Act is replaced by the following section:
+“74. The Commission shall keep a current register of personal information 
+agents containing, for each agent, the agent’s name, address and email address, 
+and the title and contact information of the person in charge of the protection 
+of personal information.”
+146. Section 75 of the Act is amended by adding the following sentence at 
+the end of the first paragraph: “It may also be consulted on the Commission’s 
+website.”
+147. Section 76 of the Act is repealed.
+148. Sections 78 and 79 of the Act are replaced by the following sections:
+“78. Every personal information agent must establish and apply within 
+his enterprise rules of conduct allowing any person to whom personal 
+information held by the agent relates to have access to the information according 
+to a procedure that ensures the protection of the information and to cause the 
+information to be rectified.
+“79. Every personal information agent must inform the public
+(1) of the fact that the agent holds personal information on other persons, 
+that he gives communication of credit reports bearing on the character, 
+reputation or solvency of the persons to whom the personal information relates 
+to persons with whom he is bound by contract, and that he receives from the 
+latter personal information relating to other persons;
+(2) of the rights of access and rectification that the persons concerned may 
+exercise under this Act in respect of the personal information the agent 
+holds; and
+(3) of the information provided for in subparagraphs 3 to 6 of the first 
+paragraph of section 72.
+52
+The information must be published on the personal information agent’s 
+website, or, if the agent does not have a website, made available by any other 
+appropriate means.
+“79.1. Despite section 23, a personal information agent must destroy 
+personal information collected more than seven years earlier.
+This section does not apply to personal information in a file established for 
+the purposes of an inquiry to prevent, detect or repress a crime or statutory 
+offence.”
+149. Section 80 of the Act is amended by replacing “in sections 21 and” by 
+“in section”.
+150. Section 80.1 of the Act is amended
+(1) in the first paragraph,
+(a) by inserting “functions and” after “exercise the”;
+(b) by replacing “21, 21.1, 72, 81, 83, 84” by “21.1, 72, 80.2, 81, 81.3, 81.4, 
+83, 84, 92”;
+(2) by replacing “21, 21.1” in the second paragraph by “21.1, 80.2”.
+151. The Act is amended by inserting the following section after section 80.1:
+“80.1.1. For the purposes of subdivisions 4.1 and 5, a political party is 
+considered a natural person.”
+152. Section 81 of the Act is amended
+(1) by replacing “an interested” by “a”;
+(2) by adding the following sentence at the end: “A complaint may be filed 
+anonymously.”
+153. The Act is amended by inserting the following sections after section 81:
+“81.1. It is forbidden to take a reprisal against a person on the ground that 
+the person has, in good faith, filed a complaint with the Commission or 
+cooperated in an investigation.
+It is also forbidden to threaten to take a reprisal against a person to dissuade 
+him from filing a complaint or cooperating in an investigation.
+“81.2. The demotion, suspension, dismissal or transfer of a person or any 
+other disciplinary measure or measure that adversely affects a person’s 
+employment or conditions of employment is presumed to be a reprisal within 
+the meaning of section 81.1.
+53
+“81.3. The Commission may, by a formal demand notified by any 
+appropriate method, require any person, whether subject to this Act or not, to 
+file, within a reasonable time specified in the demand, any information or 
+document to verify compliance with this Act or the regulations.
+The person to whom the demand is made shall comply with it within the 
+specified time regardless of whether the person has already filed such 
+information or documents pursuant to a similar demand or pursuant to an 
+obligation under this Act or the regulations.
+“81.4. The Commission may, when a confidentiality incident is brought 
+to its attention, order any person, after giving him the opportunity to submit 
+observations, to take any measure to protect the rights of the persons concerned 
+that are granted by this Act, for the time and on the conditions the Commission 
+determines. It may, in particular, order that the personal information involved 
+be returned to the person carrying on an enterprise or destroyed.
+If a person to whom an order applies was not given prior notice because, in 
+the opinion of the Commission, urgent action is required or there is a danger 
+of irreparable injury being caused, the person may, within the time specified 
+in the order, submit observations so that the order may be reviewed by the 
+Commission.”
+154. Section 83 of the Act is amended 
+(1) by adding the following paragraph before the first paragraph:
+“The inquiries of the Commission are non-adversary investigations.”;
+(2) by inserting “within the reasonable time limit the Commission specifies” 
+at the end of the first paragraph;
+(3) by striking out the second paragraph.
+155. The Act is amended by inserting the following section after section 83:
+“83.1. Every person carrying on an enterprise must, at the request of the 
+Commission, provide it with any information it requires on the carrying out of 
+this Act.”
+156. Sections 86 and 87 of the Act are replaced by the following sections:
+“86. An order issued by the Commission’s oversight division becomes 
+enforceable in the same manner as a decision referred to in section 58.
+“87. A person directly interested may contest an order issued by the 
+Commission’s oversight division.
+The contestation is subject to the rules set out in sections 61 to 69.”
+54
+157. Section 88 of the Act is amended by replacing “2011” in the first 
+paragraph by “2026”.
+158. Section 90 of the Act is amended by replacing subparagraph 3 of the 
+first paragraph by the following subparagraphs:
+“(3) determine the content and terms of the notices provided for in 
+section 3.5;
+“(3.1) determine the content of the register provided for in section 3.8;
+“(3.2) for the purposes of section 23, determine the criteria and terms 
+applicable to the anonymization of personal information;
+“(3.3) determine the cases in which a recovery charge is payable under 
+section 90.17, as well as the conditions of payment and the amount payable;”.
+159. The Act is amended by inserting the following subdivision after 
+section 90:
+“§4.1. — Monetary administrative penalties
+“90.1. A monetary administrative penalty may be imposed by a person 
+designated by the Commission, but who is not a member of any of its divisions, 
+on anyone who
+(1) does not inform the persons concerned in accordance with sections 7 
+and 8;
+(2) collects, uses, communicates, keeps or destroys personal information 
+in contravention of the law;
+(3) does not report, where required to do so, a confidentiality incident to 
+the Commission or to the persons concerned;
+(4) does not take the security measures necessary to ensure the protection 
+of the personal information in accordance with section 10;
+(5) does not inform the person concerned by a decision based exclusively 
+on an automated process or does not give the person an opportunity to submit 
+observations, in contravention of section 12.1; or
+(6) is a personal information agent and contravenes any of sections 70, 70.1, 
+71, 72, 78, 79 and 79.1.
+Following a failure referred to in the first paragraph, a person may, at any 
+time, enter into an undertaking with the Commission to take the measures 
+necessary to remedy the failure or mitigate its consequences. The undertaking 
+must identify the acts or omissions constituting a failure and the provisions 
+55
+involved. It may also include the conditions the Commission considers 
+necessary and contain a requirement to pay a sum of money.
+If the undertaking is accepted by the Commission and is complied with, no 
+monetary administrative penalty may be imposed on the person carrying on an 
+enterprise with regard to the acts or omissions mentioned in the undertaking.
+“90.2. The Commission shall develop and make public a general 
+framework for the application of monetary administrative penalties and shall 
+specify in the framework the following elements in particular:
+(1) the purpose of the penalties, such as urging a person carrying on an 
+enterprise to rapidly take the measures required to remedy the failure and deter 
+repetition of such failures;
+(2) the criteria that must guide designated persons in the decision to impose 
+a penalty when a failure occurs and in the determination of the amount of the 
+penalty, including
+(a) the nature, seriousness, repetitiveness and duration of the failure;
+(b) the sensitivity of the personal information concerned by the failure;
+(c) the number of persons concerned by the failure and the risk of injury to 
+which they are exposed;
+(d) the measures taken by the person in default to remedy the failure or 
+mitigate its consequences;
+(e) the degree of cooperation provided to the Commission to remedy the 
+failure or mitigate its consequences;
+(f) the compensation offered by the person in default, as restitution, to every 
+person concerned by the failure; and
+(g) the ability to pay of the person in default, given such considerations as 
+the person’s assets, turnover and revenues;
+(3) the circumstances in which priority will be given to penal proceedings; and 
+(4) the other terms regarding the imposition of such a penalty.
+“90.3. When a failure referred to in section 90.1 has occurred, a notice 
+of non-compliance may be notified to the person in default to urge him to take, 
+without delay, the measures required to remedy the failure. The notice must 
+mention the fact that the failure could give rise to a monetary administrative 
+penalty or penal sanctions, among other things.
+56
+“90.4. The designated person must, before imposing a monetary 
+administrative penalty, notify the notice of non-compliance referred to in 
+section 90.3 to the person in default and give the person an opportunity to 
+submit observations and produce any documents to complete the record.
+“90.5. A monetary administrative penalty is imposed on the person in 
+default by notification of a notice of claim setting out the amount of the claim, 
+the reasons for it, the time from which it bears interest, the right to apply for 
+a review of the decision, the right to contest the review decision before the 
+Court of Québec and the time limit for bringing such proceedings.
+The notice of claim must also include information on the procedure for 
+recovery of the amount owing, in particular with regard to the issue of a recovery 
+certificate under section 90.14 and its effects. The person must also be advised 
+that the facts on which the claim is founded may result in penal proceedings.
+The amount owing bears interest at the rate determined under the first 
+paragraph of section 28 of the Tax Administration Act (chapter A-6.002), from 
+the 31st day after notification of the notice.
+The notification of a notice of claim interrupts the prescription provided for 
+in the Civil Code with regard to the recovery of the amount owing.
+“90.6. The person in default may apply to the Commission in writing for 
+a review of the decision to impose a monetary administrative penalty, within 
+30 days after notification of the notice of claim.
+A member assigned to the Commission’s oversight division is responsible 
+for reviewing the decision.
+“90.7. The application for review must be dealt with promptly. The review 
+decision is rendered after giving the person in default an opportunity to submit 
+observations and produce any documents to complete the record. The decision 
+may confirm, quash or vary the decision under review.
+“90.8. The review decision must be written in clear and concise terms, 
+with reasons given, must be notified to the applicant and must state the 
+applicant’s right to contest the decision before the Court of Québec and the 
+time limit for bringing such a proceeding.
+If the review decision is not rendered within 30 days after the application is 
+received or, if applicable, after the time granted to the applicant to submit 
+observations or produce documents, the interest provided for in the first 
+paragraph of section 90.5 on the amount owing is suspended until the decision 
+is rendered.
+“90.9. A review decision confirming or amending the decision to impose 
+a monetary administrative penalty may be contested before the Court of Québec 
+within 30 days after notification of the contested decision.
+57
+The contestation is subject to the rules set out in sections 61 to 69, with the 
+necessary modifications.
+“90.10. The imposition of a monetary administrative penalty is prescribed 
+two years from the date of the failure to comply with the Act.
+“90.11. No monetary administrative penalty may be imposed on a person 
+for a failure to comply with this Act if a statement of offence has already been 
+served on the person for a failure to comply with the same provision on the 
+same day, based on the same facts.
+“90.12. The maximum amount of the monetary administrative penalty 
+is $50,000 in the case of a natural person and, in all other cases, $10,000,000 
+or, if greater, the amount corresponding to 2% of worldwide turnover for the 
+preceding fiscal year.
+“90.13. The debtor and the Commission may enter into a payment 
+agreement with regard to the amount owing. Such an agreement, or the payment 
+of the amount owing, does not constitute, for the purposes of penal proceedings 
+or any other administrative penalty under this Act, an acknowledgement of the 
+facts giving rise to it.
+“90.14. If the amount owing is not paid in its entirety or the payment 
+agreement is not adhered to, the Commission may issue a recovery certificate 
+upon the expiry of the time for applying for a review of the decision imposing 
+the monetary administrative penalty, upon the expiry of the time for contesting 
+the review decision before the Court of Québec or upon the expiry of 30 days 
+after the final decision of the Court confirming all or part of the decision 
+imposing the penalty or the review decision, as applicable.
+However, a recovery certificate may be issued before the expiry of the time 
+referred to in the first paragraph if the Commission is of the opinion that the 
+debtor is attempting to evade payment.
+A recovery certificate must state the debtor’s name and address and the 
+amount of the debt.
+“90.15. Once a recovery certificate has been issued, the Minister of 
+Revenue applies, in accordance with section 31 of the Tax Administration Act 
+(chapter A-6.002), any refund owed to a person under a fiscal law to the payment 
+of an amount owed by that person under this Act.
+The allocation interrupts the prescription provided for in the Civil Code with 
+regard to the recovery of an amount owing.
+“90.16. Upon the filing of the recovery certificate at the office of the 
+competent court, together with a copy of the final decision stating the amount 
+of the debt, the decision becomes enforceable as if it were a final judgment of 
+that court not subject to appeal, and has all the effects of such a judgment.
+58
+“90.17. The debtor is required to pay a recovery charge in the cases, 
+under the conditions and in the amount determined by regulation.”
+160. Sections 91 to 92.1 of the Act are replaced by the following sections:
+“91. Anyone who
+(1) collects, uses, communicates, keeps or destroys personal information 
+in contravention of the law,
+(2) fails to report, where required to do so, a confidentiality incident to the 
+Commission or to the persons concerned,
+(3) contravenes the prohibition set out in section 8.4,
+(4) does not take the security measures necessary to ensure the protection 
+of the personal information in accordance with section 10,
+(5) identifies or attempts to identify a natural person using de-identified 
+information without the authorization of the person holding the information 
+or using anonymized information,
+(6) is a personal information agent and contravenes any of sections 70, 70.1, 
+71, 72, 78, 79 and 79.1,
+(7) impedes the progress of an inquiry or inspection of the Commission or 
+the hearing of an application by the Commission by providing it with false or 
+inaccurate information, by omitting to provide information it requires or 
+otherwise,
+(8) contravenes section 81.1,
+(9) refuses or neglects to comply, within the specified time, with a demand 
+made under section 81.3, or
+(10) fails to comply with an order of the Commission
+commits an offence and is liable to a fine of $5,000 to $100,000 in the case of 
+a natural person and, in all other cases, of $15,000 to $25,000,000, or, if greater, 
+the amount corresponding to 4% of worldwide turnover for the preceding 
+fiscal year.
+“92. The Commission may, in accordance with article 10 of the Code of 
+Penal Procedure (chapter C-25.1), institute penal proceedings for an offence 
+under this division.
+“92.1. In the case of a subsequent offence, the fines under this division 
+are doubled.
+59
+“92.2. All penal proceedings must be instituted within five years of the 
+commission of the offence.
+“92.3. In determining the penalty, the judge takes into account the 
+following factors, among others:
+(1) the nature, seriousness, repetitiveness and duration of the offence;
+(2) the sensitivity of the personal information concerned by the offence;
+(3) whether the offender acted intentionally or was negligent or reckless;
+(4) the foreseeable character of the offence or the failure to follow 
+recommendations or warnings to prevent it;
+(5) the offender’s attempts to cover up the offence or failure to try to mitigate 
+its consequences;
+(6) whether the offender failed to take reasonable measures to prevent the 
+commission of the offence;
+(7) whether the offender obtained or intended to obtain an increase in 
+revenues or a decrease in expenses by committing the offence or by omitting 
+to take measures to prevent it; and
+(8) the number of persons concerned by the offence and the risk of injury 
+to which they are exposed.”
+161. The Act is amended by inserting the following after section 93:
+“§6. — Damages
+“93.1. Where the unlawful infringement of a right conferred by this Act 
+or by articles 35 to 40 of the Civil Code causes an injury and the infringement 
+is intentional or results from a gross fault, the court shall award punitive 
+damages of not less than $1,000.”
+ANIMAL HEALTH PROTECTION ACT
+162. Section 11.3 of the Animal Health Protection Act (chapter P-42) is 
+amended by replacing the last paragraph by the following paragraph:
+“The agreements must be sent to the Commission d’accès à l’information 
+and come into force 30 days after they are received by the Commission.”
+60
+163. Section 22.4 of the Act is amended by replacing the last paragraph by 
+the following paragraph:
+“The agreements must be sent to the Commission d’accès à l’information 
+and come into force 30 days after they are received by the Commission.”
+ACT RESPECTING THE LEGAL PUBLICITY OF ENTERPRISES
+164. Section 101 of the Act respecting the legal publicity of enterprises 
+(chapter P-44.1) is amended, in the second paragraph,
+(1) by striking out “and 5”;
+(2) by replacing “section 67 or” by “any of sections 67, 67.2.1 and”.
+165. Section 121 of the Act is amended, in subparagraph 2 of the third 
+paragraph,
+(1) by striking out “or 5”;
+(2) by replacing “section 67 or” by “any of sections 67, 67.2.1 and”.
+ACT RESPECTING THE RÉGIE DE L’ASSURANCE MALADIE 
+DU QUÉBEC
+166. Section 2 of the Act respecting the Régie de l’assurance maladie du 
+Québec (chapter R-5) is amended by replacing “pursuant to an agreement 
+subject to section 70 of the Act respecting Access to documents held by public 
+bodies and the Protection of personal information (chapter A-2.1)” in the fourth 
+paragraph by “, pursuant to an agreement sent to the Commission d’accès à 
+l’information,”.
+ACT RESPECTING THE GOVERNMENT AND PUBLIC EMPLOYEES 
+RETIREMENT PLAN
+167. Section 223 of the Act respecting the Government and Public Employees 
+Retirement Plan (chapter R-10) is amended by replacing “67 to 70” in the 
+second paragraph by “67 to 68”.
+ACT RESPECTING OCCUPATIONAL HEALTH AND SAFETY
+168. Section 175 of the Act respecting occupational health and safety 
+(chapter S-2.1) is amended
+(1) by striking out “and notwithstanding subparagraph 5 of the second 
+paragraph of section 59 of the Act respecting Access to documents held by 
+public bodies and the Protection of personal information (chapter A-2.1)” in 
+the first paragraph;
+61
+(2) by replacing the second paragraph by the following paragraph:
+“The authorization is granted in accordance with sections 67.2.1 to 67.2.3 
+of the Act respecting Access to documents held by public bodies and the 
+Protection of personal information (chapter A-2.1).”
+PUBLIC HEALTH ACT 
+169. Section 36 of the Public Health Act (chapter S-2.2) is amended by 
+replacing “which is within the purview of the Commission d’accès à 
+l’information” in the second paragraph by “which must be the subject of an 
+agreement sent to the Commission d’accès à l’information”.
+ACT RESPECTING HEALTH SERVICES AND SOCIAL SERVICES
+170. Section 19.2 of the Act respecting health services and social services 
+(chapter S-4.2) is amended by replacing the first sentence of the second 
+paragraph by the following sentence: “Before granting such authorization, the 
+director must, however, ascertain that it is consistent with sections 67.2.1 to 
+67.2.3 of the Act respecting Access to documents held by public bodies and 
+the Protection of personal information (chapter A-2.1).”
+ACT RESPECTING HEALTH SERVICES AND SOCIAL SERVICES FOR 
+CREE NATIVE PERSONS
+171. Section 7 of the Act respecting health services and social services for 
+Cree Native persons (chapter S-5) is amended, in the fourth paragraph,
+(1) by striking out “, notwithstanding subparagraph 5 of the second 
+paragraph of section 59 of the Act respecting Access to documents held by 
+public bodies and the Protection of personal information (chapter A-2.1),”;
+(2) by replacing “that the criteria determined under section 125 of the Act 
+are satisfied” by “that it is consistent with sections 67.2.1 to 67.2.3 of the Act 
+respecting Access to documents held by public bodies and the Protection of 
+personal information (chapter A-2.1)”.
+CREDIT ASSESSMENT AGENTS ACT
+172. Section 108 of the Credit Assessment Agents Act (2020, chapter 21) 
+is amended by renumbering section 8.1 of the Act respecting the protection of 
+personal information in the private sector (chapter P-39.1) that it enacts, which 
+becomes section 8.4.
+173. Section 111 of the Act is repealed.
+62
+TRANSITIONAL AND FINAL PROVISIONS
+174. Sections 64, 68 and 68.1 of the Act respecting Access to documents 
+held by public bodies and the Protection of personal information (chapter A-2.1), 
+as they read on 22 September 2021, continue to apply to any agreement entered 
+into in accordance with one of those sections before that date and still in force 
+on 22 September 2023, until the expiry date of the agreement or until 
+22 September 2025, whichever occurs first.
+175. The provisions of this Act come into force on 22 September 2023, 
+except 
+(1) paragraph 2 of section 41 and sections 73, 157, 172 and 173, which 
+come into force on 22 September 2021;
+(2) sections 1, 3 and 7, subparagraph c of paragraph 2 of section 13, 
+subparagraph d of that paragraph insofar as it concerns sections 63.8 and 67.2.1 
+of the Act respecting Access to documents held by public bodies and the 
+Protection of personal information, section 15 insofar as it enacts sections 63.8 
+to 63.11 of the Act respecting Access to documents held by public bodies and 
+the Protection of personal information, section 23, section 24 insofar as it 
+concerns section 67.2.1 of the Act respecting Access to documents held by 
+public bodies and the Protection of personal information, paragraph 2 of 
+section 33, sections 36 to 40, paragraph 1 of section 41, sections 42 to 54 and 57 
+to 66, section 67, except subparagraphs 5 and 6.3 of the first paragraph of 
+section 155 of the Act respecting Access to documents held by public bodies 
+and the Protection of personal information, enacted by paragraph 2 of that 
+section, sections 68, 79 to 81, 85, 90 to 92, 97 and 99, section 103 insofar as 
+it enacts sections 3.1 and 3.5 to 3.8 of the Act respecting the protection of 
+personal information in the private sector (chapter P-39.1), subparagraph c of 
+paragraph 1 of section 112 insofar as it concerns section 18.4 of the Act 
+respecting the protection of personal information in the private sector, 
+subparagraph d of that paragraph, section 115 insofar as it enacts section 18.4 
+of the Act respecting the protection of personal information in the private sector, 
+sections 118, 132, 133, 135 to 142, 149, 150 and 153 to 156, section 158 insofar 
+as it enacts subparagraphs 3 and 3.1 of the first paragraph of section 90 of the 
+Act respecting the protection of personal information in the private sector, and 
+sections 164, 165, 168, 170 and 171, which come into force on 22 September 2022;
+(3) section 30, and section 120 to the extent that it enacts the third paragraph 
+of section 27 of the Act respecting the protection of personal information in 
+the private sector, which come into force on 22 September 2024;
+(4) section 160 insofar as it enacts paragraph 3 of section 91 of the Act 
+respecting the protection of personal information in the private sector, which 
+comes into force on the date of coming into force of section 108 of the Credit 
+Assessment Agents Act (2020, chapter 21).
+
