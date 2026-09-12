@@ -1428,6 +1428,76 @@ def main():
               and ">expected<" in uk)
         check("and does not call the guidance law",
               "guidance, not law" in flat_uk)
+
+        # The portfolio count. 75 case studies, and the number that matters is
+        # a zero, which is the kind of number that rots quietly: DSIT adds case
+        # studies, one of them finally claims a decision-level record, and the
+        # page goes on saying none does. So the count is recomputed from the
+        # committed corpus on every run, and the classification of the
+        # candidates is held beside it.
+        import importlib.util as _ilu
+        _dp = os.path.join(ROOT, "census", "dsit_portfolio.py")
+        _spec = _ilu.spec_from_file_location("dsit_portfolio", _dp)
+        _mod = _ilu.module_from_spec(_spec)
+        _spec.loader.exec_module(_mod)
+        _rows = _mod.load()
+        _c = _mod.counted(_rows)
+
+        for label, got, want, needle in (
+                ("case studies", _c["total"], 75, "75 case studies"),
+                ("mention a person", _c["person"], 18, ">18<"),
+                ("mention something kept", _c["record"], 39, ">39<"),
+                ("were read in full", _c["both"], 14, ">14<")):
+            check("the portfolio count: %s is %d" % (label, want),
+                  got == want, got)
+            check("and the page says %d for %s" % (want, label),
+                  needle in uk or needle in flat_uk, needle)
+
+        # THE FINDING. Every candidate was read and classified, and not one of
+        # the classifications is `decision`.
+        _dec = [k for k, (layer, _w) in _mod.READ.items() if layer == "decision"]
+        check("no case study claims a record of a human review of a decision",
+              not _dec, _dec)
+        check("and the page states that as a zero",
+              "claim a record of a human review of a particular\n          decision"
+              .replace("\n          ", " ") in flat_uk
+              or "claim a record of a human review of a particular decision"
+              in flat_uk)
+
+        # Every candidate has a verdict, and every verdict has a reason. The
+        # module raises on a mismatch itself; this is the same check from
+        # outside, so a corpus refresh that adds a candidate fails here rather
+        # than being noticed by somebody reading the page.
+        _unread = sorted(set(_c["both_slugs"]) - set(_mod.READ))
+        _stale = sorted(set(_mod.READ) - set(_c["both_slugs"]))
+        check("every candidate that was counted was also read", not _unread,
+              _unread)
+        check("and nothing is read that is no longer a candidate", not _stale,
+              _stale)
+        _thin = [k for k, (_l, why) in _mod.READ.items() if len(why) < 40]
+        check("every verdict says what the record is about", not _thin, _thin)
+        _bad_layer = [k for k, (l, _w) in _mod.READ.items()
+                      if l not in _mod.LAYERS]
+        check("every verdict uses a declared layer", not _bad_layer,
+              _bad_layer)
+
+        # The page quotes four case studies. Each quotation has to be in the
+        # corpus, on the same terms every other quotation on this site is held
+        # to.
+        _all = " ".join(r["text"] for r in _rows)
+        for _q in ("Full records are kept of governance actions to provide an "
+                   "audit trail",
+                   "a full chain of accountability for model behaviour",
+                   "does not evaluate competency",
+                   "should always make the final decision before any action is "
+                   "taken following a face match"):
+            check("the corpus contains %r" % _q[:46], _q in _all)
+
+        check("the page credits the Open Government Licence",
+              "Open Government Licence v3.0" in flat_uk)
+        check("and says the count rests on reading rather than on words",
+              "A word count cannot tell a record of a human review from a "
+              "record of a model" in flat_uk)
     else:
         check("/united-kingdom/ and both its sources are committed", False,
               [x for x in (uk_page_p, duaa, ico) if not os.path.exists(x)])

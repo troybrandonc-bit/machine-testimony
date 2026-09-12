@@ -1,5 +1,5 @@
 <!--title: The regulator asks for the record. The law does not
-    desc: Since 5 February 2026 a United Kingdom controller must enable a data subject to obtain human intervention in a significant automated decision. Articles 22A to 22D of the UK GDPR contain no occurrence of record, log, retain, retention, document, audit or evidence. The Information Commissioner's Office, interpreting those same articles, says you should keep a record of how the human reviewed the decision. A reading of the statute and of the guidance, against each other.
+    desc: Since 5 February 2026 a United Kingdom controller must enable a data subject to obtain human intervention in a significant automated decision. Articles 22A to 22D of the UK GDPR contain no occurrence of record, log, retain, retention, document, audit or evidence. The Information Commissioner's Office, interpreting those same articles, says you should keep a record of how the human reviewed the decision. A reading of the statute and of the guidance against each other, and a count over the government's own Portfolio of AI Assurance Techniques: of 75 case studies, 18 mention a person in the loop, 14 of those also mention something kept, and none claims a record of a human review of a decision.
     slug: united-kingdom-->
 
 <div class="wrap main">
@@ -143,6 +143,93 @@
         regulator has published what it expects, and the software the sector
         runs on cannot emit it.</p>
 
+      <h3>The assurance market assures the model</h3>
+      <p>The Department for Science, Innovation and Technology publishes a
+        <a href="https://www.gov.uk/ai-assurance-techniques">Portfolio of AI
+        Assurance Techniques</a>. It is the United Kingdom government's own
+        curated answer to the question of who can assure an AI system, and on
+        12 September 2026 it held <b>75 case studies</b>. Every one was read
+        here against a single question: does the technique claim to produce,
+        check or assure a record of a human review of a decision, which is the
+        thing the Commissioner says a deployer should keep.</p>
+
+      <div class="scroller">
+      <table class="reg">
+        <tr><th>Of the 75 case studies</th><th>Count</th></tr>
+        <tr><td class="d">mention a person in the loop, under any of eleven
+          names for one</td><td class="v">18</td></tr>
+        <tr><td class="d">mention something kept afterwards that somebody could
+          read</td><td class="v">39</td></tr>
+        <tr><td class="d">mention both, and so were read in full</td>
+          <td class="v">14</td></tr>
+        <tr><td class="d"><b>claim a record of a human review of a particular
+          decision</b></td><td class="v n"><b>0</b></td></tr>
+      </table>
+      </div>
+
+      <p><b>The method, because the number rests on it.</b> The first stage is
+        mechanical and decides nothing: a case study is a candidate only if it
+        uses a word from each of two fixed vocabularies, one for a person in the
+        loop and one for something kept. That bounds the reading to a set
+        anybody can reproduce from the committed corpus. Every one of the
+        fourteen candidates was then read, and the verdict cites the sentence it
+        rests on. A word count cannot tell a record of a human review from a
+        record of a model, and treating it as though it could would be the
+        error this site exists to catch elsewhere.</p>
+
+      <h3>What the fourteen records are about instead</h3>
+      <div class="scroller">
+      <table class="reg">
+        <tr><th>What the record is of</th><th>How many</th><th>Example, in their own words</th></tr>
+        <tr><td class="d">a governance action</td><td class="v">4</td>
+          <td>&ldquo;Full records are kept of governance actions to provide an
+            audit trail&rdquo;, FairNow</td></tr>
+        <tr><td class="d">the model</td><td class="v">4</td>
+          <td>data provenance and model lineage, &ldquo;a full chain of
+            accountability for model behaviour&rdquo;, Mind Foundry</td></tr>
+        <tr><td class="d">an assessment</td><td class="v">3</td>
+          <td>&ldquo;evidence documentation provided by an organisation to
+            assert the extent to which the controls have been met&rdquo;,
+            RAI Institute</td></tr>
+        <tr><td class="d">the system register</td><td class="v">1</td>
+          <td>a register recording &ldquo;the development, deployment and use
+            of AI systems, as requested by the EU AI Act&rdquo;, European AI
+            Scanner</td></tr>
+        <tr><td class="d">a procurement decision</td><td class="v">1</td>
+          <td>a third-party model review fed into &ldquo;the client's new
+            product approval process&rdquo;, Deloitte</td></tr>
+        <tr><td class="d">the method</td><td class="v">1</td>
+          <td>&ldquo;our methodology and evaluation of the model and associated
+            risks is documented in a way that can be evidenced&rdquo;, Food
+            Standards Agency</td></tr>
+      </table>
+      </div>
+
+      <p>The approvals that are recorded are real approvals. They are just of
+        something else: a control signed off, a model promoted, a supplier
+        cleared, an assessment completed. <b>Between the approval of the system
+        and the approval of one decision the system made lies the whole of what
+        the Commissioner asked for</b>, and nothing in the portfolio is on that
+        side of it.</p>
+
+      <p>The closest is worth naming because it shows the gap rather than
+        hiding it. Anekanta's facial recognition assessment states that
+        &ldquo;a trained operator should always make the final decision before
+        any action is taken following a face match&rdquo;, and says plainly
+        that the assurance system &ldquo;does not evaluate competency&rdquo;.
+        So a human decision is required, the competence behind it is out of
+        scope by design, and what the technique produces is a privacy impact
+        report rather than a record that the operator decided anything.</p>
+
+      <p class="callout"><b>This is not a criticism of any technique in the
+        portfolio.</b> A method for measuring disparate impact is not failing
+        to record a decision, in the same way that a vector store is not
+        failing to authorise an action. Each of these is doing the job it was
+        built for. The finding is about the shape of the market as a whole: the
+        United Kingdom has a live regulator expectation about a record of a
+        human review, a government portfolio of 75 ways to assure AI, and no
+        overlap between them.</p>
+
       <h3>The same specification, reached from the opposite direction</h3>
       <p>Colorado's proposed Rule 7.7, which would take effect on
         <b>1 January 2027</b>, asks for substantially the list above: a reviewer
@@ -213,11 +300,20 @@
       <h3>Check it</h3>
       <p>Both texts are committed in
         <span class="mono">census/sources/</span> beside this reading: the
-        substituted articles as enacted, and the guidance as published. Every
-        count on this page is recomputed from those files by the test suite
-        rather than written down once and trusted, so a reader who thinks a
-        number is wrong can settle it against the same bytes this page was
-        written from.</p>
+        substituted articles as enacted, and the guidance as published. All 75
+        portfolio case studies are committed too, as
+        <span class="mono">census/sources/dsit-portfolio.jsonl</span>, one
+        object per case study with its path, title and text as fetched on
+        12 September 2026, and the count is produced by
+        <span class="mono">census/dsit_portfolio.py</span>, which prints the
+        sentence behind every verdict when run with
+        <span class="mono">--read</span>. Every count on this page is
+        recomputed from those files by the test suite rather than written down
+        once and trusted, so a reader who thinks a number is wrong can settle
+        it against the same bytes this page was written from.</p>
+
+      <p>The portfolio material contains public sector information licensed
+        under the Open Government Licence v3.0.</p>
 
       <p>A reading is wrong in the ordinary way readings are wrong, which is why
         every statement above names the article or the sentence it rests on.</p>
