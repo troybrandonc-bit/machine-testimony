@@ -74,6 +74,38 @@ the record then carries both: `arguments` is what the person allowed and
 `proposed_arguments` is what the model asked for. A reader can see the
 difference instead of inferring it from which version was deployed.
 
+## Colorado asks for this from 1 January 2027
+
+Proposed Rule 7.7 under Colorado's Automated Decision-Making Technology Act
+requires a deployer to retain a record showing, when a human reviews an
+automated decision: **the reviewer's identity**, review timestamps, the primary
+evidence available to them, whether they **approved, modified or overrode** the
+output, and a written justification. The rules were filed on 11 August 2026 and
+take effect with the act on 1 January 2027 if adopted. They are not law yet.
+
+A reading of ten widely deployed agent systems found that of the eight which
+take or gate consequential actions, **one can identify the person who approved
+one**, and that one is the reference implementation of this specification, which
+is disclosed rather than left to be found.
+
+### What this framework can show, measured, including the awkward one
+
+Pydantic AI is the only one of six that can say it does not know whether an
+effect occurred: `BaseToolReturnPart.outcome` is a literal of success, failed,
+denied and interrupted, and `denied` separates a policy refusal from a runtime
+error. Nothing else read comes close on that question.
+
+On whether a reviewer **modified** an action it cannot say, and this was
+reproduced rather than reasoned about. A reviewer shown `{'ticket': 0, 'amount':
+0}` approved with override args `{'ticket': 41, 'amount': 1}`, the tool executed
+the override, and the message history records the **original** arguments as the
+call. The executed arguments appear nowhere as a call. Rule 7.7 asks for that
+distinction twice.
+
+Read 9 September 2026 at
+[machinetestimony.org/approval-binding/](https://machinetestimony.org/approval-binding/),
+with the file and line behind every verdict.
+
 ## What it will not do
 
 **It will not fail open.** If your `decide` returns anything that is not a

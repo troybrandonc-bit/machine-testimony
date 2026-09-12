@@ -45,6 +45,38 @@ identify a person or a named role holder", four were assessed absent and one
 could not be established either way. LangGraph 1.2.11 was one of the four, with
 the evidence pinned to `libs/langgraph/langgraph/types.py`.
 
+## Colorado asks for this from 1 January 2027
+
+Proposed Rule 7.7 under Colorado's Automated Decision-Making Technology Act
+requires a deployer to retain a record showing, when a human reviews an
+automated decision: **the reviewer's identity**, review timestamps, the primary
+evidence available to them, whether they **approved, modified or overrode** the
+output, and a written justification. The rules were filed on 11 August 2026 and
+take effect with the act on 1 January 2027 if adopted. They are not law yet.
+
+A reading of ten widely deployed agent systems found that of the eight which
+take or gate consequential actions, **one can identify the person who approved
+one**, and that one is the reference implementation of this specification, which
+is disclosed rather than left to be found.
+
+### What this framework can show, measured
+
+`langgraph` is the strongest of the six read on what a reviewer was shown: a
+graph paused with `interrupt(value)` keeps the displayed material verbatim as a
+pending write on the checkpoint, so a consumer can reconstruct it. It is also
+one of only two that can tell a **modification** from an approval, because
+`HumanResponse` types the outcome as accept, ignore, response or edit rather
+than as a boolean.
+
+What it cannot do is name the person. Nothing on the resume boundary carries a
+principal, which is the gap this adapter exists to close, and `modify()` carries
+the edit through to the record so a reviewer who changed the arguments is not
+recorded as having approved them unchanged.
+
+Read 9 September 2026 at
+[machinetestimony.org/approval-binding/](https://machinetestimony.org/approval-binding/),
+with the file and line behind every verdict.
+
 ## What this adapter does not do
 
 **It does not invent an approver.** The identity does not exist anywhere in
@@ -98,6 +130,29 @@ rec.approve(graph, config,
 
 rec.write("record.jsonl")
 ```
+
+### A reviewer who changed something
+
+The value a boolean cannot carry, and the one Rule 7.7 asks for twice. Without
+it a reviewer who rewrote a refund amount and one who waved the original through
+produce the same record.
+
+```python
+rec.modify(graph, config,
+           approver={"id": "troy@example.com", "kind": "human"},
+           identity_source="auth-session",
+           args={"ticket": 41, "amount": 1})   # what will actually run
+```
+
+The decision records the arguments that ran and keeps `proposed_args` beside
+them; the approval records `disposition: "modified"` with `changed` naming the
+fields that moved. It refuses arguments identical to the proposal and tells you
+to call `approve()` instead, because calling that a modification would
+misdescribe the review.
+
+`refuse()` records `disposition: "overrode"`. `approve()` records `"approved"`.
+All three are new in 0.2.0 and need `testimony-record/0.3`.
+
 
 Refusing is recorded with the same standing as permitting, because a system
 that only records what it did is a receipt:

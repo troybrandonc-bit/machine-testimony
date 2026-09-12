@@ -51,6 +51,36 @@ seam.
 workbench underneath. The agent, the model client and the team configuration
 are untouched.
 
+## Colorado asks for this from 1 January 2027
+
+Proposed Rule 7.7 under Colorado's Automated Decision-Making Technology Act
+requires a deployer to retain a record showing, when a human reviews an
+automated decision: **the reviewer's identity**, review timestamps, the primary
+evidence available to them, whether they **approved, modified or overrode** the
+output, and a written justification. The rules were filed on 11 August 2026 and
+take effect with the act on 1 January 2027 if adopted. They are not law yet.
+
+A reading of ten widely deployed agent systems found that of the eight which
+take or gate consequential actions, **one can identify the person who approved
+one**, and that one is the reference implementation of this specification, which
+is disclosed rather than left to be found.
+
+### What this framework can show, measured
+
+AutoGen has no approval pause of its own, which is why this adapter works at the
+workbench rather than at a hook: there is no boundary in the framework to attach
+one to. That is not a criticism. It is a multi-agent conversation library and it
+never claimed to be an authorisation layer.
+
+The consequence for Rule 7.7 is direct. Nothing in a plain AutoGen run identifies
+a person on any approval path, because there is no approval path, so every one of
+the six things the rule asks a record to show has to come from the boundary you
+put around it.
+
+Read 4 to 6 September 2026 at
+[machinetestimony.org/register/](https://machinetestimony.org/register/), with
+the file and line behind every verdict.
+
 ## What it will not do
 
 **It will not fail open.** If your `decide` returns anything that is not a

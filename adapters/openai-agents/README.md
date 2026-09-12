@@ -60,6 +60,38 @@ This does not fix that by inventing an approver. It fixes it by refusing to
 write an approval unless you supply an identity from your own authentication
 layer, and by making the omission visible rather than silent.
 
+## Colorado asks for this from 1 January 2027
+
+Proposed Rule 7.7 under Colorado's Automated Decision-Making Technology Act
+requires a deployer to retain a record showing, when a human reviews an
+automated decision: **the reviewer's identity**, review timestamps, the primary
+evidence available to them, whether they **approved, modified or overrode** the
+output, and a written justification. The rules were filed on 11 August 2026 and
+take effect with the act on 1 January 2027 if adopted. They are not law yet.
+
+A reading of ten widely deployed agent systems found that of the eight which
+take or gate consequential actions, **one can identify the person who approved
+one**, and that one is the reference implementation of this specification, which
+is disclosed rather than left to be found.
+
+### What this SDK can show, measured
+
+On whether a reviewer **modified** an action, this SDK passes by construction
+and it is worth being precise about why. It offers approve and reject and no
+modify path at all, so a reviewer cannot alter arguments and then allow them and
+a different action is necessarily a different call. That is a design decision,
+not a missing field, and recording it as a failure would report a defect where
+the defect has been made impossible.
+
+What it retains of the material a reviewer saw is the raw tool call, so what was
+**eligible** to be shown is recoverable and the rendering is not: two
+integrations displaying the same call very differently produce identical
+records. And the approval names no person, which is the gap this adapter closes.
+
+Read 9 September 2026 at
+[machinetestimony.org/approval-binding/](https://machinetestimony.org/approval-binding/),
+with the file and line behind every verdict.
+
 ## What it will not do
 
 **It will not fail open.**

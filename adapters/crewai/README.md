@@ -50,6 +50,38 @@ no difference and nothing downstream changes. The inner tool's own `run()` is
 what executes, so validation, usage limits and failure policy all still apply.
 Nothing is monkeypatched.
 
+## Colorado asks for this from 1 January 2027
+
+Proposed Rule 7.7 under Colorado's Automated Decision-Making Technology Act
+requires a deployer to retain a record showing, when a human reviews an
+automated decision: **the reviewer's identity**, review timestamps, the primary
+evidence available to them, whether they **approved, modified or overrode** the
+output, and a written justification. The rules were filed on 11 August 2026 and
+take effect with the act on 1 January 2027 if adopted. They are not law yet.
+
+A reading of ten widely deployed agent systems found that of the eight which
+take or gate consequential actions, **one can identify the person who approved
+one**, and that one is the reference implementation of this specification, which
+is disclosed rather than left to be found.
+
+### What this framework can show, measured
+
+CrewAI has an approval boundary: `before_tool_call` hooks can block execution by
+raising `HookAborted`. An earlier reading of this project recorded it as having
+none, which was wrong and was corrected on 9 September.
+
+Two things it cannot presently show. Nothing on the hook path persists what a
+reviewer was displayed. And a reviewer who **modified** an action is
+indistinguishable from one who approved it unchanged, reproduced: a hook was
+shown `{'ticket': 0, 'amount': 0}`, set `ctx.tool_input` to `{'ticket': 41,
+'amount': 1}` in place and returned without blocking, the tool executed 41 and
+1, and because the hook returns a single boolean both cases produce an identical
+return value.
+
+Read 9 September 2026 at
+[machinetestimony.org/approval-binding/](https://machinetestimony.org/approval-binding/),
+with the file and line behind every verdict.
+
 ## What it will not do
 
 **It will not fail open.** If your `decide` returns anything that is not a

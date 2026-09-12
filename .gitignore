@@ -33,3 +33,12 @@ adapters/crewai/testimony_anchor.py
 adapters/autogen/testimony_anchor.py
 adapters/openai-agents/testimony_anchor.py
 adapters/pydantic-ai/testimony_anchor.py
+
+# Copied into an adapter by its hatch_build.py at build time. Leaving them in
+# the tree makes tests_pages read the wrong file: it takes the first adapter
+# module it finds and testimony_anchor.py sorts before testimony_langgraph.py,
+# so a stray build artifact reported the adapter as having no approve or refuse.
+adapters/*/testimony_validate.py
+adapters/*/testimony_anchor.py
+adapters/*/testimony_emit.py
+adapters/*/dist/
