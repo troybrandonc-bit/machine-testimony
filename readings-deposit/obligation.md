@@ -24,13 +24,13 @@ Four of the five specify what a record must contain. All four require one to be 
 
 ### The one that asks for the name is a private certificate
 
-[AIUC-1](/aiuc-1/) was added to this reading on 12 September 2026 and it is the only subject here that answers *required* to the second question. Control **E015.2** is mandatory and requires structured logs capturing ìapprover identity, timestamp, decision outcomeî for authorization events, its own worked example being human-in-the-loop approvals.
+[AIUC-1](/aiuc-1/) was added to this reading on 12 September 2026 and it is the only subject here that answers *required* to the second question. Control **E015.2** is mandatory and requires structured logs capturing ‚Äúapprover identity, timestamp, decision outcome‚Äù for authorization events, its own worked example being human-in-the-loop approvals.
 
 > **No legislature read here requires it. A commercial certification scheme does.** AIUC-1 is not law and binds nobody who does not seek the certificate. What it demonstrates is that the requirement is writable and auditable: it is already written, an accredited auditor already collects evidence against it, and certificates are already held. The gap in the law is not a gap in what can be specified.
 
 The placement inside AIUC-1 is worth stating, because it cuts the other way. Across 51 live controls that sub-requirement is the only place a named human is asked for anywhere, and **C007, the control that establishes human review, is marked Optional** and asks for workflow documentation showing assignments rather than reviewers. So the approver's identity is collected as log content rather than established as an oversight duty, which makes producing it a question about what the underlying software emits rather than about what a governance programme says.
 
-It also goes furthest of anything here on the third question and still stops short. E015.4 requires log integrity protection by name: ìwrite-once-read-many (WORM) storage configuration, cryptographic hashing of log entries, append-only database settings.î Every one of those is held and operated by the party that produced the log. A digest a deployer computes over its own records and keeps itself does not let anybody else show them unaltered, which is why it reads partial rather than required.
+It also goes furthest of anything here on the third question and still stops short. E015.4 requires log integrity protection by name: ‚Äúwrite-once-read-many (WORM) storage configuration, cryptographic hashing of log entries, append-only database settings.‚Äù Every one of those is held and operated by the party that produced the log. A digest a deployer computes over its own records and keeps itself does not let anybody else show them unaltered, which is why it reads partial rather than required.
 
 ### The law has the gap too
 
