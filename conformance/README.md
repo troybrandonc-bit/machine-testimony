@@ -1,6 +1,6 @@
 # The conformance corpus
 
-68 records and the verdict each one should get. If you are implementing the
+70 records and the verdict each one should get. If you are implementing the
 Testimony Record, this is how you find out whether you have finished.
 
 ```
@@ -24,7 +24,7 @@ a conformance claim you can only check with our software is worth nothing.
 
 ## What conformance means here
 
-Your implementation reaches the same verdict as the reference on all 68 cases.
+Your implementation reaches the same verdict as the reference on all 70 cases.
 
 It does not mean the same check names, the same wording, the same number of
 checks, or the same explanations. Those are this project's prose. A corpus that
@@ -33,8 +33,8 @@ file rather than whether you had implemented a specification, and an
 independent implementation is the entire point. The comparison is deliberately
 blind to everything except the answer.
 
-It is also not a certificate. It is a statement about 68 cases, and the
-specification is larger than any 68 cases.
+It is also not a certificate. It is a statement about 70 cases, and the
+specification is larger than any 70 cases.
 
 ## When you disagree
 
@@ -51,8 +51,8 @@ checks here exist because somebody said so.
 | no level | 19 cases: malformed JSON, unknown types, missing required members, invented enum values, reused ids, times that go backwards, a member declared to be an actor given as a name, as an object with no id, or with a kind nobody defined, and four observations that fail the version gate or resolve to nothing |
 | TR-1 | 6 cases: well formed, and failing something at TR-2 |
 | TR-2 | 13 cases: evidence that resolves, conflicts that keep both sides, resolutions that name what was kept, and a modification that does not say what it modified |
-| TR-3 | 25 cases: gates, refusals that did not execute, approvals that name a person other than the proposer, provenance declared from somewhere the model cannot write, actions whose effect the record cannot confirm, observations that support, contradict or settle nothing, and the three dispositions an approval can carry |
-| TR-4 | 5 cases: a hash chain, a replay that names its engine, a number that serialises portably, a record a Time Stamp Authority actually signed, and an advisory system anchored by a kind this validator cannot recompute |
+| TR-3 | 26 cases: gates, refusals that did not execute, approvals that name a person other than the proposer, provenance declared from somewhere the model cannot write, actions whose effect the record cannot confirm, observations that support, contradict or settle nothing, the three dispositions an approval can carry, and an observation whose basis was changed after the digest was taken over it |
+| TR-4 | 6 cases: a hash chain, a replay that names its engine, a number that serialises portably, a record a Time Stamp Authority actually signed, an advisory system anchored by a kind this validator cannot recompute, and an observation whose basis is inside the bytes the digest covers |
 
 **Eleven cases are `testimony-record/0.3`**, which is a version this validator
 knows and the published specification does not yet document. They cover the
@@ -62,6 +62,14 @@ type and you are **right** to reject it: `observation-before-its-version` is
 the case that says so, and it fails here too. The other ten are here so that a
 corpus exists before the version is released rather than after, which is the
 order that helps somebody implementing it.
+
+**`basis-under-the-digest` and `basis-swapped-under-the-digest` are a pair and
+only mean anything together.** The records are identical apart from one value,
+the `basis` on the observation, and that one value moves the verdict from TR-4
+to TR-3. If your implementation gives them the same answer, its canonical form
+is not covering the whole entry, and an observation that says it watched the
+effect can be swapped for one that merely asserts it without the digest
+noticing.
 
 The TR-4 cases are the ones worth reading first if you are short of time.
 `digest-of-nothing` is sixty-four zeros where a digest should be, and it

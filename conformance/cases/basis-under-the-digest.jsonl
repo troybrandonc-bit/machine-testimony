@@ -1,0 +1,8 @@
+{"spec": "testimony-record/0.3", "type": "scope", "id": "s1", "at": "2026-09-01T09:00:00Z", "acts": true}
+{"spec": "testimony-record/0.3", "type": "evidence", "id": "e1", "at": "2026-09-01T09:00:01Z", "kind": "api", "source": "crm://1"}
+{"spec": "testimony-record/0.3", "type": "evidence", "id": "e2", "at": "2026-09-01T09:00:01Z", "kind": "api", "source": "crm://2"}
+{"spec": "testimony-record/0.3", "type": "belief", "id": "b1", "at": "2026-09-01T09:00:02Z", "subject": "customer:a", "proposition": "owed_refund", "polarity": "affirm", "state": "believed_true", "asserted_by": {"id": "agent", "kind": "agent"}, "evidence": ["e1"]}
+{"spec": "testimony-record/0.3", "type": "decision", "id": "d1", "at": "2026-09-01T09:00:03Z", "action_type": "issue_refund", "risk_class": "high", "risk_source": "registry", "proposed_by": {"id": "agent", "kind": "agent"}, "verdict": "permitted", "executed": true, "approval": "a1"}
+{"spec": "testimony-record/0.3", "type": "approval", "id": "a1", "at": "2026-09-01T09:00:04Z", "decision": "d1", "approver": {"id": "sam@example.com", "kind": "human"}, "identity_source": "auth-session"}
+{"spec": "testimony-record/0.3", "type": "observation", "id": "o1", "at": "2026-09-01T09:00:06Z", "decision": "d1", "claim": "refund:rf_88 reached settled for amount 4200 currency GBP", "basis": "effect-observed", "observer": {"id": "settlement-poller", "kind": "system"}, "evidence": ["e2"], "result": "supports"}
+{"spec": "testimony-record/0.3", "type": "integrity", "id": "i1", "at": "2026-09-01T09:00:07Z", "scheme": "hash-chain", "digest": "sha256:8a62cc810e84c0990a062d860854aae35a323a9df2689a9024478f878204d042", "covers": ["s1", "e1", "e2", "b1", "d1", "a1", "o1"]}

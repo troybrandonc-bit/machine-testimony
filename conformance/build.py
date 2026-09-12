@@ -398,6 +398,33 @@ def cases():
                 reason="the reviewer would not authorise it"),
             app(disposition="overrode")]))
 
+    # @RemanenetSpy asked on #91 that `basis` sit inside the signed canonical
+    # bytes, so that an `asserted` observation cannot be handed to a verifier
+    # that was promised proof of an effect. It does, because the preimage is
+    # the whole entry serialised with sorted keys, and until these two cases
+    # existed NOTHING asserted that: a refactor narrowing `canonical()` would
+    # have removed the property and every other test would still have passed.
+    #
+    # The pair is the test. Both records are identical in every other respect
+    # and both are otherwise valid, so the only thing that can move the verdict
+    # is whether the digest covers the basis.
+    sworn = v3([scope(), ev(), ev(2), bel(), dec(), app(), obs()])
+    # The integrity entry has to be 0.3 like the rest of the record, and it
+    # has to be written after the observation it covers. Defaulting either way
+    # failed the version and ordering checks before the digest was reached,
+    # which would have made the pair prove nothing about the preimage.
+    seal = lambda: integrity(sworn, spec=V3, at=T % 7)
+    add("basis-under-the-digest",
+        "an observation whose basis is inside the bytes the digest was taken "
+        "over",
+        sworn + [seal()])
+    swapped = [dict(x) for x in sworn] + [seal()]
+    [x for x in swapped if x["type"] == "observation"][0]["basis"] = "asserted"
+    add("basis-swapped-under-the-digest",
+        "an observation downgraded from effect-observed to asserted after the "
+        "digest was taken over it",
+        swapped)
+
     # ── the digest rule itself ──────────────────────────────────────────────
     body = gated()
     body[1]["confidence"] = 0.87

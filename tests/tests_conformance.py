@@ -156,6 +156,53 @@ def main():
           r.returncode == 0, (r.stdout + r.stderr).strip()[-300:])
 
     shutil.rmtree(work, ignore_errors=True)
+
+    # ── the preimage pair, and a guard on the pair itself ──────────────────
+    #
+    # @RemanenetSpy's requirement on #91 is that `basis` sit inside the signed
+    # canonical bytes, so that an `asserted` observation cannot be handed to a
+    # verifier that was promised proof of an effect. It holds because the
+    # preimage is the whole entry serialised with sorted keys, which is a
+    # property of `canonical()` that nothing asserted until these cases existed.
+    # A refactor narrowing it would have removed the property silently and
+    # every other test would still have passed.
+    #
+    # The two records prove it only while they stay identical apart from that
+    # one value. If they ever drift, the pair still meets its own expected
+    # verdicts while proving nothing, so the difference is counted here rather
+    # than trusted. That is this file's own rule applied to its own fixtures.
+    print("")
+    print("the basis is inside the bytes the digest covers")
+    exp = json.load(io.open(os.path.join(CONF, "expected.json"),
+                            encoding="utf-8"))
+
+    def load(name):
+        with io.open(os.path.join(CONF, "cases", name + ".jsonl"),
+                     encoding="utf-8") as fh:
+            return [json.loads(l) for l in fh if l.strip()]
+
+    sworn = load("basis-under-the-digest")
+    swapped = load("basis-swapped-under-the-digest")
+    check("the two records have the same number of entries",
+          len(sworn) == len(swapped), (len(sworn), len(swapped)))
+    diff = [(x["id"], k, x.get(k), y.get(k))
+            for x, y in zip(sworn, swapped)
+            for k in set(x) | set(y) if x.get(k) != y.get(k)]
+    check("and differ in exactly one member of one entry", len(diff) == 1,
+          diff)
+    check("which is the observation's basis",
+          bool(diff) and diff[0][1] == "basis", diff)
+    check("the sworn record reaches TR-4 and the swapped one does not",
+          exp["basis-under-the-digest"]["level"] == "TR-4"
+          and exp["basis-swapped-under-the-digest"]["level"] == "TR-3",
+          (exp["basis-under-the-digest"]["level"],
+           exp["basis-swapped-under-the-digest"]["level"]))
+    # Said directly as well. The pair demonstrates it through a level, and a
+    # level is a conclusion; this is the property.
+    ob = [x for x in sworn if x["type"] == "observation"][0]
+    check("changing the basis changes the digest",
+          tv.digest_of([ob]) != tv.digest_of([dict(ob, basis="asserted")]))
+
     print("\n%d passed, %d failed" % (PASS, FAIL))
     return 1 if FAIL else 0
 

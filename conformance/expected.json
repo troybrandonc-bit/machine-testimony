@@ -191,6 +191,30 @@
   "scope": "acts",
   "spec": "testimony-record/0.2"
  },
+ "basis-swapped-under-the-digest": {
+  "level": "TR-3",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "an observation downgraded from effect-observed to asserted after the digest was taken over it",
+  "scope": "acts",
+  "spec": "testimony-record/0.3"
+ },
+ "basis-under-the-digest": {
+  "level": "TR-4",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": true
+  },
+  "note": "an observation whose basis is inside the bytes the digest was taken over",
+  "scope": "acts",
+  "spec": "testimony-record/0.3"
+ },
  "conflict-one-side": {
   "level": "TR-1",
   "levels_met": {
