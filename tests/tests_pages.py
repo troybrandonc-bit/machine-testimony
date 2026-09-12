@@ -1629,6 +1629,57 @@ def main():
     check("and the count of factors it weighs is stated",
           "seven factors" in _co)
 
+
+    # ── /chatbots/, recomputed from both statutes ─────────────────────
+    print("")
+    print("neither chatbot statute asks an operator to keep anything")
+    _cb = " ".join(io.open(os.path.join(PUB, "chatbots", "index.html"),
+                           encoding="utf-8").read().split())
+    _wa = re.sub(r"\s+", " ", io.open(
+        os.path.join(ROOT, "census", "sources", "wa-hb2225.txt"),
+        encoding="utf-8", errors="replace").read())
+    _corules = re.sub(r"\s+", " ", io.open(
+        os.path.join(ROOT, "census", "sources", "co-admt-proposed-rules.txt"),
+        encoding="utf-8", errors="replace").read())
+    _co9 = re.search(r"9\.1 Authority|Rule 9", _corules)
+    _co = _corules[_co9.start():] if _co9 else ""
+
+    _NONE = (r"\blogs?\b", r"\blogging\b", r"\baudits?\b",
+             r"\bretentions?\b")
+    for _label, _text in (("Washington", _wa), ("Colorado Rules 9 to 14", _co)):
+        _found = {p: len(re.findall(p, _text, re.I)) for p in _NONE}
+        _hits = {k: v for k, v in _found.items() if v}
+        check("%s asks for no log, audit or retention" % _label,
+              not _hits, _hits)
+
+    # The enacted Washington text is the one with zero records too. Colorado
+    # has exactly one and the page is built on what it is.
+    check("Washington requires no record either",
+          len(re.findall(r"\brecords?\b", _wa, re.I)) == 0,
+          len(re.findall(r"\brecords?\b", _wa, re.I)))
+    check("Colorado's chatbot rules say record exactly once",
+          len(re.findall(r"\brecords?\b", _co, re.I)) == 1,
+          len(re.findall(r"\brecords?\b", _co, re.I)))
+    check("and that once is the Rule 13.3 demand power",
+          "sufficient to verify any element of the submission" in _co)
+
+    # The substring trap the page describes, asserted rather than retold.
+    _sub = len(re.findall(r"\w*log\w*", _wa, re.I))
+    check("a substring count of log in Washington is not zero, which is why "
+          "the page explains it", _sub > 0, _sub)
+
+    # Quotations, both directions.
+    for _q in ("maintains and implements a protocol for detecting and "
+               "addressing suicidal ideation",
+               "refer users to appropriate crisis resources"):
+        check("in the Washington act: %s" % _q[:44], _q in _wa)
+        check("and on the page: %s" % _q[:44], _q in _cb)
+
+    check("the page refuses to argue the statutes should require logs",
+          "not an argument that either statute should" in _cb)
+    check("and names Oregon as unread rather than summarising it",
+          "Oregon SB 1546" in _cb and "refused" in _cb)
+
     print("\nthe site does not link at things that are not there")
     dead = []
     for page in pages():
