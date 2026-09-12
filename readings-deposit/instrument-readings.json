@@ -13,7 +13,8 @@
   "required": "The instrument requires it of the party it binds.",
   "partial": "Required for something adjacent, or required without being checkable.",
   "absent": "Not required anywhere in the text read.",
-  "not_applicable": "Outside the kind of instrument this is."
+  "not_applicable": "Outside the kind of instrument this is.",
+  "expected": "Stated by the instrument as an expectation rather than an obligation. Guidance, so a deployer who ignores it is not breaking a stated rule and is departing from what the enforcing authority has published."
  },
  "questions": [
   {
@@ -158,6 +159,31 @@
     }
    },
    "finding": "The first instrument read by this project that requires the approver's identity, and it is not a law. A private certification scheme with an accredited auditor asks for what the EU AI Act, ForHumanity and CoSAI do not. It also goes furthest on integrity and still stops at controls the producing party operates, which is the same boundary every other subject reaches by a different route."
+  },
+  {
+   "name": "ICO ADM guidance",
+   "kind": "regulator guidance, not law",
+   "read": "Automated decision-making, including profiling: What are the ADM safeguards, the whole page, read 12 September 2026. It interprets Articles 22A to 22D of the UK GDPR as substituted by section 80 of the Data (Use and Access) Act 2025, in force since 5 February 2026",
+   "source": "https://ico.org.uk, published without registration; read at https://machinetestimony.org/colorado/",
+   "answers": {
+    "Q1": {
+     "verdict": "expected",
+     "note": "“You should keep a record of how the human reviewed the decision.” The guidance separately says a deployer “should use a system that is able to deliver an audit trail showing the key decision points that formed the basis for the decision”. Expected rather than required, and the distinction is the whole reason this subject is here: the statute it interprets contains no occurrence of record, log, retain or retention, so the expectation has no statutory basis to be required by. The guidance uses must 19 times for what the law obliges and should 13 times for what the ICO expects, and the record is a should."
+    },
+    "Q2": {
+     "verdict": "absent",
+     "note": "The record asked for is of HOW the human reviewed the decision, never of WHO. The guidance lists five properties a reviewer should have, that they assess the reconsideration before it is applied, can influence the outcome, have “discretion and authority to alter the decision”, are “suitably trained and qualified”, and take the relevant data into account, and asks for nothing that would identify them. THE SECOND INSTRUMENT FOUND THAT ASKS FOR A RECORD OF A HUMAN REVIEW, AND THE SECOND THAT DOES NOT ASK WHO."
+    },
+    "Q3": {
+     "verdict": "absent",
+     "note": "Zero occurrences of tamper, unaltered, integrity, immutable, chain of custody, signature or hash across the page. The one occurrence of verify is about verifying the ADM result to help explain it, which is a duty about the decision rather than about the record of it."
+    },
+    "Q4": {
+     "verdict": "absent",
+     "note": "No retention period anywhere. The single occurrence of retention in the captured page is the ICO's own website retention policy in a page-not-found fragment of the site furniture, which is recorded here because a word count that counted it would be wrong."
+    }
+   },
+   "finding": "The only live instrument in this census that asks a deployer to keep a record of a human review, and it cannot require it. AIUC-1 requires the name and is a private certificate; this asks for the record and is a regulator's published expectation. Both are in effect today and neither is law, which is the shape of the whole finding: what a deployer can be made to produce today comes from an insurer and a regulator's guidance, and the laws that will require it apply in 2027."
   }
  ],
  "not_read": [

@@ -1,13 +1,15 @@
 Two readings of published instruments, made in September 2026.
 
-The first reads five instruments that will oblige deployers to keep records
+The first reads six instruments that address deployers keeping records
 against a single question: do they require a record to say who authorised a
 consequential action, and to be checkable by somebody other than the party
 that produced it? The EU AI Act, the ForHumanity certification criteria,
-AIUC-1, the CoSAI Risk Map and the NIST AI RMF. Four of the five specify what
-a record must contain and all four require one to be kept.
+AIUC-1, the CoSAI Risk Map, the NIST AI RMF and the Information Commissioner's
+Office guidance on automated decision-making. Five of the six specify what a
+record must contain. Four require one to be kept and the fifth, a regulator
+rather than a rule, expects it.
 
-Only one of the four requires the record to name the person who authorised a
+Only one of the five requires the record to name the person who authorised a
 consequential action, and it is not a law. AIUC-1, a private certification
 scheme audited by an accredited third party, makes control E015 mandatory and
 requires structured logs capturing approver identity, timestamp and decision

@@ -1228,7 +1228,7 @@ def main():
                                         "readings.json"), encoding="utf-8"))
     qs = [q["id"] for q in sc["questions"]]
     check("four questions were asked", len(qs) == 4, qs)
-    check("five instruments were read", len(sc["subjects"]) == 5,
+    check("six instruments were read", len(sc["subjects"]) == 6,
           len(sc["subjects"]))
     for sub in sc["subjects"]:
         check("%s answers every question" % sub["name"],
@@ -1250,13 +1250,26 @@ def main():
 
     able = [x for x in sc["subjects"]
             if x["answers"]["Q1"]["verdict"] != "not_applicable"]
-    check("four of the five specify what a record must contain",
-          len(able) == 4, len(able))
+    check("five of the six specify what a record must contain",
+          len(able) == 5, len(able))
     flat_ob = " ".join(ob.split())
-    check("and the page says four", "four rather than five" in flat_ob)
-    check("all four require a record to be kept",
-          all(x["answers"]["Q1"]["verdict"] == "required" for x in able),
-          [x["answers"]["Q1"]["verdict"] for x in able])
+    check("and the page says five", "five rather than six" in flat_ob)
+    # Added 12 September 2026 with the ICO's ADM guidance, which is the only
+    # subject here that is neither a law nor a scheme anybody signs up to. It
+    # says a deployer SHOULD keep a record of how a human reviewed a decision,
+    # on a statute that says nothing about records at all. Scoring that as
+    # `required` would be the overclaim this census exists to catch in other
+    # people's products, so the vocabulary gained a value rather than the
+    # verdict being rounded up.
+    _q1 = {x["name"]: x["answers"]["Q1"]["verdict"] for x in able}
+    check("four require a record to be kept",
+          sorted(_q1.values()).count("required") == 4, _q1)
+    check("and the fifth expects one without being able to require it",
+          _q1.get("ICO ADM guidance") == "expected"
+          and "expected" in sc["verdicts"], _q1)
+    check("the page says guidance expects rather than requires",
+          "expects it" in flat_ob and "no statutory basis to be required by"
+          in flat_ob)
     # The finding itself. If either of these stops being unanimous, the
     # sentence on the page becomes false, and this is where that surfaces.
     # Corrected 8 Sep 2026. This read "none of the three requires it" until
@@ -1272,9 +1285,24 @@ def main():
     # requires it and a commercial scheme does", which is a stronger claim and
     # a narrower one.
     q2 = {x["name"]: x["answers"]["Q2"]["verdict"] for x in able}
-    check("exactly one of the four requires a record to name the person",
-          sorted(q2.values()) == ["absent", "absent", "partial", "required"],
-          q2)
+    check("exactly one of the five requires a record to name the person",
+          sorted(q2.values()) == ["absent", "absent", "absent", "partial",
+                                  "required"], q2)
+    # THE FINDING THE ICO ROW WAS ADDED FOR. Two subjects ask for a record of
+    # a human review. Both are in effect today and neither can require it: one
+    # is a certificate nobody has to hold and the other is an expectation with
+    # no statute behind it. If a law ever answers `expected` or better on Q1
+    # while asking for the name, this check fails and the sentence on the page
+    # and in the testimony both need rewriting.
+    _kind = {x["name"]: x["kind"] for x in able}
+    check("the one that requires the name is not a law",
+          "law" not in _kind.get("AIUC-1", "law"), _kind.get("AIUC-1"))
+    check("and the one that expects the record is not a law either",
+          _kind.get("ICO ADM guidance") == "regulator guidance, not law",
+          _kind.get("ICO ADM guidance"))
+    check("and the page says both are in effect and neither is law",
+          "The two instruments here that ask for a record of a human review "
+          "are the two that cannot require one." in flat_ob)
     check("and it is the certification scheme, not either law or catalogue",
           q2.get("AIUC-1") == "required", q2)
     check("the one that is a law reaches partial and no further",

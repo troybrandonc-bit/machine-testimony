@@ -7,7 +7,7 @@ so that their dates are held by somebody other than their author.
 
 | file | what it is |
 |---|---|
-| `obligation.md` | The first reading. Five instruments read against whether they require a record to name who authorised an action, and to be checkable by somebody other than the party that produced it. |
+| `obligation.md` | The first reading. Six instruments read against whether they require a record to name who authorised an action, and to be checkable by somebody other than the party that produced it. |
 | `explaining.md` | The second reading. Two articles of the EU AI Act read against each other: what a deployer must be able to explain, and what the same regulation requires them to record. |
 | `instrument-readings.json` | The data behind the first reading. Every verdict with the clause, control or criterion it rests on. |
 
@@ -19,18 +19,26 @@ different findings.
 
 ## What they found
 
-**Of five instruments that will oblige deployers to keep records** (the EU AI
-Act, the ForHumanity certification criteria, AIUC-1, the CoSAI Risk Map and the
-NIST AI RMF), four specify what a record must contain and all four require one
-to be kept.
+**Of six instruments that address deployers keeping records** (the EU AI Act,
+the ForHumanity certification criteria, AIUC-1, the CoSAI Risk Map, the NIST AI
+RMF and the Information Commissioner's Office guidance on automated
+decision-making), five specify what a record must contain. Four require one to
+be kept and the fifth, which is a regulator rather than a rule, expects it.
 
-**Only one of the four requires the record to name the person who authorised a
+**Only one of the five requires the record to name the person who authorised a
 consequential action, and it is not a law.** AIUC-1, a private certification
 scheme audited by an accredited third party, requires logs to capture
 "approver identity, timestamp, decision outcome" for human-in-the-loop
 authorization events. No legislature read here requires it.
 
-None of the four requires the record to be capable of being shown unaltered by
+The two that ask for a record of a human review are the two that cannot require
+one. AIUC-1 is a certificate nobody has to hold, and the ICO guidance says "you
+should keep a record of how the human reviewed the decision" on a statute, in
+force in the United Kingdom since 5 February 2026, that contains no occurrence
+of record, log, retain or retention. Both are in effect today. The laws that
+will require the record apply in 2027.
+
+None of the five requires the record to be capable of being shown unaltered by
 anyone other than its author. AIUC-1 goes furthest and still stops short: it
 requires write-once storage, cryptographic hashing and append-only settings,
 all of them operated by the party that produced the log.

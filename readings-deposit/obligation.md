@@ -1,12 +1,12 @@
 # Everyone requires the log. The only instrument that requires it to name who approved is not a law
 
-*Reading, 7 September 2026. AIUC-1 added 12 September 2026.*
+*Reading, 7 September 2026. AIUC-1 and the ICO's automated decision-making guidance added 12 September 2026.*
 
 ## Everyone requires the log. The only instrument that requires it to name who approved is not a law.
 
 From 2 December 2027, a deployer of a high-risk AI system in the European Union must keep the logs its system generates. Article 12 says the system shall technically allow for the automatic recording of events over its lifetime. Article 26(6) says the deployer shall keep those logs for at least six months. Article 14 says a natural person shall oversee the system.
 
-None of those articles says what has to be in the record for it to answer a question afterwards. So it is worth asking whether anything else does. Five instruments were read against four questions.
+None of those articles says what has to be in the record for it to answer a question afterwards. So it is worth asking whether anything else does. Six instruments were read against four questions.
 
 > **Where these require a record of what an automated system did, do they require it to say who authorised a consequential action, and to be checkable by somebody other than the party that produced it?**
 
@@ -18,9 +18,20 @@ None of those articles says what has to be in the record for it to answer a ques
 | ForHumanity | certification scheme | required | absent | partial | required |
 | CoSAI Risk Map | controls catalogue | required | absent | partial | absent |
 | AIUC-1 | certification scheme, audited | required | required | partial | partial |
+| ICO ADM guidance | regulator guidance, not law | expected | absent | absent | absent |
 | NIST AI RMF 1.0 | governance framework | n/a | n/a | n/a | n/a |
 
-Four of the five specify what a record must contain. All four require one to be kept. **Only one of them requires a record to name the person, and it is not a law.** None of the four requires a record to be capable of being shown unaltered by anyone other than its author.
+Five of the six specify what a record must contain. Four require one to be kept and the fifth, which is a regulator rather than a rule, expects it. **Only one of them requires a record to name the person, and it is not a law.** None of the five requires a record to be capable of being shown unaltered by anyone other than its author.
+
+> **The two instruments here that ask for a record of a human review are the two that cannot require one.** AIUC-1 is a private certificate and the ICO guidance is an expectation. Both are in effect today. The laws that will require the record apply in 2027.
+
+### The one that asks for it today is guidance
+
+The Information Commissioner's Office guidance on automated decision-making was added to this reading on 12 September 2026, and it is the only subject here that is live rather than forthcoming and addressed to deployers rather than to certificate holders. It says: **“You should keep a record of how the human reviewed the decision.”**
+
+The statute it interprets says nothing of the kind. Articles 22A to 22D of the UK GDPR, in force since 5 February 2026, give a person the right to obtain human intervention in a significant automated decision and contain no occurrence of record, log, retain or retention. So the expectation has no statutory basis to be required by, which is why it reads *expected* in the table rather than *required*. The guidance uses *must* nineteen times for what the law obliges and *should* thirteen times for what the regulator expects, and the record is a *should*.
+
+It asks for a record of **how** the human reviewed the decision and never for **who** did. The five properties it lists are that the reviewer assessed the reconsideration before it was applied, could influence the outcome, had “discretion and authority to alter the decision”, was “suitably trained and qualified”, and took the relevant data into account. Nothing there would identify them. That is the same list Colorado's proposed Rule 7.7 writes into a rule effective 1 January 2027, reached from the opposite direction: one jurisdiction is drafting it and the other is already expecting it, and neither asks for the name today.
 
 ### The one that asks for the name is a private certificate
 
@@ -58,7 +69,7 @@ The integrity vocabulary is present and properly defined. Data Integrity is take
 
 NIST AI RMF 1.0 contains no occurrence of log, logging, record-keeping or audit trail. Reporting that as a finding would be the error this reading exists to avoid. The framework organises risk management into four functions and deliberately specifies no controls; the suggested actions live in a separate companion Playbook. A document that does not specify controls is not failing to specify one, in the same way that a vector store is not failing to authorise actions.
 
-It is in the table so that the count of instruments that specify a record is four rather than five, and so that the zero is visible without being counted as a deficiency.
+It is in the table so that the count of instruments that specify a record is five rather than six, and so that the zero is visible without being counted as a deficiency.
 
 ### One of them is already closing it
 
