@@ -1,0 +1,53 @@
+Two readings of published instruments, made in September 2026.
+
+The first reads five instruments that will oblige deployers to keep records
+against a single question: do they require a record to say who authorised a
+consequential action, and to be checkable by somebody other than the party
+that produced it? The EU AI Act, the ForHumanity certification criteria,
+AIUC-1, the CoSAI Risk Map and the NIST AI RMF. Four of the five specify what
+a record must contain and all four require one to be kept.
+
+Only one of the four requires the record to name the person who authorised a
+consequential action, and it is not a law. AIUC-1, a private certification
+scheme audited by an accredited third party, makes control E015 mandatory and
+requires structured logs capturing approver identity, timestamp and decision
+outcome for authorization events, its own worked example being human-in-the-
+loop approvals. No legislature read here requires that. The placement cuts
+both ways and is recorded: across 51 live controls that sub-requirement is the
+only place a named human is asked for anywhere, and C007, the control that
+establishes human review, is marked optional and asks for workflow
+documentation showing assignments rather than reviewers.
+
+None of the four requires the record to be capable of being shown unaltered by
+anyone other than its author. AIUC-1 goes furthest and still stops short: it
+requires write-once storage, cryptographic hashing of log entries and
+append-only settings, every one of them operated by the party that produced
+the log. NIST is recorded as not applicable throughout, because a framework
+that deliberately specifies no controls is not failing to specify one. ISO/IEC
+42001 has no verdict because its text is paywalled, which is recorded as a
+fact about the field rather than guessed at.
+
+The second reads two articles of the EU AI Act against each other. Article 86
+gives an affected person the right to clear and meaningful explanations of the
+role of an AI system in a decision and the main elements of the decision
+taken, across seven of the eight areas of Annex III. Article 12 specifies what
+a log must contain for one of them, remote biometric identification, which is
+also the only place the Act requires the record to name the natural persons
+who verified a result. The duty to explain is therefore seven times wider than
+the duty to record, and the counts show what deployed software can answer: of
+ten agent systems read at pinned commits, two can recover the source of a
+stored fact by following a link rather than inferring it, and eight cannot say
+afterwards that two stored facts ever disagreed.
+
+Neither reading is legal advice. Every verdict names the article, clause,
+control or criterion it rests on, so that a wrong one is cheap to demonstrate.
+Two corrections are recorded on the face of the documents rather than made
+quietly. An earlier version of the first reading said the Act contained no
+requirement to record a person's identity; that was false, Article 12(3)(d)
+requires it for one category. And this version adds a fifth instrument: the
+earlier reading found that none of the four it had read required the approver
+to be named, which was correctly scoped to what it had read and is no longer
+the state of the field.
+
+The per-system verdicts these counts come from are deposited separately at
+doi:10.5281/zenodo.22290922.
