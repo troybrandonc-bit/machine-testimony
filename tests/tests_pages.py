@@ -1704,6 +1704,26 @@ def main():
     check("and names Oregon as unread rather than summarising it",
           "Oregon SB 1546" in _cb and "refused" in _cb)
 
+
+    print("")
+    print("the one US law that requires a signature to survive")
+    _ab = re.sub(r"\s+", " ", io.open(
+        os.path.join(ROOT, "census", "sources", "ca-ab853.txt"),
+        encoding="utf-8", errors="replace").read())
+    _te = " ".join(io.open(os.path.join(PUB, "tamper-evidence", "index.html"),
+                           encoding="utf-8").read().split())
+    for _q in ("any system provenance data or digital signature that is "
+               "compliant with widely adopted specifications",
+               "to the extent it is technically feasible"):
+        check("in SB 942 as amended: %s" % _q[:40], _q in _ab)
+        check("and on /tamper-evidence/: %s" % _q[:40], _q in _te)
+    # The act asks nobody to keep anything, which is the half that makes the
+    # "forbids destroying" point worth making at all.
+    for _w in (r"logs?", r"audits?", r"retain", r"retentions?"):
+        check("SB 942 as amended has no %s duty" % _w.replace(chr(92)+"b",""),
+              not re.findall(_w, _ab, re.I),
+              len(re.findall(_w, _ab, re.I)))
+
     print("\nthe site does not link at things that are not there")
     dead = []
     for page in pages():
