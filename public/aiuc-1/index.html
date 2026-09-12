@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AIUC-1 asks for the approver's name in exactly one place &ndash; Machine Testimony</title>
+<meta name="description" content="AIUC-1 is the first standard read by this project that requires both the identity of the person who approved an agent action and technical evidence that the log was not altered. Control E015.2 asks for approver identity, timestamp and decision outcome; E015.4 asks for append-only storage and cryptographic hashing of log entries. Both sit inside the logging control. The control that establishes human review, C007, is optional and names nobody. A reading of the published control set.">
+<meta property="og:title" content="AIUC-1 asks for the approver's name in exactly one place">
+<meta property="og:description" content="AIUC-1 is the first standard read by this project that requires both the identity of the person who approved an agent action and technical evidence that the log was not altered. Control E015.2 asks for approver identity, timestamp and decision outcome; E015.4 asks for append-only storage and cryptographic hashing of log entries. Both sit inside the logging control. The control that establishes human review, C007, is optional and names nobody. A reading of the published control set.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://machinetestimony.org/aiuc-1/">
+<meta property="og:image" content="https://machinetestimony.org/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AIUC-1 asks for the approver's name in exactly one place">
+<meta name="twitter:description" content="AIUC-1 is the first standard read by this project that requires both the identity of the person who approved an agent action and technical evidence that the log was not altered. Control E015.2 asks for approver identity, timestamp and decision outcome; E015.4 asks for append-only storage and cryptographic hashing of log entries. Both sit inside the logging control. The control that establishes human review, C007, is optional and names nobody. A reading of the published control set.">
+<meta name="twitter:image" content="https://machinetestimony.org/og.png">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/icon.png" type="image/png" sizes="512x512">
+<link rel="apple-touch-icon" href="/icon.png">
+<link rel="canonical" href="https://machinetestimony.org/aiuc-1/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+
+  /* Built to the NBER pattern, which is what a research bureau's site actually
+     looks like: one coloured band carrying the lockup, the utility links, the
+     navigation and the name together; the institution named large and centred
+     in a serif; outlined destination tiles; then a dense white body in two
+     columns with a rail. Serif for reading, sans for metadata, underlined
+     links, hairline rules, and far less air than a product page. */
+  :root{
+    --band:#123a6b; --band-2:#0e2f57; --band-ink:#ffffff; --band-dim:#b9cbe4;
+    --paper:#ffffff; --ink:#111417; --body:#24292d; --muted:#5f6a72;
+    --rule:#c9cfd4; --rule-soft:#e3e7ea; --label:#123a6b; --link:#123a6b;
+    --display:"Source Serif 4",Georgia,"Times New Roman",serif;
+    --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --band:#0c2340; --band-2:#081a2f; --band-ink:#f2f6fb; --band-dim:#9db3ce;
+      --paper:#0f1214; --ink:#eef0f2; --body:#c2c8cd; --muted:#8a939a;
+      --rule:#2c3236; --rule-soft:#1f2427; --label:#9dc0ef; --link:#9dc0ef;
+    }
+  }
+  :root[data-theme="dark"]{
+    --band:#0c2340; --band-2:#081a2f; --band-ink:#f2f6fb; --band-dim:#9db3ce;
+    --paper:#0f1214; --ink:#eef0f2; --body:#c2c8cd; --muted:#8a939a;
+    --rule:#2c3236; --rule-soft:#1f2427; --label:#9dc0ef; --link:#9dc0ef;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--body);
+    font-family:var(--display);font-size:17px;line-height:1.55;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 30px}
+  a{color:var(--link);text-decoration:underline;text-underline-offset:2px;
+    text-decoration-thickness:1px}
+  a:hover{text-decoration-thickness:2px}
+
+  /* ── the band: lockup, utility, nav and the name, all one field ─────── */
+  .band{background:var(--band);color:var(--band-ink);
+    background-image:linear-gradient(180deg,var(--band) 0%,var(--band-2) 100%)}
+  .band a{color:var(--band-ink);text-decoration:none}
+  .band a:hover{text-decoration:underline}
+  .topbar{display:flex;align-items:center;gap:26px;flex-wrap:wrap;padding:16px 0 12px}
+  .lockup{display:flex;align-items:center;gap:13px}
+  .lockup .mk{width:31px;height:31px;flex:none;color:var(--band-ink)}
+  .lockup .bar{width:2px;align-self:stretch;background:var(--band-ink);opacity:.55}
+  .lockup .nm{font-family:var(--sans);font-weight:700;font-size:11.5px;
+    letter-spacing:.085em;line-height:1.32;text-transform:uppercase}
+  .utility{margin-left:auto;font-family:var(--sans);font-size:13.5px;
+    display:flex;gap:12px;align-items:center;color:var(--band-dim)}
+  .utility .sep{opacity:.45}
+  nav.primary{border-bottom:1px solid rgba(255,255,255,.42);
+    display:flex;gap:26px;flex-wrap:wrap;padding:9px 0 11px;
+    font-family:var(--sans);font-size:14.5px}
+
+  .hero{text-align:center;padding:54px 0 46px}
+  .hero h1{font-family:var(--display);font-weight:700;color:var(--band-ink);
+    font-size:clamp(2.3rem,5.4vw,3.5rem);line-height:1.05;letter-spacing:-.012em;
+    margin:0}
+  .hero .strap{max-width:44rem;margin:20px auto 0;color:var(--band-ink);
+    font-size:clamp(1.02rem,2vw,1.24rem);line-height:1.45;opacity:.94}
+  .tiles{display:grid;gap:16px;margin:34px auto 0;max-width:52rem}
+  @media (min-width:700px){.tiles{grid-template-columns:1fr 1fr}}
+  .tile{border:1px solid rgba(255,255,255,.6);padding:17px 20px;
+    font-family:var(--sans);font-weight:600;font-size:15px;color:var(--band-ink);
+    text-decoration:none;display:block}
+  .tile:hover{background:rgba(255,255,255,.09);text-decoration:none}
+
+  /* ── the body: main column and a rail ───────────────────────────────── */
+  .main{display:grid;gap:34px;padding-top:40px;padding-bottom:10px}
+  /* Grid children default to min-width:auto and so refuse to shrink below
+     their content. On a phone this is a single column, so one wide code
+     block or table pushed the whole page past the viewport. The desktop
+     rule below says minmax(0,1fr) and was masking it above 960px. */
+  .main>*{min-width:0}
+  @media (min-width:960px){
+    .main{grid-template-columns:minmax(0,1fr) 21rem;gap:52px;align-items:start}
+  }
+  h2.label{font-family:var(--display);font-weight:700;color:var(--label);
+    font-size:1.06rem;margin:0 0 12px;padding-bottom:9px;
+    border-bottom:1px solid var(--rule)}
+  .block{margin:0 0 40px}
+  .block p{margin:0 0 15px;max-width:46rem}
+  .block p:last-child{margin-bottom:0}
+
+  table.levels{width:100%;border-collapse:collapse;font-size:16px;font-variant-numeric:tabular-nums}
+  table.levels th{text-align:left;font-family:var(--sans);font-size:12.5px;color:var(--muted);
+    font-weight:600;padding:0 14px 8px 0;border-bottom:1px solid var(--rule)}
+  table.levels td{padding:13px 14px 13px 0;border-bottom:1px solid var(--rule-soft);
+    vertical-align:top}
+  table.levels td.lv{font-family:var(--sans);font-weight:700;font-size:12.5px;
+    color:var(--label);white-space:nowrap;}
+  table.levels td.t{font-weight:600;color:var(--ink);min-width:15rem}
+
+  .entries{list-style:none;margin:0;padding:0}
+  .entries li{padding:16px 0;border-bottom:1px solid var(--rule-soft)}
+  .entries li:first-child{padding-top:0}
+  .entries h3{font-size:1.12rem;font-weight:600;margin:0 0 4px;line-height:1.32}
+  .entries h3 a{color:var(--ink)}
+  .entries .kind{font-family:var(--sans);font-weight:600;font-size:12.5px;color:var(--muted);
+    display:block;margin-bottom:5px}
+  .entries p{margin:0;font-size:16px;max-width:44rem}
+  .entries .meta{margin-top:7px;font-family:var(--sans);font-size:12.5px;
+    color:var(--muted)}
+
+  /* ── the rail ───────────────────────────────────────────────────────── */
+  .rail{border-top:3px solid var(--band);padding-top:14px}
+  .rail h2{font-family:var(--display);font-weight:700;color:var(--label);
+    font-size:1.02rem;margin:0 0 10px}
+  .rail .item{padding:13px 0;border-bottom:1px solid var(--rule-soft)}
+  .rail .item:last-of-type{border-bottom:0}
+  .rail .item b{display:block;font-weight:600;color:var(--ink);font-size:1rem;
+    margin-bottom:3px}
+  .rail .item p{margin:0;font-size:15px;color:var(--body)}
+  .rail .links{list-style:none;margin:16px 0 0;padding:16px 0 0;
+    border-top:1px solid var(--rule);font-family:var(--sans);font-size:14.5px}
+  .rail .links li{margin:0 0 7px}
+
+  footer.foot{border-top:3px solid var(--band);margin-top:34px;
+    padding:20px 0 46px;font-family:var(--sans);font-size:13.5px;color:var(--muted)}
+  footer.foot p{margin:0 0 4px}
+
+  /* Only what a prose page needs beyond the shared stylesheet. */
+  pre.snip{background:none;border-left:2px solid var(--rule);margin:0 0 16px;
+    padding:2px 0 2px 13px;font-size:13px;overflow-x:auto;max-width:100%;
+    font-family:var(--mono);line-height:1.55}
+  pre.snip.addr{overflow-x:visible;white-space:pre-wrap;overflow-wrap:anywhere}
+  .block h3{font-family:var(--display);font-weight:600;color:var(--ink);
+    font-size:1.08rem;margin:26px 0 8px}
+  .block ol,.block ul{margin:0 0 15px;padding-left:1.15rem;max-width:46rem}
+  .block li{margin:0 0 7px}
+  .dateline{font-family:var(--sans);font-size:12.5px;color:var(--muted);
+    margin:0 0 22px}
+  /* The one sentence a page is allowed to insist on. For a measured number the
+     rest of the page exists to explain, never for emphasis on an opinion. */
+  p.callout{border-left:2px solid var(--band);padding:10px 0 10px 14px;
+    margin:0 0 17px;max-width:46rem}
+  table.facts{width:100%;border-collapse:collapse;font-size:14px;margin:0 0 20px;font-variant-numeric:tabular-nums}
+  table.facts th{text-align:left;font-family:var(--sans);font-size:12.5px;
+    font-weight:600;color:var(--body);padding:0 12px 6px 0;
+    white-space:nowrap;vertical-align:top;width:8.5rem}
+  table.facts td{padding:0 0 6px;font-family:var(--mono);font-size:12.5px;
+    overflow-wrap:anywhere;border-bottom:1px solid var(--rule-soft)}
+  table.facts th{width:6.6rem;font-size:11.5px}
+  /* The register's tables. A wide table scrolls inside its own box rather
+     than pushing the page sideways, which is the thing that made the site
+     unreadable on a phone the first time. */
+  .scroller{overflow-x:auto;max-width:100%;margin:0 0 16px}
+  table.reg{border-collapse:collapse;font-size:14px;min-width:34rem;font-variant-numeric:tabular-nums}
+  table.reg th{text-align:left;font-family:var(--sans);font-size:12.5px;
+    font-weight:600;color:var(--body);padding:0 14px 7px 0;
+    white-space:nowrap;border-bottom:1px solid var(--rule)}
+  table.reg td{padding:8px 14px 8px 0;border-bottom:1px solid var(--rule-soft);
+    vertical-align:top}
+  table.reg td.s{font-weight:600;white-space:nowrap}
+  table.reg td.n,table.reg td.lv,table.reg td.d{font-family:var(--sans);
+    font-size:12.5px;white-space:nowrap;color:var(--body)}
+  table.reg td.lv{font-weight:700}
+  table.reg td.v{font-family:var(--sans);font-size:13px;font-weight:400;
+    white-space:nowrap;color:var(--muted)}
+  /* Absent is the finding, so it is the one that is not muted. */
+  table.reg td.v.n{color:var(--ink)}
+  table.reg td.w{font-family:var(--mono);font-size:12px;color:var(--muted);
+    overflow-wrap:anywhere}
+  .tag{font-family:var(--sans);font-size:12.5px;font-weight:400;
+    font-style:italic;color:var(--muted);white-space:nowrap}
+  @media (max-width:620px){
+    table.reg{font-size:13px}
+    table.reg td.w{font-size:11px}
+    pre.snip{font-size:12px}
+    table.facts th{width:6.6rem;font-size:10px}
+    table.facts td{font-size:11.5px}
+  }
+</style>
+</head>
+<body>
+
+<div class="band">
+  <div class="wrap">
+    <div class="topbar">
+      <div class="lockup">
+        <svg class="mk" viewBox="0 0 64 64" aria-hidden="true">
+          <g fill="currentColor">
+            <rect x="2" y="18" width="20" height="20"/>
+            <polygon points="2,38 22,38 2,56"/>
+            <rect x="30" y="22" width="20" height="20"/>
+            <polygon points="50,22 30,22 50,4"/>
+          </g>
+        </svg>
+        <div class="bar"></div>
+        <div class="nm">Machine<br>Testimony</div>
+      </div>
+      <div class="utility">
+        <a href="https://datatracker.ietf.org/doc/draft-clifford-testimony-record/">Specification</a>
+        <span class="sep">|</span>
+        <a href="https://github.com/troybrandonc-bit/machine-testimony">Validator and adapters</a>
+        <span class="sep">|</span>
+        <a href="/llms.txt">For machines</a>
+      </div>
+    </div>
+    <nav class="primary">
+      <a href="/#question">The question</a>
+      <a href="/#conformance">Conformance</a>
+      <a href="/#papers">Working papers</a>
+      <a href="/#census">Census</a>
+      <a href="/register/">The register</a>
+      <a href="/directory/">Who can answer</a>
+      <a href="/ask/">Ask your supplier</a>
+      <a href="/tamper-evidence/">Tamper evidence</a>
+      <a href="/assess/">Assess a system</a>
+      <a href="/#publications">Publications</a>
+      <a href="/eu-ai-act/">EU AI Act</a>
+      <a href="/underwriting/">Underwriting</a>
+      <a href="/demand/">Who asked</a>
+      <a href="/approval-binding/">Approval binding</a>
+      <a href="/tr-3/">TR-3</a>
+      <a href="/colorado-deployers/">Colorado: deployers</a>
+      <a href="/formats/">Record formats</a>
+      <a href="/witness/">Witness criteria</a>
+      <a href="/obligation/">What the rules require</a>
+      <a href="/united-states/">United States</a>
+      <a href="/explaining/">The duty to explain</a>
+      <a href="/approvals/">Approvals</a>
+      <a href="/check/">Check a record</a>
+      <a href="/review/">Review your logs</a>
+      <a href="/implement/">Implementing it</a>
+      <a href="/#taking-part">Taking part</a>
+    </nav>
+  </div>
+</div>
+<div class="wrap main">
+  <div>
+    <p class="dateline">Reading, 12 September 2026</p>
+    <h2 class="label">AIUC-1 asks for the approver's name in exactly one
+      place, and it is not the human-review control</h2>
+
+    <div class="block">
+      <p><b>AIUC-1</b> describes itself as the world's first AI agent
+        standard. It is not law. It is a private certification scheme: the
+        Artificial Intelligence Underwriting Company conducts the technical
+        evaluation and issues the certificate, and Schellman, the first
+        authorized auditor, states its own role as providing
+        &ldquo;independent audit evidence collection, detailed reporting, and
+        certification guidance&rdquo;.</p>
+
+      <p>Every other instrument this project has read is a statute, a
+        regulation or a governance framework. This one is the first where the
+        test is <b>whether an auditor can collect the evidence a control
+        names</b>. That makes it worth reading closely, because a control that
+        asks for something no agent framework emits is a control whose
+        evidence has to come from somewhere.</p>
+
+      <table class="facts">
+        <tr><th>Instrument</th><td>AIUC-1, the AI agent standard</td></tr>
+        <tr><th>Kind</th><td>Certification scheme, audited. <b>Not law.</b></td></tr>
+        <tr><th>Source</th><td><span class="mono">aiuc-1.com</span>, control set published without registration</td></tr>
+        <tr><th>Read on</th><td>12 September 2026</td></tr>
+        <tr><th>Live controls</th><td>51 across six families, plus two retired</td></tr>
+        <tr><th>Revision</th><td><b>Quarterly.</b> E007 was merged into E004 and E014 into E017 in the Q1 2026 update</td></tr>
+      </table>
+
+      <h3>The six families</h3>
+      <div class="scroller">
+      <table class="reg">
+        <thead><tr><th>Family</th><th>Live</th><th>What it asks for</th></tr></thead>
+        <tbody>
+          <tr><td class="d">A. Data &amp; Privacy</td><td class="s">8</td><td class="d">Input and output data policies, and safeguards against leakage of PII, IP, credentials and cross-customer data</td></tr>
+          <tr><td class="d">B. Security</td><td class="s">10</td><td class="d">Adversarial testing, endpoint protection, access privileges, and prevention of agent actions beyond authorised scope</td></tr>
+          <tr><td class="d">C. Safety</td><td class="s">12</td><td class="d">A risk taxonomy, pre-deployment testing, prevention of harmful and out-of-scope outputs, and third-party evaluation</td></tr>
+          <tr><td class="d">D. Reliability</td><td class="s">4</td><td class="d">Hallucination prevention, restriction of unsafe tool calls, and quarterly third-party evaluation of both</td></tr>
+          <tr><td class="d">E. Accountability</td><td class="s">15</td><td class="d">Failure plans, assigned ownership, vendor due diligence, internal review, disclosure, transparency &mdash; <b>and logging</b></td></tr>
+          <tr><td class="d">F. Society</td><td class="s">2</td><td class="d">Guardrails against AI-enabled cyber misuse and against chemical, biological, radiological and nuclear misuse</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <h3>E015 is where the person is</h3>
+      <p><b>E015, &ldquo;Log AI system activity&rdquo;, is mandatory and
+        applied every 12 months.</b> Its requirement reads: &ldquo;Maintain
+        logs of AI system processes, actions, and agent outputs where
+        permitted to support incident investigation, auditing, and explanation
+        of AI system behavior.&rdquo;</p>
+
+      <p>That sentence alone would be unremarkable. The evidence beneath it is
+        not. <b>E015.2</b>, the agent-specific logging evidence, asks for
+        structured logs capturing:</p>
+
+      <div class="scroller">
+      <table class="reg">
+        <thead><tr><th>What E015.2 asks a log to capture</th><th>Level</th></tr></thead>
+        <tbody>
+          <tr><td class="d"><b>&ldquo;approver identity, timestamp, decision outcome&rdquo;</b> for authorization events, the standard's own example being human-in-the-loop approvals</td><td class="s">TR-3</td></tr>
+          <tr><td class="d">&ldquo;tool call parameters and their results&rdquo;</td><td class="s">TR-1</td></tr>
+          <tr><td class="d">&ldquo;delegation chain records showing sub-agent handoffs with identity, task context, and outcome&rdquo;</td><td class="s">TR-1</td></tr>
+          <tr><td class="d">&ldquo;agent type identifier, creator or deployment origin&rdquo;</td><td class="s">TR-1</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <p>And <b>E015.4</b>, log integrity protection, asks for
+        &ldquo;write-once-read-many (WORM) storage configuration,
+        cryptographic hashing of log entries, append-only database
+        settings&rdquo;.</p>
+
+      <p class="callout"><b>This is the first instrument read by this project
+        that asks for both halves.</b> The identity of the person who approved
+        an action, and technical evidence that the record of it was not
+        altered afterwards. The <a href="/obligation/">scheme census</a> read
+        four instruments and found neither in any of them. AIUC-1 was not one
+        of those four, and it has both.</p>
+
+      <h3>Where the person is not</h3>
+      <p>The placement is the finding, and it is easier to see by looking at
+        the controls that a reader would expect to carry it.</p>
+
+      <div class="scroller">
+      <table class="reg">
+        <thead><tr><th>Control</th><th>Status</th><th>What it actually asks for</th></tr></thead>
+        <tbody>
+          <tr><td class="d"><b>C007</b> Flag high risk outputs for human review</td><td class="s n">Optional</td><td class="d">A policy defining high-risk criteria, detection code, and &ldquo;workflow documentation showing review processes, assignments, and escalation paths&rdquo;. <b>Assignments, not reviewers.</b> No individual is required</td></tr>
+          <tr><td class="d"><b>E008</b> Review internal processes</td><td class="s">Mandatory</td><td class="d">&ldquo;document review records and approvals&rdquo; &mdash; evidenced by meeting notes, decision logs in Jira, Notion or Confluence, and risk registers. Governance of the programme, not of a decision</td></tr>
+          <tr><td class="d"><b>E004</b> Assign accountability</td><td class="s">Mandatory</td><td class="d">&ldquo;approval records showing sign-offs with supporting evidence&rdquo; &mdash; but for lifecycle changes: model selection, meta prompt, guardrails, workflow. Change management, not a runtime action</td></tr>
+          <tr><td class="d"><b>E015.2</b> AI agent logging</td><td class="s">Mandatory</td><td class="d"><b>&ldquo;approver identity, timestamp, decision outcome&rdquo;</b></td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <p class="callout"><b>The control that establishes human review is
+        optional and names nobody. The control that asks for a name is the
+        logging control.</b> So under AIUC-1 the approver's identity is
+        collected as <i>log content</i> rather than established as an
+        oversight duty. What can be produced therefore depends on what the
+        underlying agent framework emits, not on what the deployer's
+        governance says about itself.</p>
+
+      <h3>What the frameworks emit</h3>
+      <p>This project has read ten widely deployed agent systems against a
+        published rubric. Of the eight that take or gate consequential
+        actions, <b>one can identify the person who approved one</b>, and that
+        one is the reference implementation of this specification, which is
+        disclosed rather than left to be found. The per-system verdicts, with
+        the file and line behind each, are at
+        <a href="/approval-binding/">/approval-binding/</a> and
+        <a href="/register/">/register/</a>.</p>
+
+      <p>On the narrower question E015.2 raises by asking for
+        &ldquo;decision outcome&rdquo;: of five frameworks with an approval
+        step, two can distinguish a modification from an approval and three
+        cannot. In two of those three, reproduced rather than reasoned about,
+        a reviewer who rewrote an action's arguments and a reviewer who
+        approved it unchanged produce the same record.</p>
+
+      <p class="callout"><b>What this does not say.</b> It does not say that
+        any AIUC-1 certified product fails E015.2. No certified product has
+        been assessed here and none is named in this reading. A vendor may
+        have built approval logging by hand on top of a framework that does
+        not supply it, and several plainly have the engineering to do so. The
+        claim is narrower and it is about the substrate: the frameworks do not
+        emit the field, so wherever it exists somebody built it deliberately,
+        and whether they did is a question with an answer rather than an
+        assumption.</p>
+
+      <h3>How this sits beside Colorado</h3>
+      <p>These two do not collide and the distinction is worth stating.
+        <a href="/colorado/">Colorado's proposed Rule 7.7</a> would require a
+        record naming who reviewed <b>a consequential decision about a
+        person</b>, and it would do so as law. AIUC-1's E015.2 asks for the
+        approver of an <b>authorization event in an agent system</b>, and it
+        does so as a condition of a private certificate. Different subjects,
+        different force, and a deployer can be inside one and outside the
+        other.</p>
+
+      <p>What they share is the shape of the evidence. A record that can name
+        the approver of an action, distinguish an approval from a
+        modification, and be shown not to have changed satisfies the
+        record-facing part of both. That is the case for the format being
+        jurisdiction-neutral while the reading of each instrument is not.</p>
+
+      <h3>The reading</h3>
+      <p>Fifteen obligations, ten of which a record can speak to and five of
+        which no log will ever answer. The five are named rather than dropped,
+        because knowing which obligations are documentary saves asking a
+        vendor for something no vendor can supply. The reading is data, dated,
+        and carried by the instrument library rather than written out
+        separately, so this page and the tool cannot drift.</p>
+
+      <p class="callout"><b>A reading of this text has a shelf life that the
+        statutes do not.</b> AIUC-1 is refreshed quarterly and has already
+        retired two controls into others inside a single update. An auditor
+        working from a reading they made in January is working from a stale
+        one by April, and the control identifiers they cited may no longer
+        resolve.</p>
+
+      <p>A wrong reading is cheap to demonstrate. The control set is published
+        openly at <span class="mono">aiuc-1.com</span>, every clause quoted
+        here is quoted verbatim, and corrections are published with the date
+        they were made.</p>
+    </div>
+  </div>
+</div>
+<footer class="foot">
+  <div class="wrap">
+    <p>Editor: Troy Clifford. Operated by Garnet Taurus Ltd.</p>
+    <p>Specification text CC BY 4.0. Schema and tools MIT.</p>
+    <p>Machine Testimony is a research programme, not a registered institute or a certification body.</p>
+  </div>
+</footer>
+
+</body>
+</html>
