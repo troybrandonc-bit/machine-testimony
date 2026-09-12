@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "testimony-langgraph"
-version = "0.2.0"
+version = "0.2.1"
 description = "Emit a Testimony Record from a LangGraph human-in-the-loop flow, so the record can say who approved."
 readme = "README.md"
 requires-python = ">=3.9"
