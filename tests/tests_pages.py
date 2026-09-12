@@ -586,8 +586,14 @@ def main():
         # the first attempt: the rules say "reviewer" constantly, so folding
         # them in made the page's true statement about the statute read false.
         sources = act
+        # /colorado/ now quotes beyond Colorado: the UK statute for the
+        # correction to what Colorado is first at, and the ICO guidance for
+        # the record the UK statute does not require. Both are committed, and
+        # a quotation from either still has to be findable in the bytes.
         for extra in ("co-admt-proposed-rules.txt",
-                      "co-admt-notice-of-hearing.txt"):
+                      "co-admt-notice-of-hearing.txt",
+                      "uk-duaa-s80.txt",
+                      "ico-adm-guidance.txt"):
             f = os.path.join(ROOT, "census", "sources", extra)
             if os.path.exists(f):
                 sources += " " + _re.sub(
