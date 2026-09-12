@@ -107,6 +107,42 @@
   "scope": "acts",
   "spec": "testimony-record/0.2"
  },
+ "approval-modified": {
+  "level": "TR-3",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "a reviewer who changed the arguments and then allowed them",
+  "scope": "acts",
+  "spec": "testimony-record/0.3"
+ },
+ "approval-modified-silent": {
+  "level": "TR-2",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": false,
+   "TR-4": false
+  },
+  "note": "a modification that does not say what it modified, which is the boolean problem with a new name on it",
+  "scope": "acts",
+  "spec": "testimony-record/0.3"
+ },
+ "approval-overrode": {
+  "level": "TR-3",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "a reviewer who refused the action, which reverses rather than alters and so owes no `changed`",
+  "scope": "acts",
+  "spec": "testimony-record/0.3"
+ },
  "approver-is-proposer": {
   "level": "TR-2",
   "levels_met": {
@@ -454,6 +490,102 @@
   "note": "a number Python and ECMAScript do not write the same way",
   "scope": "acts",
   "spec": "testimony-record/0.2"
+ },
+ "observation-asserted-bare": {
+  "level": "TR-3",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "an assertion with no observation behind it, which the vocabulary exists to be able to state",
+  "scope": "acts",
+  "spec": "testimony-record/0.3"
+ },
+ "observation-before-its-version": {
+  "level": null,
+  "levels_met": {
+   "TR-1": false,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "an observation in a record of a version that does not define it",
+  "scope": "acts",
+  "spec": "testimony-record/0.2"
+ },
+ "observation-contradicts": {
+  "level": "TR-3",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "an observation that contradicts the claim, which is a record doing its job rather than a record failing",
+  "scope": "acts",
+  "spec": "testimony-record/0.3"
+ },
+ "observation-inconclusive-response": {
+  "level": "TR-3",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "an interface response that was observed and did not establish the postcondition",
+  "scope": "acts",
+  "spec": "testimony-record/0.3"
+ },
+ "observation-looked-at-nothing": {
+  "level": null,
+  "levels_met": {
+   "TR-1": false,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "a claim to have observed an effect with nothing named as looked at",
+  "scope": "acts",
+  "spec": "testimony-record/0.3"
+ },
+ "observation-nobody-looked": {
+  "level": null,
+  "levels_met": {
+   "TR-1": false,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "a claim to have observed an effect that names no observer",
+  "scope": "acts",
+  "spec": "testimony-record/0.3"
+ },
+ "observation-of-nothing": {
+  "level": null,
+  "levels_met": {
+   "TR-1": false,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "an observation of a decision that is not in the record",
+  "scope": "acts",
+  "spec": "testimony-record/0.3"
+ },
+ "observation-supports": {
+  "level": "TR-3",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "an effect observed, resolving to the decision it concerns and to the evidence it rests on",
+  "scope": "acts",
+  "spec": "testimony-record/0.3"
  },
  "out-of-order": {
   "level": null,

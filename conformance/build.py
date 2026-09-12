@@ -313,6 +313,91 @@ def cases():
                                       "token": "AAAA"})])
 
 
+    # ── 0.3: observation, and the disposition on an approval ────────────
+    #
+    # 0.3 is in SPECS and not in RELEASED, so these exercise checks the
+    # published specification does not yet promise. They are here anyway
+    # because a corpus that omits the only new entry type in a version is one
+    # somebody implements from and then fails on the first real record, and
+    # because #91 asked whether the absence of fixtures should block release.
+    # It should not block it; it should precede it.
+    V3 = "testimony-record/0.3"
+
+    def v3(entries):
+        for x in entries:
+            x["spec"] = V3
+        return entries
+
+    def base3():
+        return v3([scope(), ev(), ev(2), bel(), dec(), app()])
+
+    def obs(i=1, **kw):
+        kw.setdefault("decision", "d1")
+        kw.setdefault("claim",
+                      "refund:rf_88 reached settled for amount 4200 currency GBP")
+        kw.setdefault("basis", "effect-observed")
+        kw.setdefault("observer", {"id": "settlement-poller", "kind": "system"})
+        kw.setdefault("evidence", ["e2"])
+        kw.setdefault("result", "supports")
+        return e(type="observation", id="o%d" % i, at=T % 6, spec=V3, **kw)
+
+    add("observation-supports",
+        "an effect observed, resolving to the decision it concerns and to the "
+        "evidence it rests on",
+        base3() + [obs()])
+    add("observation-contradicts",
+        "an observation that contradicts the claim, which is a record doing "
+        "its job rather than a record failing",
+        base3() + [obs(result="contradicts")])
+    add("observation-inconclusive-response",
+        "an interface response that was observed and did not establish the "
+        "postcondition",
+        base3() + [obs(basis="response-received", result="inconclusive",
+                       claim="the refund request was accepted for processing")])
+    # An assertion with nothing behind it is a legitimate state and the whole
+    # point of the vocabulary is that a record has to say so. A validator that
+    # demanded evidence here would push emitters back to silence.
+    add("observation-asserted-bare",
+        "an assertion with no observation behind it, which the vocabulary "
+        "exists to be able to state",
+        base3() + [e(type="observation", id="o1", at=T % 6, spec=V3,
+                     decision="d1", claim="the refund went out",
+                     basis="asserted", result="supports", evidence=[])])
+    add("observation-before-its-version",
+        "an observation in a record of a version that does not define it",
+        [scope(), ev(), ev(2), bel(), dec(), app(),
+         e(type="observation", id="o1", at=T % 6, decision="d1",
+           claim="the refund went out", basis="asserted", result="supports",
+           evidence=[])])
+    add("observation-of-nothing",
+        "an observation of a decision that is not in the record",
+        base3() + [obs(decision="d9")])
+    add("observation-looked-at-nothing",
+        "a claim to have observed an effect with nothing named as looked at",
+        base3() + [obs(evidence=[])])
+    add("observation-nobody-looked",
+        "a claim to have observed an effect that names no observer",
+        base3() + [obs(observer={"kind": "system"})])
+
+    add("approval-modified",
+        "a reviewer who changed the arguments and then allowed them",
+        v3([scope(), ev(), bel(), dec(), app(disposition="modified",
+                                            changed="amount")]))
+    add("approval-modified-silent",
+        "a modification that does not say what it modified, which is the "
+        "boolean problem with a new name on it",
+        v3([scope(), ev(), bel(), dec(), app(disposition="modified")]))
+    # `overrode` deliberately owes no `changed`: an override reverses an action
+    # rather than altering it, and requiring the member here was a real bug
+    # caught by a refusal test in the LangGraph adapter.
+    add("approval-overrode",
+        "a reviewer who refused the action, which reverses rather than alters "
+        "and so owes no `changed`",
+        v3([scope(), ev(), bel(),
+            dec(verdict="refused", executed=False,
+                reason="the reviewer would not authorise it"),
+            app(disposition="overrode")]))
+
     # ── the digest rule itself ──────────────────────────────────────────────
     body = gated()
     body[1]["confidence"] = 0.87
