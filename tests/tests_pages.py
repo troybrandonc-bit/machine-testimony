@@ -1646,7 +1646,11 @@ def main():
 
     _NONE = (r"\blogs?\b", r"\blogging\b", r"\baudits?\b",
              r"\bretentions?\b")
-    for _label, _text in (("Washington", _wa), ("Colorado Rules 9 to 14", _co)):
+    _ca = re.sub(r"\s+", " ", io.open(
+        os.path.join(ROOT, "census", "sources", "ca-sb243.txt"),
+        encoding="utf-8", errors="replace").read())
+    for _label, _text in (("Washington", _wa), ("Colorado Rules 9 to 14", _co),
+                          ("California SB 243", _ca)):
         _found = {p: len(re.findall(p, _text, re.I)) for p in _NONE}
         _hits = {k: v for k, v in _found.items() if v}
         check("%s asks for no log, audit or retention" % _label,
@@ -1675,8 +1679,28 @@ def main():
         check("in the Washington act: %s" % _q[:44], _q in _wa)
         check("and on the page: %s" % _q[:44], _q in _cb)
 
+    # Worded to survive the page gaining a fourth statute. What matters is the
+    # refusal being present, not the number in the sentence, and the earlier
+    # version of this check broke the moment California was added.
     check("the page refuses to argue the statutes should require logs",
-          "not an argument that either statute should" in _cb)
+          "not an argument that any of these statutes should" in _cb
+          or "not an argument that either statute should" in _cb)
+
+    # California is the one that asks for a quantity, which is the page's
+    # sharpest claim and the one most worth recomputing: a count has to be
+    # counted from something, and the statute requires nothing kept.
+    check("California requires no record either",
+          len(re.findall(r"records?", _ca, re.I)) == 0,
+          len(re.findall(r"records?", _ca, re.I)))
+    for _q in ("The number of times the operator has issued a crisis service "
+               "provider referral notification",
+               "shall not include any identifiers or personal information "
+               "about users",
+               "evidence-based methods for measuring suicidal ideation"):
+        check("in SB 243: %s" % _q[:42], _q in _ca)
+        check("and on the page: %s" % _q[:42], _q in _cb)
+    check("the page records that it omitted California and was corrected",
+          "did not mention California" in _cb)
     check("and names Oregon as unread rather than summarising it",
           "Oregon SB 1546" in _cb and "refused" in _cb)
 
