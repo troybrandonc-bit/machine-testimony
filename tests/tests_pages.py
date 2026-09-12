@@ -1489,21 +1489,56 @@ def main():
                        for f in rec.get('files') or []}
             for f, src in (('obligation.md', 'obligation'),
                            ('explaining.md', 'explaining')):
+                # text=True decodes with the locale encoding, which on Windows
+                # is cp1252. to_markdown.py writes its stdout with the same
+                # locale, so this round-tripped by coincidence rather than by
+                # agreement and would have broken the moment either side was
+                # run somewhere else. Both ends are pinned to UTF-8 now.
                 fresh = subprocess.run(
                     [sys.executable,
                      os.path.join(ROOT, 'census', 'to_markdown.py'),
                      os.path.join(ROOT, 'pages', src + '.html')],
-                    capture_output=True, text=True)
+                    capture_output=True,
+                    env=dict(os.environ, PYTHONIOENCODING='utf-8',
+                             PYTHONUTF8='1'))
+                fresh_text = fresh.stdout.decode('utf-8', 'replace')
+
+                # A file the deposit does not carry is a failure, not an
+                # absence. The `want <= got` check above covers the named set;
+                # this catches a link that is missing for any other reason.
+                if held_at.get(f) is None:
+                    check('%s is in the deposit at all' % f, False,
+                          'the record carries no link for it')
+                    continue
+
+                # THE SPLIT THIS BLOCK EXISTS FOR. Fetching can fail because
+                # Zenodo is having a bad day, and failing a run for that
+                # reports nothing about the repository. Decoding cannot fail
+                # for that reason: bytes that arrived and are not UTF-8 are a
+                # corrupt deposit, and until 12 September 2026 both were
+                # caught together and printed as UNREACHABLE. A cp1252 upload
+                # went to Zenodo behind that message, so the two are separated
+                # here and only the network half is allowed to pass quietly.
                 try:
-                    held = fetch(held_at[f]).decode('utf-8')
+                    raw = fetch(held_at[f])
                 except Exception as e:                       # noqa: BLE001
                     print('  DEPOSIT UNREACHABLE: could not fetch %s (%s)'
                           % (f, str(e)[:60]))
                     continue
+                try:
+                    held = raw.decode('utf-8')
+                except UnicodeDecodeError as e:
+                    check('%s in the deposit is UTF-8' % f, False,
+                          'the deposited bytes are not UTF-8 (%s). The '
+                          'deposit is corrupt and needs a new version; '
+                          'generated text must never be written through '
+                          'shell redirection on Windows.' % str(e)[:70])
+                    continue
+                check('%s in the deposit is UTF-8' % f, True)
                 check('%s in the deposit is what the page still produces'
                       % f,
                       fresh.returncode == 0
-                      and _comparable(fresh.stdout) == _comparable(held),
+                      and _comparable(fresh_text) == _comparable(held),
                       'regenerate readings-deposit/%s and deposit a new '
                       'version' % f)
 
