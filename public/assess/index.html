@@ -144,6 +144,14 @@
   footer.foot{border-top:3px solid var(--band);margin-top:34px;
     padding:20px 0 46px;font-family:var(--sans);font-size:13.5px;color:var(--muted)}
   footer.foot p{margin:0 0 4px}
+  .foot nav{display:grid;gap:20px 30px;margin:0 0 22px;
+    grid-template-columns:repeat(auto-fit,minmax(168px,1fr))}
+  .foot nav h2{font-family:var(--sans);font-size:12.5px;font-weight:600;
+    color:var(--ink);margin:0 0 7px}
+  .foot nav a{display:block;color:var(--muted);text-decoration:none;
+    margin:0 0 4px;font-size:13px}
+  .foot nav a:hover{color:var(--ink);text-decoration:underline}
+  .foot hr{border:0;border-top:1px solid var(--rule);margin:0 0 16px}
 
   /* Only what a prose page needs beyond the shared stylesheet. */
   pre.snip{background:none;border-left:2px solid var(--rule);margin:0 0 16px;
@@ -226,32 +234,12 @@
     <nav class="primary">
       <a href="/obligation/">What the rules require</a>
       <a href="/colorado/">Colorado</a>
-      <a href="/united-states/">United States</a>
-      <a href="/eu-ai-act/">EU AI Act</a>
-      <a href="/aiuc-1/">AIUC-1</a>
-      <a href="/explaining/">The duty to explain</a>
       <a href="/register/">The register</a>
-      <a href="/approval-binding/">Approval binding</a>
-      <a href="/#census">Census</a>
-      <a href="/demand/">Who asked</a>
-      <a href="/directory/">Who can answer</a>
-      <a href="/#conformance">Conformance</a>
-      <a href="/tr-3/">TR-3</a>
-      <a href="/approvals/">Approvals</a>
-      <a href="/tamper-evidence/">Tamper evidence</a>
-      <a href="/formats/">Record formats</a>
-      <a href="/witness/">Witness criteria</a>
       <a href="/check/">Check a record</a>
-      <a href="/review/">Review your logs</a>
+      <a href="/tr-3/">TR-3</a>
       <a href="/assess/">Assess a system</a>
-      <a href="/ask/">Ask your supplier</a>
-      <a href="/colorado-deployers/">Colorado: deployers</a>
       <a href="/implement/">Implementing it</a>
       <a href="/#question">The question</a>
-      <a href="/#papers">Working papers</a>
-      <a href="/#publications">Publications</a>
-      <a href="/underwriting/">Underwriting</a>
-      <a href="/#taking-part">Taking part</a>
     </nav>
   </div>
 </div>
@@ -501,6 +489,56 @@ cp census/TEMPLATE.json census/subjects/their-system.json</pre>
   </aside>
 </div>
 <footer class="foot">
+  <div class="wrap">
+    <nav>
+      <div>
+        <h2>What the rules require</h2>
+        <a href="/obligation/">Every instrument read</a>
+        <a href="/colorado/">Colorado</a>
+        <a href="/colorado-deployers/">Colorado: for deployers</a>
+        <a href="/united-states/">United States</a>
+        <a href="/eu-ai-act/">EU AI Act</a>
+        <a href="/aiuc-1/">AIUC-1</a>
+        <a href="/explaining/">The duty to explain</a>
+      </div>
+      <div>
+        <h2>What software can show</h2>
+        <a href="/register/">The register</a>
+        <a href="/approval-binding/">Approval binding</a>
+        <a href="/#census">The conformance census</a>
+        <a href="/demand/">Who asked for it</a>
+        <a href="/directory/">Who can answer</a>
+      </div>
+      <div>
+        <h2>The record</h2>
+        <a href="/#conformance">Conformance levels</a>
+        <a href="/tr-3/">TR-3</a>
+        <a href="/approvals/">Recording who approved</a>
+        <a href="/tamper-evidence/">Tamper evidence</a>
+        <a href="/anchor/">Anchor a record</a>
+        <a href="/formats/">Record formats</a>
+        <a href="/witness/">Witness criteria</a>
+      </div>
+      <div>
+        <h2>Things you can run</h2>
+        <a href="/check/">Check a record</a>
+        <a href="/review/">Review your logs</a>
+        <a href="/assess/">Assess a system</a>
+        <a href="/ask/">Ask your supplier</a>
+        <a href="/implement/">Implementing it</a>
+      </div>
+      <div>
+        <h2>About this project</h2>
+        <a href="/#question">The question</a>
+        <a href="/#papers">Working papers</a>
+        <a href="/#publications">Publications</a>
+        <a href="/underwriting/">Underwriting</a>
+        <a href="/#taking-part">Taking part</a>
+        <a href="/changes/">Proposing a change</a>
+      </div>
+    </nav>
+    <hr>
+  </div>
   <div class="wrap">
     <p>Editor: Troy Clifford. Operated by Garnet Taurus Ltd.</p>
     <p>Specification text CC BY 4.0. Schema and tools MIT.</p>
