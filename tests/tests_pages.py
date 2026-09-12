@@ -1542,6 +1542,54 @@ def main():
                       'regenerate readings-deposit/%s and deposit a new '
                       'version' % f)
 
+
+    # ── the Chatbot Safety Act counts on /colorado/ ─────────────────────
+    #
+    # Rules 9 to 14 of the same filing implement HB26-1263. /colorado/ states
+    # that they contain no logging requirement at all, which is a count, so it
+    # is recomputed here from the committed rules text rather than trusted.
+    #
+    # This one has a shelf life measured in days. The revised rules circulate
+    # on or about 23 September 2026 and the chatbot rules may move with the
+    # rest. If they acquire a logging requirement, the page says something
+    # false and this is what says so.
+    print("")
+    print("the chatbot rules ask an operator to keep nothing, recomputed")
+    _rules = os.path.join(ROOT, "census", "sources",
+                          "co-admt-proposed-rules.txt")
+    _rt = io.open(_rules, encoding="utf-8", errors="replace").read()
+    # Normalised, because the page wraps at the source column and a quotation
+    # that spans a line break is still the same quotation.
+    _co = " ".join(io.open(os.path.join(PUB, "colorado", "index.html"),
+                           encoding="utf-8").read().split())
+    _start = re.search(r"9\.1 Authority|Rule 9", _rt)
+    check("the chatbot rules are in the committed source", bool(_start))
+    if _start:
+        _seg = re.sub(r"\s+", " ", _rt[_start.start():])
+        _logs = len(re.findall(r"\blogs?\b|\blogging\b", _seg, re.I))
+        _audit = len(re.findall(r"\baudits?\b|audit trail", _seg, re.I))
+        # A word boundary count, because the seven apparent matches are inside
+        # login, technologies, psychologist and methodology. Counting the
+        # substring is how this reading would have reported the opposite.
+        check("no logging requirement in Rules 9 to 14", _logs == 0, _logs)
+        check("and no audit requirement either", _audit == 0, _audit)
+        check("the page says zero", "zero occurrences of" in _co)
+        # The verification power is the whole finding, so the quotation has to
+        # survive in the rules it is attributed to.
+        check("Rule 13.3's verification power is quoted from the filing",
+              "sufficient to verify any element of the submission" in _seg
+              and "sufficient to verify any element of the submission" in _co)
+        # And the tension it sits in.
+        check("the no-retention default it sits beside is still there",
+              "default to not allowing the service to retain information"
+              in _seg)
+
+    # /colorado/ carries the feasibility answer, which is the reason the page
+    # was extended at all. A Colorado reader who never finds /aiuc-1/ is the
+    # failure this link exists to prevent.
+    check("/colorado/ carries the AIUC-1 answer and links to the reading",
+          "E015.2" in _co and 'href="/aiuc-1/"' in _co)
+
     print("\nthe site does not link at things that are not there")
     dead = []
     for page in pages():

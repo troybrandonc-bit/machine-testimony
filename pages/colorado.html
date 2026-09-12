@@ -4,7 +4,7 @@
 
 <div class="wrap main">
   <div>
-    <p class="dateline">Reading, 9 September 2026. Proposed rules added 11 September 2026.</p>
+    <p class="dateline">Reading, 9 September 2026. Proposed rules added 11 September. AIUC-1 and the Chatbot Safety Act added 12 September 2026.</p>
     <h2 class="label">Colorado defines the reviewer, then keeps records about
       the software</h2>
 
@@ -169,6 +169,103 @@
         deployer does not solely control, and every timestamp in every system
         this project has read is written by the party whose conduct is in
         question.</p>
+
+      <h3>The objection this reading invites, and the answer to it</h3>
+      <p>A measurement that most deployed software cannot produce the Rule 7.7
+        record can be read two ways. The reading here is that Colorado would be
+        first and should draft accordingly. The other reading is that the
+        provision asks for something the market cannot do and should be
+        softened, and that is the argument a rulemaking usually hears.</p>
+
+      <p class="callout"><b>It is worth knowing that the substance of what Rule
+        7.7 asks for is already required somewhere, audited, and certified
+        against, with no law involved.</b></p>
+
+      <p><a href="/aiuc-1/">AIUC-1</a> is a private certification standard for
+        AI agents, published openly, with 51 live controls. Control
+        <b>E015</b> is mandatory and applied every 12 months, and its
+        agent-specific evidence requirement <b>E015.2</b> asks for structured
+        logs capturing &ldquo;approver identity, timestamp, decision
+        outcome&rdquo; for authorization events, the standard's own worked
+        example being human-in-the-loop approvals. <b>E015.4</b> separately
+        asks for write-once storage, cryptographic hashing of log entries and
+        append-only settings. Certification follows a third-party audit, and
+        certificates are held by KPMG, Cursor, Harvey and ElevenLabs.</p>
+
+      <p>So the gap this page reports is not between what Rule 7.7 asks and
+        what is possible. It is between Rule 7.7 and <b>general-purpose
+        software bought before anybody asked for the field</b>. That is a
+        transition, and transitions have lead times; it is a different thing
+        from a requirement nobody can meet.</p>
+
+      <p>Two limits, because this cuts both ways. AIUC-1 is not law and binds
+        nobody who does not seek the certificate. And no certified product has
+        been assessed here and none is named: whether any of them built that
+        field by hand is not something this project has measured. The full
+        clause-level reading, including what it does not establish, is at
+        <a href="/aiuc-1/">machinetestimony.org/aiuc-1/</a>.</p>
+
+      <h3>The other act in the same rulemaking</h3>
+      <p>The filing at 4 CCR 904-6 implements two statutes, not one. Rules 9 to
+        14 implement <b>House Bill 26-1263, the Chatbot Safety Act</b>, which
+        governs operators of Conversational Artificial Intelligence Services
+        and the protection of minors: age estimation, a persistent disclosure
+        that the user is talking to a machine rather than a person, handling of
+        suicidal ideation and self-harm risk, compulsive-use design, and an
+        annual report to the Attorney General. The same hearing on 26 October
+        takes testimony on both.</p>
+
+      <p><b>Read against the same question as the rest of this page, those
+        rules ask an operator to keep nothing.</b> Across Rules 9 to 14 there
+        are zero occurrences of <span class="mono">log</span>,
+        <span class="mono">logs</span> or <span class="mono">logging</span> as
+        words, zero of <i>audit trail</i>, and zero of <i>audit</i>. The seven
+        apparent matches are all inside other words: <i>login</i>,
+        <i>technologies</i>, <i>psychologist</i>, <i>methodology</i>. The three
+        occurrences of <i>retain</i> are about the minor's own data, requiring
+        that privacy settings let a minor stop the service retaining prior
+        sessions and default to not retaining them.</p>
+
+      <p>Human review appears twice and both are descriptions of a method
+        rather than records of an event. Rule 13 asks an operator to state, in
+        its annual report, &ldquo;Whether and at what point a situation is
+        elevated to human review&rdquo; and the criteria that decide it.</p>
+
+      <p class="callout"><b>Rule 13.3 then reserves a power to check.</b> The
+        Department &ldquo;may request that an Operator produce underlying
+        documentation, source materials, records, or a demonstration sufficient
+        to verify any element of the submission&rdquo;, within 30 days. That is
+        the only occurrence of <i>record</i> in the chatbot rules, and it is a
+        demand power rather than a duty to keep anything.</p>
+
+      <p>So an operator states annually when a conversation with a minor is
+        escalated to a person, and may be asked within 30 days to prove any
+        element of that. Nothing in the rules requires it to have kept anything
+        that would constitute proof, and Rule 11.5 pushes the other way by
+        defaulting a minor's data to not being retained at all.</p>
+
+      <p><b>This is not an argument that the Chatbot Safety Act should require
+        logs.</b> A safety statute about minors has reasons to keep operators
+        away from retaining conversations, and an outsider should be slow to
+        second-guess them. The finding is a tension between two rules in the
+        same filing, stated because both are defensible and nothing in the text
+        says which gives way.</p>
+
+      <h3>What this project has filed here</h3>
+      <p>Three written comments are in the rulemaking record, and all written
+        comments are published by the Department at
+        <a href="https://comments.coag.gov/s/colorado-automated-decision-making">comments.coag.gov</a>.
+        The first, <span class="mono">0000000594</span>, filed 9 September
+        2026, reports item by item whether deployed software can produce what
+        Rule 7.7 asks. The second corrects two statements in it that were
+        stronger than the evidence behind them, found by re-reading rather than
+        because anyone challenged them. The third, filed 12 September, is the
+        AIUC-1 reading above.</p>
+
+      <p>None of the three proposes a format, record contents or a remedy, and
+        they say so. Rule 7.7 already specifies the record, and a submission
+        from an interested party offering to improve that is worth less than
+        one that does not.</p>
 
       <h3>What this reading is not</h3>
       <p>It is not legal advice and it is not a compliance product. It is one
