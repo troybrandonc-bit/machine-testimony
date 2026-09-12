@@ -1,0 +1,226 @@
+<!--title: The regulator asks for the record. The law does not
+    desc: Since 5 February 2026 a United Kingdom controller must enable a data subject to obtain human intervention in a significant automated decision. Articles 22A to 22D of the UK GDPR contain no occurrence of record, log, retain, retention, document, audit or evidence. The Information Commissioner's Office, interpreting those same articles, says you should keep a record of how the human reviewed the decision. A reading of the statute and of the guidance, against each other.
+    slug: united-kingdom-->
+
+<div class="wrap main">
+  <div>
+    <p class="dateline">Reading, 12 September 2026</p>
+    <h2 class="label">The regulator asks for the record. The law does not.</h2>
+
+    <div class="block">
+      <p>Since <b>5 February 2026</b>, a controller in the United Kingdom must
+        enable a data subject to obtain human intervention in a significant
+        decision based entirely or partly on automated processing. That is
+        Article 22C of the UK GDPR, as substituted by section 80 of the Data
+        (Use and Access) Act 2025. Across Articles 22A to 22D there is
+        <b>not one occurrence</b> of record, records, log, logs, logging,
+        retain, retention, document, audit or evidence.</p>
+
+      <p>The Information Commissioner's Office, interpreting those same
+        articles, says something the articles do not: <b>&ldquo;You should keep
+        a record of how the human reviewed the decision.&rdquo;</b></p>
+
+      <p class="callout"><b>What can a deployer in the United Kingdom be asked
+        to produce today about a human review, by whom, and on what
+        authority?</b></p>
+
+      <h3>What the reading found</h3>
+      <div class="scroller">
+      <table class="reg">
+        <tr>
+          <th>Instrument</th><th>What decides<br>an outcome</th>
+          <th>Record<br>required</th><th>Who<br>reviewed</th>
+          <th>Shown<br>unaltered</th><th>Retention<br>stated</th>
+        </tr>
+        <tr>
+          <td>UK GDPR Articles 22A to 22D<br>
+            <span class="mono">law, in force 5 Feb 2026</span></td>
+          <td class="d">safeguards offered</td>
+          <td class="v n">absent</td>
+          <td class="v n">absent</td>
+          <td class="v n">absent</td>
+          <td class="v n">absent</td>
+        </tr>
+        <tr>
+          <td>ICO guidance on automated<br>decision-making<br>
+            <span class="mono">guidance, not law</span></td>
+          <td class="d">regulator expectation</td>
+          <td class="v">expected</td>
+          <td class="v n">absent</td>
+          <td class="v n">absent</td>
+          <td class="v n">absent</td>
+        </tr>
+      </table>
+      </div>
+
+      <p><b>Expected</b> rather than required, and the difference is the whole
+        page. Guidance requires nothing of anybody. A deployer who ignores it is
+        not breaking a stated rule, and is departing from what the enforcing
+        authority has published about how it reads the law. Scoring that as
+        <i>required</i> would be the overclaim this site exists to catch in
+        other people's documents.</p>
+
+      <h3>The statute gives a right and asks for nothing</h3>
+      <p>Article 22B restricts significant decisions based entirely or partly on
+        automated processing. Article 22C says that where such a decision is
+        taken, the controller must have safeguards in place, and enumerates
+        four: provide the data subject with information about the decision,
+        <b>&ldquo;enable the data subject to obtain human intervention on the
+        part of the controller&rdquo;</b>, enable them to make representations,
+        and enable them to contest it.</p>
+
+      <p>Four events, every one of which a record could carry, and the statute
+        asks for none of them. Whether a particular person obtained
+        intervention, from whom, what that person was shown, and whether the
+        decision changed, are all questions the text leaves to whatever the
+        controller happened to build.</p>
+
+      <p>The definition is where it bites hardest. Article 22A(1)(a): <b>&ldquo;A
+        decision is based solely on automated processing if there is no
+        meaningful human involvement in the taking of the decision.&rdquo;</b>
+        The restriction is escaped by asserting meaningful human involvement,
+        and nothing in the text requires evidence of the involvement being
+        asserted. The phrase appears eight times across the substituted
+        articles. Article 22A(2) names one factor for deciding it, the extent to
+        which the decision was reached by profiling, and leaves the list open.
+        Article 22D then lets the Secretary of State settle by regulations
+        whether there is or is not meaningful human involvement in described
+        cases, so the central term of the regime is deliberately unfinished.</p>
+
+      <h3>The regulator asks for the record the statute does not</h3>
+      <p>The ICO's guidance on the automated decision-making safeguards is
+        careful about the difference between the two words it uses. It says
+        <b>must</b> nineteen times, for what the law obliges, and <b>should</b>
+        thirteen times, for what the Commissioner expects. The record is a
+        <i>should</i>:</p>
+
+      <p class="callout"><b>&ldquo;You should keep a record of how the human
+        reviewed the decision.&rdquo;</b></p>
+
+      <p>It is the only occurrence of the word record in the guidance, and there
+        is no equivalent anywhere in the articles it interprets. The guidance
+        also asks, once, for <b>&ldquo;a system that is able to deliver an audit
+        trail showing the key decision points that formed the basis for the
+        decision&rdquo;</b>. Those two sentences are the entire documentary
+        expectation, and neither has a statutory provision behind it.</p>
+
+      <p>The guidance is more specific about the reviewer than the statute is.
+        Human reviewers should assess and review any reconsideration before it
+        is applied, have the ability to influence the outcome, have
+        <b>&ldquo;discretion and authority to alter the decision&rdquo;</b>, be
+        <b>&ldquo;suitably trained and qualified to understand the system's
+        outputs, limitations, and risks&rdquo;</b>, and take into account the
+        relevant data and factors the decision was based on. It adds that, like
+        human involvement, human intervention <b>&ldquo;cannot be
+        tokenistic&rdquo;</b>.</p>
+
+      <p><b>Five properties of a person, and a record of how they reviewed.</b>
+        Two of those five are facts about an employment relationship rather than
+        about any decision: training and qualification live in HR and identity
+        systems and no record format produces them. The other three are
+        observable, and a record can carry them if it was built to.</p>
+
+      <h3>What a record would have to carry, and what does not</h3>
+      <p>Taking the guidance at its word, a record that answered it would have
+        to say who intervened, where that identity was resolved from, what
+        material the reviewer was actually shown as distinct from what the
+        decision cited, and whether they approved, modified or overrode the
+        output. The last is the one to check first, because a reviewer who
+        changed an action before allowing it and one who approved it unchanged
+        must not produce the same record.</p>
+
+      <p>Of ten widely deployed agent frameworks and memory systems read at
+        pinned commits, eight take or gate consequential actions and
+        <b>one can identify the person who approved one</b>, and that one is
+        this project's own reference implementation, which is stated here rather
+        than left to be found. Nothing on the approval path in the others
+        identifies a person at all. The per-system verdicts, each citing a file
+        and a line, are in the <a href="/register/">conformance register</a>,
+        and what a reviewer was shown is read separately at
+        <a href="/approval-binding/">approval binding</a>.</p>
+
+      <p>So the gap a United Kingdom deployer has is not a policy gap. The
+        regulator has published what it expects, and the software the sector
+        runs on cannot emit it.</p>
+
+      <h3>The same specification, reached from the opposite direction</h3>
+      <p>Colorado's proposed Rule 7.7, which would take effect on
+        <b>1 January 2027</b>, asks for substantially the list above: a reviewer
+        with authority to alter the output, trained and competent, who took the
+        relevant evidence into account, and a record of it. One jurisdiction is
+        writing it into a rule and the other is already stating it as an
+        expectation on a statute that requires none of it. Neither of them
+        arrived at the other's text. That is read in full at
+        <a href="/colorado/">the Colorado reading</a>.</p>
+
+      <h3>Where this sits in time</h3>
+      <p>The United Kingdom is neither the first nor the last to give a person a
+        route to a human, and the ordering is worth having straight, because
+        every one of these gave the right and asked for no record of it.</p>
+
+      <div class="scroller">
+      <table class="reg">
+        <tr>
+          <th>Instrument</th><th>From</th><th>Asks for a record<br>of the review</th>
+        </tr>
+        <tr>
+          <td>EU GDPR Article 22(3)</td>
+          <td class="d">25 May 2018</td><td class="v n">no</td>
+        </tr>
+        <tr>
+          <td>Quebec, section 12.1</td>
+          <td class="d">22 September 2023</td><td class="v n">no</td>
+        </tr>
+        <tr>
+          <td>UK GDPR Articles 22A to 22D</td>
+          <td class="d">5 February 2026</td><td class="v n">no</td>
+        </tr>
+        <tr>
+          <td>ICO guidance</td>
+          <td class="d">live, not law</td><td class="v">yes, as an expectation</td>
+        </tr>
+        <tr>
+          <td>Colorado Rule 7.7, proposed</td>
+          <td class="d">1 January 2027</td><td class="v">yes, if adopted</td>
+        </tr>
+        <tr>
+          <td>EU AI Act, high risk</td>
+          <td class="d">2 December 2027</td><td class="v n">no</td>
+        </tr>
+      </table>
+      </div>
+
+      <p>Eight years between the first of those and the first one that asks for
+        the record, and the thing that asks for it today is guidance rather than
+        law.</p>
+
+      <h3>What this does not show</h3>
+      <p>Two instruments, read against what they ask a record to show. Not an
+        assessment of whether either is good at what it is for, and not legal
+        advice. The guidance is doing a job the statute left it, and doing it
+        more precisely than the statute did.</p>
+
+      <p>Several things a United Kingdom deployer is subject to are outside this
+        reading and are named rather than implied. The rest of the Data (Use and
+        Access) Act 2025 was not read. The ICO's wider guidance on artificial
+        intelligence was not read; only the automated decision-making safeguards
+        page was. ISO/IEC 42001 has no verdict anywhere on this site because its
+        text is paywalled, which is recorded as a fact about the field rather
+        than scored. A United Kingdom firm placing a system on the European
+        Union market is separately subject to the EU AI Act, which is read at
+        <a href="/eu-ai-act/">its own page</a>.</p>
+
+      <h3>Check it</h3>
+      <p>Both texts are committed in
+        <span class="mono">census/sources/</span> beside this reading: the
+        substituted articles as enacted, and the guidance as published. Every
+        count on this page is recomputed from those files by the test suite
+        rather than written down once and trusted, so a reader who thinks a
+        number is wrong can settle it against the same bytes this page was
+        written from.</p>
+
+      <p>A reading is wrong in the ordinary way readings are wrong, which is why
+        every statement above names the article or the sentence it rests on.</p>
+    </div>
+  </div>
+</div>

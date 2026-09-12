@@ -1361,6 +1361,77 @@ def main():
           "census/schemes/readings.json" in ob)
     check("and sells nothing", "OMEM" not in ob and "omem" not in ob.lower())
 
+    print("")
+    print("/united-kingdom/ is a statute read against its own regulator")
+
+    # The whole page is two counts and four quotations. The statute gives a
+    # right and asks for nothing; the regulator asks for a record the statute
+    # never mentions. If either half moves, the page says something false about
+    # a live obligation in Troy's own jurisdiction, so both are recomputed here
+    # rather than trusted.
+    uk_page_p = os.path.join(PUB, "united-kingdom", "index.html")
+    duaa = os.path.join(ROOT, "census", "sources", "uk-duaa-s80.txt")
+    ico = os.path.join(ROOT, "census", "sources", "ico-adm-guidance.txt")
+    if all(os.path.exists(x) for x in (uk_page_p, duaa, ico)):
+        uk = io.open(uk_page_p, encoding="utf-8").read()
+        flat_uk = " ".join(uk.split())
+        d = _re.sub(r"\s+", " ", io.open(duaa, encoding="utf-8").read())
+        g = _re.sub(r"\s+", " ", io.open(ico, encoding="utf-8").read())
+
+        # The statute's zero, which is the claim the page is built on. Ten
+        # words, and the page names all ten.
+        absent = []
+        for word in ("record", "records", "log", "logs", "logging", "retain",
+                     "retention", "document", "audit", "evidence"):
+            if _re.search(r"\b" + word + r"\b", d, _re.I):
+                absent.append(word)
+            if word not in flat_uk:
+                absent.append("page omits " + word)
+        check("Articles 22A to 22D contain none of the ten words, and the "
+              "page names all ten", not absent, absent)
+
+        n = len(_re.findall(r"meaningful human involvement", d, _re.I))
+        check("the statute uses meaningful human involvement eight times",
+              n == 8, n)
+        check("and the page says eight", "appears eight times" in flat_uk)
+
+        # The guidance. One record, one audit trail, and the must/should split
+        # that makes `expected` the honest verdict rather than `required`.
+        for word, want, said in (("record", 1, "the only occurrence of the "
+                                                "word record"),
+                                 ("audit trail", 1, "once"),
+                                 ("must", 19, "nineteen times"),
+                                 ("should", 13, "thirteen times")):
+            got = len(_re.findall(r"\b" + word + r"\b", g, _re.I))
+            check("the ICO guidance uses %r %d times" % (word, want),
+                  got == want, got)
+            check("and the page says so for %r" % word, said in flat_uk, said)
+
+        for q in ("You should keep a record of how the human reviewed the "
+                  "decision.",
+                  "audit trail showing the key decision points",
+                  "discretion and authority to alter the decision",
+                  "suitably trained and qualified",
+                  "cannot be tokenistic"):
+            check("the guidance actually contains %r" % q[:44], q in g)
+
+        for q in ("obtain human intervention on the part of the controller",
+                  "no meaningful human involvement in the taking of the "
+                  "decision"):
+            check("the statute actually contains %r" % q[:44], q in d)
+
+        # `expected` is load-bearing. Guidance requires nothing of anybody, and
+        # a page that said the ICO requires a record would be making the
+        # overclaim this site exists to catch in other people's documents.
+        check("the page scores the guidance as expected rather than required",
+              "Guidance requires nothing of anybody" in flat_uk
+              and ">expected<" in uk)
+        check("and does not call the guidance law",
+              "guidance, not law" in flat_uk)
+    else:
+        check("/united-kingdom/ and both its sources are committed", False,
+              [x for x in (uk_page_p, duaa, ico) if not os.path.exists(x)])
+
     # The operating company was renamed and every page rebuilt except the two
     # excluded from the rebuild because they are deposited. /papers/wp1/ kept
     # the old name on a live page for days, and nothing here noticed, because
