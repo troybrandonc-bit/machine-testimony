@@ -451,7 +451,7 @@ function sentence(e, byId) {
         ? "This system takes or gates actions."
         : "This system declares that it does not act, so there is nothing to gate.";
     case "evidence":
-      return "Read " + esc(e.source) + (e.description ? " &mdash; " + esc(e.description) : "");
+      return "Read " + esc(e.source) + (e.description ? ", " + esc(e.description) : "");
     case "belief": {
       const st = { believed_true: "believed", believed_false: "believed false",
                    contradicted: "contradicted", unknown: "unknown" }[e.state] || esc(e.state);
