@@ -1270,6 +1270,24 @@ def main():
     check("the page says guidance expects rather than requires",
           "expects it" in flat_ob and "no statutory basis to be required by"
           in flat_ob)
+    # AIUC-1 was added to this census on 12 September 2026 and llms.txt still
+    # named four subjects and said "all three" hours later, because nothing
+    # here had an opinion about that line. It is the surface a model quotes
+    # without ever seeing the table, so the count it states is checked against
+    # the table rather than remembered.
+    _n = {4: "four", 5: "five", 6: "six", 7: "seven", 8: "eight"}
+    _ll = [l for l in io.open(os.path.join(PUB, "llms.txt"),
+                              encoding="utf-8").read().split(chr(10))
+           if "machinetestimony.org/obligation/" in l]
+    check("llms.txt carries exactly one entry for the reading", len(_ll) == 1,
+          len(_ll))
+    if _ll:
+        _want = "%s of the %s specify what a record must contain" % (
+            _n[len(able)], _n[len(sc["subjects"])])
+        # Case-insensitive: the entry opens that sentence and the page does
+        # not, and a capital letter is not a disagreement about a count.
+        check("and states the same counts as the table",
+              _want in _ll[0].lower(), _want)
     # The finding itself. If either of these stops being unanimous, the
     # sentence on the page becomes false, and this is where that surfaces.
     # Corrected 8 Sep 2026. This read "none of the three requires it" until
