@@ -1590,6 +1590,45 @@ def main():
     check("/colorado/ carries the AIUC-1 answer and links to the reading",
           "E015.2" in _co and 'href="/aiuc-1/"' in _co)
 
+
+    # Rule 7.7 has at least six parts and this page read one of them until
+    # 12 September 2026. Its heading is "Right to Meaningful Human Review and
+    # Reconsideration"; Documentation is a sub-provision. The quotations added
+    # for the other parts are checked against the filing and against the built
+    # page, both, because either can drift without the other.
+    print("")
+    print("the rest of Rule 7.7 is quoted from the filing")
+    _r77 = re.sub(r"\s+", " ", io.open(
+        os.path.join(ROOT, "census", "sources", "co-admt-proposed-rules.txt"),
+        encoding="utf-8", errors="replace").read())
+    _R77Q = (
+        "not a subordinate of the original decision-maker",
+        "must not be subject to steering by the upper management",
+        "shielded from potential retaliation",
+        "ADMT may not assist in the Meaningful Human Review",
+        "the marginal cost and technical feasibility of the review",
+        "technically or financially impossible",
+    )
+    # Case-insensitive on purpose. The page runs some of these into its own
+    # sentences, so a factor printed "The marginal cost..." in the filing is
+    # lowercased mid-clause on the page. That is correct prose and it is still
+    # the same text; what this check is for is the text going missing from the
+    # draft, not the capital letter.
+    _low_r77, _low_co = _r77.lower(), _co.lower()
+    _missing_rules = [q for q in _R77Q if q.lower() not in _low_r77]
+    _missing_page = [q for q in _R77Q if q.lower() not in _low_co]
+    check("every added quotation is in the proposed rules as filed",
+          not _missing_rules, "; ".join(q[:48] for q in _missing_rules))
+    check("and every one of them survives onto the page",
+          not _missing_page, "; ".join(q[:48] for q in _missing_page))
+    # Commercial Reasonableness is where the feasibility rebuttal lives, so the
+    # page saying so is the load-bearing sentence rather than decoration.
+    check("the page names Commercial Reasonableness as the rebuttal route",
+          "Commercial Reasonableness" in _co
+          and "technically or financially impossible" in _co)
+    check("and the count of factors it weighs is stated",
+          "seven factors" in _co)
+
     print("\nthe site does not link at things that are not there")
     dead = []
     for page in pages():
