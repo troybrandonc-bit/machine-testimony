@@ -1222,7 +1222,7 @@ def main():
                                         "readings.json"), encoding="utf-8"))
     qs = [q["id"] for q in sc["questions"]]
     check("four questions were asked", len(qs) == 4, qs)
-    check("four instruments were read", len(sc["subjects"]) == 4,
+    check("five instruments were read", len(sc["subjects"]) == 5,
           len(sc["subjects"]))
     for sub in sc["subjects"]:
         check("%s answers every question" % sub["name"],
@@ -1244,11 +1244,11 @@ def main():
 
     able = [x for x in sc["subjects"]
             if x["answers"]["Q1"]["verdict"] != "not_applicable"]
-    check("three of the four specify what a record must contain",
-          len(able) == 3, len(able))
+    check("four of the five specify what a record must contain",
+          len(able) == 4, len(able))
     flat_ob = " ".join(ob.split())
-    check("and the page says three", "three rather than four" in flat_ob)
-    check("all three require a record to be kept",
+    check("and the page says four", "four rather than five" in flat_ob)
+    check("all four require a record to be kept",
           all(x["answers"]["Q1"]["verdict"] == "required" for x in able),
           [x["answers"]["Q1"]["verdict"] for x in able])
     # The finding itself. If either of these stops being unanimous, the
@@ -1259,11 +1259,24 @@ def main():
     # persons who verified the result, pointing at Article 14(5)'s two named
     # people. The requirement exists, drafted, and scoped to one row of Annex
     # III. Partial is the honest verdict and the finding is stronger for it.
+    # Amended 12 Sep 2026, and the amendment is the finding rather than a
+    # count. AIUC-1 answers `required` here, which nothing else in this census
+    # does, and it is a private certification scheme rather than a law. So the
+    # sentence stops being "nobody requires it" and becomes "no legislature
+    # requires it and a commercial scheme does", which is a stronger claim and
+    # a narrower one.
     q2 = {x["name"]: x["answers"]["Q2"]["verdict"] for x in able}
-    check("exactly one of the three requires a record to name the person",
-          sorted(q2.values()) == ["absent", "absent", "partial"], q2)
-    check("and it is the law, for one category rather than in general",
+    check("exactly one of the four requires a record to name the person",
+          sorted(q2.values()) == ["absent", "absent", "partial", "required"],
+          q2)
+    check("and it is the certification scheme, not either law or catalogue",
+          q2.get("AIUC-1") == "required", q2)
+    check("the one that is a law reaches partial and no further",
           q2.get("EU AI Act") == "partial", q2)
+    check("the AIUC-1 note cites the control and its evidence id",
+          all(k in [x for x in able if x["name"] == "AIUC-1"][0]
+              ["answers"]["Q2"]["note"]
+              for k in ("E015.2", "approver identity", "C007")))
     check("the note says which article and which Annex III category",
           all(k in [x for x in able if x["name"] == "EU AI Act"][0]
               ["answers"]["Q2"]["note"]
@@ -1273,8 +1286,8 @@ def main():
           [x["name"] for x in able
            if x["answers"]["Q3"]["verdict"] == "required"])
     check("the page states that finding",
-          "Only one of them requires a record to name the person, and only for "
-          "one category of system out of everything the law covers" in flat_ob)
+          "Only one of them requires a record to name the person, and it is "
+          "not a law" in flat_ob)
     # A correction to a published reading is recorded on the page rather than
     # made quietly, on the same terms this project asks of everybody else.
     check("and the page records that it previously said otherwise",

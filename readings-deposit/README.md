@@ -7,7 +7,7 @@ so that their dates are held by somebody other than their author.
 
 | file | what it is |
 |---|---|
-| `obligation.md` | The first reading. Four instruments read against whether they require a record to name who authorised an action, and to be checkable by somebody other than the party that produced it. |
+| `obligation.md` | The first reading. Five instruments read against whether they require a record to name who authorised an action, and to be checkable by somebody other than the party that produced it. |
 | `explaining.md` | The second reading. Two articles of the EU AI Act read against each other: what a deployer must be able to explain, and what the same regulation requires them to record. |
 | `instrument-readings.json` | The data behind the first reading. Every verdict with the clause, control or criterion it rests on. |
 
@@ -19,11 +19,21 @@ different findings.
 
 ## What they found
 
-**Of four instruments that will oblige deployers to keep records** — the EU AI
-Act, the ForHumanity certification criteria, the CoSAI Risk Map and the NIST AI
-RMF — three specify what a record must contain. All three require one to be
-kept. None requires it to be capable of being shown unaltered by anyone other
-than its author.
+**Of five instruments that will oblige deployers to keep records** (the EU AI
+Act, the ForHumanity certification criteria, AIUC-1, the CoSAI Risk Map and the
+NIST AI RMF), four specify what a record must contain and all four require one
+to be kept.
+
+**Only one of the four requires the record to name the person who authorised a
+consequential action, and it is not a law.** AIUC-1, a private certification
+scheme audited by an accredited third party, requires logs to capture
+"approver identity, timestamp, decision outcome" for human-in-the-loop
+authorization events. No legislature read here requires it.
+
+None of the four requires the record to be capable of being shown unaltered by
+anyone other than its author. AIUC-1 goes furthest and still stops short: it
+requires write-once storage, cryptographic hashing and append-only settings,
+all of them operated by the party that produced the log.
 
 **Of the eight areas of Annex III to the EU AI Act**, seven carry a right for an
 affected person to be told the main elements of a decision. One has the content

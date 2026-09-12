@@ -1,12 +1,12 @@
-# Everyone requires the log. One row of Annex III requires it to name who approved
+# Everyone requires the log. The only instrument that requires it to name who approved is not a law
 
-*Reading, 7 September 2026*
+*Reading, 7 September 2026. AIUC-1 added 12 September 2026.*
 
-## Everyone requires the log. One row of Annex III requires it to name who approved.
+## Everyone requires the log. The only instrument that requires it to name who approved is not a law.
 
 From 2 December 2027, a deployer of a high-risk AI system in the European Union must keep the logs its system generates. Article 12 says the system shall technically allow for the automatic recording of events over its lifetime. Article 26(6) says the deployer shall keep those logs for at least six months. Article 14 says a natural person shall oversee the system.
 
-None of those articles says what has to be in the record for it to answer a question afterwards. So it is worth asking whether anything else does. Four instruments were read against four questions.
+None of those articles says what has to be in the record for it to answer a question afterwards. So it is worth asking whether anything else does. Five instruments were read against four questions.
 
 > **Where these require a record of what an automated system did, do they require it to say who authorised a consequential action, and to be checkable by somebody other than the party that produced it?**
 
@@ -17,9 +17,20 @@ None of those articles says what has to be in the record for it to answer a ques
 | EU AI Act | law | required | partial | absent | required |
 | ForHumanity | certification scheme | required | absent | partial | required |
 | CoSAI Risk Map | controls catalogue | required | absent | partial | absent |
+| AIUC-1 | certification scheme, audited | required | required | partial | partial |
 | NIST AI RMF 1.0 | governance framework | n/a | n/a | n/a | n/a |
 
-Three of the four specify what a record must contain. All three require one to be kept. **Only one of them requires a record to name the person, and only for one category of system out of everything the law covers. None of the three requires a record to be capable of being shown unaltered by anyone other than its author.**
+Four of the five specify what a record must contain. All four require one to be kept. **Only one of them requires a record to name the person, and it is not a law.** None of the four requires a record to be capable of being shown unaltered by anyone other than its author.
+
+### The one that asks for the name is a private certificate
+
+[AIUC-1](/aiuc-1/) was added to this reading on 12 September 2026 and it is the only subject here that answers *required* to the second question. Control **E015.2** is mandatory and requires structured logs capturing “approver identity, timestamp, decision outcome” for authorization events, its own worked example being human-in-the-loop approvals.
+
+> **No legislature read here requires it. A commercial certification scheme does.** AIUC-1 is not law and binds nobody who does not seek the certificate. What it demonstrates is that the requirement is writable and auditable: it is already written, an accredited auditor already collects evidence against it, and certificates are already held. The gap in the law is not a gap in what can be specified.
+
+The placement inside AIUC-1 is worth stating, because it cuts the other way. Across 51 live controls that sub-requirement is the only place a named human is asked for anywhere, and **C007, the control that establishes human review, is marked Optional** and asks for workflow documentation showing assignments rather than reviewers. So the approver's identity is collected as log content rather than established as an oversight duty, which makes producing it a question about what the underlying software emits rather than about what a governance programme says.
+
+It also goes furthest of anything here on the third question and still stops short. E015.4 requires log integrity protection by name: “write-once-read-many (WORM) storage configuration, cryptographic hashing of log entries, append-only database settings.” Every one of those is held and operated by the party that produced the log. A digest a deployer computes over its own records and keeps itself does not let anybody else show them unaltered, which is why it reads partial rather than required.
 
 ### The law has the gap too
 
@@ -47,7 +58,7 @@ The integrity vocabulary is present and properly defined. Data Integrity is take
 
 NIST AI RMF 1.0 contains no occurrence of log, logging, record-keeping or audit trail. Reporting that as a finding would be the error this reading exists to avoid. The framework organises risk management into four functions and deliberately specifies no controls; the suggested actions live in a separate companion Playbook. A document that does not specify controls is not failing to specify one, in the same way that a vector store is not failing to authorise actions.
 
-It is in the table so that the count of instruments that specify a record is three rather than four, and so that the zero is visible without being counted as a deficiency.
+It is in the table so that the count of instruments that specify a record is four rather than five, and so that the zero is visible without being counted as a deficiency.
 
 ### One of them is already closing it
 
@@ -70,3 +81,5 @@ Only published text was read, at the versions named in the data. A criterion tha
 The four questions, the verdicts, the documents read and the reasoning for each are in [census/schemes/readings.json](https://github.com/troybrandonc-bit/machine-testimony/blob/main/census/schemes/readings.json). The counts on this page are recomputed from that file by the test suite rather than typed.
 
 The companion question, asked of the software rather than of the rules, is the [conformance census](/register/): of the eight systems there that take or gate actions, one can name the person who approved. And the specific failure where the approval is recorded but the action changes underneath it is [a separate reading](/approval-binding/).
+
+Both readings are deposited together with a DOI, so the date on them is stamped by somebody other than their author: [10.5281/zenodo.22658916](https://doi.org/10.5281/zenodo.22658916). The deposit carries the same text as this page, generated from the same file, and it carries the correction above on its face.
