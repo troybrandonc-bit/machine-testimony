@@ -1361,6 +1361,23 @@ def main():
           "census/schemes/readings.json" in ob)
     check("and sells nothing", "OMEM" not in ob and "omem" not in ob.lower())
 
+    # The operating company was renamed and every page rebuilt except the two
+    # excluded from the rebuild because they are deposited. /papers/wp1/ kept
+    # the old name on a live page for days, and nothing here noticed, because
+    # the check that rebuilds pages skips exactly the pages a rename cannot
+    # reach. One name on every surface, or the rename is half done.
+    _old_names = []
+    for _root, _dirs, _names in os.walk(PUB):
+        for _n in _names:
+            if not _n.endswith((".html", ".txt", ".json", ".xml")):
+                continue
+            _p = os.path.join(_root, _n)
+            if "Black Tier" in io.open(_p, encoding="utf-8",
+                                       errors="replace").read():
+                _old_names.append(os.path.relpath(_p, PUB))
+    check("no published page names the company by its former name",
+          not _old_names, _old_names)
+
     print("\nthe governance page commits to something checkable")
     # A governance page that says only "one editor decides" describes the
     # arrangement without constraining it. What stops a fork is not the
