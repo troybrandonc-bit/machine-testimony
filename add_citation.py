@@ -37,6 +37,7 @@ PAGES = os.path.join(HERE, "pages")
 # this map is not missing a DOI; it has none, and cites its dated URL instead.
 DOI = {
     "register": "10.5281/zenodo.22290922",
+    "named-approver": "10.5281/zenodo.22738449",
 }
 
 # The pages a stranger has a reason to cite: a reading of a text, or a

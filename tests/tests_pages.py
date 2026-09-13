@@ -52,10 +52,13 @@ DEPOSITED = {
     "papers/wp1",       # doi:10.5281/zenodo.22286050
 }
 
-# Hand-written pages with no source in pages/ and NO deposit. The distinction
-# from DEPOSITED matters and is not pedantry: a deposited page is skipped
-# because editing it needs a new Zenodo version, so the navigation check has to
-# let it drift. An undeposited paper has no such excuse, and wp2 is held to the
+# Hand-written pages with no source in pages/. The distinction from DEPOSITED
+# matters and is not pedantry: a page in DEPOSITED is skipped because the
+# deposit IS that page, so regenerating it to pick up a new nav link would put
+# the live copy out of step with what Zenodo serves. wp2 has a deposit as of
+# 13 September 2026, doi:10.5281/zenodo.22738449, but the deposited artefact is
+# machine-testimony-wp2.pdf, typeset by make_wp2_pdf.py and not this page. A
+# nav link added here changes nothing on Zenodo, so wp2 stays held to the
 # navigation check and passes it. This set exempts one thing only, which is the
 # requirement to have a generator source.
 HAND_WRITTEN = {
@@ -1719,7 +1722,8 @@ def main():
     check("and no page cites a DOI that is not one of ours",
           not (cited - {READINGS_DOI, CENSUS_DOI,
                         "10.5281/zenodo.22286050", "10.5281/zenodo.22286051",
-                        "10.5281/zenodo.22290923"}),
+                        "10.5281/zenodo.22290923",
+                        "10.5281/zenodo.22738449", "10.5281/zenodo.22738450"}),
           sorted(cited))
 
     for name, doi, want in (
