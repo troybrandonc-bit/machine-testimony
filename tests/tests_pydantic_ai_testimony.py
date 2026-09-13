@@ -224,6 +224,43 @@ with tempfile.TemporaryDirectory() as td:
           rep3.level == "TR-4",
           [c["check"] for c in rep3.checks if not c["ok"]])
 
+# approve(arguments=...) already substituted what runs. What it never said was
+# that a person changed it, so an edit and a wave-through still read alike in
+# the approval itself. That is the half pydantic-ai#6968 leaves open.
+print("\na reviewer who edited the action is not one who waved it through")
+CALLS.clear()
+rec_m = recorder(lambda q: q.modify(approver=HUMAN, identity_source="oidc",
+                                    arguments={"customer": "8842", "amount": 20},
+                                    reason="capped to policy"))
+rec_m.run_sync(build(), "Refund order 8842")
+check("the tool runs with the reviewer's arguments, not the model's",
+      CALLS == [("issue_refund", "8842", 20)], CALLS)
+dm = [e for e in rec_m.entries() if e["type"] == "decision"][-1]
+am = [e for e in rec_m.entries() if e["type"] == "approval"][-1]
+check("the decision records what actually ran",
+      dm["arguments"]["amount"] == 20, dm.get("arguments"))
+check("and what was proposed", dm.get("proposed_arguments", {}).get("amount") == 4200,
+      dm.get("proposed_arguments"))
+check("the approval says the reviewer modified rather than approved",
+      am.get("disposition") == "modified", am.get("disposition"))
+check("and names the field that moved without restating its value",
+      am.get("changed") == "amount", am.get("changed"))
+
+# An unchanged approval must still say so, or `modified` means nothing.
+am2 = [e for e in rec2.entries() if e["type"] == "approval"][-1]
+check("an ordinary approval is recorded as approved, not left silent",
+      am2.get("disposition") == "approved", am2.get("disposition"))
+
+CALLS.clear()
+rec_s = recorder(lambda q: q.modify(approver=HUMAN, identity_source="oidc",
+                                    arguments={"customer": "8842", "amount": 4200}))
+try:
+    rec_s.run_sync(build(), "Refund order 8842")
+    check("modify() with unchanged arguments is refused", False, CALLS)
+except Exception as e:                                          # noqa: BLE001
+    check("modify() with unchanged arguments is refused",
+          "already proposed" in str(e), str(e)[:90])
+
 print("\nit needs nothing from OMEM")
 check("the adapter does not import omem", "omem" not in src.lower())
 check("and depends only on the emitter", "import testimony_emit" in src)

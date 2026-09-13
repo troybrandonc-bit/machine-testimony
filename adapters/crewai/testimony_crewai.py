@@ -88,6 +88,20 @@ UNTRUSTED = {"model", "plan", "request", "request-body", "prompt", "agent"}
 NEEDS_APPROVAL = ("high",)
 
 
+def _changed(was, now) -> str:
+    """Name the fields that moved, without printing the values.
+
+    The values are already in the record twice, as `proposed_arguments` and
+    `arguments`. Repeating them in prose invites the two to disagree, and a
+    summary that can contradict the thing it summarises is worse than none.
+    """
+    if not isinstance(was, dict) or not isinstance(now, dict):
+        return "arguments replaced"
+    keys = sorted(set(was or {}) | set(now or {}))
+    moved = [k for k in keys if (was or {}).get(k) != (now or {}).get(k)]
+    return ", ".join(moved) if moved else "arguments replaced"
+
+
 class NoDecision(Exception):
     """A gate that did not produce a decision. Never treated as permission."""
 
@@ -122,6 +136,36 @@ class Request:
                 "token, an operator console?" % identity_source)
         self._out = {"verdict": "permitted", "approver": dict(approver),
                      "identity_source": str(identity_source)}
+        return self
+
+    def modify(self, *, approver: dict, identity_source: str,
+               args: tuple | None = None, kwargs: dict | None = None,
+               reason: str = "") -> "Request":
+        """Change the arguments, then permit, and record that both happened.
+
+        The outcome a boolean cannot carry. A reviewer who rewrote a refund
+        amount and one who waved the original through are the same event to a
+        record that stores only whether the call proceeded, and Colorado's
+        proposed Rule 7.7 asks for the difference twice.
+
+        CrewAI itself has no way to express this: its `before_tool_call` hook
+        mutates the arguments in place and returns the same boolean an
+        unchanged approval returns, so the edit leaves no trace. That is
+        measured rather than asserted, at
+        machinetestimony.org/approval-binding/.
+        """
+        self.approve(approver=approver, identity_source=identity_source)
+        new_args = self.args if args is None else tuple(args)
+        new_kwargs = dict(self.kwargs if kwargs is None else kwargs)
+        if new_args == self.args and new_kwargs == self.kwargs:
+            raise Refused(
+                "modify() was given the arguments that were already proposed. "
+                "Nothing changed, so this is approve(), and recording it as a "
+                "modification would misdescribe the review.")
+        self._out.update({"disposition": "modified", "args": new_args,
+                          "kwargs": new_kwargs})
+        if str(reason).strip():
+            self._out["reason"] = str(reason)
         return self
 
     def refuse(self, reason: str) -> "Request":
@@ -226,6 +270,17 @@ class Recorder:
             return ("Refused: %s. This action was not taken, and the refusal "
                     "is on the record." % out["reason"])
 
+        # A modification replaces what runs, so what runs and what was proposed
+        # are both recorded. A record of an edit that does not say what was
+        # there before is a record of an approval with extra words.
+        modified = out.get("disposition") == "modified"
+        if modified:
+            args, kwargs = out["args"], out["kwargs"]
+            ran = {"args": list(args), **kwargs} if args else dict(kwargs)
+            extra = {"arguments": ran, "proposed_arguments": shown}
+        else:
+            extra = {"arguments": shown}
+
         # Recorded before the call, with executed False, so a tool that raises
         # leaves a record saying it was allowed and did not run, which is what
         # happened. Claiming execution before executing is how a receipt starts
@@ -233,11 +288,16 @@ class Recorder:
         did = self.rec.decision(
             action_type=action, risk_class=risk, risk_source=self.risk_source,
             proposed_by=dict(self.agent), verdict="permitted", executed=False,
-            arguments=shown)
+            **extra)
         if out.get("approver"):
-            aid = self.rec.approval(decision=did, approver=out["approver"],
-                                    identity_source=out["identity_source"],
-                                    method="crewai-tool-gate")
+            aid = self.rec.approval(
+                decision=did, approver=out["approver"],
+                identity_source=out["identity_source"],
+                method="crewai-tool-gate",
+                **({"disposition": "modified",
+                    "changed": _changed(shown, extra["arguments"])}
+                   if modified else {"disposition": "approved"}),
+                **({"reason": out["reason"]} if out.get("reason") else {}))
             for e in self.rec.entries:
                 if e["id"] == did:
                     e["approval"] = aid

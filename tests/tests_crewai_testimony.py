@@ -21,6 +21,7 @@ silent failure that still passes a smoke test, so it gets an assertion.
 Copyright 2026 Garnet Taurus Ltd. MIT licensed.
 """
 import io
+import json
 import os
 import sys
 import tempfile
@@ -206,6 +207,48 @@ def main():
         check("a record whose only decision was a refusal also validates",
               rep2.level == "TR-4",
               [c["check"] for c in rep2.checks if not c["ok"]])
+
+    # CrewAI's own before_tool_call hook mutates the arguments in place and
+    # returns the same boolean an unchanged approval returns, so an edit leaves
+    # no trace. This is the outcome that boolean cannot carry.
+    print("\na reviewer who edited the action is not one who waved it through")
+    edited = recorder(lambda q: q.modify(approver=HUMAN,
+                                         identity_source="auth-session",
+                                         kwargs={"customer": "c1", "amount": 20},
+                                         reason="capped to policy"))
+    out = edited.gate(Refund()).run(customer="c1", amount=500)
+    check("the tool runs with the reviewer's arguments, not the model's",
+          "20" in out and "500" not in out, out)
+    edited.rec.seal()
+    ents = [json.loads(l) for l in edited.rec.jsonl().strip().split("\n")]
+    dec = next(e for e in ents if e["type"] == "decision")
+    app = next(e for e in ents if e["type"] == "approval")
+    check("the decision records what actually ran",
+          dec["arguments"]["amount"] == 20, dec.get("arguments"))
+    check("and what was proposed, so the edit is legible",
+          dec["proposed_arguments"]["amount"] == 500,
+          dec.get("proposed_arguments"))
+    check("the approval says the reviewer modified rather than approved",
+          app.get("disposition") == "modified", app.get("disposition"))
+    check("and names the field that moved without restating its value",
+          app.get("changed") == "amount" and "500" not in str(app.get("changed")),
+          app.get("changed"))
+    check("the reference validator reads it back at TR-4",
+          tv.validate(edited.rec.jsonl()).level == "TR-4",
+          tv.validate(edited.rec.jsonl()).level)
+
+    # The failure this member exists to prevent, one layer up: calling it a
+    # modification when nothing moved would make the record say a review was
+    # more than it was.
+    same = recorder(lambda q: q.modify(approver=HUMAN,
+                                       identity_source="auth-session",
+                                       kwargs={"customer": "c1", "amount": 5}))
+    try:
+        same.gate(Refund()).run(customer="c1", amount=5)
+        check("modify() with unchanged arguments is refused", False)
+    except Exception as e:                                      # noqa: BLE001
+        check("modify() with unchanged arguments is refused",
+              "already proposed" in str(e), str(e)[:90])
 
     print("\nit needs nothing from OMEM")
     src = io.open(os.path.join(ROOT, "adapters", "crewai",

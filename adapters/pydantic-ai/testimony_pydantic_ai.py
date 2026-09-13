@@ -96,6 +96,20 @@ class NoDecision(Exception):
     """A gate that did not produce a decision. Never treated as permission."""
 
 
+def _changed(was, now) -> str:
+    """Name the fields that moved, without printing the values.
+
+    The values are already in the record twice, as `proposed_arguments` and
+    `arguments`. Repeating them in prose invites the two to disagree, and a
+    summary that can contradict the thing it summarises is worse than none.
+    """
+    if not isinstance(was, dict) or not isinstance(now, dict):
+        return "arguments replaced"
+    keys = sorted(set(was or {}) | set(now or {}))
+    moved = [k for k in keys if (was or {}).get(k) != (now or {}).get(k)]
+    return ", ".join(moved) if moved else "arguments replaced"
+
+
 class Request:
     """One tool call the framework has paused for, waiting on a person.
 
@@ -133,6 +147,36 @@ class Request:
         self._out = {"verdict": "permitted", "approver": dict(approver),
                      "identity_source": str(identity_source),
                      "arguments": arguments}
+        return self
+
+    def modify(self, *, approver: dict, identity_source: str,
+               arguments: Any, reason: str = "") -> "Request":
+        """Change the arguments, then permit, and record that both happened.
+
+        Pydantic AI is the one framework read here that already carries the
+        mechanism: `ToolApproved(override_args=...)` executes arguments the
+        approver supplied. What it does not carry is the distinction. The
+        message history keeps the model's original call, so a reviewer who
+        rewrote a refund amount and one who waved the original through leave
+        the same trace, which is pydantic-ai#6968 and is measured at
+        machinetestimony.org/approval-binding/.
+
+        So this records both: the decision carries what ran and what was
+        proposed, and the approval says `modified` and names the field.
+        """
+        self.approve(approver=approver, identity_source=identity_source,
+                     arguments=arguments)
+        if arguments is None:
+            raise Refused("modify() needs the arguments that will actually "
+                          "run. Passing none is approve().")
+        if _plain(arguments) == _plain(self.arguments):
+            raise Refused(
+                "modify() was given the arguments that were already proposed. "
+                "Nothing changed, so this is approve(), and recording it as a "
+                "modification would misdescribe the review.")
+        self._out["disposition"] = "modified"
+        if str(reason).strip():
+            self._out["reason"] = str(reason)
         return self
 
     def refuse(self, reason: str) -> "Request":
@@ -259,10 +303,15 @@ class Recorder:
                 proposed_arguments=(_plain(args) if allowed is not None else ""),
                 tool_call_id=call.tool_call_id)
             if d.get("approver"):
+                modified = d.get("disposition") == "modified"
                 aid = self.rec.approval(
                     decision=did, approver=d["approver"],
                     identity_source=d["identity_source"],
-                    method="pydantic-ai-deferred-approval")
+                    method="pydantic-ai-deferred-approval",
+                    **({"disposition": "modified",
+                        "changed": _changed(_plain(args), _plain(allowed))}
+                       if modified else {"disposition": "approved"}),
+                    **({"reason": d["reason"]} if d.get("reason") else {}))
                 for e in self.rec.entries:
                     if e["id"] == did:
                         e["approval"] = aid

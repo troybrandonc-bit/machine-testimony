@@ -126,6 +126,23 @@ class Request:
                      "identity_source": str(identity_source)}
         return self
 
+    # THERE IS NO modify() HERE, AND ITS ABSENCE IS THE FINDING.
+    #
+    # The other adapters let a reviewer change an action's arguments and then
+    # permit it, recording `disposition: modified` and what moved, because
+    # Colorado's proposed Rule 7.7 asks whether a reviewer approved, MODIFIED
+    # or overrode an output, and asks it twice.
+    #
+    # This SDK cannot do it. `RunState.approve(approval_item, always_approve)`
+    # takes no arguments to substitute: a tool call is approved as proposed or
+    # it is rejected. So a modify() here could only record that the arguments
+    # changed while the original ones executed, which is a false record, and
+    # a false record is worse than a missing feature. The honest position is
+    # that this framework has no modify path, which is what
+    # machinetestimony.org/approval-binding/ already reports about it.
+    #
+    # If the SDK gains argument substitution, this is the place for it.
+
     def refuse(self, reason: str) -> "Request":
         if not str(reason).strip():
             raise Refused("a refusal has to say why. A refusal with no reason "
@@ -239,9 +256,15 @@ class Recorder:
             verdict="permitted", executed=True,
             **({"arguments": shown} if shown is not None else {}))
         if out.get("approver"):
+            # `approved` is written rather than left absent. An approval with
+            # no disposition is the state this member exists to end: a reader
+            # cannot tell whether nothing changed or whether nobody recorded
+            # it. This SDK has no modify path, so the value here is always
+            # `approved`, and saying so is the claim.
             aid = self.rec.approval(decision=did, approver=out["approver"],
                                     identity_source=out["identity_source"],
-                                    method="openai-agents-approval")
+                                    method="openai-agents-approval",
+                                    disposition="approved")
             for e in self.rec.entries:
                 if e["id"] == did:
                     e["approval"] = aid

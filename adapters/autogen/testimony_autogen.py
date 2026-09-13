@@ -83,6 +83,20 @@ class NoDecision(Exception):
     """A gate that did not produce a decision. Never treated as permission."""
 
 
+def _changed(was, now) -> str:
+    """Name the fields that moved, without printing the values.
+
+    The values are already in the record twice, as `proposed_arguments` and
+    `arguments`. Repeating them in prose invites the two to disagree, and a
+    summary that can contradict the thing it summarises is worse than none.
+    """
+    if not isinstance(was, dict) or not isinstance(now, dict):
+        return "arguments replaced"
+    keys = sorted(set(was or {}) | set(now or {}))
+    moved = [k for k in keys if (was or {}).get(k) != (now or {}).get(k)]
+    return ", ".join(moved) if moved else "arguments replaced"
+
+
 class Request:
     """One tool call, waiting on a person.
 
@@ -113,6 +127,34 @@ class Request:
                 "token, an operator console?" % identity_source)
         self._out = {"verdict": "permitted", "approver": dict(approver),
                      "identity_source": str(identity_source)}
+        return self
+
+    def modify(self, *, approver: dict, identity_source: str,
+               arguments: dict, reason: str = "") -> "Request":
+        """Change the arguments, then permit, and record that both happened.
+
+        The outcome a boolean cannot carry. A reviewer who rewrote a refund
+        amount and one who waved the original through are the same event to a
+        record that stores only whether the call proceeded, and Colorado's
+        proposed Rule 7.7 asks for the difference twice.
+
+        AutoGen has no approval pause in core, so there is nothing here to
+        carry the distinction and nothing to lose it either. That is measured
+        rather than asserted, at machinetestimony.org/approval-binding/.
+        """
+        self.approve(approver=approver, identity_source=identity_source)
+        if not isinstance(arguments, dict):
+            raise Refused("modify() needs the arguments that will actually "
+                          "run, as a mapping")
+        if dict(arguments) == dict(self.arguments):
+            raise Refused(
+                "modify() was given the arguments that were already proposed. "
+                "Nothing changed, so this is approve(), and recording it as a "
+                "modification would misdescribe the review.")
+        self._out.update({"disposition": "modified",
+                          "arguments": dict(arguments)})
+        if str(reason).strip():
+            self._out["reason"] = str(reason)
         return self
 
     def refuse(self, reason: str) -> "Request":
@@ -202,14 +244,29 @@ class Recorder:
         # Recorded before the call with executed False, so a tool that raises
         # leaves a record saying it was allowed and did not run, which is what
         # happened.
+        # A modification replaces what runs, so what runs and what was proposed
+        # are both recorded. A record of an edit that does not say what was
+        # there before is a record of an approval with extra words.
+        modified = out.get("disposition") == "modified"
+        if modified:
+            arguments = dict(out["arguments"])
+            extra = {"arguments": dict(arguments), "proposed_arguments": shown}
+        else:
+            extra = {"arguments": shown}
+
         did = self.rec.decision(
             action_type=name, risk_class=risk, risk_source=self.risk_source,
             proposed_by=dict(self.agent), verdict="permitted", executed=False,
-            arguments=shown)
+            **extra)
         if out.get("approver"):
-            aid = self.rec.approval(decision=did, approver=out["approver"],
-                                    identity_source=out["identity_source"],
-                                    method="autogen-workbench-gate")
+            aid = self.rec.approval(
+                decision=did, approver=out["approver"],
+                identity_source=out["identity_source"],
+                method="autogen-workbench-gate",
+                **({"disposition": "modified",
+                    "changed": _changed(shown, extra["arguments"])}
+                   if modified else {"disposition": "approved"}),
+                **({"reason": out["reason"]} if out.get("reason") else {}))
             for e in self.rec.entries:
                 if e["id"] == did:
                     e["approval"] = aid

@@ -207,6 +207,44 @@ async def main():
               rep2.level == "TR-4",
               [c["check"] for c in rep2.checks if not c["ok"]])
 
+    # AutoGen has no approval pause in core, so this distinction has nowhere
+    # to live there and nothing to lose it. The adapter supplies both.
+    print("\na reviewer who edited the action is not one who waved it through")
+    CALLS.clear()
+    edited = recorder(lambda q: q.modify(
+        approver=HUMAN, identity_source="auth-session",
+        arguments={"customer": "8842", "amount": 20}, reason="capped to policy"))
+    we = edited.gate(bench())
+    await we.call_tool("issue_refund", {"customer": "8842", "amount": 4200})
+    check("the tool runs with the reviewer's arguments, not the model's",
+          CALLS == [("issue_refund", "8842", 20)], CALLS)
+    ee = edited.entries()
+    de = [e for e in ee if e["type"] == "decision"][-1]
+    ae = [e for e in ee if e["type"] == "approval"][-1]
+    check("the decision records what actually ran",
+          de["arguments"]["amount"] == 20, de.get("arguments"))
+    check("and what was proposed, so the edit is legible",
+          de["proposed_arguments"]["amount"] == 4200,
+          de.get("proposed_arguments"))
+    check("the approval says the reviewer modified rather than approved",
+          ae.get("disposition") == "modified", ae.get("disposition"))
+    check("and names the field that moved without restating its value",
+          ae.get("changed") == "amount", ae.get("changed"))
+    check("the reference validator reads it back at TR-3 or better",
+          tv.validate(edited.jsonl()).level in ("TR-3", "TR-4"),
+          tv.validate(edited.jsonl()).level)
+
+    same = recorder(lambda q: q.modify(
+        approver=HUMAN, identity_source="auth-session",
+        arguments={"customer": "8842", "amount": 4200}))
+    try:
+        await same.gate(bench()).call_tool(
+            "issue_refund", {"customer": "8842", "amount": 4200})
+        check("modify() with unchanged arguments is refused", False)
+    except Exception as e:                                      # noqa: BLE001
+        check("modify() with unchanged arguments is refused",
+              "already proposed" in str(e), str(e)[:90])
+
     print("\nit needs nothing from OMEM")
     src = io.open(os.path.join(ROOT, "adapters", "autogen",
                                "testimony_autogen.py"), encoding="utf-8").read()
