@@ -1502,6 +1502,71 @@ def main():
         check("/united-kingdom/ and both its sources are committed", False,
               [x for x in (uk_page_p, duaa, ico) if not os.path.exists(x)])
 
+    print("")
+    print("/south-korea/ is Article 34, read against the same eight words")
+
+    kr_page_p = os.path.join(PUB, "south-korea", "index.html")
+    kr_src = os.path.join(ROOT, "census", "sources", "kr-ai-basic-act.txt")
+    if os.path.exists(kr_page_p) and os.path.exists(kr_src):
+        kr = io.open(kr_page_p, encoding="utf-8").read()
+        flat_kr = " ".join(kr.split())
+        k = _re.sub(r"\s+", " ", io.open(kr_src, encoding="utf-8").read())
+
+        absent = []
+        for word in ("record", "records", "log", "logs", "logging", "audit",
+                     "retain", "retention"):
+            if _re.search(r"\b" + word + r"\b", k, _re.I):
+                absent.append(word)
+            if word not in flat_kr:
+                absent.append("page omits " + word)
+        check("the Act contains none of the eight words, and the page names "
+              "all eight", not absent, absent)
+
+        for q, on_page in (
+                ("Human management and supervision of high-impact AI", True),
+                ("Preparation and storage of documents that demonstrate "
+                 "measures taken to ensure AI safety and reliability", True),
+                ("To the extent that it is technically feasible", True),
+                ("they shall be deemed to have implemented the measures",
+                 True),
+                # A citation the reading rests on, not a sentence the page
+                # quotes verbatim: the page names the article by number.
+                ("Article 34 (High-Impact AI Business Operators' "
+                 "Responsibilities)", False)):
+            check("Korea source actually contains %r" % q[:44], q in k)
+            if not on_page:
+                continue
+            # A quotation on the page has its curly quotes and apostrophe
+            # rendered as HTML entities and can open mid-sentence (lower
+            # case where the source has upper), so match the first few
+            # content words case-insensitively rather than verbatim.
+            words_only = q.replace("'", "").strip(".")
+            check("and the page quotes it (word match)",
+                  all(w.lower() in flat_kr.lower()
+                      for w in words_only.split()[:6]))
+
+        check("the page states the finding: nothing connects items 4 and 5",
+              "nothing connects them" in flat_kr)
+        check("the page discloses what it did not read",
+              "Presidential Decree No." in flat_kr
+              and "not established" in flat_kr)
+        check("and does not overstate the secondary summaries as the Act's "
+              "own text",
+              "stronger terms than the enacted text itself" in flat_kr)
+
+        # The cross-instrument count is a claim about the private instrument
+        # library, which this public test suite does not otherwise depend on.
+        # Checked as a literal against the text written when this page was
+        # built rather than against that library at test time, the same way
+        # other cross-instrument counts on this site are held: a human has to
+        # revisit the sentence when the count changes, rather than the test
+        # reaching into a sibling repository to recompute it.
+        check("the page states the cross-instrument count it was written "
+              "against", "Twelve of twenty instruments" in flat_kr)
+    else:
+        check("/south-korea/ and its source are committed", False,
+              [x for x in (kr_page_p, kr_src) if not os.path.exists(x)])
+
     # The operating company was renamed and every page rebuilt except the two
     # excluded from the rebuild because they are deposited. /papers/wp1/ kept
     # the old name on a live page for days, and nothing here noticed, because

@@ -1,0 +1,884 @@
+<!doctype html>
+<!--[if lte IE 8 ]><html lang="en" class="ie8"><![endif]-->
+<!--[if lte IE 9 ]><html lang="en" class="ie9"><![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!-->
+<html lang="en">
+<head prefix="og: http://ogp.me/ns#">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, width=device-width">
+    <title>What are the ADM safeguards? | ICO</title>
+    
+
+<meta name="DC.Subject" content="What are the ADM safeguards?" />
+<meta name="DC.Date" content="Tuesday, June 16, 2026" />
+<meta name="DC.Creator" content="" />
+<meta name="DC.Publisher" content="ICO" />
+<meta name="DC.Title" content="What are the ADM safeguards?" />
+<meta name="DC.PageID" content="86205" />
+
+<meta property="og:title" content="What are the ADM safeguards?" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/individual-rights/automated-decision-making/what-are-the-adm-safeguards/" />
+<meta property="og:description" content="" />
+<meta property="og:image" content="" />
+
+<meta name="twitter:title" content="What are the ADM safeguards?" />
+<meta name="twitter:description" content="" />
+
+<meta name="description" content="" />
+
+
+    
+
+<meta name="robots" content="noindex" />
+
+    <link rel="shortcut icon" type="image/x-icon" href="/media2/lhphq55z/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="/css/site.css?v=Ka9PWZQ0qc4sZ2HcqAAIyoaxGNtwgcaUgR5myolazNs" />
+    
+    
+</head>
+<body id="top" class="bg-white min-h-screen ">
+    
+
+    <a class="flex items-center justify-center px-3 py-2 bg-secondary text-white text-xl sr-only focus:relative focus:w-full focus:h-fit" href="#main-content">
+        <span class="font-serif text-serif-base pr-2">Skip to main content</span>
+        <span class="icon icon-arrow-down"></span>
+    </a>
+    <header class="sticky top-0 md:static z-10 md:z-auto print:hidden">
+        <div class="bg-primary">
+            <div class="lg:container px-4 py-3.5 md:flex">
+                <div class="md:pr-8">
+                    
+    <a href="/">
+            <img src="/media2/qkcg1rdf/logo-small.svg?width=80&amp;height=32&amp;v=1db03b868bf60c0" width="80" height="32" alt="" class="inline-block md:hidden" />
+            <img src="/media2/myukqaa2/ico-header-logo.svg?width=160&amp;height=96&amp;v=1db03b866f17e90" width="160" height="96" alt="" class="hidden md:inline-block" />
+        <span class="sr-only">Home</span>
+    </a>
+
+                </div>
+                <div class="grow items-stretch hidden md:flex">
+                    
+    <div class="font-serif text-center md:text-left text-white text-serif-base md:flex items-end md:pl-8 border-secondary border-dotted md:border-l-2">
+        <span>The ICO exists to empower you through information.</span>
+    </div>
+
+                </div>
+                <div class="flex flex-col items-end md:pl-8">
+                    
+
+
+
+    <script type="application/json" id="language-settings">
+        {"cookieDomain":"ico.org.uk","options":[{"text":"English","href":"https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/individual-rights/automated-decision-making/what-are-the-adm-safeguards/","icon":"icon-lang-en","value":"English"},{"text":"Cymraeg","href":"https://cy.ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/individual-rights/automated-decision-making/what-are-the-adm-safeguards/","icon":"icon-lang-cy","value":"Welsh"}]}
+    </script>
+    <div id="language-toggle"></div>
+
+                    <div class="grow flex items-end">
+                        
+
+
+<button type="button" id="search-toggle" class="absolute rounded-sm p-2 top-3 right-12 md:hidden hover:bg-secondary" aria-controls="search">
+    <span id="search-icon" class="block icon icon-search text-white text-xl"></span>
+    <span class="sr-only">Search</span>
+</button>
+
+<div id="search" class="motion-safe:transition-all motion-safe:duration-200 hidden md:block w-full sm:w-fit max-h-0 md:max-h-fit overflow-hidden md:overflow-auto">
+    <form action="https://icosearch.ico.org.uk/s/search.html" method="GET" id="search-form" class="pt-3.5 md:pt-0">
+
+                <input type="hidden" name="collection" value="ico~sp-search" />
+                <input type="hidden" name="profile" value="_default" />
+
+        <div class="flex">
+            <label for="search-query" aria-hidden="false" class="sr-only">Search</label>
+            <input type="search"
+                   name="query"
+                   id="search-query"
+                   class="grow min-w-0 px-2 py-1 border-t border-b border-l border-r-0 border-white/50 focus:border-white focus:ring-0 rounded-l bg-secondary motion-safe:transition-colors hocus:bg-white text-white hocus:text-black sm:w-60 md:w-48" />
+            <button type="submit" class="text-transparent bg-secondary rounded-r p-2 border-t border-b border-r border-white/50">
+                <span class="block text-white text-xl icon icon-search"></span>
+                <span class="sr-only">Search</span>
+            </button>
+        </div>
+    </form>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bg-secondary">
+            <div class="lg:container md:px-4">
+                
+
+    <button type="button" id="navbar-toggle" class="absolute rounded-sm p-2 top-3 right-3 md:hidden hover:bg-secondary" aria-controls="navbar">
+        <span class="block icon icon-menu text-white text-xl"></span>
+        <span class="sr-only">Menu</span>
+    </button>
+    <nav id="navbar" class="bg-secondary motion-safe:transition-all motion-safe:duration-200 hidden md:block max-h-0 md:max-h-fit overflow-hidden md:overflow-auto">
+        <ul class="border-primary border-dotted border-t-2 md:border-t-0 md:flex md:flex-wrap">
+                    <li class="md:flex">
+                        <a href="/"
+                           class="relative flex justify-between items-center text-white text-serif-lg md:text-base whitespace-nowrap md:whitespace-normal pl-9 md:pl-3 pr-4 md:pr-3 py-2 md:py-1 font-serif md:font-sans before:absolute before:w-2.5 before:top-2 before:bottom-2 before:left-4 md:before:hidden md:border-y-5 md:border-transparent before:bg-theme-grey md:hover:border-t-theme-grey">
+                            <span>Home</span>
+                            <span class="icon icon-arrow-right text-xl md:hidden"></span>
+                        </a>
+                    </li>
+                    <li class="md:flex">
+                        <a href="/for-the-public/"
+                           class="relative flex justify-between items-center text-white text-serif-lg md:text-base whitespace-nowrap md:whitespace-normal pl-9 md:pl-3 pr-4 md:pr-3 py-2 md:py-1 font-serif md:font-sans before:absolute before:w-2.5 before:top-2 before:bottom-2 before:left-4 md:before:hidden md:border-y-5 md:border-transparent before:bg-theme-green md:hover:border-t-theme-green">
+                            <span>For the public</span>
+                            <span class="icon icon-arrow-right text-xl md:hidden"></span>
+                        </a>
+                    </li>
+                    <li class="md:flex">
+                        <a href="/for-organisations/"
+                           class="relative flex justify-between items-center text-white text-serif-lg md:text-base whitespace-nowrap md:whitespace-normal pl-9 md:pl-3 pr-4 md:pr-3 py-2 md:py-1 font-serif md:font-sans before:absolute before:w-2.5 before:top-2 before:bottom-2 before:left-4 md:before:hidden md:border-y-5 md:border-transparent before:bg-theme-yellow md:hover:border-t-theme-yellow bg-primary md:border-t-theme-yellow">
+                            <span>For organisations</span>
+                            <span class="icon icon-arrow-right text-xl md:hidden"></span>
+                        </a>
+                    </li>
+                    <li class="md:flex">
+                        <a href="/make-a-complaint/"
+                           class="relative flex justify-between items-center text-white text-serif-lg md:text-base whitespace-nowrap md:whitespace-normal pl-9 md:pl-3 pr-4 md:pr-3 py-2 md:py-1 font-serif md:font-sans before:absolute before:w-2.5 before:top-2 before:bottom-2 before:left-4 md:before:hidden md:border-y-5 md:border-transparent before:bg-theme-orange md:hover:border-t-theme-orange">
+                            <span>Make a complaint</span>
+                            <span class="icon icon-arrow-right text-xl md:hidden"></span>
+                        </a>
+                    </li>
+                    <li class="md:flex">
+                        <a href="/action-weve-taken/"
+                           class="relative flex justify-between items-center text-white text-serif-lg md:text-base whitespace-nowrap md:whitespace-normal pl-9 md:pl-3 pr-4 md:pr-3 py-2 md:py-1 font-serif md:font-sans before:absolute before:w-2.5 before:top-2 before:bottom-2 before:left-4 md:before:hidden md:border-y-5 md:border-transparent before:bg-theme-red md:hover:border-t-theme-red">
+                            <span>Action we&#x27;ve taken</span>
+                            <span class="icon icon-arrow-right text-xl md:hidden"></span>
+                        </a>
+                    </li>
+                    <li class="md:flex">
+                        <a href="/about-the-ico/"
+                           class="relative flex justify-between items-center text-white text-serif-lg md:text-base whitespace-nowrap md:whitespace-normal pl-9 md:pl-3 pr-4 md:pr-3 py-2 md:py-1 font-serif md:font-sans before:absolute before:w-2.5 before:top-2 before:bottom-2 before:left-4 md:before:hidden md:border-y-5 md:border-transparent before:bg-theme-blue md:hover:border-t-theme-blue">
+                            <span>About the ICO</span>
+                            <span class="icon icon-arrow-right text-xl md:hidden"></span>
+                        </a>
+                    </li>
+        </ul>
+    </nav>
+
+            </div>
+        </div>
+    </header>
+    <main id="main-content" class="pt-20 md:pt-0 md:mt-7 mb-3 md:mb-4">
+            <div class="lg:container px-4 mb-4 print:hidden">
+                
+    <nav aria-label="breadcrumb">
+        <ul class="flex flex-wrap text-sm gap-1">
+                <li>
+                        <span class="after:content-['/'] after:mx-1">
+                            <a href="/for-organisations/" class="my-[-0.5em] py-[0.5em] text-link hover:underline">For organisations</a>
+                        </span>
+                </li>
+                <li>
+                        <span class="after:content-['/'] after:mx-1">
+                            <a href="/for-organisations/uk-gdpr-guidance-and-resources/" class="my-[-0.5em] py-[0.5em] text-link hover:underline">UK GDPR guidance and resources</a>
+                        </span>
+                </li>
+                <li>
+                        <span class="after:content-['/'] after:mx-1">
+                            <a href="/for-organisations/uk-gdpr-guidance-and-resources/individual-rights/" class="my-[-0.5em] py-[0.5em] text-link hover:underline">Individual rights - guidance and resources</a>
+                        </span>
+                </li>
+                <li>
+                        <span class="after:content-['/'] after:mx-1">
+                            <a href="/for-organisations/uk-gdpr-guidance-and-resources/individual-rights/automated-decision-making/" class="my-[-0.5em] py-[0.5em] text-link hover:underline">Automated decision-making, including profiling</a>
+                        </span>
+                </li>
+                <li>
+                        <span class="my-[-0.5em] py-[0.5em]">What are the ADM safeguards?</span>
+                </li>
+        </ul>
+    </nav>
+
+            </div>
+        <div class="lg:container px-4">
+                <div class="border-dotted border-b-2 border-neutral-200 pb-2 sm:pb-3.5 md:pb-6 mb-2 sm:mb-3.5 md:mb-5">
+                    <div class="md:flex md:items-center md:justify-between md:gap-10">
+                        <h1 class="py-0.5 font-serif leading-none sm:border-l-10 sm:pl-3 text-serif-2xl sm:text-serif-3xl border-theme-yellow">What are the ADM safeguards?</h1>
+                            
+<div class="mt-2 md:mt-0 print:hidden">
+    <button type="button" id="download-toggle" class="flex items-center gap-3 group">
+        <span>
+            <span class="font-serif text-serif-base text-link whitespace-nowrap group-hover:underline group-hover:decoration-1 group-hover:underline-offset-4">Download options</span>
+            <span class="sr-only">(Opens download panel)</span>
+        </span>
+        <i class="icon icon-download text-base text-white bg-pink-600 rounded-full p-1"></i>
+    </button>
+</div>
+
+                    </div>
+                        
+<div class="bg-pink-600 mt-5 rounded-lg motion-safe:transition-all motion-safe:duration-200 overflow-hidden max-h-0 hidden" id="download-panel">
+    <form method="post" action="/for-organisations/uk-gdpr-guidance-and-resources/individual-rights/automated-decision-making/what-are-the-adm-safeguards/" class="p-3 flex flex-col md:flex-row md:items-center md:justify-between gap-5">
+
+
+            <div class="flex flex-col md:flex-row md:items-center gap-5 md:gap-10 text-white">
+                    <fieldset class="flex items-center gap-5">
+                        <legend class="contents font-bold font-serif text-serif-base">Pages</legend>
+                        <ul class="flex gap-2">
+                                <li>
+                                    <input type="radio" id="download-Page-all" name="Page" value="all" class="hidden peer" checked="">
+                                    <label for="download-Page-all" class="cursor-pointer rounded-sm px-3 py-2 flex items-center gap-2 peer-checked:bg-pink-700">
+                                        <i class="icon icon-book text-base md:text-lg"></i>
+                                        <span class="text-sm md:text-base">All pages</span>
+                                    </label>
+                                </li>
+                                <li>
+                                    <input type="radio" id="download-Page-single" name="Page" value="single" class="hidden peer">
+                                    <label for="download-Page-single" class="cursor-pointer rounded-sm px-3 py-2 flex items-center gap-2 peer-checked:bg-pink-700">
+                                        <i class="icon icon-file-blank text-base md:text-lg"></i>
+                                        <span class="text-sm md:text-base">This page</span>
+                                    </label>
+                                </li>
+                        </ul>
+                    </fieldset>
+                    <fieldset class="flex items-center gap-5">
+                        <legend class="contents font-bold font-serif text-serif-base">Format</legend>
+                        <ul class="flex gap-2">
+                                <li>
+                                    <input type="radio" id="download-format-pdf" name="format" value="pdf" class="hidden peer" checked="">
+                                    <label for="download-format-pdf" class="cursor-pointer rounded-sm px-3 py-2 flex items-center gap-2 peer-checked:bg-pink-700">
+                                        <i class="icon icon-file-pdf text-base md:text-lg"></i>
+                                        <span class="text-sm md:text-base">PDF</span>
+                                    </label>
+                                </li>
+                        </ul>
+                    </fieldset>
+            </div>
+
+        <div>
+            <button class="btn btn-primary md:btn-lg icon-download" type="submit">
+                Download
+            </button>
+        </div>
+
+    </form>
+</div>
+
+                </div>
+            
+
+            
+<div class="grid grid-cols-4">
+
+
+<div class="col-span-4 md:hidden border-b-2 border-dotted border-neutral-200 flex justify-between pb-2 mb-4 cursor-pointer print:hidden" id="multipage-nav-toggle">
+    <p class="text-sm text-primary justify-start">Contents</p>
+    <div class="justify-end">
+        <span class="icon icon-search text-primary" id="multipage-search-button"></span>
+        <span class="icon icon-pointer-down text-primary"></span>
+    </div>
+</div>
+
+<aside class="col-span-4 md:col-span-1 hidden md:block motion-safe:transition-all motion-safe:duration-200 overflow-hidden md:overflow-auto max-h-0 md:max-h-fit mb-6 md:mb-0" id="multipage-nav">
+    <form id="multipage-search" class="mb-3" method="get">
+        <label for="multipage-search-input" class="font-serif">Search this document</label>
+        <div class="flex mt-2">
+            <input type="search"
+                   name="search"
+                   value=""
+                   class="w-full py-2 px-2 text-sm bg-slate-100 border-r-0"
+                   id="multipage-search-input"/>
+            <button type="submit"
+                    title="Search"
+                    aria-hidden="false"
+                    aria-label="Search"
+                    class="icon icon-search px-2 bg-slate-100 border border-solid border-l-0 border-slate-700">
+            </button>
+        </div>
+    </form>
+    <nav>
+        
+<ul>
+    <li>
+        <div class="mb-2 pb-2 border-b-2 border-dotted border-neutral-200">
+            <a href="/for-organisations/uk-gdpr-guidance-and-resources/individual-rights/automated-decision-making/"
+               class="pt-2 pr-2 pb-2 flex justify-between text-sm border-l-4 border-solid text-link border-transparent hover:border-neutral-200 hover:bg-neutral-100 pl-[10px]"
+               data-id="85875">
+                <span>Automated decision-making, including profiling</span>
+            </a>
+        </div>
+
+<ul>
+    <li>
+        <div>
+            <a href="/for-organisations/uk-gdpr-guidance-and-resources/individual-rights/automated-decision-making/what-is-adm/"
+               class="pt-2 pr-2 pb-2 flex justify-between text-sm border-l-4 border-solid text-link border-transparent hover:border-neutral-200 hover:bg-neutral-100 pl-[10px]"
+               data-id="85881">
+                <span>What is ADM?</span>
+            </a>
+        </div>
+    </li>
+</ul>
+
+<ul>
+    <li>
+        <div>
+            <a href="/for-organisations/uk-gdpr-guidance-and-resources/individual-rights/automated-decision-making/what-does-the-uk-gdpr-say-about-adm/"
+               class="pt-2 pr-2 pb-2 flex justify-between text-sm border-l-4 border-solid text-link border-transparent hover:border-neutral-200 hover:bg-neutral-100 pl-[10px]"
+               data-id="85886">
+                <span>What does the UK GDPR say about ADM?</span>
+            </a>
+        </div>
+    </li>
+</ul>
+
+<ul>
+    <li>
+        <div>
+            <a href="/for-organisations/uk-gdpr-guidance-and-resources/individual-rights/automated-decision-making/how-do-we-carry-out-adm-lawfully/"
+               class="pt-2 pr-2 pb-2 flex justify-between text-sm border-l-4 border-solid text-link border-transparent hover:border-neutral-200 hover:bg-neutral-100 pl-[10px]"
+               data-id="85913">
+                <span>How do we carry out ADM lawfully?</span>
+            </a>
+        </div>
+    </li>
+</ul>
+
+<ul>
+    <li>
+        <div>
+            <a href="/for-organisations/uk-gdpr-guidance-and-resources/individual-rights/automated-decision-making/when-can-we-use-special-category-data-in-our-adm/"
+               class="pt-2 pr-2 pb-2 flex justify-between text-sm border-l-4 border-solid text-link border-transparent hover:border-neutral-200 hover:bg-neutral-100 pl-[10px]"
+               data-id="86204">
+                <span>When can we use special category data in our ADM?</span>
+            </a>
+        </div>
+    </li>
+</ul>
+
+<ul>
+    <li>
+        <div>
+            <a href="/for-organisations/uk-gdpr-guidance-and-resources/individual-rights/automated-decision-making/what-are-the-adm-safeguards/"
+               class="pt-2 pr-2 pb-2 flex justify-between text-sm border-l-4 border-solid bg-neutral-100 text-neutral-600 border-theme-yellow pl-[10px]"
+               data-id="86205">
+                <span>What are the ADM safeguards?</span>
+            </a>
+        </div>
+    </li>
+</ul>
+
+<ul>
+    <li>
+        <div>
+            <a href="/for-organisations/uk-gdpr-guidance-and-resources/individual-rights/automated-decision-making/what-rights-do-people-have/"
+               class="pt-2 pr-2 pb-2 flex justify-between text-sm border-l-4 border-solid text-link border-transparent hover:border-neutral-200 hover:bg-neutral-100 pl-[10px]"
+               data-id="86206">
+                <span>What rights do people have?</span>
+            </a>
+        </div>
+    </li>
+</ul>
+
+<ul>
+    <li>
+        <div>
+            <a href="/for-organisations/uk-gdpr-guidance-and-resources/individual-rights/automated-decision-making/what-else-do-we-need-to-consider/"
+               class="pt-2 pr-2 pb-2 flex justify-between text-sm border-l-4 border-solid text-link border-transparent hover:border-neutral-200 hover:bg-neutral-100 pl-[10px]"
+               data-id="86207">
+                <span>What else do we need to consider?</span>
+            </a>
+        </div>
+    </li>
+</ul>
+    </li>
+</ul>
+
+    </nav>
+</aside>
+    <div class="col-span-4 md:col-span-3 md:pl-10">
+            <div class="mb-10">
+                
+<div class="umb-block-grid"
+     data-grid-columns="12;"
+     style="--umb-block-grid--grid-columns: 12;">
+    
+
+<div class="umb-block-grid__layout-container">
+        <div class="umb-block-grid__layout-item"
+             data-content-element-type-alias="detailsBlock"
+             data-content-element-type-key="86269f89-de24-4579-bb82-a384f2ebac89"
+             data-element-udi="umb://element/189c027cb728448ebd8549ab2646d257"
+             data-col-span="12"
+             data-row-span="1"
+             style=" --umb-block-grid--item-column-span: 12; --umb-block-grid--item-row-span: 1; ">
+
+<span class="hidden" id="3bd76577-e955-4a33-b53b-f3059262badb">Click to toggle details</span>
+
+<div class="prose prose-theme-yellow">
+    <details>
+        <summary aria-describedby="3bd76577-e955-4a33-b53b-f3059262badb">Latest updates - 31 March 2026</summary>
+        <div>
+            <p><strong>31 March 2026 - </strong>We have updated this draft guidance to reflect changes to the UK GDPR following the Data (Use and Access) Act 2025 (DUAA).</p>
+<ul>
+<li>We’ve added content about how you can determine whether the processing you undertake falls within the scope of the UK GDPR’s article 22A provisions that relate to solely automated decisions with significant effects. We use the short-hand automated decision-making (ADM) across this guidance when we refer to this kind of processing.</li>
+<li>We’ve also clarified when your ability to undertake ADM has certain restrictions and what conditions you must satisfy in these cases.</li>
+<li>We’ve created a new section about the safeguards you must put in place, as well as the rights people have about the ADM that affects them.</li>
+</ul>
+        </div>
+    </details>
+</div>
+        </div>
+        <div class="umb-block-grid__layout-item"
+             data-content-element-type-alias="richTextBlock"
+             data-content-element-type-key="d7ec1d8a-2a00-439e-95b4-9f3537f5ece4"
+             data-element-udi="umb://element/37acfaa9fa8c429383188c006ad2f0b8"
+             data-col-span="12"
+             data-row-span="1"
+             style=" --umb-block-grid--item-column-span: 12; --umb-block-grid--item-row-span: 1; ">
+
+<div class="rich-text">
+    <div class="prose prose-theme-yellow">
+        <h2>In detail</h2>
+<ul>
+<li><a href="#Safeguards" data-anchor="#safeguards">What are the safeguards in the ADM provisions?</a></li>
+<li><a href="#InformationAboutDecisions" data-anchor="#InformationAboutDecisions">What ‘information about decisions’ do we have to provide?</a></li>
+<li><a href="#Representations" data-anchor="#Representations">How do we enable people to make representations?</a></li>
+<li><a href="#HumanIntervention" data-anchor="#HumanIntervention">What is ‘human intervention’?</a></li>
+<li><a href="#Contest" data-anchor="#Contest">How do we enable people to contest decisions?</a></li>
+<li><a href="#Rights" data-anchor="#Rights">What do we do if someone exercises their rights under the ADM provisions?</a></li>
+</ul>
+<h3><a id="Safeguards"></a>What are the safeguards in the ADM provisions?</h3>
+<p>Article 22C of the UK GDPR says that for ADM, you <strong>must</strong>:</p>
+<blockquote>
+<p>“…ensure that safeguards for the data subject’s rights, freedoms and legitimate interests are in place which comply with paragraph 2 and any regulations under Article 22D(3)”</p>
+<p>“The safeguards must consist of or include measures which—</p>
+<p>(a) provide the data subject with information about decisions described in paragraph 1 taken in relation to the data subject;</p>
+<p>(b) enable the data subject to make representations about such decisions;</p>
+<p>(c) enable the data subject to obtain human intervention on the part of the controller in relation to such decisions;</p>
+<p>(d) enable the data subject to contest such decisions.”</p>
+</blockquote>
+<p>These safeguards work to ensure that your ADM processes are fair, lawful and transparent. This also enables people to have the necessary context to decide whether they want to request human intervention or challenge the decision. You <strong>must</strong> apply the safeguards consistently rather than on an ad hoc discretionary basis.&nbsp;</p>
+<h3><a id="InformationAboutDecisions"></a>What ‘information about decisions’ do we have to provide?</h3>
+<p>You <strong>must</strong> provide the person with information about all ADM you carry out about them.&nbsp;</p>
+<p>This means you <strong>must</strong> explain all ADM to give people an understanding of how you reached the decision. This is decision-specific information about the actual outcome, rather than simply repeating information you provide in your privacy notice about how the system arrives at its decisions and its potential consequences.</p>
+<p>This safeguard is distinct from the right to be informed. Its main objective is to empower the person who has been affected by the ADM to meaningfully understand the decision and the specific aspects of their case that influenced it. This understanding is fundamental to them making an informed decision about whether they want to exercise their other rights under the safeguards, such as contesting the decision or obtaining human intervention.</p>
+<p>What ‘information about decisions’ looks like – its format, detail and scope - depends on the context. This context may include the:&nbsp;</p>
+<ul>
+<li>nature of the decisions you make;</li>
+<li>circumstances in which you make them;</li>
+<li>systems you use to do so; and</li>
+<li>specific person affected by them.&nbsp;</li>
+</ul>
+<p>For example, for ADM about a loan, a person might need details about what data was processed, what timeframe it covered, what the system decided, what risk factors the system identified. Only then would they be in a position to challenge the decision.</p>
+<p>If the information you provide is incomplete or unclear, people may feel they need to exercise those rights unnecessarily, which can create additional work for you. Clear, transparent explanations help people make informed choices and reduce avoidable burdens on your organisation.</p>
+<p>You <strong>must</strong> ensure your information:&nbsp;</p>
+<ul>
+<li>is clear and accessible;</li>
+<li>helps people understand the decision you made;</li>
+<li>explains how you reached it; and</li>
+<li>tells them what its actual impact is.</li>
+</ul>
+<p>You <strong>should</strong> include in your information aspects such as:</p>
+<ul>
+<li>which factors contributed to the decision;</li>
+<li>whether profiling was involved;</li>
+<li>whether data from a third-party controller influenced the decision.</li>
+</ul>
+<p>If someone is unhappy with the ADM you’ve carried out about them, they have the right to make representations about that decision, obtain human intervention, or contest that decision. You <strong>must</strong> explain how they can do this. You <strong>should</strong> do this at the point you provide the decision.&nbsp;</p>
+<p>You <strong>should</strong> include an explanation of how and why you reached the decision about the specific person, and the impact on them. You must understand the underlying rules that apply to your ADM or factors that have influenced it, so you are able to explain these to people.&nbsp;</p>
+<p>You <strong>must</strong> provide a concise explanation for the rationale behind the decision about the specific person. You <strong>should</strong> also be able to verify the ADM results to assist with this.&nbsp;</p>
+<p>You <strong>should</strong> use a system that is able to deliver an audit trail showing the key decision points that formed the basis for the decision or the factors that were considered at those decision points. If your system considered any alternatives, you <strong>should</strong> understand why these were not preferred. These details help you demonstrate accountability and allow people to understand and, if necessary, challenge the decision.</p>
+<div class="rt-block rt-green">
+<p><strong>Further reading – ICO guidance</strong></p>
+<p><a href="/for-organisations/uk-gdpr-guidance-and-resources/artificial-intelligence/explaining-decisions-made-with-artificial-intelligence/" title="Explaining decisions made with Artificial Intelligence">Explaining decisions made with AI</a></p>
+</div>
+<h3><a id="Representations"></a>How do we enable people to make representations?</h3>
+<p>Under the ADM provisions, you <strong>must</strong> enable people to make representations about the decisions you made about them. This means you <strong>must</strong> give them the opportunity to put forward their point of view about the decision you made. This includes giving them the chance to produce any additional information you may have missed.&nbsp;</p>
+<p>You <strong>must</strong> make it clear to people that they have this right.&nbsp;</p>
+<p>You <strong>should</strong> focus on helping people make representations about decisions easily and quickly. If you provide the right information upfront, it increases the chances that any representations they make will be relevant and targeted. This ultimately helps you operate the other safeguards more efficiently.&nbsp;</p>
+<p>How you do this depends on your particular context, including:</p>
+<ul>
+<li>who you are and the nature of your organisation;</li>
+<li>what you do, including the types of services or functions you provide;</li>
+<li>your relationship with the person you are carrying out ADM on;</li>
+<li>the types of decisions involved and their complexity;</li>
+<li>the impact of those decisions on the person;</li>
+<li>what extent people will be able to effectively reverse or mitigate the impacts of your decisions within a certain timeframe; and</li>
+<li>the characteristics and needs of the people you make such decisions about.</li>
+</ul>
+<h3><a id="HumanIntervention"></a>What is ‘human intervention’?</h3>
+<p>The right to obtain human intervention is a key safeguard in the ADM provisions. It means you enable people to have their decision looked at by a human. You <strong>must</strong> ensure this involves a review of the decision, with the possibility that you could change it.</p>
+<p>You <strong>should not</strong> confuse the concept of ‘human intervention’ with that of ‘human involvement’. These differ in the following ways:</p>
+<ul>
+<li><strong>Human intervention</strong> refers to the safeguard that applies after you make a solely automated significant decision about a person. It applies only when what you’re doing is in the scope of the ADM provisions. Human intervention means people can ask for a human to review the decision on a case‑by‑case basis.</li>
+<li><strong>Human involvement</strong> refers to the role humans have during the decision-making process. It is one of the key factors in deciding whether the ADM provisions apply in the first place. If a decision includes meaningful human involvement, it is not solely automated. This is the case even if the decision has significant effects on someone.</li>
+</ul>
+<p>Like human involvement, human intervention cannot be tokenistic. Human reviewers <strong>should:</strong></p>
+<ul>
+<li>assess and review any reconsideration of the decision before it is applied;</li>
+<li>have the ability to influence the outcome;</li>
+<li>have discretion and authority to alter the decision;</li>
+<li>be suitably trained and qualified to understand the system’s outputs, limitations, and risks; and</li>
+<li>take into account the relevant data and factors that the decision was based on.</li>
+</ul>
+<p>You <strong>should</strong> keep a record of how the human reviewed the decision.</p>
+<p>To ensure your human intervention process is effective, you <strong>should:</strong></p>
+<ul>
+<li>arrange for someone suitably qualified to carry out the review;</li>
+<li>provide the human reviewer with access to all relevant data and original facts that your ADM system used to reach the decision;</li>
+<li>require the reviewer to consider both the relevant data the system used, as well as any additional information or evidence the person affected provides to support their challenge; and</li>
+<li>put in place appropriate training so that your human reviewers understand things like the capabilities and limitations of your ADM systems, relevant technological developments and risks (including bias and discrimination).&nbsp;</li>
+</ul>
+<p>You <strong>should</strong> also monitor and analyse the outcomes of the human reviews following requests for a human intervention. If human reviewers are regularly changing decisions when people challenge them, it may indicate issues with the performance of your ADM systems that you may need to resolve. &nbsp;</p>
+<p>Spot checking an ADM process doesn’t meet the requirements of this safeguard. This is because the right to obtain human intervention is something that a person actively exercises after you’ve provided them with information about the decision. Spot checking isn’t something that the person instigates themselves.&nbsp;</p>
+<div class="rt-block rt-green">
+<p><strong>Further reading – ICO guidance</strong></p>
+<p>Our <a href="/for-organisations/uk-gdpr-guidance-and-resources/artificial-intelligence/guidance-on-ai-and-data-protection/" title="Guidance on AI and data protection">guidance on AI and data protection</a> has more information about individual rights relating to ADM and the role of human oversight:</p>
+<ul>
+<li><a href="/for-organisations/uk-gdpr-guidance-and-resources/artificial-intelligence/guidance-on-ai-and-data-protection/how-do-we-ensure-individual-rights-in-our-ai-systems/#howdoweensure" title="How do we ensure individual rights in our AI systems?" data-anchor="#howdoweensure">How do we ensure individual rights relating to solely automated decisions with legal or similarly significant effect?</a></li>
+<li><a href="/for-organisations/uk-gdpr-guidance-and-resources/artificial-intelligence/guidance-on-ai-and-data-protection/how-do-we-ensure-individual-rights-in-our-ai-systems/#whatistherole" title="How do we ensure individual rights in our AI systems?" data-anchor="#whatistherole">What is the role of human oversight?</a></li>
+</ul>
+</div>
+<h3><a id="Contest"></a>How do we enable people to contest decisions?</h3>
+<p>The provisions also say people have the right to contest the ADM you carry out.</p>
+<p>To ensure you facilitate people’s rights appropriately, you <strong>must</strong> put measures in place for people to challenge or appeal the ADM you carry out. This doesn’t have to be complicated for you to establish or operate.</p>
+<p>You <strong>must</strong> make it clear to people that they have the right to contest your decision and what process they can follow to exercise this right.</p>
+<h3><a id="Rights"></a>What do we do if someone exercises their rights under the ADM provisions?</h3>
+<p>The ability to make representations, obtain human intervention, and contest decisions, all form part of how people can exercise their data protection rights. In practice, people may essentially exercise all three of these at the same time whenever they challenge a decision.&nbsp;</p>
+<p>In all cases, you <strong>must</strong> act on the person’s request without undue delay and at the latest within one month of receipt.</p>
+<p>You can extend the time to respond by a further two months if the request is complex or if the person makes a number of requests to you. You <strong>must:</strong>&nbsp;</p>
+<ul>
+<li>let the person know you are applying an extension without undue delay (and at the latest within one month of receiving their request); and</li>
+<li>explain why the extension is necessary.</li>
+</ul>
+<p>You <strong>should</strong> take these timeframes into account when designing any policy or process for people to contest your decisions.&nbsp;</p>
+    </div>
+</div>
+        </div>
+        <div class="umb-block-grid__layout-item"
+             data-content-element-type-alias="furtherReadingBlock"
+             data-content-element-type-key="349dc532-9e3f-4f24-9fa4-2e5b86aa0eda"
+             data-element-udi="umb://element/c08858eac9764d67947662825030c59b"
+             data-col-span="12"
+             data-row-span="1"
+             style=" --umb-block-grid--item-column-span: 12; --umb-block-grid--item-row-span: 1; ">
+
+
+
+<further-Reading x-href="https://eur-lex.europa.eu/legal-content/EN/TXT/?qid=1528874672298&amp;uri=CELEX:02016R0679-20160504"
+                 x-target="_blank"
+                 x-title="Relevant provisions in the UK GDPR - see articles 12, 12A, and 22C"
+                 x-location="External link"></further-Reading>
+        </div>
+</div>
+
+</div>
+
+            </div>
+
+        
+
+    <nav class="print:hidden inline-flex flex-col items-start gap-5">
+
+            <a href="/for-organisations/uk-gdpr-guidance-and-resources/individual-rights/automated-decision-making/when-can-we-use-special-category-data-in-our-adm/" class="group text-primary">
+                <div class="flex items-center">
+                    <i class="icon icon-arrow-left"></i>
+                    <span class="pl-3 flex flex-col">
+                        <span class="text-lg font-semibold">Previous</span>
+                        <span class="text-sm underline underline-offset-4 decoration-dotted decoration-1 group-hover:decoration-solid">When can we use special category data in our ADM?</span>
+                    </span>
+                </div>
+            </a>
+
+            <a href="/for-organisations/uk-gdpr-guidance-and-resources/individual-rights/automated-decision-making/what-rights-do-people-have/" class="group text-primary">
+                <div class="flex items-center">
+                    <i class="icon icon-arrow-right"></i>
+                    <span class="pl-3 flex flex-col">
+                        <span class="text-lg font-semibold">Next</span>
+                        <span class="text-sm underline underline-offset-4 decoration-dotted decoration-1 group-hover:decoration-solid">What rights do people have?</span>
+                    </span>
+                </div>
+            </a>
+
+    </nav>
+
+    </div>
+</div>
+
+        </div>
+    </main>
+    
+<a href="#top"
+   id="button-top"
+   class="transition-opacity duration-500 flex items-center justify-center fixed right-4 bottom-4 z-10 rounded-full outline outline-white w-8 h-8 bg-primary opacity-0 hidden print:hidden">
+    <span class="icon icon-arrow-up text-white"></span>
+    <span class="sr-only">Back to top</span>
+</a>
+
+    <footer class="sticky top-[100vh] print:hidden">
+        
+<div class="lg:container px-4 border-t-2 border-dotted border-neutral-200 mt-6">
+    <div class="py-3">
+        <button type="button"
+                class="flex items-center group"
+                onClick="window.print()">
+            <i class="icon icon-printer text-lg text-white rounded-full p-1 bg-neutral-400"></i>
+            <span class="ml-2 text-sm text-link group-hover:underline">Print this page</span>
+        </button>
+    </div>
+</div>
+
+        <div class="bg-neutral-100">
+            <div class="lg:container px-4">
+                <div class="py-5 flex">
+                    <div class="hidden md:block flex-auto">
+                        
+    <ul class="grid gap-4 grid-cols-4">
+            <li>
+                    <div class="mb-3">
+                        <a href="/for-the-public/"
+                           class="font-serif text-serif-base text-link py-[0.2em] inline-block hover:underline">For the public</a>
+                    </div>
+                    <ul class="text-sm text-neutral-600 -mt-1">
+                            <li>
+                                <a href="/for-the-public/official-information/"
+                                   class="hover:underline min-h-[22px] mb-[5px] inline-block">Official information</a>
+                            </li>
+                            <li>
+                                <a href="/for-the-public/nuisance-calls/"
+                                   class="hover:underline min-h-[22px] mb-[5px] inline-block">Nuisance calls</a>
+                            </li>
+                    </ul>
+            </li>
+            <li>
+                    <div class="mb-3">
+                        <a href="/for-organisations/"
+                           class="font-serif text-serif-base text-link py-[0.2em] inline-block hover:underline">For organisations</a>
+                    </div>
+                    <ul class="text-sm text-neutral-600 -mt-1">
+                            <li>
+                                <a href="/for-organisations/uk-gdpr-guidance-and-resources/"
+                                   class="hover:underline min-h-[22px] mb-[5px] inline-block">UK GDPR guidance and resources</a>
+                            </li>
+                            <li>
+                                <a href="/for-organisations/foi/"
+                                   class="hover:underline min-h-[22px] mb-[5px] inline-block">Freedom of information</a>
+                            </li>
+                            <li>
+                                <a href="/for-organisations/eir-and-access-to-information/"
+                                   class="hover:underline min-h-[22px] mb-[5px] inline-block">EIR and access to information</a>
+                            </li>
+                            <li>
+                                <a href="/for-organisations/direct-marketing-and-privacy-and-electronic-communications/"
+                                   class="hover:underline min-h-[22px] mb-[5px] inline-block">Direct marketing</a>
+                            </li>
+                            <li>
+                                <a href="/for-organisations/advice-and-services/"
+                                   class="hover:underline min-h-[22px] mb-[5px] inline-block">Advice and services</a>
+                            </li>
+                    </ul>
+            </li>
+            <li>
+                    <div class="mb-3">
+                        <a href="/action-weve-taken/"
+                           class="font-serif text-serif-base text-link py-[0.2em] inline-block hover:underline">Action we&#x27;ve taken</a>
+                    </div>
+                    <ul class="text-sm text-neutral-600 -mt-1">
+                            <li>
+                                <a href="/action-weve-taken/enforcement/"
+                                   class="hover:underline min-h-[22px] mb-[5px] inline-block">Enforcement action</a>
+                            </li>
+                            <li>
+                                <a href="/action-weve-taken/decision-notices/"
+                                   class="hover:underline min-h-[22px] mb-[5px] inline-block">Decision notices</a>
+                            </li>
+                            <li>
+                                <a href="/action-weve-taken/audits-and-overview-reports/"
+                                   class="hover:underline min-h-[22px] mb-[5px] inline-block">Audits and overview reports</a>
+                            </li>
+                    </ul>
+            </li>
+            <li>
+                    <div class="mb-3">
+                        <a href="/about-the-ico/"
+                           class="font-serif text-serif-base text-link py-[0.2em] inline-block hover:underline">About the ICO</a>
+                    </div>
+                    <ul class="text-sm text-neutral-600 -mt-1">
+                            <li>
+                                <a href="/about-the-ico/what-we-do/register-of-fee-payers/"
+                                   class="hover:underline min-h-[22px] mb-[5px] inline-block">Download registration certificate</a>
+                            </li>
+                            <li>
+                                <a href="/about-the-ico/who-we-are/"
+                                   class="hover:underline min-h-[22px] mb-[5px] inline-block">Who we are</a>
+                            </li>
+                            <li>
+                                <a href="/about-the-ico/what-we-do/"
+                                   class="hover:underline min-h-[22px] mb-[5px] inline-block">What we do</a>
+                            </li>
+                            <li>
+                                <a href="/about-the-ico/media-centre/"
+                                   class="hover:underline min-h-[22px] mb-[5px] inline-block">Media centre</a>
+                            </li>
+                            <li>
+                                <a href="/about-the-ico/jobs/"
+                                   class="hover:underline min-h-[22px] mb-[5px] inline-block">Careers</a>
+                            </li>
+                            <li>
+                                <a href="/about-the-ico/modern-slavery-statement/"
+                                   class="hover:underline min-h-[22px] mb-[5px] inline-block">Modern slavery statement</a>
+                            </li>
+                    </ul>
+            </li>
+    </ul>
+
+                    </div>
+                    <div class="hidden md:block flex-auto mx-8 border-l-2 border-dotted border-neutral-400">
+                    </div>
+                    <div class="flex-auto">
+                        
+        <div class="font-serif text-serif-base text-link mb-3">Follow us</div>
+    <ul class="flex flex-col sm:flex-row md:flex-col sm:flex-wrap sm:gap-x-4 gap-y-2 text-sm text-neutral-600">
+
+                <li class="sm:flex-auto md:flex-none">
+
+                    <a class="flex items-center hover:underline"
+                       href="https://x.com/iconews"
+                       target="_blank">
+
+                            <img class="rounded-full mr-2" src="/media2/3e3molj2/x-logo-1.svg?width=24&amp;height=24&amp;v=1db7d782a8d9170" width="24" height="24" alt="Icon for the X @ICONews social link" loading="lazy" />
+
+                        <span>X @ICONews</span>
+
+                    </a>
+                </li>
+                <li class="sm:flex-auto md:flex-none">
+
+                    <a class="flex items-center hover:underline"
+                       href="http://www.youtube.com/user/icocomms"
+                       target="_blank">
+
+                            <img class="rounded-full mr-2" src="/media2/z3vdkkxj/youtube.svg?width=24&amp;height=24&amp;v=1db042ab32beee0" width="24" height="24" alt="Icon for the YouTube social link" loading="lazy" />
+
+                        <span>YouTube</span>
+
+                    </a>
+                </li>
+                <li class="sm:flex-auto md:flex-none">
+
+                    <a class="flex items-center hover:underline"
+                       href="http://linkedin.com/company/information-commissioner&#x27;s-office"
+                       target="_blank">
+
+                            <img class="rounded-full mr-2" src="/media2/cgdpvn4n/linkedin.svg?width=24&amp;height=24&amp;v=1db042ab2dda7d0" width="24" height="24" alt="Icon for the LinkedIn social link" loading="lazy" />
+
+                        <span>LinkedIn</span>
+
+                    </a>
+                </li>
+                <li class="sm:flex-auto md:flex-none">
+
+                    <a class="flex items-center hover:underline"
+                       href="http://facebook.com/ICOnews"
+                       target="_blank">
+
+                            <img class="rounded-full mr-2" src="/media2/g2nhkyjv/facebook.svg?width=24&amp;height=24&amp;v=1db03b86b4b62d0" width="24" height="24" alt="Icon for the Facebook social link" loading="lazy" />
+
+                        <span>Facebook</span>
+
+                    </a>
+                </li>
+                <li class="sm:flex-auto md:flex-none">
+
+                    <a class="flex items-center hover:underline"
+                       href="/about-the-ico/media-centre/e-newsletter/">
+
+                            <img class="rounded-full mr-2" src="/media2/thzeryz5/envelope.svg?width=24&amp;height=24&amp;v=1db03b86a1d4310" width="24" height="24" alt="Icon for the Subscribe to our e-newsletter social link" loading="lazy" />
+
+                        <span>Subscribe to our e-newsletter</span>
+
+                    </a>
+                </li>
+
+    </ul>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bg-secondary">
+            <div class="lg:container px-4">
+                <div class="py-3 md:hidden">
+                    
+    <div class="font-serif text-center md:text-left text-white text-serif-base md:flex items-end md:pl-8 border-secondary border-dotted md:border-l-2">
+        <span>The ICO exists to empower you through information.</span>
+    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="bg-primary">
+            <div class="lg:container px-4">
+                <div class="pt-2">
+                    
+    <ul class="-mx-3 flex flex-wrap text-white text-sm md:text-base">
+                <li class="mx-3 my-1">
+                    <a href="/global/contact-us/"
+                       class="hover:underline">Contact us</a>
+                </li>
+                <li class="mx-3 my-1">
+                    <a href="/global/privacy-notice/"
+                       class="hover:underline">Privacy notice</a>
+                </li>
+                <li class="mx-3 my-1">
+                    <a href="/global/cookies/"
+                       class="hover:underline">Cookies</a>
+                </li>
+                <li class="mx-3 my-1">
+                    <a href="/global/accessibility/"
+                       class="hover:underline">Accessibility</a>
+                </li>
+                <li class="mx-3 my-1">
+                    <a href="/about-the-ico/who-we-are/wales-office/"
+                       class="hover:underline">Cymraeg</a>
+                </li>
+                <li class="mx-3 my-1">
+                    <a href="/global/disclaimer/"
+                       class="hover:underline">Disclaimer</a>
+                </li>
+                <li class="mx-3 my-1">
+                    <a href="/global/copyright-and-re-use-of-materials/"
+                       class="hover:underline">&#xA9; Copyright</a>
+                </li>
+    </ul>
+
+                </div>
+                <div class="py-5">
+                        <div class="md:flex md:items-center">
+
+            <div class="pr-4 mb-2 md:mb-0">
+                <img class="w-10" src="/media2/r34b3hma/ogl.png?width=40&amp;height=16&amp;v=1dc6f3b2af11af0" width="40" height="16" alt="OGL logo" loading="lazy" />
+            </div>
+        
+        <div class="prose footer-rich-text">
+            <p>All text content is available under the <a href="http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/">Open Government Licence v3.0</a>, except where otherwise stated.</p>
+        </div>
+    </div>
+
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <script type="text/javascript" defer src="https://cc.cdn.civiccomputing.com/9/cookieControl-9.11.min.js"></script>
+    <script type="application/json" id="cookie-settings">
+        {"apiKey":"dbf86e044f3ab8c4df852af5c7c6ceb2dd7678dd","necessaryCookies":[".AspNetCore.Antiforgery.*","banner.*","language"],"statement":{"description":"For more detailed information, see our","name":"Cookies page","url":"/global/cookies/","updated":"17/12/2024"},"text":{"title":"Cookies on the ICO website","intro":"We use some essential cookies to make this site work. We also set analytics cookies to understand how you use this site. We may use services from Vimeo and YouTube that may also use cookies.","acceptSettings":"Accept non-essential cookies","rejectSettings":"Reject non-essential cookies","necessaryTitle":"Essential cookies","necessaryDescription":"These cookies are necessary for core functionality, such as security and network management. They always need to be on.","closeLabel":"Save and close","cornerButton":"Cookie options","on":"On","off":"Off"},"optionalCookies":[{"name":"analytics","label":"Analytics cookies","description":"We use Silktide to measure how you use the ICO website. These cookies collect information about how you got to the site, the pages you visit and how long you spend on each page, and what you click on.","lawfulBasis":"legitimate interest"},{"name":"videoPlayer","label":"Video player cookies","description":"Some pages of the ICO website include videos hosted on Vimeo and YouTube. If you enable this setting, this may result in the video sharing platform collecting information about your viewing for analytics and advertising purposes. If you don\u2019t enable this setting, the pages will include external links instead."}]}
+    </script>
+
+    
+<script type="text/plain" id="silktide-settings">12d0c703744ea255b679f823daf1645f</script>
+    <script type="text/javascript" defer src="/js/index.js?v=UJFv7RSenKNL2I8oYG-0zOiZdwn6GqOTdlv5A102NDk"></script>
+    
+    
+
+    
+</body>
+</html>
