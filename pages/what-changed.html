@@ -1,0 +1,155 @@
+<!--title: Who changed what after reading this, and the corrections that landed here
+    desc: A project that publishes what other people's systems cannot do has to be checkable about its own effects. No customer list, because there are no customers. This is the list of what actually moved, in both directions, with a link on every line: code changed in somebody else's repository, positions revised in public, and the corrections that landed here because a stranger checked.
+    slug: what-changed-->
+
+<div class="wrap main">
+  <div>
+    <p class="dateline">Record, 13 September 2026</p>
+    <h2 class="label">What changed after somebody read this</h2>
+
+    <div class="block">
+      <p>This project measures what other people's systems can and cannot
+        show. That only means something if the same standard runs in this
+        direction, so this page is the list of what actually moved after
+        somebody read the work, with a link on every line.</p>
+
+      <p><b>Corrections that landed on this project are on the same page as
+        the ones that landed elsewhere, deliberately.</b> A page carrying only
+        the first kind would be a brag sheet, and a reader could not tell the
+        difference between a project that gets checked and one that is never
+        read closely enough to correct.</p>
+
+      <h3>Independently reproduced</h3>
+      <p class="callout"><b>On 6 September 2026, somebody who had never
+        contributed here ran the reference validator against the published
+        conformance corpus at the pinned commit and reported back 52 of 52,
+        with the split of 40 cases carrying a level and 12 carrying none,
+        matching what was published.</b> Then they contested one of the cases,
+        and they were right.</p>
+
+      <p>The contested check was the contradiction rule, which refused
+        <span class="mono">executed: true</span> alongside
+        <span class="mono">outcome: unconfirmed</span>. That combination is
+        what a provider returning 200 with settlement pending actually is, so
+        the rule forced the honest record into
+        <span class="mono">executed: false</span>, which is the field a naive
+        retry keys on. It was fixed the same night in both validators, the
+        emitter, the specification text and the corpus. The corpus now stands
+        at 57 cases.</p>
+
+      <p>Running the corpus is one step from implementing against it, and it
+        is the closest anybody has come to a second implementation, which is
+        what decides whether this is a specification or a manual.
+        <a href="https://github.com/langchain-ai/langgraph/issues/7844#issuecomment-5562440918">The
+        reproduction is here</a>, in a thread on somebody else's repository.</p>
+
+      <h3>Changed in somebody else's work</h3>
+
+      <p><b>A commit.</b> On 3 September 2026,
+        <a href="https://github.com/0xddneto/AI-Proof-of-Us/commit/50e265d8c4d31ba4948ba5889d1d4f4382e75f6e"><span class="mono">50e265d8c4d3</span>,
+        "feat: bind approval to authenticated principal"</a>, landed in a
+        repository belonging to somebody this project has never met. It came
+        the day after an argument on <span class="mono">pydantic-ai#6452</span>
+        that an approver name taken from a request body is display metadata
+        rather than authority. A commit rather than a compliment, and the only
+        one of its kind so far.</p>
+
+      <p><b>A product decision.</b> On
+        <a href="https://github.com/langchain-ai/langgraph/issues/8636#issuecomment-5601454639">9
+        September 2026</a>, the author of AgentGuard, an execution-bound
+        authorization layer, wrote: <i>"I don't want to position AgentGuard as
+        solving a failure mode that the frameworks have already largely
+        addressed."</i> That followed being shown the measurement that all
+        eight acting systems in the census keep risk classes and tool
+        permissions outside model-controlled state, so the failure mode the
+        product was being positioned against was not the one the frameworks
+        have.</p>
+
+      <p><b>A position held since June, revised in public.</b> On
+        <a href="https://github.com/langchain-ai/langgraph/issues/7844#issuecomment-5560780098">6
+        September 2026</a>, a contributor to the same thread corrected their
+        own 27 June comment: they had described a signed receipt as
+        establishing that evidence can be verified outside the operator's
+        infrastructure, and wrote that this "was too broad." A signature
+        authenticates origin and detects change. It does not establish that
+        the reported action happened.</p>
+
+      <h3>Changed here, because somebody checked</h3>
+
+      <p><b>The <span class="mono">scope</span> entry in version 0.2 exists
+        because Phill Clapham reported</b> that the validator refused TR-3 to
+        any record containing no decisions, a requirement that appeared
+        nowhere in the specification text. The specification was wrong and the
+        validator was enforcing something unwritten.</p>
+
+      <p><b>The <span class="mono">outcome</span> member in
+        <span class="mono">-02</span> exists because a reader on somebody
+        else's issue tracker</b> pointed out that an expired evidence deadline
+        and a failed action are different facts, and the format could express
+        neither: <span class="mono">executed</span> was a required boolean, so
+        a system whose acknowledgement never came back had to assert something
+        it did not know.</p>
+
+      <p><b>The clock is an undisclosed attested claim, and it took a stranger
+        to say so.</b> Raised on
+        <a href="https://github.com/troybrandonc-bit/machine-testimony/issues/44">machine-testimony#44</a>
+        on 7 September 2026: every <span class="mono">at</span> in a record is
+        the emitting party's own word, no check says so, and a reader sees
+        TR-4 with thirty-one verified checks and learns nothing about it.
+        Conceded the same day. <b>Three fixes were named and none of them is
+        built, so this one is still open and is disclosed in the Colorado
+        comment and in the testimony rather than left to be found.</b></p>
+
+      <p><b>A reading of the EU AI Act, corrected by the person who had just
+        reproduced the corpus.</b> On
+        <a href="https://github.com/langchain-ai/langgraph/issues/7844#issuecomment-5598148028">9
+        September 2026</a>: Article 12(3)(d) is the one place in the Act where
+        a log must record "the identification of the natural persons involved
+        in the verification of the results," scoped to the remote biometric
+        identification systems in Annex III point 1(a). The correction
+        strengthened the conclusion rather than weakening it, and the pages
+        were rewritten the same day.</p>
+
+      <p><b>And then the fix itself was audited.</b> Three hours later the
+        same reader
+        <a href="https://github.com/langchain-ai/langgraph/issues/7844#issuecomment-5602141116">re-read
+        the published pages live</a>, confirmed three of the four places had
+        been corrected, and named the fourth that had not: a duplicated
+        sentence in <span class="mono">public/llms.txt</span> at a named
+        commit and line. That is the standard this project asks of everybody
+        else, applied to it by somebody with no reason to be gentle.</p>
+
+      <h3>What this page does not claim</h3>
+      <ul>
+        <li><b>Not customers, and not users.</b> Nobody named here bought
+          anything, and most of them are building something adjacent of their
+          own.</li>
+        <li><b>Not endorsement.</b> Every person here acted in public, several
+          of them by disagreeing, and being listed is not agreement with
+          anything on this site.</li>
+        <li><b>Not adoption.</b> The threshold this project holds itself to is
+          one production user who is not its author and who would be annoyed
+          if it disappeared. <b>That has not happened.</b> Conversations come
+          before that and are not it, and a page like this one is exactly
+          where the distinction gets blurred if nobody states it.</li>
+      </ul>
+
+      <h3>If any of it was useful</h3>
+      <p>Everything above was free to read and stays free: the specification,
+        the validator, the emitter, the five framework adapters, the
+        conformance corpus, the census rubric and the converter. The readings
+        are CC BY, which already asks for attribution, and this is the same
+        request made in plain words rather than in a licence file.</p>
+
+      <p><b>If a reading, a corpus case or a measurement was useful, cite it
+        where you used it.</b> A citation reaches people this project cannot,
+        and it is the only thing asked for anything here. If you ran the
+        corpus against a validator you wrote yourself, the result is worth
+        more than a citation and worth sending either way, including when it
+        disagrees: every correction on this page arrived that way.</p>
+
+      <pre class="snip addr"><code>https://github.com/troybrandonc-bit/machine-testimony/issues
+troy@machinetestimony.com</code></pre>
+    </div>
+  </div>
+</div>

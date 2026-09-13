@@ -118,5 +118,21 @@ public `Model` interface. The agent, the Runner, the tool, the interruption,
 `to_state` and `approve`/`reject` are all the real ones, because those are what
 is under test.
 
+## If it was useful
+
+There is no telemetry in any of this, which means a download count is the only
+signal there is and it cannot tell a person from a mirror. So the ask is a line
+back, and it is the only thing asked for anything here:
+
+- **Say you are using it**, even in one sentence, on the issue tracker.
+- **Cite the reading or the measurement** where it changed what you built. The
+  readings are CC BY, which already asks for attribution; this is the same
+  request in plain words.
+- **Ran the corpus against a validator you wrote yourself?** That result is
+  worth more than a citation, including when it disagrees. Every correction at
+  <https://machinetestimony.org/changed/> arrived that way.
+
+<https://github.com/troybrandonc-bit/machine-testimony/issues>
+
 MIT. Copyright 2026 Garnet Taurus Ltd.
 The specification: <https://datatracker.ietf.org/doc/draft-clifford-testimony-record/>
