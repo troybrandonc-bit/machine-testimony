@@ -379,6 +379,51 @@ def cases():
         "a claim to have observed an effect that names no observer",
         base3() + [obs(observer={"kind": "system"})])
 
+    # `shown` is 0.4, and it is fixtured before the version is released for the
+    # same reason `observation` was: the absence of cases should precede a
+    # release rather than block one.
+    V4 = "testimony-record/0.4"
+
+    def v4(entries):
+        for x in entries:
+            x["spec"] = V4
+        return entries
+
+    def shown(i=1, **kw):
+        kw.setdefault("decision", "d1")
+        # A digest of the rendered bytes. The value is a real SHA-256, of the
+        # string in the note, so a reader can recompute it and see that the
+        # entry commits to a rendering rather than to a list of references.
+        kw.setdefault("digest", "sha256:" + __import__("hashlib").sha256(
+            b"Refund 4200 GBP to customer 8842. Balance outstanding: no."
+        ).hexdigest())
+        kw.setdefault("shown_to", {"id": "r.okonkwo@example.com",
+                                   "kind": "human"})
+        kw.setdefault("cites", ["b1"])
+        # Before the approval it informed, which is what a rendering is for.
+        return e(type="shown", id="sh%d" % i, at=T % 4, spec=V4, **kw)
+
+    add("shown-rendering",
+        "what the reviewer was shown, committed to by a digest of the bytes "
+        "rather than by a list of what they were drawn from",
+        v4([scope(), ev(), bel(), dec(), shown(), app()]))
+    add("shown-of-nothing",
+        "a rendering shown for a decision that is not in the record",
+        v4([scope(), ev(), bel(), dec(), shown(decision="d9"), app()]))
+    add("shown-cites-a-ghost",
+        "a rendering citing material the record does not contain",
+        v4([scope(), ev(), bel(), dec(), shown(cites=["b9"]), app()]))
+    # The case the member exists for. An entry naming what was eligible to be
+    # shown, with no commitment to what was actually rendered, proves
+    # eligibility while letting a reader hear attention.
+    add("shown-without-a-digest",
+        "a rendering that names what it drew on and never says what it drew",
+        v4([scope(), ev(), bel(), dec(), shown(digest=""), app()]))
+    add("shown-in-an-older-version",
+        "a shown entry in a record claiming a version that never defined one",
+        v3([scope(), ev(), bel(), dec(),
+            dict(shown(), spec="testimony-record/0.3"), app()]))
+
     add("approval-modified",
         "a reviewer who changed the arguments and then allowed them",
         v3([scope(), ev(), bel(), dec(), app(disposition="modified",

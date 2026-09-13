@@ -48,10 +48,10 @@ checks here exist because somebody said so.
 
 | | |
 |---|---|
-| no level | 19 cases: malformed JSON, unknown types, missing required members, invented enum values, reused ids, times that go backwards, a member declared to be an actor given as a name, as an object with no id, or with a kind nobody defined, and four observations that fail the version gate or resolve to nothing |
+| no level | 23 cases: malformed JSON, unknown types, missing required members, invented enum values, reused ids, times that go backwards, a member declared to be an actor given as a name, as an object with no id, or with a kind nobody defined, four observations that fail the version gate or resolve to nothing, and four renderings that fail the version gate, name a decision or citation that is not there, or commit to no digest at all |
 | TR-1 | 6 cases: well formed, and failing something at TR-2 |
 | TR-2 | 13 cases: evidence that resolves, conflicts that keep both sides, resolutions that name what was kept, and a modification that does not say what it modified |
-| TR-3 | 26 cases: gates, refusals that did not execute, approvals that name a person other than the proposer, provenance declared from somewhere the model cannot write, actions whose effect the record cannot confirm, observations that support, contradict or settle nothing, the three dispositions an approval can carry, and an observation whose basis was changed after the digest was taken over it |
+| TR-3 | 27 cases: gates, refusals that did not execute, approvals that name a person other than the proposer, provenance declared from somewhere the model cannot write, actions whose effect the record cannot confirm, observations that support, contradict or settle nothing, the three dispositions an approval can carry, an observation whose basis was changed after the digest was taken over it, and a rendering committed to by a digest of the bytes a reviewer saw rather than by a list of what it was drawn from |
 | TR-4 | 6 cases: a hash chain, a replay that names its engine, a number that serialises portably, a record a Time Stamp Authority actually signed, an advisory system anchored by a kind this validator cannot recompute, and an observation whose basis is inside the bytes the digest covers |
 
 **Eleven cases are `testimony-record/0.3`**, which is a version this validator

@@ -66,6 +66,9 @@ REQUIRED = {
                  "executed"),
     "approval": ("decision", "approver"),
     "integrity": ("scheme", "digest"),
+    # What was put in front of the reviewer. New in 0.4 and gated there by the
+    # validator: a record claiming an older version may not carry one.
+    "shown": ("decision", "digest", "shown_to"),
 }
 ENUMS = {
     ("belief", "polarity"): {"affirm", "deny"},
@@ -317,6 +320,51 @@ class Record:
                         identity_source=identity_source, **kw)
         d["approval"] = eid
         return eid
+
+    def shown(self, decision: str, rendering: bytes | str, shown_to: dict,
+              cites=None, **kw) -> str:
+        """What was put in front of the reviewer, by digest of the rendering.
+
+        The member Rule 7.7 asks for that no framework read for the census can
+        produce. `inputs` on a decision names the beliefs the SYSTEM rested on,
+        which is its reasoning and not the rendering a person saw.
+
+        `rendering` is hashed here and NOT stored. The record carries the hash
+        and whoever holds the rendering can show it unaltered, which is the
+        footing `evidence.digest` already sits on. Passing the identifiers
+        instead would record which things were eligible to be shown, and a
+        summary and the full text of the same belief are the same identifier
+        and a different review.
+
+        This is an attested claim about an event outside the system. It does
+        not establish that the rendering was displayed, that anybody looked at
+        it, or that a screen drew what a server sent.
+        """
+        d = self._by_id(decision)
+        if d is None or d["type"] != "decision":
+            raise Refused("shown names %r, which is not a decision in this "
+                          "record" % decision)
+        if not isinstance(shown_to, dict) or not str(
+                shown_to.get("id") or "").strip():
+            raise Refused("shown_to names the person the rendering was put in "
+                          "front of. A rendering shown to nobody is not a "
+                          "record of a review")
+        if isinstance(rendering, str):
+            rendering = rendering.encode("utf-8")
+        if not isinstance(rendering, (bytes, bytearray)):
+            raise Refused("rendering is the bytes that were displayed, so that "
+                          "the digest is over what a person saw")
+        if not rendering:
+            raise Refused("an empty rendering digests to a constant, which "
+                          "every empty rendering everywhere shares and which "
+                          "establishes nothing about this one")
+        for c in cites or []:
+            if self._by_id(c) is None:
+                raise Refused("shown cites %r, which is not in this record" % c)
+        return self._add("shown", decision=decision,
+                         digest="sha256:" + hashlib.sha256(rendering).hexdigest(),
+                         shown_to=dict(shown_to),
+                         **({"cites": list(cites)} if cites else {}), **kw)
 
     # ── closing the record ──────────────────────────────────────────────────
 

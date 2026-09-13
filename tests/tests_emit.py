@@ -240,6 +240,53 @@ def main():
           tv.validate(r4.jsonl()).level == "TR-4",
           tv.validate(r4.jsonl()).level)
 
+    # What the reviewer was SHOWN, which is the one thing in Colorado's Rule
+    # 7.7 no framework read for the census can produce. `inputs` names what the
+    # SYSTEM rested on; this names the rendering a person saw.
+    print("\nthe rendering is committed to by digest, not by reference")
+    # A 0.4 record, because `shown` is gated to the version that defines it and
+    # a 0.2 record carrying one is correctly refused. That gate is the subject
+    # of its own corpus case.
+    r5 = em.Record(spec="testimony-record/0.4")
+    r5.scope(acts=True)
+    e5 = r5.evidence(kind="api", source="crm://8842")
+    b5 = r5.belief(subject="c:8842", proposition="requested_refund",
+                   asserted_by=agent, evidence=[e5])
+    d5 = r5.decision(action_type="issue_refund", risk_class="high",
+                     risk_source="registry", proposed_by=agent,
+                     verdict="permitted", executed=True, inputs=[b5])
+    s5 = r5.shown(d5, "Refund 4200 GBP to 8842. Balance outstanding: no.",
+                  {"id": "sam@example.com", "kind": "human"}, cites=[b5])
+    wrote5 = r5._by_id(s5)
+    import hashlib as _h
+    want = "sha256:" + _h.sha256(
+        "Refund 4200 GBP to 8842. Balance outstanding: no.".encode("utf-8")
+    ).hexdigest()
+    check("the digest is over the rendered bytes, recomputable by a reader",
+          wrote5.get("digest") == want, wrote5.get("digest"))
+    check("the rendering itself is NOT stored",
+          "Refund 4200" not in json.dumps(wrote5), json.dumps(wrote5)[:120])
+    check("and it names who it was put in front of",
+          wrote5["shown_to"]["id"] == "sam@example.com", wrote5.get("shown_to"))
+    r5.approval(decision=d5, approver={"id": "sam@example.com", "kind": "human"},
+                identity_source="auth-session", disposition="approved")
+    r5.seal()
+    check("the reference validator reads it back at TR-4",
+          tv.validate(r5.jsonl()).level == "TR-4",
+          tv.validate(r5.jsonl()).level)
+
+    # An entry that names what was eligible to be shown and never commits to
+    # what was drawn proves eligibility while letting a reader hear attention.
+    refuses("a rendering of nothing, which every empty rendering shares",
+            lambda: r5.shown(d5, b"", {"id": "s@e.com", "kind": "human"}))
+    refuses("a rendering shown to nobody",
+            lambda: r5.shown(d5, "x", {}))
+    refuses("a rendering citing material the record does not hold",
+            lambda: r5.shown(d5, "x", {"id": "s@e.com", "kind": "human"},
+                             cites=["b_nope"]))
+    refuses("a rendering for a decision that is not there",
+            lambda: r5.shown("d_nope", "x", {"id": "s@e.com", "kind": "human"}))
+
     reuse = started()
     first = reuse.entries[0]["id"]
     refuses("a reused id",

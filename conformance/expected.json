@@ -803,6 +803,66 @@
   "scope": "acts",
   "spec": "testimony-record/0.2"
  },
+ "shown-cites-a-ghost": {
+  "level": null,
+  "levels_met": {
+   "TR-1": false,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "a rendering citing material the record does not contain",
+  "scope": "acts",
+  "spec": "testimony-record/0.4"
+ },
+ "shown-in-an-older-version": {
+  "level": null,
+  "levels_met": {
+   "TR-1": false,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "a shown entry in a record claiming a version that never defined one",
+  "scope": "acts",
+  "spec": "testimony-record/0.3"
+ },
+ "shown-of-nothing": {
+  "level": null,
+  "levels_met": {
+   "TR-1": false,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "a rendering shown for a decision that is not in the record",
+  "scope": "acts",
+  "spec": "testimony-record/0.4"
+ },
+ "shown-rendering": {
+  "level": "TR-3",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "what the reviewer was shown, committed to by a digest of the bytes rather than by a list of what they were drawn from",
+  "scope": "acts",
+  "spec": "testimony-record/0.4"
+ },
+ "shown-without-a-digest": {
+  "level": null,
+  "levels_met": {
+   "TR-1": false,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "a rendering that names what it drew on and never says what it drew",
+  "scope": "acts",
+  "spec": "testimony-record/0.4"
+ },
  "two-specs": {
   "level": null,
   "levels_met": {

@@ -18,13 +18,13 @@
 
 export const SPEC = "testimony-record/0.2";
 export const SPECS = ["testimony-record/0.1", "testimony-record/0.2",
-  "testimony-record/0.3"];
+  "testimony-record/0.3", "testimony-record/0.4"];
 export const LEVELS = ["TR-1", "TR-2", "TR-3", "TR-4"] as const;
 export type Level = (typeof LEVELS)[number];
 
 const TYPES = new Set([
   "belief", "evidence", "conflict", "decision", "approval", "integrity", "scope",
-  "observation",
+  "observation", "shown",
 ]);
 
 /* `observation` is new in 0.3 and is NOT a known type before it. Adding a
@@ -33,6 +33,7 @@ const TYPES = new Set([
  * version that had never heard of it. machine-testimony#91. */
 const TYPES_FROM: Record<string, string> = {
   observation: "testimony-record/0.3",
+  shown: "testimony-record/0.4",
 };
 
 const RFC3339 =
@@ -80,6 +81,11 @@ const REQUIRED: Record<string, string[]> = {
   decision: ["action_type", "risk_class", "proposed_by", "verdict", "executed"],
   approval: ["decision", "approver"],
   integrity: ["scheme", "digest"],
+  /* What was put in front of the reviewer. The digest is required because an
+   * identifier set establishes only what was ELIGIBLE to be shown: two
+   * renderers can cite the same belief while one displays a summary and the
+   * other the full text, same references and a materially different review. */
+  shown: ["decision", "digest", "shown_to"],
   // `basis` is deliberately NOT required. An omitted basis is unknown,
   // never `asserted`: absence does not distinguish an observation that was
   // made and left out from one that never happened. @HarperZ9 on #90.
@@ -831,6 +837,44 @@ export function validate(text: string): Report {
   }
   add("TR-1", "an observation resolves to a decision and to its evidence",
     obsDangling.length === 0, obsDangling.slice(0, 3).join("; "));
+
+  /* `shown`: what was put in front of the reviewer (0.4).
+   *
+   * A separate entry rather than a member on the decision, because a bad
+   * `inputs` lies about the system's own reasoning while a bad `shown` lies
+   * about a UI event outside the system entirely, and one check cannot tell
+   * those apart. It establishes none of what a reader wants: not that the
+   * rendering was displayed, not that anybody read it, not that a screen drew
+   * what a server sent. Shape only. */
+  const shownEntries = of("shown");
+
+  const shownEarly = shownEntries.filter(
+    (s) => (str(s.spec) || report.spec) !== TYPES_FROM.shown);
+  add("TR-1", "a shown entry appears only in a version that defines it",
+    shownEarly.length === 0,
+    shownEarly.slice(0, 3).map((s) =>
+      `line ${s._line}: shown in ${JSON.stringify(str(s.spec) || report.spec)}`)
+      .join("; "), "verified", TYPES_FROM.shown);
+
+  const shownLoose: string[] = [];
+  for (const s of shownEntries) {
+    if (str((byId.get(str(s.decision)) ?? {}).type) !== "decision")
+      shownLoose.push(`line ${s._line}: names a decision not in the record`);
+    for (const c of (Array.isArray(s.cites) ? s.cites : []))
+      if (!byId.has(str(c)))
+        shownLoose.push(`line ${s._line}: cites ${JSON.stringify(str(c))}, which does not resolve`);
+  }
+  add("TR-1", "a shown entry resolves to a decision and to what it cites",
+    shownLoose.length === 0, shownLoose.slice(0, 3).join("; "),
+    "verified", TYPES_FROM.shown);
+
+  const shownBad = shownEntries
+    .filter((s) => !/^sha256:[0-9a-f]{64}$/.test(str(s.digest)))
+    .map((s) => `line ${s._line}: digest ${JSON.stringify(str(s.digest))}`);
+  add("TR-1",
+    "a shown entry carries a digest of the rendering, not only a list of what it drew on",
+    shownBad.length === 0, shownBad.slice(0, 3).join("; "),
+    "verified", TYPES_FROM.shown);
 
   /* An observation-based basis is a claim to have looked at something, so it
    * owes both the thing looked at and who looked. `asserted` owes neither, and

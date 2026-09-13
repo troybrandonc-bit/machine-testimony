@@ -31,10 +31,10 @@ import sys
 
 SPEC = "testimony-record/0.2"
 SPECS = ("testimony-record/0.1", "testimony-record/0.2",
-         "testimony-record/0.3")
+         "testimony-record/0.3", "testimony-record/0.4")
 LEVELS = ["TR-1", "TR-2", "TR-3", "TR-4"]
 TYPES = {"belief", "evidence", "conflict", "decision", "approval", "integrity",
-         "scope", "observation"}
+         "scope", "observation", "shown"}
 
 # `observation` is new in 0.3 and is NOT a known type before it. Adding a
 # type to the global set would otherwise change what an 0.2 record means:
@@ -42,7 +42,8 @@ TYPES = {"belief", "evidence", "conflict", "decision", "approval", "integrity",
 # version that had never heard of it. machine-testimony#91 says no old
 # record may be silently upgraded or demoted, and this is the half of that
 # rule the validator can enforce.
-TYPES_FROM = {"observation": "testimony-record/0.3"}
+TYPES_FROM = {"observation": "testimony-record/0.3",
+              "shown": "testimony-record/0.4"}
 
 # Which of SPECS the published specification actually documents. The validator
 # is allowed to run ahead of the draft, because a draft on the IETF datatracker
@@ -582,6 +583,23 @@ REQUIRED = {
     # never `asserted`: absence does not distinguish an observation that
     # was made and left out from one that never happened. @HarperZ9 on #90.
     "observation": ("decision", "claim"),
+    # `shown` is what was put in front of the reviewer, which is the one thing
+    # in Colorado's proposed Rule 7.7 that no framework read for the census can
+    # produce, and the one the record has been silent about. `inputs` names the
+    # beliefs a DECISION rested on, which is the system's reasoning and not the
+    # rendering: a reviewer sees a summary while the decision rested on forty
+    # beliefs, or is shown a rendering that omits the belief that mattered, and
+    # both produce an accurate record of the system and a silent one about the
+    # review.
+    #
+    # The digest is REQUIRED and the reason is the whole design. Naming
+    # identifiers establishes only which things were ELIGIBLE to be shown. Two
+    # renderers can both cite belief b17 while one displays a one-line summary
+    # and the other the full text: same reference set, materially different
+    # review. Without a hash of the literal rendered bytes the entry proves
+    # eligibility while letting a reader hear attention, which is worse than
+    # not having it, because the false version is more convincing than silence.
+    "shown": ("decision", "digest", "shown_to"),
 }
 ENUMS = {
     ("belief", "polarity"): {"affirm", "deny"},
@@ -979,6 +997,60 @@ def validate(text: str) -> Report:
     r.add("TR-1", "an observation that claims to have looked says what at, and "
                   "who looked", not unbacked,
           "; ".join(unbacked[:3]), basis="verified")
+
+    # ── shown: what was put in front of the reviewer (0.4) ───────────────
+    #
+    # A separate entry rather than a member on the decision, and the reason is
+    # the adversary rather than tidiness. A bad `inputs` lies about the
+    # system's own reasoning. A bad `shown` lies about a UI event outside the
+    # system entirely: a component that truncates, a scroll position, a stale
+    # cache. One check cannot distinguish "the reasoning was wrong" from "the
+    # reasoning was right and nobody saw it", and merging the members
+    # relocates that ambiguity rather than removing it.
+    #
+    # WHAT THIS CANNOT ESTABLISH, and it is most of what a reader wants. That
+    # the rendering was displayed. That the person looked at it, or read it,
+    # or understood it. That the digest is of what a screen actually drew
+    # rather than of what a server meant to send. Every check below is about
+    # shape, and the entry is an attested claim about an event this format
+    # cannot reach. It is worth recording for the reason every attestation
+    # here is worth recording: a system that records nothing cannot be
+    # contradicted, and one that records a specific claim can be.
+    shown_entries = by_type["shown"]
+
+    early_shown = [s for s in shown_entries
+                   if (s.get("spec") or r.spec) != TYPES_FROM["shown"]]
+    r.add("TR-1", "a shown entry appears only in a version that defines it",
+          not early_shown,
+          "; ".join(f"line {s['_line']}: shown in "
+                    f"{s.get('spec') or r.spec!r}" for s in early_shown[:3]),
+          basis="verified", since=TYPES_FROM["shown"])
+
+    loose = []
+    for s in shown_entries:
+        if by_id.get(s.get("decision") or "", {}).get("type") != "decision":
+            loose.append(f"line {s['_line']}: names a decision not in the "
+                         f"record")
+        for cited in s.get("cites") or []:
+            if cited not in by_id:
+                loose.append(f"line {s['_line']}: cites {cited!r}, which does "
+                             f"not resolve")
+    r.add("TR-1", "a shown entry resolves to a decision and to what it cites",
+          not loose, "; ".join(loose[:3]), basis="verified",
+          since=TYPES_FROM["shown"])
+
+    # The digest is the entry. An identifier set says what was ELIGIBLE to be
+    # shown; only a hash of the rendered bytes distinguishes a summary from
+    # the full text, which is the difference between two materially different
+    # reviews that would otherwise write identical records.
+    malformed = [f"line {s['_line']}: digest {s.get('digest')!r}"
+                 for s in shown_entries
+                 if not re.fullmatch(r"sha256:[0-9a-f]{64}",
+                                     str(s.get("digest") or ""))]
+    r.add("TR-1", "a shown entry carries a digest of the rendering, not only "
+                  "a list of what it drew on", not malformed,
+          "; ".join(malformed[:3]), basis="verified",
+          since=TYPES_FROM["shown"])
 
     # A modification that does not say what it modified is not a record of a
     # modification. `approved` owes nothing, which is the point: the vocabulary
