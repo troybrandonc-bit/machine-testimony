@@ -199,6 +199,47 @@ def main():
             lambda: r3.approval(decision=dd,
                                 approver={"id": "s@e.com", "kind": "human"},
                                 identity_source="trust-me"))
+    # What the reviewer did, which `decision.verdict` cannot carry. Before
+    # `disposition` a reviewer who edited an action and then allowed it was
+    # written down as having approved it unchanged, which is the distinction
+    # Colorado's proposed Rule 7.7 asks for twice.
+    print("\nan approval says what the reviewer did, not only that they acted")
+    refuses("a disposition nobody defines",
+            lambda: r3.approval(decision=dd,
+                                approver={"id": "s@e.com", "kind": "human"},
+                                identity_source="oidc", disposition="edited"))
+    silent = refuses("a modification that does not say what it modified",
+                     lambda: r3.approval(
+                         decision=dd,
+                         approver={"id": "s@e.com", "kind": "human"},
+                         identity_source="oidc", disposition="modified"))
+    check("and says why that is the boolean again under a longer name",
+          "boolean" in silent, silent[:140])
+    refuses("what was changed, with nothing saying anything changed",
+            lambda: r3.approval(decision=dd,
+                                approver={"id": "s@e.com", "kind": "human"},
+                                identity_source="oidc", changed="amount"))
+
+    r4 = started()
+    d4 = r4.decision(action_type="issue_refund", risk_class="high",
+                     risk_source="registry", proposed_by=agent,
+                     verdict="permitted", executed=True)
+    a4 = r4.approval(decision=d4,
+                     approver={"id": "sam@example.com", "kind": "human"},
+                     identity_source="auth-session",
+                     disposition="modified", changed="amount")
+    wrote = r4._by_id(a4)
+    check("a modification that says what it changed is written",
+          wrote.get("disposition") == "modified"
+          and wrote.get("changed") == "amount", json.dumps(wrote))
+    # The whole point is that the reference validator agrees, because an
+    # emitter and a validator that disagree about this member would leave the
+    # gap open under a new name.
+    r4.seal()
+    check("and the reference validator reads it back at TR-4",
+          tv.validate(r4.jsonl()).level == "TR-4",
+          tv.validate(r4.jsonl()).level)
+
     reuse = started()
     first = reuse.entries[0]["id"]
     refuses("a reused id",

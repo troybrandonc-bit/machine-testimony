@@ -97,6 +97,22 @@ IDENTITY_SOURCES = {"auth-session", "session", "api-key", "jwt", "oidc",
 # an action that may already have run.
 OUTCOMES = {"confirmed", "not_attempted", "unconfirmed"}
 
+# What the reviewer did, as distinct from what the system's gate decided.
+# `decision.verdict` is permitted or refused and carries the gate; it has no
+# room for a reviewer who changed an action and then allowed it, so before this
+# existed such a reviewer was recorded as having approved the action unchanged.
+# Colorado's proposed Rule 7.7 asks for the distinction twice and then makes it
+# evidentiary, treating a full reversal on override as indicating that the
+# review was meaningful, so a boolean loses the fact the rule keys on.
+DISPOSITIONS = {"approved", "modified", "overrode"}
+
+# `modified` owes what it changed, and the other two do not. `approved` changed
+# nothing. `overrode` reversed the decision, and the reversal is already on the
+# decision as `verdict: refused`, so requiring prose restating it would add a
+# member whose only possible content is a worse copy of a fact already in the
+# record. Same narrowing the validator makes, for the same reason.
+DISPOSITIONS_OWING_CHANGED = {"modified"}
+
 NUM_MIN, NUM_MAX, SAFE_INT = 1e-4, 1e21, 2 ** 53
 
 
@@ -246,8 +262,14 @@ class Record:
                          executed=bool(executed), **kw)
 
     def approval(self, decision: str, approver: dict, identity_source: str,
-                 **kw) -> str:
-        """Records the approval and points the decision back at it."""
+                 disposition: str = "", changed: str = "", **kw) -> str:
+        """Records the approval and points the decision back at it.
+
+        `disposition` says what the reviewer did, which the decision's verdict
+        cannot: a reviewer who edited an action before allowing it is not a
+        reviewer who approved it unchanged, and a record that cannot tell them
+        apart cannot answer the question Rule 7.7 asks twice.
+        """
         d = self._by_id(decision)
         if d is None or d["type"] != "decision":
             raise Refused("approval names %r, which is not a decision in this "
@@ -265,6 +287,32 @@ class Record:
         why = _source_problem(identity_source, IDENTITY_SOURCES)
         if why:
             raise Refused("identity_source: " + why)
+        if disposition:
+            if disposition not in DISPOSITIONS:
+                raise Refused("disposition: %r is not one of %s"
+                              % (disposition, ", ".join(sorted(DISPOSITIONS))))
+            # Refused here rather than left to the validator, because a silent
+            # modification is the exact failure this member exists to end: it
+            # reads as an approval, and the reader cannot tell that anything
+            # moved. An emitter that writes one has recorded the boolean again
+            # under a longer name.
+            if disposition in DISPOSITIONS_OWING_CHANGED and not str(
+                    changed or "").strip():
+                raise Refused("disposition %r says the reviewer changed the "
+                              "action and `changed` does not say what. An "
+                              "unexplained modification is the boolean this "
+                              "member replaces" % disposition)
+            # Deliberately NOT refused here: an `overrode` whose decision does
+            # not record `refused`. It looks like a contradiction and the
+            # specification does not say it is one, so refusing it would be
+            # this emitter enforcing a rule no reader can find in the text.
+            # That is the defect the `scope` entry exists because of.
+            kw["disposition"] = disposition
+        if str(changed or "").strip():
+            if not disposition:
+                raise Refused("`changed` says what the reviewer altered and "
+                              "no disposition says that they altered anything")
+            kw["changed"] = changed
         eid = self._add("approval", decision=decision, approver=approver,
                         identity_source=identity_source, **kw)
         d["approval"] = eid
