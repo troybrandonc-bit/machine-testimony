@@ -189,7 +189,13 @@ def main():
         "conflict": {"resolution"},
         "decision": {"risk_source", "reason", "inputs", "approval",
                      "outcome"},
-        "approval": {"identity_source", "method"},
+        "approval": {"identity_source", "method", "disposition", "changed"},
+        # `observation` carries no member the validator requires beyond the
+        # decision it names and the claim it makes. Everything else here is
+        # conditional: `observer` and `evidence` are owed only by a basis that
+        # claims somebody looked, which the validator checks and this table
+        # cannot express.
+        "observation": {"basis", "result", "observer", "evidence"},
         "integrity": {"engine", "engine_version", "covers", "anchor"},
     }
     for t in sorted(secs):

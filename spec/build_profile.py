@@ -65,7 +65,7 @@ LEDGER = os.path.join(HERE, "profiles", "PUBLISHED.json")
 EXAMPLE = os.path.join(HERE, "testimony-record-example.jsonl")
 
 PROFILE_ID = "testimony-record/tr-3"
-PROFILE_VERSION = "1"
+PROFILE_VERSION = "2"
 
 # What the level is FOR, in one sentence, because a requirement list without a
 # purpose gets applied to things it was not meant for.
@@ -161,7 +161,7 @@ def build() -> dict:
     core = {
         "profile": PROFILE_ID,
         "version": PROFILE_VERSION,
-        "specification": "draft-clifford-testimony-record-02",
+        "specification": "draft-clifford-testimony-record-03",
         "level": "TR-3",
         "cumulative": ["TR-1", "TR-2", "TR-3"],
         "requirements": reqs,

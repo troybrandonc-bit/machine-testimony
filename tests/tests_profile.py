@@ -199,10 +199,18 @@ if os.path.exists(pg):
     gone = [r["requirement"] for r in doc["requirements"]
             if r["requirement"] not in page]
     check("every requirement is on the page", not gone, gone)
-    check("the page states the attested count honestly",
-          "six of the eight" in page.lower()
-          and len(ver) == 6 and len(att) == 2,
-          "page says six verified; profile has %d" % len(ver))
+    # Derived from the profile rather than written here. This check used to
+    # hardcode "six of the eight" and went stale the moment a requirement was
+    # added, which made the test a second place to remember a number instead
+    # of a guard on the first.
+    WORDS = {2: "two", 6: "six", 7: "seven", 8: "eight", 9: "nine",
+             10: "ten", 11: "eleven", 12: "twelve"}
+    phrase = "%s of the %s" % (WORDS.get(len(ver), len(ver)),
+                               WORDS.get(len(ver) + len(att), len(ver) + len(att)))
+    check("the page states the verified and attested split honestly",
+          phrase in page.lower() and len(att) >= 1,
+          "page does not say %r; profile has %d verified and %d attested"
+          % (phrase, len(ver), len(att)))
     check("the page says the list is generated, not transcribed",
           "generated from the reference validator" in page)
     check("the page says the digest excludes the prose",

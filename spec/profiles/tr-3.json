@@ -1,7 +1,7 @@
 {
   "profile": "testimony-record/tr-3",
-  "version": "1",
-  "specification": "draft-clifford-testimony-record-02",
+  "version": "2",
+  "specification": "draft-clifford-testimony-record-03",
   "level": "TR-3",
   "cumulative": [
     "TR-1",
@@ -38,11 +38,15 @@
       "basis": "verified"
     },
     {
+      "requirement": "an approval that modified the action says what it changed",
+      "basis": "verified"
+    },
+    {
       "requirement": "the approver's name is declared to come from authentication",
       "basis": "attested"
     }
   ],
-  "digest": "sha256:74ead20bf296ef51729b4d2f6db71ee9e37af7b498b01f3895ce8603d7dfa49f",
+  "digest": "sha256:a132a27279dca3336713641b0bd7537237edc32c435992e2ede51f43d4581177",
   "digest_covers": "profile, version, specification, level, cumulative and requirements, canonicalised with sorted keys and no whitespace. It does not cover the notes below, so correcting prose does not invalidate a reference.",
   "purpose": "A record at TR-3 can show that an action which carried risk was gated by a named person who was not the party that proposed it.",
   "basis_means": {

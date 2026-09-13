@@ -520,9 +520,23 @@ function sentence(e, byId) {
             ? ", not executed. " + esc(e.reason || "no reason given")
             : e.executed ? ", and it ran" : ", and it did not run");
     }
-    case "approval":
-      return "Approved by " + WHO(e.approver) + ", identity from "
-        + esc(e.identity_source || "an unstated source");
+    case "approval": {
+      // `disposition` is read rather than assumed. Rendering a modification
+      // as "Approved by" is the conflation the member exists to end: a
+      // reviewer who altered the action and one who waved it through would
+      // read identically on this page while differing in the record.
+      const did = e.disposition === "modified" ? "Modified"
+        : e.disposition === "overrode" ? "Overrode"
+        : "Approved";
+      return did + " by " + WHO(e.approver)
+        + (e.disposition === "modified" && e.changed
+            ? ", changing " + esc(e.changed) : "")
+        + ", identity from " + esc(e.identity_source || "an unstated source");
+    }
+    case "observation":
+      return "Observed of " + esc(e.decision) + ": " + esc(e.claim)
+        + " (" + esc(e.basis || "basis unstated") + ")"
+        + (e.result ? ", which " + esc(e.result) + " it" : "");
     case "integrity":
       return "Sealed with " + esc(e.scheme) + " over "
         + ((e.covers || []).length || "an unstated number of") + " entries"

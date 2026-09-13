@@ -6,6 +6,12 @@
       "digest": "sha256:74ead20bf296ef51729b4d2f6db71ee9e37af7b498b01f3895ce8603d7dfa49f",
       "first_published": "2026-09-09",
       "url": "https://machinetestimony.org/tr-3/v1.json"
+    },
+    {
+      "version": "2",
+      "digest": "sha256:a132a27279dca3336713641b0bd7537237edc32c435992e2ede51f43d4581177",
+      "first_published": "2026-09-13",
+      "url": "https://machinetestimony.org/tr-3/v2.json"
     }
   ]
 }

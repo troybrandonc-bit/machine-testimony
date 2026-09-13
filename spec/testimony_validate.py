@@ -52,7 +52,8 @@ TYPES_FROM = {"observation": "testimony-record/0.3"}
 # gate, and the drift comparison between the two validators. The only thing it
 # does not get is a promise, and RELEASED is where that line is drawn so it is
 # a fact the tests can read rather than something somebody remembers.
-RELEASED = ("testimony-record/0.1", "testimony-record/0.2")
+RELEASED = ("testimony-record/0.1", "testimony-record/0.2",
+            "testimony-record/0.3")
 UNRELEASED_TYPES = frozenset(
     t for t, v in TYPES_FROM.items() if v not in RELEASED)
 

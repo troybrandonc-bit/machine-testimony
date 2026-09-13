@@ -1,0 +1,1033 @@
+---
+title: "The Testimony Record: An Interchange Format for What an Automated System Believed and Did"
+abbrev: "Testimony Record"
+docname: draft-clifford-testimony-record-03
+category: info
+ipr: trust200902
+submissionType: independent
+area: "Applications and Real-Time"
+keyword:
+  - accountability
+  - provenance
+  - audit
+  - autonomous agents
+stand_alone: yes
+pi: [toc, sortrefs, symrefs]
+
+author:
+  -
+    ins: T. Clifford
+    name: Troy Clifford
+    organization: Machine Testimony
+    email: troy@machinetestimony.com
+    uri: https://machinetestimony.org
+
+# RFC 2119 and RFC 8174 are deliberately absent here: the bcp14
+# boilerplate below declares them itself, and naming them in both places
+# makes kramdown warn that the reference is inline and in the header.
+normative:
+  RFC8259:
+  RFC7493:
+  RFC3339:
+  RFC7464:
+  # RFC 9162 and RFC 9942 are deliberately absent, for the same reason RFC 2119
+  # and RFC 8174 are: they are cited inline as {{!RFC...}}, which makes them
+  # normative on its own, and naming them here as well makes kramdown warn that
+  # the reference is both inline and in the header. RFC 3161 has always been
+  # handled this way. They became normative when -02 added `kind: scitt`, since
+  # an implementation that checks one has to follow both.
+
+informative:
+  # Was I-D.ietf-scitt-architecture until 8 September 2026. The draft became
+  # RFC 9943 in June 2026 and citing the superseded I-D pointed a reader at a
+  # document that had been replaced.
+  RFC9943:
+  TR-SPEC:
+    title: "The Testimony Record: specification source, reference validator and adapters"
+    author:
+      ins: T. Clifford
+      name: Troy Clifford
+    date: 2026
+    target: https://github.com/troybrandonc-bit/machine-testimony
+  CENSUS:
+    title: "The Testimony Record Conformance Census: What Eight Agent Systems Record About What They Did"
+    author:
+      ins: T. Clifford
+      name: Troy Clifford
+    date: 2026-09
+    seriesinfo:
+      DOI: 10.5281/zenodo.22290922
+  EU-AI-ACT:
+    title: "Regulation (EU) 2024/1689 laying down harmonised rules on artificial intelligence"
+    author:
+      org: European Parliament and Council of the European Union
+    date: 2024
+
+--- abstract
+
+This document specifies the Testimony Record, an append-only interchange format
+for the account an automated system gives of its own operation: what it
+believed, what evidence each belief rested on, which of its beliefs
+contradicted one another, what actions it attempted, and who authorised the
+consequential ones.
+
+The format is defined so that a party who was not present, and who has no
+access to the emitting system, can read a record and check specific properties
+of it. Four conformance levels are defined, each stating a property that can be
+verified mechanically rather than asserted.
+
+This is not a logging format. Logs record what a program did. A Testimony
+Record states what a system claimed to know, what disagreed with it, and what
+it was permitted to do about it.
+
+--- middle
+
+# Introduction
+
+Automated systems increasingly hold beliefs about people and take actions on
+the strength of them. When such an action is later questioned, the questions
+asked are consistent: what did the system believe at that moment, where did
+that belief come from, was there anything contradicting it, and who allowed the
+action to proceed.
+
+Existing formats answer none of these. Structured logging records events.
+Distributed tracing records calls. Neither retains what a system concluded, nor
+whether two of its conclusions disagreed, nor whether a person with a name
+permitted a consequential action or a process did so unattended.
+
+The gap is not hypothetical. A survey of eight agent memory and agent framework
+implementations {{CENSUS}} assessed six that take or gate actions, five of them
+written by someone other than this document's author. Against the requirement
+that an approval identify a person or a named role holder, four of those five
+were assessed absent and the fifth could not be established either way. None
+was assessed present. A run in which an engineer read the arguments and decided
+produces a record indistinguishable from one in which a script approved
+everything automatically.
+
+## Scope
+
+This document specifies a serialisation and a set of conformance levels. It
+does not specify how a system forms beliefs, how it should resolve
+disagreements, what risk classification it should apply, or how it should
+authenticate an approver. Those are properties of an implementation. This
+document specifies what such a system must be able to write down about them.
+
+## Design Constraints
+
+Three observations shape the format.
+
+First, a record whose completeness cannot be checked is worth little regardless
+of its accuracy. A conformance claim the reader cannot verify is an adjective.
+
+Second, silently resolving a disagreement destroys the only evidence that the
+system was ever uncertain. Both sides of a contradiction are therefore
+retained, and resolution, if it occurs, is recorded as an event with an actor.
+
+Third, an ungrounded belief must be expressible. A system that cannot state
+"believed, and nothing supports this" will, under pressure to produce
+well-formed output, produce support that does not exist.
+
+# Conventions and Definitions
+
+{::boilerplate bcp14-tagged}
+
+Record:
+: A sequence of entries describing one system over one period.
+
+Entry:
+: A single JSON object; one element of the serialisation.
+
+Emitter:
+: The system that produced the record.
+
+Actor:
+: A JSON object carrying at least `id` and `kind`, where `kind` is one of
+  `agent`, `human`, `system` or `connector`. It MAY carry `name` and `role`.
+  There is no string form of an Actor. A bare identifier, whether a name, an
+  email address or a string id, does not satisfy a member typed as an Actor,
+  even where it would resolve unambiguously to a real Actor object elsewhere in
+  the record. The failure mode this closes is not ambiguity: it is that a
+  resolvable-looking string is the case most likely to pass silent review, and
+  therefore the case a shape check exists to catch.
+
+Subject:
+: The thing a belief is about. Frequently a person.
+
+Proposition:
+: A claim about a subject, expressed as a stable token or URI rather than as
+  prose, so that two entries can be compared.
+
+Consequential action:
+: An action with an effect outside the emitter.
+
+# Serialisation
+
+A record is a sequence of JSON texts {{RFC8259}} in the I-JSON {{RFC7493}}
+profile, encoded in UTF-8. Two framings are defined and carry the same entries:
+
+Line-delimited:
+: One JSON text per line, separated by LF. This is the common on-disk form and
+  is used throughout this document for readability.
+
+Sequence:
+: JSON Text Sequences {{RFC7464}}, each JSON text preceded by RS (0x1E). This
+  is the self-delimiting form, and the one the media type in
+  {{iana-considerations}} names.
+
+Converting between them is mechanical. A parser MAY accept both, and can
+distinguish them by the leading octet.
+
+Every entry MUST contain the following members.
+
+spec:
+: The specification version this entry conforms to. This document specifies
+  `testimony-record/0.2`. All entries in one record MUST name the same version.
+
+type:
+: One of `belief`, `evidence`, `conflict`, `decision`, `approval`, `integrity`,
+  `scope`, `observation`.
+
+id:
+: A string unique within the record. An identifier MUST NOT be reused, in this
+  record or in a later one from the same emitter.
+
+at:
+: The time the entry was written, as an {{RFC3339}} timestamp. This is the
+  write time and not the time any described fact held. Entries MUST appear in
+  non-decreasing write-time order.
+
+An entry MAY carry members not defined here. A consumer MUST ignore members it
+does not recognise.
+
+# Entry Types
+
+## scope
+
+At most one per record, declaring what the emitting system does. Introduced in
+`testimony-record/0.2`; a record naming `testimony-record/0.1` MUST NOT carry
+one.
+
+acts:
+: Boolean. REQUIRED. Whether the emitter takes or gates consequential actions.
+
+declared_by:
+: An Actor. OPTIONAL. What made the declaration.
+
+A record with no scope entry is read as `acts: true`, which is what every
+`testimony-record/0.1` record means. A record declaring `acts: false` MUST NOT
+contain a decision entry. A record that contradicts its own declaration is not
+describing the system it claims to describe, and fails at the lowest
+conformance level rather than at the level it would otherwise have skipped.
+
+## belief
+
+subject, proposition:
+: REQUIRED. What the belief concerns, and what is claimed.
+
+polarity:
+: REQUIRED. `affirm` or `deny`.
+
+state:
+: REQUIRED. `believed_true`, `believed_false`, `contradicted` or `unknown`, as
+  at write time. A later entry may supersede it. This entry is never edited.
+
+asserted_by:
+: REQUIRED. An Actor.
+
+evidence:
+: An array of evidence entry identifiers. REQUIRED at TR-2 and above. An empty
+  array asserts that the belief is ungrounded, and MUST be representable.
+
+## evidence
+
+kind:
+: REQUIRED. `document`, `message`, `event`, `api`, `human` or `derived`.
+
+source:
+: REQUIRED. A stable identifier for where the material came from.
+
+digest:
+: OPTIONAL, RECOMMENDED. A content hash, so a cited source can be shown
+  unchanged without the record carrying its content.
+
+excerpt:
+: OPTIONAL. The quoted material itself.
+
+redacted:
+: OPTIONAL boolean. True where content was deliberately withheld. The citation
+  still stands, and a digest allows the holder of the source to show it
+  unchanged.
+
+## conflict
+
+subject, proposition:
+: REQUIRED. What is disagreed about.
+
+sides:
+: REQUIRED. Two or more belief identifiers. Every one of them MUST be present
+  in the record as a belief entry.
+
+resolution:
+: An object or null. Null is valid, and frequently the honest value: a
+  disagreement that nothing resolved is a fact about the system. A non-null
+  resolution MUST carry `method`, `by`, `at` and `kept`, and `kept` MUST be one
+  of the identifiers in `sides`.
+
+Where a belief has `state` of `contradicted`, a conflict entry naming that
+subject and proposition MUST be present.
+
+## decision
+
+action_type:
+: REQUIRED. What was proposed.
+
+risk_class:
+: REQUIRED. `low`, `medium` or `high`.
+
+risk_source:
+: REQUIRED at TR-3. Where the risk class came from, named from this list:
+  `registry`, `policy`, `catalogue`, `catalog`, `configuration`, `config`,
+  `regulation`, `operator` or `human`. A deployment whose source is none of
+  these writes it with an `x-` prefix, as in `x-inhouse-registry`, so that a
+  reader sees an extension rather than a value they might mistake for a defined
+  one. Omitting the member does not satisfy the requirement, and neither do
+  `model`, `plan`, `prompt`, `request`, `request-body` or `agent`, a risk class
+  originating in the proposing model's own output being no gate at all.
+
+: What this member establishes is bounded, and the bound should be stated
+  rather than discovered. It is an assertion by the emitter. No reader can
+  confirm from the record that a registry exists or that the class in the entry
+  came from it. Requiring a named value rather than free text makes the
+  assertion specific and comparable across systems; it does not make it
+  evidence.
+
+proposed_by:
+: REQUIRED. An Actor.
+
+verdict:
+: REQUIRED. `permitted` or `refused`.
+
+executed:
+: REQUIRED. Boolean. Whether the system observed the action run. A decision
+  with `verdict` of `refused` MUST NOT record `executed` as true.
+
+outcome:
+: OPTIONAL. `confirmed`, `not_attempted` or `unconfirmed`. What the record
+  claims about the effect, as distinct from what the system observed. The
+  boolean above cannot carry that claim on its own: an action that was
+  dispatched and whose acknowledgement never arrived is not an action that did
+  not happen, and a reader who treats it as one may retry an action that
+  already ran. This member is the same distinction a belief entry draws when
+  its state is unknown, applied to actions. A record MUST NOT contradict
+  itself. Where the system observed the action run, this member if present MUST
+  NOT be `not_attempted`; it may be `confirmed` or `unconfirmed`, because an
+  action can be observed to run while its effect remains unestablished. Where
+  the action was refused, it MUST be `not_attempted`.
+
+reason:
+: REQUIRED where the verdict is `refused`.
+
+inputs:
+: OPTIONAL. Identifiers of the beliefs the decision rested on. Every one of
+  them MUST be present in the record as a belief entry.
+
+approval:
+: The identifier of an approval entry. REQUIRED where `risk_class` is `high`
+  and `executed` is true.
+
+## approval
+
+decision:
+: REQUIRED. The identifier of the decision this approval permits, which MUST be
+  present in the record.
+
+approver:
+: REQUIRED. An Actor whose `kind` is `human`.
+
+identity_source:
+: REQUIRED. Where the approver's identity was obtained, named from this list:
+  `auth-session`, `session`, `api-key`, `jwt`, `oidc`, `oauth`, `saml`, `mtls`,
+  `webauthn`, `passkey`, `signed-token`, `directory`, `sso`, `ldap` or
+  `kerberos`. Anything else is written with an `x-` prefix. The values excluded for `risk_source` are excluded here, and a
+  name the proposing model produced does not satisfy the requirement.
+
+: Like `risk_source`, this is an assertion. A record cannot show that the name
+  in an approval came from the session it names, and a validator reading the
+  record cannot either. It is worth requiring because a system that records no
+  approver at all cannot be asked afterwards who decided, and one that records
+  a name and where it says the name came from can at least be contradicted by
+  its own logs.
+
+method:
+: OPTIONAL. How the approval was given.
+
+disposition:
+: OPTIONAL. What the reviewer did, named from this list: `approved`,
+  `modified`, `overrode`. `decision.verdict` records the gate's outcome and
+  has only two values, so before this member a reviewer who altered an action
+  and then allowed it was indistinguishable from one who allowed it unchanged.
+
+: Where this member is `modified`, the entry MUST also carry `changed`. The
+  other two values do not: `approved` altered nothing, and `overrode` reverses
+  the decision, which is already recorded as a `verdict` of `refused` on the
+  decision this approval names, so requiring prose restating it would add a
+  member whose only possible content is a worse copy of a fact already in the
+  record.
+
+: What this member does not establish: that the alteration was the one the
+  reviewer intended, or that the arguments recorded as executed are the ones
+  that ran. It records what the emitter says a person did.
+
+changed:
+: REQUIRED where `disposition` is `modified`. What the reviewer altered.
+  Naming the fields that moved is sufficient and restating their values is
+  not required, since a record carrying the arguments both before and after
+  already holds them and a prose summary that can contradict its own source is
+  worse than none.
+
+The approver MUST NOT be the principal named in the approved decision's
+`proposed_by`. An implementation that lets an acting agent's own credential
+sign off its own action does not meet the level, however the name in the entry
+is spelled.
+
+## observation
+
+decision:
+: REQUIRED. The identifier of the decision this observation concerns, which
+  MUST be present in the record.
+
+claim:
+: REQUIRED. What the observation says about that decision's effect.
+
+basis:
+: OPTIONAL. What the claim rests on, named from this list: `effect-observed`,
+  `response-received`, `asserted`. These describe what was looked at and are
+  NOT a ranking of trust: a forged read of target state claims
+  `effect-observed` while establishing less than an honest
+  `response-received`, and an implementation that sorts them into a ladder has
+  invented a guarantee this specification does not make.
+
+: The member is deliberately not required. An omitted basis means unknown and
+  MUST NOT be read as `asserted`, because absence cannot distinguish an
+  observation that was made and left out of the record from one that never
+  happened.
+
+result:
+: OPTIONAL. How the observation bears on the decision it names, from this
+  list: `supports`, `contradicts`, `inconclusive`.
+
+observer:
+: REQUIRED where `basis` is `effect-observed` or `response-received`. An Actor.
+  A basis claiming that somebody looked owes the record who looked.
+
+evidence:
+: REQUIRED where `basis` is `effect-observed` or `response-received`.
+  Identifiers of evidence entries, each of which MUST be present in the record.
+  A claim to have looked at something owes the thing looked at. An `asserted`
+  basis owes neither, and an assertion with nothing behind it stays
+  expressible, because the point of the vocabulary is that a record has to say
+  which of the two it is.
+
+An observation is a separate entry rather than a member on the decision it
+concerns, and the reason is integrity rather than tidiness. An effect is
+frequently learned after the decision is written. Writing it back onto the
+decision would alter an entry a digest already covers, so the format would be
+asking an emitter to break its own integrity claim in order to become more
+honest. An append-only record can only carry later knowledge as a later entry.
+
+**What an observation does not establish.** That the source is authentic, that
+the observer looked at anything, or that the observer is independent of the
+party that proposed the action. A different Actor identifier is not
+independence. A reader settles the shape of these entries from the record and
+settles none of those three from it.
+
+## integrity
+
+scheme:
+: REQUIRED. `replay`, `hash-chain`, `signature` or `external-anchor`.
+
+digest:
+: REQUIRED. `sha256:` followed by the lowercase hexadecimal SHA-256 of the
+  canonical form of the entries `covers` names, computed as in
+  {{digest-computation}}. A digest whose computation is not specified cannot be
+  recomputed by a reader, which is the only thing that makes it worth
+  recording.
+
+engine, engine_version:
+: REQUIRED where the scheme is `replay`. A replay nobody else can reproduce is
+  not a verification.
+
+covers:
+: OPTIONAL in general, REQUIRED at TR-4. Identifiers of the entries the digest
+  is computed over, in the order they are hashed, each of which MUST be present
+  in the record. A digest that does not say what it is over cannot be
+  recomputed by anyone, so a record reaching the verifiable level cannot omit
+  this.
+
+anchor:
+: REQUIRED where the scheme is `external-anchor`. An object carrying `kind`,
+  `authority` and `token`. The point of an external anchor is that its evidence
+  is held by somebody other than the emitter, so a scheme naming no authority
+  and carrying no token is the claim without the thing, and is refused.
+
+An `external-anchor` of kind `rfc3161` carries, as `token`, the base64 of a
+TimeStampResp {{!RFC3161}} obtained from a Time Stamp Authority over the
+entry's digest. The `messageImprint` of the TSTInfo in that token MUST be
+the entry's digest: a token signed over anything else is a valid timestamp
+for some other record and says nothing about this one.
+
+An implementation making that comparison MUST take the imprint from the
+`messageImprint` of the TSTInfo, and not from the first SHA-256
+AlgorithmIdentifier it finds in the token. A TimeStampResp is a CMS SignedData,
+whose `digestAlgorithms` field carries a SHA-256 identifier **before** the
+TSTInfo does. A scan from the start of the token therefore finds the wrong one,
+and an implementation that stops there compares a value the authority never
+signed over, while appearing to check the thing this level rests on. An
+`AlgorithmIdentifier` may also carry an explicit NULL parameter, which must be
+skipped before the OCTET STRING holding the imprint.
+
+This is written down because two independent implementations made the same
+mistake, which is the evidence that the specification rather than either author
+was at fault. For the same reason, an implementation reading the TSA's
+`genTime` should begin its search at the message imprint rather than at the
+start of the token, since a SignerInfo may carry a signing-time attribute of
+its own and a scan from the front can return the signer's clock in place of the
+authority's.
+
+An `external-anchor` of kind `scitt` carries, as `token`, the base64 of a COSE
+receipt {{!RFC9942}} over a log whose verifiable data structure is
+RFC9162_SHA256 {{!RFC9162}}, and MUST also carry `root`: the tree head, in
+lowercase hex, that the receipt's inclusion proof lands on.
+
+The head is required, and the reason is the whole of what makes the anchor
+worth anything. A receipt carries an inclusion proof and not a root; the root
+is the detached payload the log's signature covers. So an inclusion proof taken
+over some other record reconstructs perfectly well and simply arrives at a
+different head, and a reader with no head to compare against has checked
+nothing at all. With the head declared, the check is arithmetic: reconstruct
+from the entry's digest as the leaf, and it either lands on the declared head
+or it does not.
+
+What that settles is that this proof is over this record and reaches the head
+the anchor names. What it does not settle is that the head is the log's. That
+needs the log's signature over the root, a key, and a curve, and it is
+therefore attested rather than verified, on exactly the terms an RFC 3161
+token's issuance is. An implementation MUST NOT report a reconstructed head as
+evidence that the log published it.
+
+A receipt declaring any other verifiable data structure is reported as attested
+in the same way an unreadable kind is, and MUST NOT be refused. The structure
+is a different one, not a bad one.
+
+A `kind` SHOULD be an absolute URI or a reverse-DNS name, such as
+`org.opentimestamps`, rather than a bare word. This is not about making a false
+claim harder to write, which it barely does. It is that `kind` is an extension
+point, and an unregistered extension point collides: two implementers who
+independently choose `blockchain` for different mechanisms produce records a
+validator reads as the same claim when they are not. The problem gets worse as
+adoption improves, which is the kind worth fixing before it exists, and it is
+why namespaces, package names and media types all settled on the same
+convention.
+
+A bare word is not refused. Refusing one would fail an honest emitter over
+spelling, and the identifier resolving an ambiguity does not make the claim it
+carries any more checkable: an anchor whose kind is a URI is attested on exactly
+the same terms as one whose kind is a word, and an implementation MUST NOT
+report it otherwise.
+
+Other kinds are permitted and `rfc3161` is not privileged. A digest committed
+to a public blockchain, or published to independent relays, is an external
+anchor by the definition above: evidence for it is held by somebody other than
+the emitter. An implementation that cannot recompute a given kind MUST NOT
+refuse the record on that ground. It reports the anchor as attested and says
+which kind it could not read, so a reader learns that this level rests on one
+fewer settled check and why.
+
+Refusing an unrecognised kind marks a record down for carrying evidence the
+reader's tools happen not to parse, which says nothing about the record. An
+implementation that reports it as verified without reading it is worse, and is
+the failure this format exists to make visible.
+Such a token is verifiable by any RFC 3161 implementation, without reference to
+the emitter or to this document's tooling, which is the property that makes it
+worth more than a digest the emitter computed. It fixes the bytes and the time
+and nothing else: it does not establish that the record is accurate, that it is
+complete, or that a different record was not also produced and discarded.
+
+## Computing a digest {#digest-computation}
+
+An implementation computes the digest of an integrity entry as follows.
+
+1. Take the entries `covers` names, in the order it names them.
+
+2. Serialise each as a JSON object with no insignificant whitespace, its
+   members ordered by name comparing names as sequences of Unicode code points,
+   and members whose names begin with U+005F LOW LINE omitted. Those are reader
+   annotations rather than record content, and a digest that varied with them
+   would change when a tool added a line number.
+
+3. Join the serialised entries with a single U+000A LINE FEED, with none after
+   the last.
+
+4. Encode the result as UTF-8 and take its SHA-256. The `digest` member is
+   `sha256:` followed by the lowercase hexadecimal.
+
+Member names defined by this document are ASCII, so ordering by code point and
+the UTF-16 code unit ordering of {{!RFC8785}} cannot differ for them. An
+extension using non-ASCII member names should expect that they can, and should
+not.
+
+Numbers are the one place where two implementations can serialise the same
+value into different bytes. A number that is a whole number is written without
+a fraction, as {{!RFC8785}} requires: `1`, never `1.0`. Outside that,
+implementations agree on the shortest representation that round-trips, but not
+on where to switch to an exponent, so a covered entry MUST NOT contain a number
+whose magnitude is below 0.0001 or at or above 1e21, nor an integer whose
+magnitude exceeds 2^53. An implementation encountering one refuses the record
+rather than emitting a digest another implementation would not reproduce.
+
+# Conformance Levels
+
+Each level states a property of the record. The level reached is the highest
+for which nothing at that level or below is unmet.
+
+## TR-1: Recorded
+
+The record parses, is not empty, and names one known specification version
+throughout. Every entry has a known type, its required members, allowed values
+for enumerated members, a unique identifier and a well-formed write time.
+Entries are in non-decreasing write-time order, which is what append-only looks
+like from outside. At most one scope entry is present, and a record declaring
+that it does not act contains no decisions.
+
+## TR-2: Explained
+
+Every belief states its evidence, including by stating that there is none, and
+every cited evidence entry is present. Every conflict names at least two sides,
+and every side is retained as a belief in the record. A belief marked
+contradicted has a conflict entry naming it. A resolved conflict records the
+method, the actor, the time, and which side was kept.
+
+## TR-3: Gated
+
+The record contains at least one decision, unless the emitter has declared that
+it does not act. Every decision's risk class comes from outside the proposing
+model's control. A refused action did not execute, and records its reason. An
+executed high-risk action has an approval entry. Every approval names a human,
+sourced from authentication rather than from model output, and that human is
+not the proposer.
+
+An emitter declaring `acts: false` satisfies this level by having no actions to
+gate. This is satisfaction rather than exemption: such a system may reach TR-4.
+
+## TR-4: Verifiable
+
+The record publishes an integrity scheme; every integrity entry carries a
+digest and says which entries that digest is over; everything an integrity
+entry claims to cover is present in the record; and, for each entry, the digest
+is the digest of exactly those entries, computed as in {{digest-computation}}.
+Where the scheme is `external-anchor`, the token names an authority and the
+message imprint that authority signed is the digest in the entry.
+
+The name of this level is a claim about what a reader can do, so the checks
+behind it are arithmetic over bytes already in the record rather than
+statements about the emitter. The exception is `replay`, which names an engine
+whose behaviour no reader can confirm from the record. It is reported as an
+attestation, and a record whose only integrity is a replay claim reaches this
+level on the emitter's word.
+
+## What a Level Rests On {#what-a-level-rests-on}
+
+The checks behind these levels are not all of one kind, and a level reported
+without saying so is a number standing on an unknown mixture.
+
+A **verified** check is one a reader can settle from the record alone. That the
+evidence a belief cites is present, that both sides of a conflict are retained,
+that a refused action is not also recorded as executed, that a digest is the
+digest of the entries it covers, that an anchor's token is over that digest and
+not a different one. A reader who disagrees with a validator about any of these
+can settle it without asking anybody.
+
+An **attested** check is one the record asserts and no reader can confirm from
+it. That a risk class came from a registry. That an approver's name came from
+an authenticated session. That a replay engine reproduces what it claims to.
+**That the authority named in an anchor is the party that issued its token.**
+**And every `at` in the record.** These are worth requiring, because a system
+that records nothing cannot be contradicted and one that records a specific
+claim can be. They are not evidence, and a conformance report that presents
+them as though they were is making the error this format exists to make
+visible.
+
+The anchor was reported as one check until 8 September 2026 and is now two, for
+the same reason. It read "the anchor's authority signed this record's digest",
+marked verified, and no signature was verified anywhere in it: the check decodes
+the token, finds the SHA-256 imprints and asks whether this record's digest is
+among them. That comparison is arithmetic over bytes in the file and is
+correctly verified. That the named authority issued the token is a different
+claim needing a certificate the reference validator does not carry, and it was
+riding on the word "signed" with no check behind it. Splitting them changes no
+verdict and lets the per-level counts say how much of the level is settled.
+
+The clock deserves saying out loud, because two checks touch it and both are
+verified, which makes it look better founded than it is. That an `at` is a
+well-formed {{RFC3339}} timestamp, and that entries are in non-decreasing
+write-time order, are both settleable from the record alone and both correctly
+marked. Together they establish that the emitter's numbers are well formed and
+monotone, not that they are true, and an emitter that back-dates consistently
+satisfies both without effort.
+
+One bound on it can be settled by a reader, and only where an entry is covered
+by an external anchor. A TimeStampResp carries the moment the authority saw the
+digest, so an entry claiming a write time after that moment is contradicted by
+a party with no stake in the record. That is a check rather than an assertion,
+and an implementation that anchors SHOULD make it. It is one-sided: it bounds
+`at` from above and says nothing about a time written earlier than the truth.
+
+Nothing in this specification closes back-dating, and no self-contained record
+can, because the emitter authored every number in it. Closing it requires a
+timestamp taken before the fact rather than over the finished record, which is
+a different and heavier requirement than any level here states.
+
+An implementation reporting a level SHOULD report, for each level, how many of
+its checks were of each kind. The reference validator does. A level cited
+without that distinction is a weaker statement than it appears.
+
+## On the Ordering
+
+The levels are cumulative, which conflates two independent properties: whether
+a system gates its actions, and whether its record can be shown unaltered. A
+system may hold a genuine hash chain and gate nothing, and before the scope
+entry existed such a system reported TR-2 however good its integrity was.
+
+The scope entry resolves the case where the system does not act. It does not
+resolve the general case. Implementations reporting conformance SHOULD report
+each level's own result alongside the level reached, so that a satisfied level
+sitting behind an unmet one below remains visible, and SHOULD report the
+declared scope with the level, because "TR-4, record only" is a different
+sentence from "TR-4".
+
+# Security Considerations
+
+A record is evidence about a system, and frequently about people.
+
+A record is not a secure log below TR-4. Nothing in the format prevents an
+entry being altered after the fact. Non-decreasing write times demonstrate that
+a record is consistent with having been appended to, not that it was. Consumers
+MUST NOT treat conformance at TR-1 through TR-3 as tamper evidence.
+
+Not every integrity scheme is worth the same. A digest computed by the emitter
+detects alteration by a third party and establishes nothing about the emitter,
+who can recompute it over whatever they please. Only `signature` and
+`external-anchor` place evidence outside the emitter's control, and only those
+support a claim made against the emitter rather than on the emitter's behalf. A
+consumer evaluating a TR-4 record SHOULD read the scheme rather than the
+level.
+
+A self-declared scope is believed by the validator. An emitter that acts and
+declares otherwise skips the gate requirements. Two things limit the damage: a
+record contradicting its own declaration fails at TR-1, and the declaration is
+reported with the level rather than hidden inside it. Neither is a substitute
+for external attestation. Consumers requiring assurance beyond self-assertion
+should look to the SCITT architecture {{RFC9943}} and to transparency logs
+{{RFC9162}}. An `external-anchor` of kind `scitt` is the direct expression of
+that: a COSE receipt {{RFC9942}} over such a log, checked here as far as bytes
+alone go.
+
+An approval is only as strong as its identity source. The format requires
+identity to originate outside anything the proposing model can write, and
+requires the approver not to be the proposer, but it cannot verify that an
+implementation honoured either. These are the failures a reader cannot
+otherwise detect, which is why they are stated as requirements rather than left
+to implementations.
+
+An identifier reused across records defeats them both. Identifier uniqueness is
+checked within a record. An emitter that restarts its counter produces two
+records that cannot be read together.
+
+# Privacy Considerations
+
+Belief entries frequently concern identifiable people, and evidence entries may
+reference material about them.
+
+Implementations SHOULD omit content and carry a digest instead. A citation with
+a digest lets a holder of the source show it unchanged, without the record
+becoming a second copy of the material. The `redacted` member exists so that a
+withheld excerpt is visibly withheld rather than silently absent, which is the
+difference between a record that can be audited and one that merely looks
+complete.
+
+Append-only recording is in tension with erasure obligations. This document
+takes no position on how an implementation should resolve that tension, but
+notes that the two obvious resolutions both fail: rewriting history destroys
+the property that made the record worth keeping, and recording a deletion
+alongside the deleted content erases nothing. An implementation SHOULD be able
+to record that a destruction occurred without re-retaining what was destroyed.
+
+# IANA Considerations
+
+IANA is requested to register the following media type in the "Media Types"
+registry.
+
+Type name:
+: application
+
+Subtype name:
+: testimony-record+json-seq
+
+Required parameters:
+: N/A
+
+Optional parameters:
+: N/A
+
+Encoding considerations:
+: binary; a JSON text sequence {{RFC7464}} of UTF-8 encoded JSON texts
+
+Security considerations:
+: See {{security-considerations}} of this document.
+
+Interoperability considerations:
+: All entries in one record name a single specification version. Consumers
+  ignore members they do not recognise.
+
+Published specification:
+: This document
+
+Applications that use this media type:
+: Systems recording and exchanging accounts of automated decision-making, and
+  tools that validate such accounts
+
+Fragment identifier considerations:
+: N/A
+
+Additional information:
+: Deprecated alias names for this type: N/A. Magic number(s): N/A. File
+  extension(s): .trseq for the sequence framing; .jsonl is in common use for
+  the line-delimited framing. Macintosh file type code(s): N/A.
+
+Person and email address to contact for further information:
+: Troy Clifford <troy@machinetestimony.com>
+
+Intended usage:
+: COMMON
+
+Restrictions on usage:
+: None
+
+Author:
+: Troy Clifford
+
+Change controller:
+: The IESG
+
+# Relationship to Regulation
+
+The European Union Artificial Intelligence Act {{EU-AI-ACT}} requires
+record-keeping over the lifetime of high-risk systems, and human oversight
+capable of intervention. This document does not implement those obligations and
+makes no claim of compliance with them. It is noted only that the levels
+defined here were shaped by the same questions: TR-1 by automatic recording as
+events occur, TR-2 and TR-3 by the identification of risk situations, and TR-3
+by the attributability of oversight. Whether a given deployment satisfies a
+legal obligation is a matter for the parties to that obligation and their
+regulator.
+
+--- back
+
+# Implementation Status
+
+At the time of writing, every implementation of this format is by this
+document's author. There are two validators, one in Python and one in
+TypeScript, written separately and checked against each other on a corpus of
+records covering each level and each failure mode, which tests the
+specification's clarity but is not independent implementation in the sense that
+matters. There are two emitters: one for the author's own system, and one for
+LangGraph, which depends on that framework and on nothing of the author's.
+
+One implementation by another party is known. An author writing as
+babyblueviper1 wrote a validator from this document's text, without reading the
+reference implementation, and ran it against the published conformance corpus.
+It reached the same verdict on fifty-three of the fifty-four cases. On the
+fifty-fourth it disagreed and was right: three members defined here as an Actor
+were checked by the reference for presence and never for shape, so a bare string
+where an object belongs reached the second level in the reference validator and
+in the corpus that validator publishes.
+
+What that establishes is narrow and worth stating exactly. It is a validator and
+not an emitter, it was one person's work over one evening, and the corpus it was
+checked against is this document's own. What it does establish is that the text
+is sufficient to build a conforming implementation from without access to the
+author, which is the property the two validators above cannot demonstrate however
+carefully they are written, because both were written by the same reader of the
+same text.
+
+The manner of the disagreement is worth as much as the count. Two people writing
+from this text without coordinating arrived independently at the same two gaps:
+a shape requirement stated in the Conventions and enforced nowhere, and a
+comparison this document required while saying nothing about where to take one
+side of it from. A single author re-reading their own specification cannot
+produce that, however carefully and however often, because the reading that
+produced the gap is the reading doing the re-reading. Two readers hitting the
+same omission separately is evidence about the text rather than about either of
+them.
+
+No independent emitter is known. That is the honest remaining state of it, and
+it is the thing a reader deciding whether to implement this should weigh most
+heavily.
+
+The reference validator is a single standard-library file with no network
+access, published under an MIT licence, so that a conformance claim can be
+checked by the party hearing it rather than by the party making it {{TR-SPEC}}.
+
+A survey of eight agent memory and agent framework implementations against
+these requirements is published with a DOI {{CENSUS}}. It includes the
+reference implementation, which the survey states carries no evidential weight,
+and records two defects the survey found in it during preparation.
+
+The `scope` entry, the conditional TR-3 requirement, and the recommendation to
+report per-level results are new in `testimony-record/0.2` and have one
+implementation each at the time of writing.
+
+# Changes Since -00
+{:numbered="false"}
+
+This section is to be removed before publication as an RFC.
+
+The Introduction of -00 stated that none of the eight surveyed systems records
+the identity of the person who approved an action. The survey it cites does not
+support that. Four of the eight were assessed absent on that requirement, a
+fifth could not be established either way, and the three remaining include this
+document's author's own system, which does record it. The claim was stronger
+than the evidence behind it, and a document arguing that a system should not
+assert more than it can show is the wrong place for one. Corrected.
+
+The {{TR-SPEC}} reference pointed at a product's documentation site, which made
+the format read as the manual for a piece of software. The specification
+source, the reference validator and the adapters are now published in a
+repository of their own, and the reference points there.
+
+An Implementation Status section was added. It states that every implementation
+of this format is by this document's author, and that no independent
+implementation is known.
+
+The `external-anchor` integrity scheme was named in -00 and not specified. The
+`anchor` member is now defined, with an RFC 3161 profile, and the Security
+Considerations distinguish the schemes that place evidence outside the
+emitter's control from those that do not.
+
+-00 did not say how a digest was computed. It said only that the digest was
+the value under which alteration would be detected, which names no algorithm,
+no serialisation and no ordering. Two conforming implementations would have
+produced different digests for one record, and no reader could have recomputed
+either, so the level called Verifiable was not reachable by anyone reading this
+document alone. {{digest-computation}} specifies it, `covers` is required at
+that level, and the reference validator recomputes rather than accepts. This
+was found in the author's own implementations, which had two versions of the
+rule that had never agreed, neither of them written down.
+
+The values of `risk_source` and `identity_source` were specified as a list of
+words that did not satisfy them, which meant any other word did. They are
+specified as lists of words that do, with an `x-` prefix for anything else.
+
+Nothing in -00 distinguished the checks a reader can settle from the record
+from the ones the record merely asserts. {{what-a-level-rests-on}} does, and
+implementations are asked to report the split alongside a level.
+
+# Changes from -02
+{:numbered="false"}
+
+Two things the validator, the conformance corpus and the reference
+implementation already carried are normative here for the first time. Both
+were deliberately held back: this specification is allowed to lag the code,
+because publishing an unsettled design as normative text is worse than
+documenting a settled one late.
+
+**A record can say what a reviewer did.** `decision.verdict` is `permitted` or
+`refused` and records the gate, so a reviewer who altered an action and then
+allowed it was written down as one who allowed it unchanged. Colorado's
+proposed ADMT rules ask whether a reviewer approved, modified or overrode an
+output, ask it twice, and then make it evidentiary by treating a full reversal
+as indicating that the review was meaningful, so a two-valued gate loses the
+fact the rule turns on. `approval.disposition` carries the distinction and a
+`modified` entry owes `changed`, because an unexplained modification is the
+boolean it replaces wearing a longer name.
+
+**A record can say on what basis it claims an effect.** `observation` is to
+`outcome` what `approval` is to `verdict`: a separate entry naming what it
+concerns, carrying an Actor, keeping the provenance of a claim beside the claim
+instead of inside it. It is an entry rather than a member because an effect is
+usually learned after the decision was written, and writing it back would alter
+an entry a digest already covers.
+
+`basis` is not a trust ladder and the text now says so. A forged read of target
+state claims `effect-observed` while establishing less than an honest
+`response-received`. An omitted basis means unknown and never `asserted`, since
+absence cannot distinguish an observation left out of the record from one that
+never happened. That distinction was raised on an issue tracker rather than
+designed in.
+
+# Changes from -01
+{:numbered="false"}
+
+A decision could say that an action ran or that it did not, and could not say
+that it was dispatched and the effect could not be confirmed. The record has
+always modelled that uncertainty for beliefs, where `state` carries `unknown`,
+and did not model it for actions, so a system whose acknowledgement was lost had
+to assert something it did not know. The optional `outcome` member carries the
+distinction, and a decision that contradicts itself between `executed`,
+`verdict` and `outcome` no longer reaches TR-3. Observing an action run and
+being unable to confirm its effect is not a contradiction: a call that returned
+while settlement is pending is both.
+
+The TSTInfo parsing trap is now stated: the first SHA-256 AlgorithmIdentifier
+in a TimeStampResp belongs to the CMS `digestAlgorithms` field and not to the
+message imprint, so an implementation that takes it compares a value the
+authority never signed. Two independent implementations made that mistake
+before it was written down.
+
+An anchor's `kind` SHOULD now be an absolute URI or a reverse-DNS name, because
+an unregistered extension point collides between honest implementers, which is a
+failure mode that needs nobody to lie. A bare word is still accepted, and a
+URI-shaped one is attested on the same terms, since an identifier resolves
+ambiguity rather than manufacturing evidence.
+
+An anchor of a kind an implementation cannot recompute is now reported as
+attested rather than refused. The reference validator read every anchor token
+as an RFC 3161 TimeStampResp whatever its `kind` said, so a digest committed to
+Bitcoin proof-of-work could not reach the fourth level: it was marked down for
+carrying evidence no single authority can move.
+
+The clock is now named as an attested claim. Every `at` is written by the
+emitter, and the section listing what a reader cannot settle did not say so,
+which meant a reader consulting exactly that section to find the emitter's
+unsupported claims was told the wrong thing by omission. One checkable bound is
+stated with it, and the limit of that bound is stated too: an external anchor
+bounds a write time from above and nothing here closes back-dating.
+
+# Acknowledgements
+{:numbered="false"}
+
+Phill Clapham reported that the reference validator refused TR-3 to any record
+containing no decision entries, a requirement that appears nowhere in the
+specification text, with the effect that a system holding a genuine hash chain
+and gating nothing could not reach TR-4 however good its integrity was. The
+scope entry and the per-level reporting in this document are the result.
+
+An author writing as impartshadow proposed the `outcome` member, found within
+hours that the first implementation of it refused the honest case it existed to
+express, and proposed both `may_duplicate` and the placement of an approval
+deadline on the request rather than on the approval.
+
+An author writing as babyblueviper1 established that the record's own clock was
+an attested claim the specification did not disclose, that the two checks
+touching it prove only well-formedness and monotonicity, and that an RFC 3161
+token already carried a bound on it that no implementation was reading.
+
+They then wrote an implementation of this specification from its text alone,
+without reading the reference validator, and ran it over the conformance corpus.
+It disagreed on one case of fifty-four and was correct: three members declared
+here to be an Actor were checked for presence and never for shape, so a name
+where an object belongs reached the second level in the reference validator and
+in the corpus it publishes. That is the defect an implementation built from a
+port cannot find, because a port inherits its author's reading of the text
+rather than the text, and it is the reason this document asks for the other
+kind.
