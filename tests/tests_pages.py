@@ -52,6 +52,16 @@ DEPOSITED = {
     "papers/wp1",       # doi:10.5281/zenodo.22286050
 }
 
+# Hand-written pages with no source in pages/ and NO deposit. The distinction
+# from DEPOSITED matters and is not pedantry: a deposited page is skipped
+# because editing it needs a new Zenodo version, so the navigation check has to
+# let it drift. An undeposited paper has no such excuse, and wp2 is held to the
+# navigation check and passes it. This set exempts one thing only, which is the
+# requirement to have a generator source.
+HAND_WRITTEN = {
+    "papers/wp2",       # working paper, typeset on wp1's stylesheet
+}
+
 CA_BUNDLES = (
     "/etc/ssl/certs/ca-certificates.crt",
     "/etc/pki/tls/certs/ca-bundle.crt",
@@ -2136,7 +2146,8 @@ def main():
                 if os.path.isdir(os.path.join(d, inner)) and os.path.exists(
                         os.path.join(d, inner, "index.html")):
                     published.add("%s/%s" % (name, inner))
-    orphans = sorted(published - sources - UNCONVERTED - DEPOSITED)
+    orphans = sorted(published - sources - UNCONVERTED - DEPOSITED
+                     - HAND_WRITTEN)
     check("no published page lacks a source in pages/", not orphans, orphans)
     # And the allowlist must not outlive the thing it excuses.
     stale = sorted((UNCONVERTED | DEPOSITED) & sources)

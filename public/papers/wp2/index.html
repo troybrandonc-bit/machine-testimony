@@ -1,0 +1,595 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>One of Eight: Can Deployed Agent Systems Record Who Approved an Action? - Machine Testimony Working Paper No. 2</title>
+<meta name="description" content="Ten widely deployed agent and agent-memory systems were read at pinned commits against twenty record-keeping requirements. Eight take or gate consequential actions. One of the eight can identify the person who approved one, and that one is the author's own implementation. Twenty legal instruments were read against the same question: twelve ask a record to show who intervened and four are law.">
+<meta property="og:title" content="One of Eight">
+<meta property="og:description" content="Ten deployed agent systems read at pinned commits. One of the eight that act can name who approved an action.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://machinetestimony.org/papers/wp2/">
+<meta property="og:image" content="https://machinetestimony.org/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="One of Eight">
+<meta name="twitter:description" content="One of eight acting agent systems can name who approved an action.">
+<meta name="twitter:image" content="https://machinetestimony.org/og.png">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/icon.png" type="image/png" sizes="512x512">
+<link rel="apple-touch-icon" href="/icon.png">
+<link rel="canonical" href="https://machinetestimony.org/papers/wp2/">
+<meta name="citation_title" content="One of Eight: Can Deployed Agent Systems Record Who Approved an Action?">
+<meta name="citation_author" content="Clifford, Troy">
+<meta name="citation_publication_date" content="2026/09/13">
+<meta name="citation_publisher" content="Machine Testimony">
+<meta name="citation_technical_report_institution" content="Machine Testimony">
+<meta name="citation_technical_report_number" content="2">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  /* A working paper. One serif column at a reading measure, numbered
+     sections, booktabs rules, notes at the foot. No boxes, no accent
+     colour in the body, no emphasis that the sentence does not carry. */
+  :root{
+    --band:#123a6b; --band-2:#0e2f57; --band-ink:#ffffff; --band-dim:#b9cbe4;
+    --paper:#ffffff; --ink:#111417; --body:#1e2429; --muted:#5f6a72;
+    --rule:#111417; --rule-soft:#c9cfd4; --link:#123a6b;
+    --display:"Source Serif 4",Georgia,"Times New Roman",serif;
+    --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --band:#0c2340; --band-2:#081a2f; --band-ink:#f2f6fb; --band-dim:#9db3ce;
+      --paper:#0f1214; --ink:#eef0f2; --body:#c8ced3; --muted:#8a939a;
+      --rule:#c8ced3; --rule-soft:#2c3236; --link:#9dc0ef;
+    }
+  }
+  :root[data-theme="dark"]{
+    --band:#0c2340; --band-2:#081a2f; --band-ink:#f2f6fb; --band-dim:#9db3ce;
+    --paper:#0f1214; --ink:#eef0f2; --body:#c8ced3; --muted:#8a939a;
+    --rule:#c8ced3; --rule-soft:#2c3236; --link:#9dc0ef;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--body);
+    font-family:var(--display);font-size:17px;line-height:1.62;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 30px}
+  a{color:var(--link);text-decoration:underline;text-underline-offset:2px;
+    text-decoration-thickness:1px}
+
+  .band{background:var(--band);color:var(--band-ink);
+    background-image:linear-gradient(180deg,var(--band) 0%,var(--band-2) 100%)}
+  .band a{color:var(--band-ink);text-decoration:none}
+  .band a:hover{text-decoration:underline}
+  .topbar{display:flex;align-items:center;gap:26px;flex-wrap:wrap;padding:16px 0 12px}
+  .lockup{display:flex;align-items:center;gap:13px}
+  .lockup .mk{width:31px;height:31px;flex:none;color:var(--band-ink)}
+  .lockup .bar{width:2px;align-self:stretch;background:var(--band-ink);opacity:.55}
+  .lockup .nm{font-family:var(--sans);font-weight:700;font-size:11.5px;
+    letter-spacing:.085em;line-height:1.32;text-transform:uppercase}
+  .utility{margin-left:auto;font-family:var(--sans);font-size:13.5px;
+    display:flex;gap:12px;align-items:center;color:var(--band-dim)}
+  .utility .sep{opacity:.45}
+  nav.primary{border-bottom:1px solid rgba(255,255,255,.42);
+    display:flex;gap:26px;flex-wrap:wrap;padding:9px 0 14px;
+    font-family:var(--sans);font-size:14.5px}
+  .band .pad{height:18px}
+
+  /* title block */
+  .paper{max-width:52rem;margin:0 auto;padding:52px 34px 0}
+  .series{font-family:var(--sans);font-size:12.5px;color:var(--muted);
+    margin:0 0 30px}
+  h1{font-family:var(--display);font-weight:700;color:var(--ink);
+    font-size:1.86rem;line-height:1.2;margin:0 0 6px;letter-spacing:-.006em}
+  h1 + .subtitle{font-family:var(--display);font-weight:400;color:var(--ink);
+    font-size:1.16rem;line-height:1.35;margin:0}
+  .authors{margin:26px 0 0;font-size:16px;color:var(--ink)}
+  .affil{font-family:var(--sans);font-size:13px;color:var(--muted);margin:3px 0 0}
+  .titlerule{border:0;border-top:1px solid var(--rule);margin:30px 0 0}
+
+  /* abstract */
+  .abstract{margin:26px auto 0;max-width:34rem}
+  .abstract h2{font-family:var(--display);font-weight:600;color:var(--ink);
+    font-size:16px;text-align:center;margin:0 0 12px}
+  .abstract p{font-size:15.5px;line-height:1.58;margin:0 0 11px;color:var(--body)}
+  .abstract p:last-child{margin-bottom:0}
+  .kw{font-size:14.5px;color:var(--muted);margin:16px 0 0}
+  .abrule{border:0;border-top:1px solid var(--rule-soft);margin:30px 0 0}
+
+  /* body */
+  h2.sec{font-family:var(--display);font-weight:600;color:var(--ink);
+    font-size:1.08rem;line-height:1.35;margin:38px 0 0}
+  h3.sub{font-family:var(--display);font-weight:600;font-style:italic;
+    color:var(--ink);font-size:1rem;margin:26px 0 0}
+  p{margin:13px 0 0}
+  p.cont{text-indent:1.4em;margin-top:0}
+  sup.fn{font-size:.68em;line-height:0;vertical-align:super}
+  sup.fn a{text-decoration:none}
+
+  /* tables, booktabs */
+  figure.tbl{margin:30px 0 0}
+  figure.tbl figcaption{font-family:var(--sans);font-size:13.5px;
+    color:var(--ink);margin:0 0 10px;line-height:1.45}
+  figure.tbl figcaption b{font-weight:600}
+  /* Set in the reading face, not in monospace. A table of results is part of
+     the document, and a proportional serif is what a table in a written report
+     looks like; monospace makes the same numbers read as terminal output. */
+  table{width:100%;border-collapse:collapse;font-family:var(--display);
+    font-size:15.5px;color:var(--body)}
+  table thead th{font-weight:600;color:var(--ink);text-align:right;
+    padding:7px 0 7px 14px;border-top:1.5px solid var(--rule);
+    border-bottom:1px solid var(--rule-soft);white-space:nowrap}
+  table thead th:first-child{text-align:left;padding-left:0}
+  table tbody td{text-align:right;padding:6px 0 6px 14px}
+  table tbody td:first-child{text-align:left;padding-left:0;
+    font-family:var(--sans);font-size:13px;white-space:nowrap}
+  table tbody tr:last-child td{border-bottom:1.5px solid var(--rule)}
+  .tnote{font-family:var(--display);font-size:14px;color:var(--muted);
+    line-height:1.55;margin:10px 0 0}
+  .scroll{overflow-x:auto;margin:0 -4px}
+
+  pre{font-family:var(--mono);font-size:12.5px;line-height:1.7;
+    margin:22px 0 0;padding:0 0 0 18px;
+    border-left:2px solid var(--rule-soft);color:var(--body);overflow-x:auto}
+
+  ol.notes{margin:14px 0 0;padding-left:22px;font-size:14.5px;
+    line-height:1.55;color:var(--body)}
+  ol.notes li{margin:0 0 10px}
+  ol.plain{margin:13px 0 0;padding-left:22px}
+  ol.plain li{margin:0 0 11px}
+
+  .endrule{border:0;border-top:1px solid var(--rule);margin:44px 0 0}
+  .backlink{font-family:var(--sans);font-size:13.5px;margin:26px 0 0}
+
+  footer.foot{border-top:1px solid var(--rule-soft);margin-top:52px;
+    padding:22px 0 40px;font-family:var(--sans);font-size:12.5px;
+    color:var(--muted)}
+  footer.foot p{margin:0 0 5px}
+
+  /* Print, which is also how the citable PDF is rendered. Plain: one neutral
+     sans throughout, black on white, no accent colour, no italics, no rules
+     that are not doing work. A document, not a designed object. Arial and
+     Helvetica rather than the interface sans, because the interface sans is
+     the one every product page uses and this is not a product page. */
+  @media print{
+    .band, .backlink{display:none}
+    body{
+      font-family:Arial, Helvetica, "Liberation Sans", sans-serif;
+      font-size:10pt;line-height:1.45;color:#000;background:#fff}
+    .paper{max-width:none;padding:0}
+    a{color:#000;text-decoration:none}
+
+    .series{font-family:inherit;font-size:9pt;color:#000;margin:0 0 22pt}
+    h1{font-family:inherit;font-size:16pt;font-weight:700;line-height:1.2;
+      letter-spacing:0;margin:0 0 4pt;color:#000}
+    h1 + .subtitle{font-family:inherit;font-size:11pt;font-weight:400;
+      font-style:normal;color:#000;margin:0}
+    .authors{font-family:inherit;font-size:10pt;margin:14pt 0 0;color:#000}
+    .affil{font-family:inherit;font-size:9pt;color:#000;margin:2pt 0 0}
+    .titlerule{border-top:1px solid #000;margin:14pt 0 0}
+
+    .abstract{max-width:none;margin:16pt 0 0}
+    .abstract h2{font-family:inherit;font-size:10pt;font-weight:700;
+      text-align:left;text-transform:none;letter-spacing:0;color:#000;
+      margin:0 0 6pt}
+    .abstract p{font-size:10pt;line-height:1.45;color:#000;margin:0 0 8pt}
+    .kw{font-family:inherit;font-size:9pt;color:#000;margin:12pt 0 0}
+    .kw i, i, em{font-style:normal}
+    .abrule{border-top:1px solid #000;margin:18pt 0 0}
+
+    h2.sec{font-family:inherit;font-size:11pt;font-weight:700;color:#000;
+      margin:20pt 0 0;padding-top:0;border-top:0;
+      page-break-after:avoid;break-after:avoid}
+    h3.sub{font-family:inherit;font-size:10pt;font-weight:700;
+      font-style:normal;color:#000;margin:14pt 0 0;
+      page-break-after:avoid;break-after:avoid}
+    p{margin:8pt 0 0;color:#000}
+    p.cont{text-indent:0;margin-top:8pt}
+    em.key{font-weight:700;font-style:normal;color:#000}
+    sup.fn{font-size:.7em}
+
+    figure.tbl{margin:16pt 0 0;page-break-inside:avoid;break-inside:avoid}
+    figure.tbl figcaption{font-family:inherit;font-size:9.5pt;font-weight:700;
+      color:#000;margin:0 0 5pt}
+    table{font-family:inherit;font-size:9pt;color:#000}
+    table thead th{color:#000;font-weight:700;border-top:1px solid #000;
+      border-bottom:1px solid #000;padding:4pt 0 4pt 12pt}
+    table tbody td{padding:3.5pt 0 3.5pt 12pt;color:#000}
+    table tbody td:first-child{font-family:inherit;font-size:9pt}
+    table tbody tr:last-child td{border-bottom:1px solid #000}
+    .tnote{font-family:inherit;font-size:8.5pt;color:#000;margin:5pt 0 0}
+
+    pre{font-family:"Courier New", Courier, monospace;font-size:8.5pt;
+      line-height:1.5;border-left:0;padding:0;margin:12pt 0 0;color:#000;
+      page-break-inside:avoid;break-inside:avoid}
+
+    ol.plain, ol.notes{color:#000}
+    ol.plain li{margin:0 0 7pt}
+    ol.notes{font-size:9pt;line-height:1.4}
+    ol.notes li{margin:0 0 7pt;page-break-inside:avoid;break-inside:avoid}
+    .endrule{border-top:1px solid #000;margin:22pt 0 0}
+
+    footer.foot{font-family:inherit;font-size:8.5pt;color:#000;
+      border-top:1px solid #000;margin-top:18pt;padding:8pt 0 0}
+    .wrap{padding:0}
+
+    .paper::before{
+      content:"Machine Testimony Working Paper No. 1 · September 2026 · machinetestimony.org/papers/wp1/";
+      display:block;font-size:8pt;color:#000;margin-bottom:14pt}
+  }
+</style>
+</head>
+<body>
+
+<div class="band">
+  <div class="wrap">
+    <div class="topbar">
+      <div class="lockup">
+        <svg class="mk" viewBox="0 0 64 64" aria-hidden="true">
+          <g fill="currentColor">
+            <rect x="2" y="18" width="20" height="20"/>
+            <polygon points="2,38 22,38 2,56"/>
+            <rect x="30" y="22" width="20" height="20"/>
+            <polygon points="50,22 30,22 50,4"/>
+          </g>
+        </svg>
+        <div class="bar"></div>
+        <div class="nm"><a href="/">Machine<br>Testimony</a></div>
+      </div>
+      <div class="utility">
+        <a href="https://infrastructure.omem-cloud.com/spec/testimony-record/">Specification</a>
+        <span class="sep">|</span>
+        <a href="https://github.com/troybrandonc-bit/Omem">Reference implementation</a>
+        <span class="sep">|</span>
+        <a href="/llms.txt">For machines</a>
+      </div>
+    </div>
+    <nav class="primary">
+      <a href="/obligation/">What the rules require</a>
+      <a href="/colorado/">Colorado</a>
+      <a href="/register/">The register</a>
+      <a href="/check/">Check a record</a>
+      <a href="/tr-3/">TR-3</a>
+      <a href="/assess/">Assess a system</a>
+      <a href="/implement/">Implementing it</a>
+      <a href="/#question">The question</a>
+    </nav>
+    <div class="pad"></div>
+  </div>
+</div>
+
+<div class="paper">
+  <p class="series">Machine Testimony Working Paper Series &nbsp;·&nbsp; No. 2 &nbsp;·&nbsp; September 2026<br>
+  Not yet deposited. This paper carries no DOI, and says so rather than printing one it does not have.</p>
+
+  <h1>One of Eight</h1>
+  <p class="subtitle">Whether deployed agent systems can record who approved an action, and whether any law requires them to</p>
+
+  <p class="authors">Troy Clifford<sup class="fn"><a href="#n1">1</a></sup></p>
+  <p class="affil">Machine Testimony</p>
+
+  <hr class="titlerule">
+
+  <div class="abstract">
+    <h2>Abstract</h2>
+    <p>
+      Several jurisdictions now give a person the right to human review of an
+      automated decision. This paper asks a narrower question that the
+      deployment of those rights depends on: whether the software that takes
+      the decisions can produce a record showing which human reviewed one.
+    </p>
+    <p>
+      Ten widely deployed agent and agent-memory systems were read at pinned
+      commits against twenty record-keeping requirements. Eight of the ten take
+      or gate consequential actions. <b>Of those eight, one can identify the
+      person who approved an action.</b> Six cannot: the structure carrying
+      what a human decided has no field for which human decided it. One could
+      not be determined from outside the vendor. The single system that can is
+      the author's own reference implementation, which is disclosed here rather
+      than left to be found, and which carries no evidential weight.
+    </p>
+    <p>
+      Twenty legal and quasi-legal instruments were then read against the same
+      question. Twelve ask a record to show who intervened in a decision and
+      four of those are law. The two instruments that ask for a record of the
+      review itself, rather than for a right to one, are a private
+      certification scheme and a regulator's published expectation, and neither
+      can require it by law.
+    </p>
+    <p>
+      The paper reports the method, the per-system verdicts with the commit
+      each was read at, four corrections made by readers after publication, and
+      the limits of what a static reading of source code can establish. Every
+      verdict cites a file and a line so that a wrong one is cheap to
+      demonstrate.
+    </p>
+    <p class="kw">
+      <i>Keywords:</i> AI governance, human oversight, audit trails, agent
+      frameworks, automated decision-making, conformance measurement.
+    </p>
+  </div>
+
+  <hr class="abrule">
+
+  <h2 class="sec">1. Introduction</h2>
+  <p>
+    A right to human review of an automated decision is now law in at least
+    four jurisdictions. Article 22(3) of the General Data Protection Regulation
+    has been applicable since 25 May 2018. Quebec's section 12.1 has been in
+    force since 22 September 2023, Articles 22A to 22D of the United Kingdom
+    GDPR since 5 February 2026, and Article 34(1)(4) of South Korea's Framework
+    Act since 22 January 2026. Colorado's Senate Bill 26-189 applies from
+    1 January 2027 and the European Union's Artificial Intelligence Act
+    applies to high-risk systems from 2 December 2027.
+  </p>
+  <p>
+    Each of these creates a duty about a review. None of the four that are
+    currently law specifies what a record of that review must contain. The
+    question this paper asks is what happens when somebody tries to satisfy one
+    of them using software they have already deployed: whether the record that
+    software produces can say which person reviewed a particular decision.
+  </p>
+  <p>
+    This is a narrower question than whether a system is well governed, and
+    deliberately so. It is answerable from published source code, which means
+    it can be measured rather than asserted, and a wrong answer can be
+    corrected by anybody who reads the same code.
+  </p>
+
+  <h2 class="sec">2. Method</h2>
+
+  <h3 class="sub">2.1 The rubric</h3>
+  <p>
+    Twenty requirements were written before any system was read, grouped into
+    four cumulative conformance levels. They ask what a record contains, not
+    what a system promises: whether entries carry write times, whether refusals
+    are recorded as faithfully as permissions, whether an approval identifies a
+    person, whether the approver's identity comes from an authentication layer
+    rather than from something the proposing model can write, and whether a
+    past state of the record can be verified by a party other than its author.
+  </p>
+  <p>
+    The requirement this paper turns on is <code>R3.5</code>,
+    stated in the rubric as: <i>&ldquo;Does an approval identify a person or a
+    named role holder?&rdquo;</i> A verdict of <i>present</i> requires that the
+    approver be a person or a role rather than a model or a process. The
+    partial case, also written in advance, is that an approval step exists but
+    the approver may be an automated principal.
+  </p>
+
+  <h3 class="sub">2.2 Scope declarations</h3>
+  <p>
+    Not every requirement applies to every system. A system that stores
+    material but takes no actions cannot be failed for lacking an approval
+    path. Each subject therefore declares a scope, and requirements are applied
+    only within it. Eight of the ten subjects declare that they act. The
+    results below concern those eight.
+  </p>
+  <p>
+    This distinction was not in the first version of the rubric. It was added
+    after a reader reported that the validator was refusing a conformance level
+    to a system that had earned it: a record-only system with a genuine hash
+    chain could never reach the third level, and because the levels are
+    cumulative its integrity at the fourth level stayed invisible however good
+    it was. The scope declaration exists because of that report.
+  </p>
+
+  <h3 class="sub">2.3 Pinned reading</h3>
+  <p>
+    Each system was read at a specific commit, recorded with the verdict. A
+    verdict is a claim about one state of one repository on one date and
+    nothing more. Every verdict cites a file and a line at that commit, so a
+    reader who disagrees can open the same line rather than argue about the
+    conclusion.
+  </p>
+
+  <h2 class="sec">3. Subjects</h2>
+  <p>
+    Ten systems were selected for deployment breadth across agent frameworks
+    and agent-memory systems: AutoGen, CrewAI, Graphiti, Haystack, LangGraph,
+    Letta Code, mem0, OMEM, the OpenAI Agents SDK and Pydantic AI. Eight
+    declare that they act. Graphiti and mem0 declare storage and derivation
+    without an action path, and are outside the results below.
+  </p>
+  <p>
+    One of the ten, OMEM, is maintained by the author of this paper. That is
+    stated here, in Section 4 where the result appears, and on every published
+    page carrying the number, for the reason given in Section 5.
+  </p>
+
+  <h2 class="sec">4. Results</h2>
+  <p>
+    Of the eight systems that take or gate consequential actions, one records
+    an approval that identifies a person. Six do not. One could not be
+    determined from outside the vendor.
+  </p>
+
+  <figure class="tbl">
+    <figcaption><b>Table 1.</b> R3.5, whether an approval identifies a person, across the eight acting subjects. R3.6 is whether that identity comes from an authentication layer; R3.7 is whether the agent is prevented from approving its own action.</figcaption>
+    <div class="scroll">
+    <table>
+      <thead>
+        <tr><th>System</th><th>R3.5</th><th>R3.6</th><th>R3.7</th><th>Commit</th><th>Read</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>AutoGen</td><td>absent</td><td>absent</td><td>absent</td><td>027ecf0a379b</td><td>2026-09-04</td></tr>
+        <tr><td>CrewAI</td><td>absent</td><td>absent</td><td>absent</td><td>92eb5f91830c</td><td>2026-09-04</td></tr>
+        <tr><td>Haystack</td><td>absent</td><td>absent</td><td>absent</td><td>82da3adc2fac</td><td>2026-09-06</td></tr>
+        <tr><td>LangGraph</td><td>absent</td><td>absent</td><td>absent</td><td>81bf17b23123</td><td>2026-09-04</td></tr>
+        <tr><td>Letta Code</td><td>undetermined</td><td>undetermined</td><td>undetermined</td><td>e0a0e1e62278</td><td>2026-09-04</td></tr>
+        <tr><td>OMEM</td><td>present</td><td>present</td><td>present</td><td>9a77c2066553</td><td>2026-09-04</td></tr>
+        <tr><td>OpenAI Agents SDK</td><td>absent</td><td>absent</td><td>absent</td><td>89c02c828ee8</td><td>2026-09-04</td></tr>
+        <tr><td>Pydantic AI</td><td>absent</td><td>absent</td><td>absent</td><td>c0e4d824eaa0</td><td>2026-09-06</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </figure>
+
+  <p>
+    R3.6 asks whether the approver's identity comes from the authentication
+    layer rather than from something the proposing model can write. R3.7 asks
+    whether the acting agent is prevented from approving its own action. The
+    three move together in every subject, which is the expected shape: a system
+    with no field for an approver has nowhere to record where that identity
+    came from, and no principal to compare against the proposer.
+  </p>
+  <p>
+    The failure is structural rather than incidental. In the six systems marked
+    absent, the object that carries a human's decision has no member for the
+    human. An integration that wishes to record one must place it somewhere the
+    framework does not define, which means a later reader must know where to
+    look and must trust that it was not written by the model.
+  </p>
+
+  <h3 class="sub">4.1 What a right to review meets in practice</h3>
+  <p>
+    Twenty legal and quasi-legal instruments were read against the question of
+    whether the text asks a record to show who intervened in a decision. Twelve
+    of the twenty do. Four of those twelve are law, as at 13 September 2026:
+    Article 22(3) of the GDPR, Quebec's section 12.1, Articles 22A to 22D of
+    the UK GDPR, and Article 34(1)(4) of South Korea's Framework Act.
+  </p>
+  <p>
+    Two further instruments are in effect and are not law. One is AIUC-1, a
+    private certification scheme whose mandatory control E015.2 requires
+    structured logs capturing approver identity, timestamp and decision
+    outcome, with a separate control E015.4 requiring those logs to be
+    tamper-evident. The other is the Information Commissioner's guidance on
+    automated decision-making, which states that a controller should keep a
+    record of how a human reviewed a decision. <b>These are the only two
+    instruments in the set that ask for a record of the review itself rather
+    than for a right to one, and neither can require it by law.</b>
+  </p>
+
+  <h2 class="sec">5. Limitations</h2>
+  <ol>
+    <li>
+      <b>The only passing subject is the author's own.</b> OMEM is maintained
+      by the author of this paper. A measurement whose single positive result
+      belongs to the party conducting it is worth what its disclosure is worth,
+      and the appropriate reading of the headline number is <i>one of eight,
+      and that one is mine</i>. It is reported as a row rather than excluded,
+      because removing it would hide the fact that the property is achievable.
+    </li>
+    <li>
+      <b>A static reading establishes what a structure can carry, not what a
+      deployment does.</b> A framework with no approver field cannot record
+      one; a framework with a field may still be deployed in a way that never
+      populates it. The absent verdicts are therefore stronger than the present
+      one.
+    </li>
+    <li>
+      <b>Each verdict is against one commit.</b> A system that added the field
+      after the date recorded beside it is not described by this paper. The
+      correction mechanism is a pull request against the subject file rather
+      than a dispute about the conclusion.
+    </li>
+    <li>
+      <b>One subject is undetermined, and that is a finding rather than a
+      gap.</b> Letta Code could not be determined from outside the vendor. It
+      is reported as undetermined rather than absent, because reporting an
+      unknown as a failure would inflate the headline number in the direction
+      that favours the author's argument.
+    </li>
+    <li>
+      <b>Ten systems are not a census of the field.</b> They are ten widely
+      deployed systems, selected before reading and named in full. The
+      healthcare, insurance and financial platforms where most consequential
+      automated decisions are actually taken are mostly not readable from
+      outside at all, and this paper says nothing about them.
+    </li>
+    <li>
+      <b>This paper does not establish that a record naming an approver would
+      make a review meaningful.</b> Whether a reviewer had authority, training,
+      or the independence to disagree are facts about a person and an
+      organisation. No record format produces them and none should claim to.
+    </li>
+  </ol>
+
+  <h2 class="sec">6. Corrections</h2>
+  <p>
+    Four substantive corrections were made to this work by readers after
+    publication, each of which changed a published claim. They are listed
+    because a measurement programme that reports only its findings and not its
+    errors is asking for a trust it has not earned.
+  </p>
+  <ol>
+    <li>
+      A reader reported that the reference validator refused the third
+      conformance level to any record containing no decisions, a requirement
+      that appeared nowhere in the specification text. The scope declaration
+      described in Section 2.2 exists because of that report.
+    </li>
+    <li>
+      A reader pointed out that an expired evidence deadline and a failed
+      action are different facts and that the format could express neither,
+      because the member recording execution was a required boolean. An
+      optional outcome member was added.
+    </li>
+    <li>
+      A reader observed that every timestamp in a record is written by the
+      party whose conduct is in question, and that the section listing what a
+      reader cannot settle from a record did not say so. The specification now
+      names it, and where a record carries an RFC 3161 token the validator
+      checks that no entry claims a write time later than the authority's.
+      Back-dating remains open and the specification says so.
+    </li>
+    <li>
+      A reader independently reproduced the conformance corpus at a pinned
+      commit, matching the published totals, then contested one case and was
+      correct. The same reader subsequently corrected this programme's reading
+      of Article 12(3)(d) of the EU AI Act, and then verified the fix and found
+      a further error in it.
+    </li>
+  </ol>
+
+  <h2 class="sec">7. Reproduction</h2>
+  <p>
+    The subject files, the rubric, and the per-verdict evidence are public. The
+    census manifest records a digest over the scored material, and the check
+    recomputes it.
+  </p>
+  <pre><code>git clone https://github.com/troybrandonc-bit/machine-testimony
+python3 census/manifest.py --check</code></pre>
+  <p>
+    The headline number and its method are published at
+    <a href="/named-approver/">machinetestimony.org/named-approver/</a>, the
+    full register at <a href="/register/">/register/</a>, and the dated edition
+    of the census at <a href="/census/2026-09/">/census/2026-09/</a>.
+  </p>
+
+  <h2 class="sec">Notes</h2>
+  <ol class="notes">
+    <li id="n1">
+      Machine Testimony is a research programme, not a registered institute or
+      a certification body. It publishes readings of public texts and
+      measurements of public software. It does not certify, audit, or offer an
+      opinion about any deployment. Correspondence:
+      troy@machinetestimony.com.
+    </li>
+    <li id="n2">
+      The author maintains OMEM, one of the ten subjects, and a record format
+      and Internet-Draft in the same area. Both interests are disclosed here,
+      in Section 4, in Section 5, and on every published page that carries the
+      headline number.
+    </li>
+  </ol>
+
+  <p class="backlink"><a href="/#papers">Working papers</a></p>
+
+</div>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>Editor: Troy Clifford. Operated by Garnet Taurus Ltd.</p>
+    <p>Working paper text CC BY 4.0. Schema and tools MIT.</p>
+    <p>Machine Testimony is a research programme, not a registered institute or a certification body.</p>
+  </div>
+</footer>
+
+</body>
+</html>
