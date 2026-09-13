@@ -1,0 +1,108 @@
+<!--title: One of eight agent systems can name the person who approved an action
+    desc: Ten widely deployed agent and agent-memory systems were read at pinned commits against twenty record-keeping requirements. Eight take or gate consequential actions. One of the eight can identify the person who approved one, and that one is the author's own implementation. This page is the number, its method, its date, and the command that recomputes it, so it can be quoted without asking anybody.
+    slug: named-approver-->
+
+<div class="wrap main">
+  <div>
+    <p class="dateline">Measurement, read 4 to 6 September 2026 at pinned commits</p>
+    <h2 class="label">One of eight</h2>
+
+    <div class="block">
+      <p class="callout"><b>Ten widely deployed agent and agent-memory systems
+        were read at pinned commits against twenty record-keeping requirements.
+        Eight of the ten take or gate consequential actions. Of those eight,
+        ONE can identify the person who approved one.</b> Six cannot. One could
+        not be determined from outside the vendor.</p>
+
+      <p>This page exists because that number gets quoted and a number without
+        a method is an anecdote. Everything needed to check it, dispute it or
+        reuse it is here: what was asked, of what, on what date, at which
+        commit, and the command that recomputes the whole thing.</p>
+
+      <h3>The question, in the rubric's own words</h3>
+      <p>The requirement is <span class="mono">R3.5</span>, one of twenty:</p>
+      <p class="callout"><b>&ldquo;Does an approval identify a person or a named
+        role holder?&rdquo;</b> Present means the approver is a person or a
+        role, not a model or a process. The partial case, stated in the rubric
+        rather than invented afterwards, is that an approval step exists but
+        the approver may be an automated principal.</p>
+
+      <h3>The eight, one row each</h3>
+      <div class="scroller">
+      <table class="reg">
+        <thead><tr><th>System</th><th>R3.5 names a person</th><th>Read at commit</th><th>Assessed</th></tr></thead>
+        <tbody>
+          <tr><td class="s">AutoGen</td><td class="v n">absent</td><td class="d mono">027ecf0a379b</td><td class="d">2026-09-04</td></tr>
+          <tr><td class="s">CrewAI</td><td class="v n">absent</td><td class="d mono">92eb5f91830c</td><td class="d">2026-09-04</td></tr>
+          <tr><td class="s">Haystack</td><td class="v n">absent</td><td class="d mono">82da3adc2fac</td><td class="d">2026-09-06</td></tr>
+          <tr><td class="s">LangGraph</td><td class="v n">absent</td><td class="d mono">81bf17b23123</td><td class="d">2026-09-04</td></tr>
+          <tr><td class="s">Letta Code</td><td class="v">undetermined</td><td class="d mono">e0a0e1e62278</td><td class="d">2026-09-04</td></tr>
+          <tr><td class="s">OMEM</td><td class="v">present</td><td class="d mono">9a77c2066553</td><td class="d">2026-09-04</td></tr>
+          <tr><td class="s">OpenAI Agents SDK</td><td class="v n">absent</td><td class="d mono">89c02c828ee8</td><td class="d">2026-09-04</td></tr>
+          <tr><td class="s">Pydantic AI</td><td class="v n">absent</td><td class="d mono">c0e4d824eaa0</td><td class="d">2026-09-06</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <p><b>The one that can is OMEM, which is this project's own reference
+        implementation.</b> That is said here, in the same size as the finding,
+        because a measurement whose only passing subject belongs to the author
+        is worth exactly as much as its disclosure. It carries no evidential
+        weight and the number is more useful stated as <i>one of eight, and
+        that one is mine</i> than as <i>one of eight</i>.</p>
+
+      <h3>What this does not say</h3>
+      <ul>
+        <li><b>Not that these are bad systems.</b> None of them was built to
+          answer this question, and until 2026 nobody asked them to. The
+          finding is about timing rather than quality.</li>
+        <li><b>Not that a person cannot be named at all.</b> It says the
+          structure carrying what a human decided has no field for which human
+          decided it, so an integration that wants to record it has to put it
+          somewhere the framework does not define.</li>
+        <li><b>Not a claim about every version.</b> Each verdict is against one
+          commit on one date, both printed above. A system that added the field
+          afterwards is not described by this page, and the fix for that is a
+          pull request against the subject file rather than an argument.</li>
+        <li><b>Not a certification, and not an audit.</b> It is a reading of
+          public source code, published so a wrong verdict is cheap to
+          demonstrate.</li>
+      </ul>
+
+      <h3>Recompute it</h3>
+      <p>Every verdict cites a file and a line at the pinned commit. The
+        per-system pages carry the evidence behind each one, and the subject
+        files are the same data as JSON.</p>
+      <pre class="snip"><code>git clone https://github.com/troybrandonc-bit/machine-testimony
+python3 census/manifest.py --check</code></pre>
+      <p>The full register is at <a href="/register/">/register/</a>, the
+        per-system verdicts at <a href="/register/">each subject's own
+        page</a>, and the dated edition of the whole census, with a DOI, at
+        <a href="/census/2026-09/">/census/2026-09/</a>.</p>
+
+      <h3>Why the number matters on a date</h3>
+      <p>Colorado's Senate Bill 26-189 applies on <b>1 January 2027</b>, and
+        its proposed Rule 7.7 asks a deployer to retain a record showing the
+        reviewer's identity. The measurement above is the distance between that
+        requirement and what deployers can produce from software they already
+        bought. <b>It can be read as an argument against the rule</b>, since
+        the rule's presumption is rebuttable by evidence that review is
+        technically impossible, and that reading is addressed at
+        <a href="/colorado-deployers/">/colorado-deployers/</a> rather than
+        avoided.</p>
+<!--cite:start-->
+      <h3>Citing this</h3>
+      <p>The readings are CC BY 4.0, which asks for attribution, so the reference is here rather than left to be composed. This block is generated from the page it sits on, so a date that moves here moves in the citation too.</p>
+      <pre class="snip"><code>Clifford, T. (2026). One of eight agent systems can name the person who approved an action. Machine Testimony. https://machinetestimony.org/named-approver/</code></pre>
+      <pre class="snip"><code>@misc{clifford2026namedapprover,
+  author = {Clifford, Troy},
+  title  = {One of eight agent systems can name the person who approved an action},
+  year   = {2026},
+  note   = {Machine Testimony, read 6 September 2026},
+  url    = {https://machinetestimony.org/named-approver/},
+}</code></pre>
+      <p>This page carries no DOI. It cites its dated URL, and saying so is the point: a citation naming a deposit that does not exist is worse than one naming a page that does.</p>
+<!--cite:end-->
+    </div>
+  </div>
+</div>

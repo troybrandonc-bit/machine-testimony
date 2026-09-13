@@ -47,7 +47,7 @@ DOI = {
 # Zenodo version for a change that is not about the reading. They are also the
 # two pages that least need this: both already display their DOI, which is the
 # citation. The block is for pages where composing a reference is work.
-CITED = ("register", "approval-binding", "aiuc-1",
+CITED = ("register", "approval-binding", "aiuc-1", "named-approver",
          "colorado", "south-korea", "united-kingdom", "eu-ai-act", "tr-3",
          "formats", "demand", "united-states")
 

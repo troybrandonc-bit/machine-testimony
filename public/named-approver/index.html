@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>One of eight agent systems can name the person who approved an action &ndash; Machine Testimony</title>
+<meta name="description" content="Ten widely deployed agent and agent-memory systems were read at pinned commits against twenty record-keeping requirements. Eight take or gate consequential actions. One of the eight can identify the person who approved one, and that one is the author's own implementation. This page is the number, its method, its date, and the command that recomputes it, so it can be quoted without asking anybody.">
+<meta property="og:title" content="One of eight agent systems can name the person who approved an action">
+<meta property="og:description" content="Ten widely deployed agent and agent-memory systems were read at pinned commits against twenty record-keeping requirements. Eight take or gate consequential actions. One of the eight can identify the person who approved one, and that one is the author's own implementation. This page is the number, its method, its date, and the command that recomputes it, so it can be quoted without asking anybody.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://machinetestimony.org/named-approver/">
+<meta property="og:image" content="https://machinetestimony.org/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="One of eight agent systems can name the person who approved an action">
+<meta name="twitter:description" content="Ten widely deployed agent and agent-memory systems were read at pinned commits against twenty record-keeping requirements. Eight take or gate consequential actions. One of the eight can identify the person who approved one, and that one is the author's own implementation. This page is the number, its method, its date, and the command that recomputes it, so it can be quoted without asking anybody.">
+<meta name="twitter:image" content="https://machinetestimony.org/og.png">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/icon.png" type="image/png" sizes="512x512">
+<link rel="apple-touch-icon" href="/icon.png">
+<link rel="canonical" href="https://machinetestimony.org/named-approver/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+
+  /* Built to the NBER pattern, which is what a research bureau's site actually
+     looks like: one coloured band carrying the lockup, the utility links, the
+     navigation and the name together; the institution named large and centred
+     in a serif; outlined destination tiles; then a dense white body in two
+     columns with a rail. Serif for reading, sans for metadata, underlined
+     links, hairline rules, and far less air than a product page. */
+  :root{
+    --band:#123a6b; --band-2:#0e2f57; --band-ink:#ffffff; --band-dim:#b9cbe4;
+    --paper:#ffffff; --ink:#111417; --body:#24292d; --muted:#5f6a72;
+    --rule:#c9cfd4; --rule-soft:#e3e7ea; --label:#123a6b; --link:#123a6b;
+    --display:"Source Serif 4",Georgia,"Times New Roman",serif;
+    --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --band:#0c2340; --band-2:#081a2f; --band-ink:#f2f6fb; --band-dim:#9db3ce;
+      --paper:#0f1214; --ink:#eef0f2; --body:#c2c8cd; --muted:#8a939a;
+      --rule:#2c3236; --rule-soft:#1f2427; --label:#9dc0ef; --link:#9dc0ef;
+    }
+  }
+  :root[data-theme="dark"]{
+    --band:#0c2340; --band-2:#081a2f; --band-ink:#f2f6fb; --band-dim:#9db3ce;
+    --paper:#0f1214; --ink:#eef0f2; --body:#c2c8cd; --muted:#8a939a;
+    --rule:#2c3236; --rule-soft:#1f2427; --label:#9dc0ef; --link:#9dc0ef;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--body);
+    font-family:var(--display);font-size:17px;line-height:1.55;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 30px}
+  a{color:var(--link);text-decoration:underline;text-underline-offset:2px;
+    text-decoration-thickness:1px}
+  a:hover{text-decoration-thickness:2px}
+
+  /* ── the band: lockup, utility, nav and the name, all one field ─────── */
+  .band{background:var(--band);color:var(--band-ink);
+    background-image:linear-gradient(180deg,var(--band) 0%,var(--band-2) 100%)}
+  .band a{color:var(--band-ink);text-decoration:none}
+  .band a:hover{text-decoration:underline}
+  .topbar{display:flex;align-items:center;gap:26px;flex-wrap:wrap;padding:16px 0 12px}
+  .lockup{display:flex;align-items:center;gap:13px}
+  .lockup .mk{width:31px;height:31px;flex:none;color:var(--band-ink)}
+  .lockup .bar{width:2px;align-self:stretch;background:var(--band-ink);opacity:.55}
+  .lockup .nm{font-family:var(--sans);font-weight:700;font-size:11.5px;
+    letter-spacing:.085em;line-height:1.32;text-transform:uppercase}
+  .utility{margin-left:auto;font-family:var(--sans);font-size:13.5px;
+    display:flex;gap:12px;align-items:center;color:var(--band-dim)}
+  .utility .sep{opacity:.45}
+  nav.primary{border-bottom:1px solid rgba(255,255,255,.42);
+    display:flex;gap:26px;flex-wrap:wrap;padding:9px 0 11px;
+    font-family:var(--sans);font-size:14.5px}
+
+  .hero{text-align:center;padding:54px 0 46px}
+  .hero h1{font-family:var(--display);font-weight:700;color:var(--band-ink);
+    font-size:clamp(2.3rem,5.4vw,3.5rem);line-height:1.05;letter-spacing:-.012em;
+    margin:0}
+  .hero .strap{max-width:44rem;margin:20px auto 0;color:var(--band-ink);
+    font-size:clamp(1.02rem,2vw,1.24rem);line-height:1.45;opacity:.94}
+  .tiles{display:grid;gap:16px;margin:34px auto 0;max-width:52rem}
+  @media (min-width:700px){.tiles{grid-template-columns:1fr 1fr}}
+  .tile{border:1px solid rgba(255,255,255,.6);padding:17px 20px;
+    font-family:var(--sans);font-weight:600;font-size:15px;color:var(--band-ink);
+    text-decoration:none;display:block}
+  .tile:hover{background:rgba(255,255,255,.09);text-decoration:none}
+
+  /* ── the body: main column and a rail ───────────────────────────────── */
+  .main{display:grid;gap:34px;padding-top:40px;padding-bottom:10px}
+  /* Grid children default to min-width:auto and so refuse to shrink below
+     their content. On a phone this is a single column, so one wide code
+     block or table pushed the whole page past the viewport. The desktop
+     rule below says minmax(0,1fr) and was masking it above 960px. */
+  .main>*{min-width:0}
+  @media (min-width:960px){
+    .main{grid-template-columns:minmax(0,1fr) 21rem;gap:52px;align-items:start}
+  }
+  h2.label{font-family:var(--display);font-weight:700;color:var(--label);
+    font-size:1.06rem;margin:0 0 12px;padding-bottom:9px;
+    border-bottom:1px solid var(--rule)}
+  .block{margin:0 0 40px}
+  .block p{margin:0 0 15px;max-width:46rem}
+  .block p:last-child{margin-bottom:0}
+
+  table.levels{width:100%;border-collapse:collapse;font-size:16px;font-variant-numeric:tabular-nums}
+  table.levels th{text-align:left;font-family:var(--sans);font-size:12.5px;color:var(--muted);
+    font-weight:600;padding:0 14px 8px 0;border-bottom:1px solid var(--rule)}
+  table.levels td{padding:13px 14px 13px 0;border-bottom:1px solid var(--rule-soft);
+    vertical-align:top}
+  table.levels td.lv{font-family:var(--sans);font-weight:700;font-size:12.5px;
+    color:var(--label);white-space:nowrap;}
+  table.levels td.t{font-weight:600;color:var(--ink);min-width:15rem}
+
+  .entries{list-style:none;margin:0;padding:0}
+  .entries li{padding:16px 0;border-bottom:1px solid var(--rule-soft)}
+  .entries li:first-child{padding-top:0}
+  .entries h3{font-size:1.12rem;font-weight:600;margin:0 0 4px;line-height:1.32}
+  .entries h3 a{color:var(--ink)}
+  .entries .kind{font-family:var(--sans);font-weight:600;font-size:12.5px;color:var(--muted);
+    display:block;margin-bottom:5px}
+  .entries p{margin:0;font-size:16px;max-width:44rem}
+  .entries .meta{margin-top:7px;font-family:var(--sans);font-size:12.5px;
+    color:var(--muted)}
+
+  /* ── the rail ───────────────────────────────────────────────────────── */
+  .rail{border-top:3px solid var(--band);padding-top:14px}
+  .rail h2{font-family:var(--display);font-weight:700;color:var(--label);
+    font-size:1.02rem;margin:0 0 10px}
+  .rail .item{padding:13px 0;border-bottom:1px solid var(--rule-soft)}
+  .rail .item:last-of-type{border-bottom:0}
+  .rail .item b{display:block;font-weight:600;color:var(--ink);font-size:1rem;
+    margin-bottom:3px}
+  .rail .item p{margin:0;font-size:15px;color:var(--body)}
+  .rail .links{list-style:none;margin:16px 0 0;padding:16px 0 0;
+    border-top:1px solid var(--rule);font-family:var(--sans);font-size:14.5px}
+  .rail .links li{margin:0 0 7px}
+
+  footer.foot{border-top:3px solid var(--band);margin-top:34px;
+    padding:20px 0 46px;font-family:var(--sans);font-size:13.5px;color:var(--muted)}
+  footer.foot p{margin:0 0 4px}
+  .foot nav{display:grid;gap:20px 30px;margin:0 0 22px;
+    grid-template-columns:repeat(auto-fit,minmax(168px,1fr))}
+  .foot nav h2{font-family:var(--sans);font-size:12.5px;font-weight:600;
+    color:var(--ink);margin:0 0 7px}
+  .foot nav a{display:block;color:var(--muted);text-decoration:none;
+    margin:0 0 4px;font-size:13px}
+  .foot nav a:hover{color:var(--ink);text-decoration:underline}
+  .foot hr{border:0;border-top:1px solid var(--rule);margin:0 0 16px}
+
+  /* Only what a prose page needs beyond the shared stylesheet. */
+  pre.snip{background:none;border-left:2px solid var(--rule);margin:0 0 16px;
+    padding:2px 0 2px 13px;font-size:13px;overflow-x:auto;max-width:100%;
+    font-family:var(--mono);line-height:1.55}
+  pre.snip.addr{overflow-x:visible;white-space:pre-wrap;overflow-wrap:anywhere}
+  .block h3{font-family:var(--display);font-weight:600;color:var(--ink);
+    font-size:1.08rem;margin:26px 0 8px}
+  .block ol,.block ul{margin:0 0 15px;padding-left:1.15rem;max-width:46rem}
+  .block li{margin:0 0 7px}
+  .dateline{font-family:var(--sans);font-size:12.5px;color:var(--muted);
+    margin:0 0 22px}
+  /* The one sentence a page is allowed to insist on. For a measured number the
+     rest of the page exists to explain, never for emphasis on an opinion. */
+  p.callout{border-left:2px solid var(--band);padding:10px 0 10px 14px;
+    margin:0 0 17px;max-width:46rem}
+  table.facts{width:100%;border-collapse:collapse;font-size:14px;margin:0 0 20px;font-variant-numeric:tabular-nums}
+  table.facts th{text-align:left;font-family:var(--sans);font-size:12.5px;
+    font-weight:600;color:var(--body);padding:0 12px 6px 0;
+    white-space:nowrap;vertical-align:top;width:8.5rem}
+  table.facts td{padding:0 0 6px;font-family:var(--mono);font-size:12.5px;
+    overflow-wrap:anywhere;border-bottom:1px solid var(--rule-soft)}
+  table.facts th{width:6.6rem;font-size:11.5px}
+  /* The register's tables. A wide table scrolls inside its own box rather
+     than pushing the page sideways, which is the thing that made the site
+     unreadable on a phone the first time. */
+  .scroller{overflow-x:auto;max-width:100%;margin:0 0 16px}
+  table.reg{border-collapse:collapse;font-size:14px;min-width:34rem;font-variant-numeric:tabular-nums}
+  table.reg th{text-align:left;font-family:var(--sans);font-size:12.5px;
+    font-weight:600;color:var(--body);padding:0 14px 7px 0;
+    white-space:nowrap;border-bottom:1px solid var(--rule)}
+  table.reg td{padding:8px 14px 8px 0;border-bottom:1px solid var(--rule-soft);
+    vertical-align:top}
+  table.reg td.s{font-weight:600;white-space:nowrap}
+  table.reg td.n,table.reg td.lv,table.reg td.d{font-family:var(--sans);
+    font-size:12.5px;white-space:nowrap;color:var(--body)}
+  table.reg td.lv{font-weight:700}
+  table.reg td.v{font-family:var(--sans);font-size:13px;font-weight:400;
+    white-space:nowrap;color:var(--muted)}
+  /* Absent is the finding, so it is the one that is not muted. */
+  table.reg td.v.n{color:var(--ink)}
+  table.reg td.w{font-family:var(--mono);font-size:12px;color:var(--muted);
+    overflow-wrap:anywhere}
+  .tag{font-family:var(--sans);font-size:12.5px;font-weight:400;
+    font-style:italic;color:var(--muted);white-space:nowrap}
+  @media (max-width:620px){
+    table.reg{font-size:13px}
+    table.reg td.w{font-size:11px}
+    pre.snip{font-size:12px}
+    table.facts th{width:6.6rem;font-size:10px}
+    table.facts td{font-size:11.5px}
+  }
+</style>
+</head>
+<body>
+
+<div class="band">
+  <div class="wrap">
+    <div class="topbar">
+      <div class="lockup">
+        <svg class="mk" viewBox="0 0 64 64" aria-hidden="true">
+          <g fill="currentColor">
+            <rect x="2" y="18" width="20" height="20"/>
+            <polygon points="2,38 22,38 2,56"/>
+            <rect x="30" y="22" width="20" height="20"/>
+            <polygon points="50,22 30,22 50,4"/>
+          </g>
+        </svg>
+        <div class="bar"></div>
+        <div class="nm">Machine<br>Testimony</div>
+      </div>
+      <div class="utility">
+        <a href="https://datatracker.ietf.org/doc/draft-clifford-testimony-record/">Specification</a>
+        <span class="sep">|</span>
+        <a href="https://github.com/troybrandonc-bit/machine-testimony">Validator and adapters</a>
+        <span class="sep">|</span>
+        <a href="/llms.txt">For machines</a>
+      </div>
+    </div>
+    <nav class="primary">
+      <a href="/obligation/">What the rules require</a>
+      <a href="/colorado/">Colorado</a>
+      <a href="/register/">The register</a>
+      <a href="/check/">Check a record</a>
+      <a href="/tr-3/">TR-3</a>
+      <a href="/assess/">Assess a system</a>
+      <a href="/implement/">Implementing it</a>
+      <a href="/#question">The question</a>
+    </nav>
+  </div>
+</div>
+<div class="wrap main">
+  <div>
+    <p class="dateline">Measurement, read 4 to 6 September 2026 at pinned commits</p>
+    <h2 class="label">One of eight</h2>
+
+    <div class="block">
+      <p class="callout"><b>Ten widely deployed agent and agent-memory systems
+        were read at pinned commits against twenty record-keeping requirements.
+        Eight of the ten take or gate consequential actions. Of those eight,
+        ONE can identify the person who approved one.</b> Six cannot. One could
+        not be determined from outside the vendor.</p>
+
+      <p>This page exists because that number gets quoted and a number without
+        a method is an anecdote. Everything needed to check it, dispute it or
+        reuse it is here: what was asked, of what, on what date, at which
+        commit, and the command that recomputes the whole thing.</p>
+
+      <h3>The question, in the rubric's own words</h3>
+      <p>The requirement is <span class="mono">R3.5</span>, one of twenty:</p>
+      <p class="callout"><b>&ldquo;Does an approval identify a person or a named
+        role holder?&rdquo;</b> Present means the approver is a person or a
+        role, not a model or a process. The partial case, stated in the rubric
+        rather than invented afterwards, is that an approval step exists but
+        the approver may be an automated principal.</p>
+
+      <h3>The eight, one row each</h3>
+      <div class="scroller">
+      <table class="reg">
+        <thead><tr><th>System</th><th>R3.5 names a person</th><th>Read at commit</th><th>Assessed</th></tr></thead>
+        <tbody>
+          <tr><td class="s">AutoGen</td><td class="v n">absent</td><td class="d mono">027ecf0a379b</td><td class="d">2026-09-04</td></tr>
+          <tr><td class="s">CrewAI</td><td class="v n">absent</td><td class="d mono">92eb5f91830c</td><td class="d">2026-09-04</td></tr>
+          <tr><td class="s">Haystack</td><td class="v n">absent</td><td class="d mono">82da3adc2fac</td><td class="d">2026-09-06</td></tr>
+          <tr><td class="s">LangGraph</td><td class="v n">absent</td><td class="d mono">81bf17b23123</td><td class="d">2026-09-04</td></tr>
+          <tr><td class="s">Letta Code</td><td class="v">undetermined</td><td class="d mono">e0a0e1e62278</td><td class="d">2026-09-04</td></tr>
+          <tr><td class="s">OMEM</td><td class="v">present</td><td class="d mono">9a77c2066553</td><td class="d">2026-09-04</td></tr>
+          <tr><td class="s">OpenAI Agents SDK</td><td class="v n">absent</td><td class="d mono">89c02c828ee8</td><td class="d">2026-09-04</td></tr>
+          <tr><td class="s">Pydantic AI</td><td class="v n">absent</td><td class="d mono">c0e4d824eaa0</td><td class="d">2026-09-06</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <p><b>The one that can is OMEM, which is this project's own reference
+        implementation.</b> That is said here, in the same size as the finding,
+        because a measurement whose only passing subject belongs to the author
+        is worth exactly as much as its disclosure. It carries no evidential
+        weight and the number is more useful stated as <i>one of eight, and
+        that one is mine</i> than as <i>one of eight</i>.</p>
+
+      <h3>What this does not say</h3>
+      <ul>
+        <li><b>Not that these are bad systems.</b> None of them was built to
+          answer this question, and until 2026 nobody asked them to. The
+          finding is about timing rather than quality.</li>
+        <li><b>Not that a person cannot be named at all.</b> It says the
+          structure carrying what a human decided has no field for which human
+          decided it, so an integration that wants to record it has to put it
+          somewhere the framework does not define.</li>
+        <li><b>Not a claim about every version.</b> Each verdict is against one
+          commit on one date, both printed above. A system that added the field
+          afterwards is not described by this page, and the fix for that is a
+          pull request against the subject file rather than an argument.</li>
+        <li><b>Not a certification, and not an audit.</b> It is a reading of
+          public source code, published so a wrong verdict is cheap to
+          demonstrate.</li>
+      </ul>
+
+      <h3>Recompute it</h3>
+      <p>Every verdict cites a file and a line at the pinned commit. The
+        per-system pages carry the evidence behind each one, and the subject
+        files are the same data as JSON.</p>
+      <pre class="snip"><code>git clone https://github.com/troybrandonc-bit/machine-testimony
+python3 census/manifest.py --check</code></pre>
+      <p>The full register is at <a href="/register/">/register/</a>, the
+        per-system verdicts at <a href="/register/">each subject's own
+        page</a>, and the dated edition of the whole census, with a DOI, at
+        <a href="/census/2026-09/">/census/2026-09/</a>.</p>
+
+      <h3>Why the number matters on a date</h3>
+      <p>Colorado's Senate Bill 26-189 applies on <b>1 January 2027</b>, and
+        its proposed Rule 7.7 asks a deployer to retain a record showing the
+        reviewer's identity. The measurement above is the distance between that
+        requirement and what deployers can produce from software they already
+        bought. <b>It can be read as an argument against the rule</b>, since
+        the rule's presumption is rebuttable by evidence that review is
+        technically impossible, and that reading is addressed at
+        <a href="/colorado-deployers/">/colorado-deployers/</a> rather than
+        avoided.</p>
+<!--cite:start-->
+      <h3>Citing this</h3>
+      <p>The readings are CC BY 4.0, which asks for attribution, so the reference is here rather than left to be composed. This block is generated from the page it sits on, so a date that moves here moves in the citation too.</p>
+      <pre class="snip"><code>Clifford, T. (2026). One of eight agent systems can name the person who approved an action. Machine Testimony. https://machinetestimony.org/named-approver/</code></pre>
+      <pre class="snip"><code>@misc{clifford2026namedapprover,
+  author = {Clifford, Troy},
+  title  = {One of eight agent systems can name the person who approved an action},
+  year   = {2026},
+  note   = {Machine Testimony, read 6 September 2026},
+  url    = {https://machinetestimony.org/named-approver/},
+}</code></pre>
+      <p>This page carries no DOI. It cites its dated URL, and saying so is the point: a citation naming a deposit that does not exist is worse than one naming a page that does.</p>
+<!--cite:end-->
+    </div>
+  </div>
+</div>
+<footer class="foot">
+  <div class="wrap">
+    <nav>
+      <div>
+        <h2>What the rules require</h2>
+        <a href="/obligation/">Every instrument read</a>
+        <a href="/colorado/">Colorado</a>
+        <a href="/colorado-deployers/">Colorado: for deployers</a>
+        <a href="/united-states/">United States</a>
+        <a href="/united-kingdom/">United Kingdom</a>
+        <a href="/south-korea/">South Korea</a>
+        <a href="/eu-ai-act/">EU AI Act</a>
+        <a href="/aiuc-1/">AIUC-1</a>
+        <a href="/chatbots/">Companion chatbots</a>
+        <a href="/explaining/">The duty to explain</a>
+      </div>
+      <div>
+        <h2>What software can show</h2>
+        <a href="/register/">The register</a>
+        <a href="/approval-binding/">Approval binding</a>
+        <a href="/#census">The conformance census</a>
+        <a href="/demand/">Who asked for it</a>
+        <a href="/directory/">Who can answer</a>
+      </div>
+      <div>
+        <h2>The record</h2>
+        <a href="/#conformance">Conformance levels</a>
+        <a href="/tr-3/">TR-3</a>
+        <a href="/approvals/">Recording who approved</a>
+        <a href="/tamper-evidence/">Tamper evidence</a>
+        <a href="/anchor/">Anchor a record</a>
+        <a href="/formats/">Record formats</a>
+        <a href="/witness/">Witness criteria</a>
+      </div>
+      <div>
+        <h2>Things you can run</h2>
+        <a href="/check/">Check a record</a>
+        <a href="/review/">Review your logs</a>
+        <a href="/assess/">Assess a system</a>
+        <a href="/ask/">Ask your supplier</a>
+        <a href="/implement/">Implementing it</a>
+      </div>
+      <div>
+        <h2>About this project</h2>
+        <a href="/#question">The question</a>
+        <a href="/#papers">Working papers</a>
+        <a href="/#publications">Publications</a>
+        <a href="/underwriting/">Underwriting</a>
+        <a href="/#taking-part">Taking part</a>
+        <a href="/changes/">Proposing a change</a>
+      </div>
+    </nav>
+    <hr>
+  </div>
+  <div class="wrap">
+    <p>Editor: Troy Clifford. Operated by Garnet Taurus Ltd.</p>
+    <p>Specification text CC BY 4.0. Schema and tools MIT.</p>
+    <p>Machine Testimony is a research programme, not a registered institute or a certification body.</p>
+  </div>
+</footer>
+
+</body>
+</html>
