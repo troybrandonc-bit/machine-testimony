@@ -1,0 +1,248 @@
+<!--title: What the instrument library does, and what it refuses to claim
+    desc: The specification, the validator and the census stay free. What is sold is the instrument library: a dated map from what a law or standard asks a record to show to whether a deployer's own records show it, kept current as the texts move, checked against Colorado's proposed Rule 7.7 item by item and against twenty instruments at once.
+    slug: instrument-->
+
+<div class="wrap main">
+  <div>
+    <p class="dateline">Written 11 September 2026</p>
+    <h2 class="label">The instrument library</h2>
+
+    <div class="block">
+      <p class="callout"><b>Install it, and you get the record for everything
+        a record can carry, plus a dated list of exactly which obligations
+        your records evidence and which they do not.</b></p>
+
+      <p>Not <i>you are compliant</i>. Nobody can sell that, and the sentence
+        that makes this worth buying is the second half rather than the
+        first: you will know, before somebody asks, which of the six things
+        Colorado's Rule 7.7 wants you can actually produce.</p>
+
+      <h3>Why not &ldquo;install and you are compliant&rdquo;</h3>
+      <p>Because it is false, and because this library exists to catch
+        exactly that claim in other people's products. The census reads ten
+        systems and publishes what they cannot do. A tool from the same
+        author that quietly implied a compliance verdict would end the only
+        asset the work has, the first time an assessor checked.</p>
+      <p>Compliance is a judgement about a particular deployment by somebody
+        qualified to make it. This maps, and it does not conclude.</p>
+
+      <h3>Rule 7.7, item by item, honestly</h3>
+      <p>Colorado's proposed Rule 7.7 requires a record showing six things
+        when a meaningful human review is conducted. It is the sharpest test
+        available because it is specific, it is dated, and it applies on
+        <b>1 January 2027</b>.</p>
+
+      <div class="scroller">
+      <table class="reg">
+        <thead><tr><th>What the rule wants</th><th>What an install delivers</th></tr></thead>
+        <tbody>
+          <tr><td class="s">The reviewer identity</td>
+              <td>Yes, where the approval path hands over an authenticated
+              session. The record carries the approver and
+              <span class="mono">identity_source</span>, which says whether
+              the identity was resolved from authentication or supplied by
+              the caller. It cannot invent an identity that was never
+              captured.</td></tr>
+          <tr><td class="s">Review timestamps</td>
+              <td>Yes. With the standing caveat that a timestamp is written
+              by the party whose conduct is in question, which is
+              <a href="https://github.com/troybrandonc-bit/machine-testimony/issues/49">issue #49</a>
+              and is not solved.</td></tr>
+          <tr><td class="s">A written justification</td>
+              <td>Yes, where the approval path captures one. The format
+              carries a reason.</td></tr>
+          <tr><td class="s">Whether the reviewer approved, modified or overrode</td>
+              <td><b>No.</b> This is a gap in the format, not in any
+              framework it reads. See below.</td></tr>
+          <tr><td class="s">Primary evidence available to the reviewer</td>
+              <td><b>No, and not from here.</b> Only the interface that
+              rendered it knows what a person was shown. Nothing installed
+              downstream can find out, and of six agent frameworks read, no
+              approval object asserts it.</td></tr>
+          <tr><td class="s">Reviewer authority and training, and their access
+              to the system's intended use and limitations</td>
+              <td><b>Never.</b> Attributes of a person in HR and identity
+              systems, and a fact about what a console displayed. No record
+              format produces them and none should claim to.</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p>Two of six are mechanical. One depends on the deployer's own
+        interface. Two are not facts about a decision at all. And one is
+        this library's own to close.</p>
+
+      <h3>The one owed</h3>
+      <p><span class="mono">verdict</span> is <span class="mono">permitted</span>
+        or <span class="mono">refused</span>. The Testimony Record cannot
+        express &ldquo;modified&rdquo; either, which means a reviewer who
+        changed an action before allowing it is recorded as having approved
+        it unchanged. That is
+        <a href="https://github.com/troybrandonc-bit/machine-testimony/issues/88">issue #88</a>,
+        disclosed in the Colorado comment and in the testimony that went with
+        it.</p>
+      <p>It matters more than any other row above. Rule 7.7 asks for the
+        distinction twice, and then makes it evidentiary: an override that
+        fully reverses a decision <i>indicates that human review was
+        meaningful</i>. The rule keys its conclusion to a signal the format
+        cannot yet emit. Three of five agent frameworks read cannot emit it
+        either, which is why this is a real market rather than a deficiency
+        peculiar to one product. This library is the only one of the four
+        that publishes the gap about itself.</p>
+
+      <h3>What comes with an install</h3>
+      <ol>
+        <li><b>A record</b>, written where the deployer already is, from
+          what their own systems emit. Nothing leaves their environment: the
+          loop makes no network calls and the pack carries no telemetry, and
+          both are tested rather than asserted.</li>
+        <li><b>A gap report, dated and per obligation.</b> Which rows a
+          deployer's records evidence, which they do not, and which are not
+          answerable from records at all. That third category is the one
+          nobody else says, and it is the one that stops an assessor wasting
+          a week.</li>
+        <li><b>A bundle an assessor can check alone</b>, without the vendor,
+          without a login, and without trusting the library that produced
+          it.</li>
+        <li><b>The same thing again next quarter</b>, against the text as it
+          then reads.</li>
+        <li><b>The answer across every text at once</b>, and which of them
+          are law today. Twenty instruments, and most deployers are subject
+          to more than one.</li>
+        <li><b>The answer across every record at once, against every text at
+          once.</b> One file, checked against all twenty in a single pass,
+          sorted by whether each currently binds.</li>
+        <li><b>A way to close the gap, not only measure it.</b> The free
+          adapter for a deployer's framework, the exact wiring snippet, and a
+          check chained straight onto the record it just produced.</li>
+        <li><b>Proof that the maintenance is real, not asserted.</b> A diff
+          between two committed versions of the same reading: obligations
+          added, obligations removed, whether the text now binds when it did
+          not before.</li>
+      </ol>
+
+      <h3>The question one text at a time cannot answer</h3>
+      <p>Reading one instrument is the right shape for advising on Colorado
+        specifically and the wrong shape for the first question a deployer
+        actually asks, which is not <i>what does this text want</i> but
+        <b>does anybody require this of me yet</b>.</p>
+      <p>A single pass across every published reading answers it: which of
+        them ask a record to show who intervened, sorted by whether they are
+        law on a given date. As at 13 September 2026, from the readings in
+        this build:</p>
+      <ul>
+        <li><b>Twelve of twenty</b> instruments ask a record to show who
+          intervened.</li>
+        <li><b>Four are law:</b> Article 22(3) of the GDPR, applicable since
+          25 May 2018; Quebec's section 12.1, in force since 22 September
+          2023; Articles 22A to 22D of the UK GDPR, in force since 5 February
+          2026; and Article 34(1)(4) of South Korea's Framework Act, in force
+          since 22 January 2026.</li>
+        <li><b>Two more are in effect and are not law:</b> AIUC-1, a
+          certification scheme, and the ICO's automated decision-making
+          guidance, a regulator's published expectation. These are the two
+          that ask for a record of the review itself rather than only a
+          right to one, and neither can be enforced as one.</li>
+        <li>The rest is a deadline: Colorado on 1 January 2027, the EU AI
+          Act on 2 December 2027, and two sets of Colorado rules that are
+          filed and not yet law.</li>
+      </ul>
+      <p>Every line of that comes from a force block in the reading it
+        describes, and a reading whose commencement cannot be established
+        from a held source says <i>unknown</i> rather than implying a date.
+        One committed text carries a literal placeholder where its effective
+        date belongs; the library says so rather than guessing one in.</p>
+
+      <h3>What that reading cannot answer either</h3>
+      <p>Naming which instruments ask for a signal is not the same as
+        knowing whether a deployer's own records supply it, because it never
+        reads a record, only the law. Checking one file against every
+        instrument at once closes that from the other side: which of the
+        twenty a deployer fully answers, which they partly answer, and which
+        ask a record for nothing at all. The clause-level detail against one
+        named instrument is still there for the deployer who already knows
+        which law applies to them and does not want the census version of
+        the answer.</p>
+
+      <h3>Closing the gap, not only measuring it</h3>
+      <p>The library's fourth piece is deliberately not a new paid thing. It
+        names the free adapter for one of five frameworks (LangGraph,
+        CrewAI, the OpenAI Agents SDK, Pydantic AI, AutoGen), prints
+        the install line and the wiring snippet verbatim from that adapter's
+        own README, and chains straight into a full check on the record it
+        just produced. The adapter is MIT, standalone, and depends on
+        nothing sold here; it makes a system able to write who approved an
+        action, from what identity source, with what outcome, going forward.
+        That is the one field the census found missing in nine of ten
+        deployed agent systems.</p>
+      <p><b>What this does not claim, stated as plainly as everywhere else on
+        this site.</b> Producing that field closes exactly the gap this
+        library measures. It does not satisfy a law's requirements about a
+        reviewer's training, authority or independence, and no record format
+        should claim to. The tool says this in its own output rather than
+        leaving it to be assumed, the same discipline every reading here
+        holds every other instrument to.</p>
+      <p>Not every deployer is asking the census question. Somebody who
+        already knows a client operates only in Korea does not want to be
+        told which of twenty texts might apply; they want to know what
+        Korea's Framework Act specifically asks for. Scoping the final check
+        to one named instrument instead of all twenty answers that directly.
+        The install step is unchanged either way: the adapter writes one
+        record format regardless of which law it will be read against, and
+        it is the check, not the record, that is jurisdiction-specific.</p>
+
+      <h3>Why it is a subscription and not a download</h3>
+      <p>Not because of a licence check. Because of decay.</p>
+      <p>Colorado's rules were filed on 11 August 2026, revised on or about
+        23 September, and take effect on 1 January 2027. The instrument
+        tracking them is dated and re-read when they move. A copy from last
+        quarter does not stop working; it starts being <b>wrong</b>, which is
+        the one thing a compliance buyer cannot tolerate.</p>
+      <p>That is why the statute and the proposed rules are kept as separate
+        instruments. On any given date one of them may get re-read and the
+        other may not, and a customer can see which. The maintenance is the
+        product, demonstrated rather than described.</p>
+
+      <h3>Demonstrated, not described</h3>
+      <p>&ldquo;The same thing again next quarter&rdquo; is a promise until
+        somebody can see it happen. A diff between two committed versions of
+        the same reading reports the difference the way everything else in
+        this library reports anything: obligations added, obligations
+        removed, and whether force changed, none of it summarised from
+        memory. The two versions are the two commits that actually touched
+        the file, not a hand-written changelog kept alongside it, because a
+        changelog can drift from what was actually read and a diff of the
+        reading itself cannot.</p>
+      <p>An instrument read once and not yet re-read says so rather than
+        inventing a predecessor to compare against, and reports exactly
+        that.</p>
+
+      <h3>What it is not</h3>
+      <ul>
+        <li>Not legal advice, and not a compliance assessment.</li>
+        <li>Not a certification, and not a mark anybody can display.</li>
+        <li>Not an opinion about any person or any deployment.</li>
+        <li>Not a claim that a record establishes what happened. A record
+          establishes what was written down, and the difference between
+          those is the whole subject of this site.</li>
+      </ul>
+
+      <h3>What is free and stays free</h3>
+      <p>The specification, the validator, the emitter, the conformance
+        corpus, the census rubric and the converter. A specification nobody
+        can implement without permission is not a specification, and the
+        position this library is sold into requires not owning the thing it
+        is measured against.</p>
+      <p>What is sold is this library and the maintenance of it: the mapping
+        from an obligation somebody else wrote to a signal in a record, kept
+        current, with the reading published so a buyer can check the map
+        rather than trust it.</p>
+
+      <h3>Get in touch</h3>
+      <p>There is no price on this page on purpose. What a licence costs
+        depends on how many instruments and how many seats, and the honest
+        answer to that is a conversation rather than a table. Write to
+        <a href="mailto:troy@machinetestimony.com">troy@machinetestimony.com</a>
+        with what you need read and what you need checked against.</p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,554 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What the instrument library does, and what it refuses to claim &ndash; Machine Testimony</title>
+<meta name="description" content="The specification, the validator and the census stay free. What is sold is the instrument library: a dated map from what a law or standard asks a record to show to whether a deployer's own records show it, kept current as the texts move, checked against Colorado's proposed Rule 7.7 item by item and against twenty instruments at once.">
+<meta property="og:title" content="What the instrument library does, and what it refuses to claim">
+<meta property="og:description" content="The specification, the validator and the census stay free. What is sold is the instrument library: a dated map from what a law or standard asks a record to show to whether a deployer's own records show it, kept current as the texts move, checked against Colorado's proposed Rule 7.7 item by item and against twenty instruments at once.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://machinetestimony.org/instrument/">
+<meta property="og:image" content="https://machinetestimony.org/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="What the instrument library does, and what it refuses to claim">
+<meta name="twitter:description" content="The specification, the validator and the census stay free. What is sold is the instrument library: a dated map from what a law or standard asks a record to show to whether a deployer's own records show it, kept current as the texts move, checked against Colorado's proposed Rule 7.7 item by item and against twenty instruments at once.">
+<meta name="twitter:image" content="https://machinetestimony.org/og.png">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/icon.png" type="image/png" sizes="512x512">
+<link rel="apple-touch-icon" href="/icon.png">
+<link rel="canonical" href="https://machinetestimony.org/instrument/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+
+  /* Built to the NBER pattern, which is what a research bureau's site actually
+     looks like: one coloured band carrying the lockup, the utility links, the
+     navigation and the name together; the institution named large and centred
+     in a serif; outlined destination tiles; then a dense white body in two
+     columns with a rail. Serif for reading, sans for metadata, underlined
+     links, hairline rules, and far less air than a product page. */
+  :root{
+    --band:#123a6b; --band-2:#0e2f57; --band-ink:#ffffff; --band-dim:#b9cbe4;
+    --paper:#ffffff; --ink:#111417; --body:#24292d; --muted:#5f6a72;
+    --rule:#c9cfd4; --rule-soft:#e3e7ea; --label:#123a6b; --link:#123a6b;
+    --display:"Source Serif 4",Georgia,"Times New Roman",serif;
+    --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --band:#0c2340; --band-2:#081a2f; --band-ink:#f2f6fb; --band-dim:#9db3ce;
+      --paper:#0f1214; --ink:#eef0f2; --body:#c2c8cd; --muted:#8a939a;
+      --rule:#2c3236; --rule-soft:#1f2427; --label:#9dc0ef; --link:#9dc0ef;
+    }
+  }
+  :root[data-theme="dark"]{
+    --band:#0c2340; --band-2:#081a2f; --band-ink:#f2f6fb; --band-dim:#9db3ce;
+    --paper:#0f1214; --ink:#eef0f2; --body:#c2c8cd; --muted:#8a939a;
+    --rule:#2c3236; --rule-soft:#1f2427; --label:#9dc0ef; --link:#9dc0ef;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--body);
+    font-family:var(--display);font-size:17px;line-height:1.55;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 30px}
+  a{color:var(--link);text-decoration:underline;text-underline-offset:2px;
+    text-decoration-thickness:1px}
+  a:hover{text-decoration-thickness:2px}
+
+  /* ── the band: lockup, utility, nav and the name, all one field ─────── */
+  .band{background:var(--band);color:var(--band-ink);
+    background-image:linear-gradient(180deg,var(--band) 0%,var(--band-2) 100%)}
+  .band a{color:var(--band-ink);text-decoration:none}
+  .band a:hover{text-decoration:underline}
+  .topbar{display:flex;align-items:center;gap:26px;flex-wrap:wrap;padding:16px 0 12px}
+  .lockup{display:flex;align-items:center;gap:13px}
+  .lockup .mk{width:31px;height:31px;flex:none;color:var(--band-ink)}
+  .lockup .bar{width:2px;align-self:stretch;background:var(--band-ink);opacity:.55}
+  .lockup .nm{font-family:var(--sans);font-weight:700;font-size:11.5px;
+    letter-spacing:.085em;line-height:1.32;text-transform:uppercase}
+  .utility{margin-left:auto;font-family:var(--sans);font-size:13.5px;
+    display:flex;gap:12px;align-items:center;color:var(--band-dim)}
+  .utility .sep{opacity:.45}
+  nav.primary{border-bottom:1px solid rgba(255,255,255,.42);
+    display:flex;gap:26px;flex-wrap:wrap;padding:9px 0 11px;
+    font-family:var(--sans);font-size:14.5px}
+
+  .hero{text-align:center;padding:54px 0 46px}
+  .hero h1{font-family:var(--display);font-weight:700;color:var(--band-ink);
+    font-size:clamp(2.3rem,5.4vw,3.5rem);line-height:1.05;letter-spacing:-.012em;
+    margin:0}
+  .hero .strap{max-width:44rem;margin:20px auto 0;color:var(--band-ink);
+    font-size:clamp(1.02rem,2vw,1.24rem);line-height:1.45;opacity:.94}
+  .tiles{display:grid;gap:16px;margin:34px auto 0;max-width:52rem}
+  @media (min-width:700px){.tiles{grid-template-columns:1fr 1fr}}
+  .tile{border:1px solid rgba(255,255,255,.6);padding:17px 20px;
+    font-family:var(--sans);font-weight:600;font-size:15px;color:var(--band-ink);
+    text-decoration:none;display:block}
+  .tile:hover{background:rgba(255,255,255,.09);text-decoration:none}
+
+  /* ── the body: main column and a rail ───────────────────────────────── */
+  .main{display:grid;gap:34px;padding-top:40px;padding-bottom:10px}
+  /* Grid children default to min-width:auto and so refuse to shrink below
+     their content. On a phone this is a single column, so one wide code
+     block or table pushed the whole page past the viewport. The desktop
+     rule below says minmax(0,1fr) and was masking it above 960px. */
+  .main>*{min-width:0}
+  @media (min-width:960px){
+    .main{grid-template-columns:minmax(0,1fr) 21rem;gap:52px;align-items:start}
+  }
+  h2.label{font-family:var(--display);font-weight:700;color:var(--label);
+    font-size:1.06rem;margin:0 0 12px;padding-bottom:9px;
+    border-bottom:1px solid var(--rule)}
+  .block{margin:0 0 40px}
+  .block p{margin:0 0 15px;max-width:46rem}
+  .block p:last-child{margin-bottom:0}
+
+  table.levels{width:100%;border-collapse:collapse;font-size:16px;font-variant-numeric:tabular-nums}
+  table.levels th{text-align:left;font-family:var(--sans);font-size:12.5px;color:var(--muted);
+    font-weight:600;padding:0 14px 8px 0;border-bottom:1px solid var(--rule)}
+  table.levels td{padding:13px 14px 13px 0;border-bottom:1px solid var(--rule-soft);
+    vertical-align:top}
+  table.levels td.lv{font-family:var(--sans);font-weight:700;font-size:12.5px;
+    color:var(--label);white-space:nowrap;}
+  table.levels td.t{font-weight:600;color:var(--ink);min-width:15rem}
+
+  .entries{list-style:none;margin:0;padding:0}
+  .entries li{padding:16px 0;border-bottom:1px solid var(--rule-soft)}
+  .entries li:first-child{padding-top:0}
+  .entries h3{font-size:1.12rem;font-weight:600;margin:0 0 4px;line-height:1.32}
+  .entries h3 a{color:var(--ink)}
+  .entries .kind{font-family:var(--sans);font-weight:600;font-size:12.5px;color:var(--muted);
+    display:block;margin-bottom:5px}
+  .entries p{margin:0;font-size:16px;max-width:44rem}
+  .entries .meta{margin-top:7px;font-family:var(--sans);font-size:12.5px;
+    color:var(--muted)}
+
+  /* ── the rail ───────────────────────────────────────────────────────── */
+  .rail{border-top:3px solid var(--band);padding-top:14px}
+  .rail h2{font-family:var(--display);font-weight:700;color:var(--label);
+    font-size:1.02rem;margin:0 0 10px}
+  .rail .item{padding:13px 0;border-bottom:1px solid var(--rule-soft)}
+  .rail .item:last-of-type{border-bottom:0}
+  .rail .item b{display:block;font-weight:600;color:var(--ink);font-size:1rem;
+    margin-bottom:3px}
+  .rail .item p{margin:0;font-size:15px;color:var(--body)}
+  .rail .links{list-style:none;margin:16px 0 0;padding:16px 0 0;
+    border-top:1px solid var(--rule);font-family:var(--sans);font-size:14.5px}
+  .rail .links li{margin:0 0 7px}
+
+  footer.foot{border-top:3px solid var(--band);margin-top:34px;
+    padding:20px 0 46px;font-family:var(--sans);font-size:13.5px;color:var(--muted)}
+  footer.foot p{margin:0 0 4px}
+  .foot nav{display:grid;gap:20px 30px;margin:0 0 22px;
+    grid-template-columns:repeat(auto-fit,minmax(168px,1fr))}
+  .foot nav h2{font-family:var(--sans);font-size:12.5px;font-weight:600;
+    color:var(--ink);margin:0 0 7px}
+  .foot nav a{display:block;color:var(--muted);text-decoration:none;
+    margin:0 0 4px;font-size:13px}
+  .foot nav a:hover{color:var(--ink);text-decoration:underline}
+  .foot hr{border:0;border-top:1px solid var(--rule);margin:0 0 16px}
+
+  /* Only what a prose page needs beyond the shared stylesheet. */
+  pre.snip{background:none;border-left:2px solid var(--rule);margin:0 0 16px;
+    padding:2px 0 2px 13px;font-size:13px;overflow-x:auto;max-width:100%;
+    font-family:var(--mono);line-height:1.55}
+  pre.snip.addr{overflow-x:visible;white-space:pre-wrap;overflow-wrap:anywhere}
+  .block h3{font-family:var(--display);font-weight:600;color:var(--ink);
+    font-size:1.08rem;margin:26px 0 8px}
+  .block ol,.block ul{margin:0 0 15px;padding-left:1.15rem;max-width:46rem}
+  .block li{margin:0 0 7px}
+  .dateline{font-family:var(--sans);font-size:12.5px;color:var(--muted);
+    margin:0 0 22px}
+  /* The one sentence a page is allowed to insist on. For a measured number the
+     rest of the page exists to explain, never for emphasis on an opinion. */
+  p.callout{border-left:2px solid var(--band);padding:10px 0 10px 14px;
+    margin:0 0 17px;max-width:46rem}
+  table.facts{width:100%;border-collapse:collapse;font-size:14px;margin:0 0 20px;font-variant-numeric:tabular-nums}
+  table.facts th{text-align:left;font-family:var(--sans);font-size:12.5px;
+    font-weight:600;color:var(--body);padding:0 12px 6px 0;
+    white-space:nowrap;vertical-align:top;width:8.5rem}
+  table.facts td{padding:0 0 6px;font-family:var(--mono);font-size:12.5px;
+    overflow-wrap:anywhere;border-bottom:1px solid var(--rule-soft)}
+  table.facts th{width:6.6rem;font-size:11.5px}
+  /* The register's tables. A wide table scrolls inside its own box rather
+     than pushing the page sideways, which is the thing that made the site
+     unreadable on a phone the first time. */
+  .scroller{overflow-x:auto;max-width:100%;margin:0 0 16px}
+  table.reg{border-collapse:collapse;font-size:14px;min-width:34rem;font-variant-numeric:tabular-nums}
+  table.reg th{text-align:left;font-family:var(--sans);font-size:12.5px;
+    font-weight:600;color:var(--body);padding:0 14px 7px 0;
+    white-space:nowrap;border-bottom:1px solid var(--rule)}
+  table.reg td{padding:8px 14px 8px 0;border-bottom:1px solid var(--rule-soft);
+    vertical-align:top}
+  table.reg td.s{font-weight:600;white-space:nowrap}
+  table.reg td.n,table.reg td.lv,table.reg td.d{font-family:var(--sans);
+    font-size:12.5px;white-space:nowrap;color:var(--body)}
+  table.reg td.lv{font-weight:700}
+  table.reg td.v{font-family:var(--sans);font-size:13px;font-weight:400;
+    white-space:nowrap;color:var(--muted)}
+  /* Absent is the finding, so it is the one that is not muted. */
+  table.reg td.v.n{color:var(--ink)}
+  table.reg td.w{font-family:var(--mono);font-size:12px;color:var(--muted);
+    overflow-wrap:anywhere}
+  .tag{font-family:var(--sans);font-size:12.5px;font-weight:400;
+    font-style:italic;color:var(--muted);white-space:nowrap}
+  @media (max-width:620px){
+    table.reg{font-size:13px}
+    table.reg td.w{font-size:11px}
+    pre.snip{font-size:12px}
+    table.facts th{width:6.6rem;font-size:10px}
+    table.facts td{font-size:11.5px}
+  }
+</style>
+</head>
+<body>
+
+<div class="band">
+  <div class="wrap">
+    <div class="topbar">
+      <div class="lockup">
+        <svg class="mk" viewBox="0 0 64 64" aria-hidden="true">
+          <g fill="currentColor">
+            <rect x="2" y="18" width="20" height="20"/>
+            <polygon points="2,38 22,38 2,56"/>
+            <rect x="30" y="22" width="20" height="20"/>
+            <polygon points="50,22 30,22 50,4"/>
+          </g>
+        </svg>
+        <div class="bar"></div>
+        <div class="nm">Machine<br>Testimony</div>
+      </div>
+      <div class="utility">
+        <a href="https://datatracker.ietf.org/doc/draft-clifford-testimony-record/">Specification</a>
+        <span class="sep">|</span>
+        <a href="https://github.com/troybrandonc-bit/machine-testimony">Validator and adapters</a>
+        <span class="sep">|</span>
+        <a href="/llms.txt">For machines</a>
+      </div>
+    </div>
+    <nav class="primary">
+      <a href="/obligation/">What the rules require</a>
+      <a href="/colorado/">Colorado</a>
+      <a href="/register/">The register</a>
+      <a href="/instrument/">The instrument</a>
+      <a href="/check/">Check a record</a>
+      <a href="/tr-3/">TR-3</a>
+      <a href="/assess/">Assess a system</a>
+      <a href="/implement/">Implementing it</a>
+      <a href="/#question">The question</a>
+    </nav>
+  </div>
+</div>
+<div class="wrap main">
+  <div>
+    <p class="dateline">Written 11 September 2026</p>
+    <h2 class="label">The instrument library</h2>
+
+    <div class="block">
+      <p class="callout"><b>Install it, and you get the record for everything
+        a record can carry, plus a dated list of exactly which obligations
+        your records evidence and which they do not.</b></p>
+
+      <p>Not <i>you are compliant</i>. Nobody can sell that, and the sentence
+        that makes this worth buying is the second half rather than the
+        first: you will know, before somebody asks, which of the six things
+        Colorado's Rule 7.7 wants you can actually produce.</p>
+
+      <h3>Why not &ldquo;install and you are compliant&rdquo;</h3>
+      <p>Because it is false, and because this library exists to catch
+        exactly that claim in other people's products. The census reads ten
+        systems and publishes what they cannot do. A tool from the same
+        author that quietly implied a compliance verdict would end the only
+        asset the work has, the first time an assessor checked.</p>
+      <p>Compliance is a judgement about a particular deployment by somebody
+        qualified to make it. This maps, and it does not conclude.</p>
+
+      <h3>Rule 7.7, item by item, honestly</h3>
+      <p>Colorado's proposed Rule 7.7 requires a record showing six things
+        when a meaningful human review is conducted. It is the sharpest test
+        available because it is specific, it is dated, and it applies on
+        <b>1 January 2027</b>.</p>
+
+      <div class="scroller">
+      <table class="reg">
+        <thead><tr><th>What the rule wants</th><th>What an install delivers</th></tr></thead>
+        <tbody>
+          <tr><td class="s">The reviewer identity</td>
+              <td>Yes, where the approval path hands over an authenticated
+              session. The record carries the approver and
+              <span class="mono">identity_source</span>, which says whether
+              the identity was resolved from authentication or supplied by
+              the caller. It cannot invent an identity that was never
+              captured.</td></tr>
+          <tr><td class="s">Review timestamps</td>
+              <td>Yes. With the standing caveat that a timestamp is written
+              by the party whose conduct is in question, which is
+              <a href="https://github.com/troybrandonc-bit/machine-testimony/issues/49">issue #49</a>
+              and is not solved.</td></tr>
+          <tr><td class="s">A written justification</td>
+              <td>Yes, where the approval path captures one. The format
+              carries a reason.</td></tr>
+          <tr><td class="s">Whether the reviewer approved, modified or overrode</td>
+              <td><b>No.</b> This is a gap in the format, not in any
+              framework it reads. See below.</td></tr>
+          <tr><td class="s">Primary evidence available to the reviewer</td>
+              <td><b>No, and not from here.</b> Only the interface that
+              rendered it knows what a person was shown. Nothing installed
+              downstream can find out, and of six agent frameworks read, no
+              approval object asserts it.</td></tr>
+          <tr><td class="s">Reviewer authority and training, and their access
+              to the system's intended use and limitations</td>
+              <td><b>Never.</b> Attributes of a person in HR and identity
+              systems, and a fact about what a console displayed. No record
+              format produces them and none should claim to.</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p>Two of six are mechanical. One depends on the deployer's own
+        interface. Two are not facts about a decision at all. And one is
+        this library's own to close.</p>
+
+      <h3>The one owed</h3>
+      <p><span class="mono">verdict</span> is <span class="mono">permitted</span>
+        or <span class="mono">refused</span>. The Testimony Record cannot
+        express &ldquo;modified&rdquo; either, which means a reviewer who
+        changed an action before allowing it is recorded as having approved
+        it unchanged. That is
+        <a href="https://github.com/troybrandonc-bit/machine-testimony/issues/88">issue #88</a>,
+        disclosed in the Colorado comment and in the testimony that went with
+        it.</p>
+      <p>It matters more than any other row above. Rule 7.7 asks for the
+        distinction twice, and then makes it evidentiary: an override that
+        fully reverses a decision <i>indicates that human review was
+        meaningful</i>. The rule keys its conclusion to a signal the format
+        cannot yet emit. Three of five agent frameworks read cannot emit it
+        either, which is why this is a real market rather than a deficiency
+        peculiar to one product. This library is the only one of the four
+        that publishes the gap about itself.</p>
+
+      <h3>What comes with an install</h3>
+      <ol>
+        <li><b>A record</b>, written where the deployer already is, from
+          what their own systems emit. Nothing leaves their environment: the
+          loop makes no network calls and the pack carries no telemetry, and
+          both are tested rather than asserted.</li>
+        <li><b>A gap report, dated and per obligation.</b> Which rows a
+          deployer's records evidence, which they do not, and which are not
+          answerable from records at all. That third category is the one
+          nobody else says, and it is the one that stops an assessor wasting
+          a week.</li>
+        <li><b>A bundle an assessor can check alone</b>, without the vendor,
+          without a login, and without trusting the library that produced
+          it.</li>
+        <li><b>The same thing again next quarter</b>, against the text as it
+          then reads.</li>
+        <li><b>The answer across every text at once</b>, and which of them
+          are law today. Twenty instruments, and most deployers are subject
+          to more than one.</li>
+        <li><b>The answer across every record at once, against every text at
+          once.</b> One file, checked against all twenty in a single pass,
+          sorted by whether each currently binds.</li>
+        <li><b>A way to close the gap, not only measure it.</b> The free
+          adapter for a deployer's framework, the exact wiring snippet, and a
+          check chained straight onto the record it just produced.</li>
+        <li><b>Proof that the maintenance is real, not asserted.</b> A diff
+          between two committed versions of the same reading: obligations
+          added, obligations removed, whether the text now binds when it did
+          not before.</li>
+      </ol>
+
+      <h3>The question one text at a time cannot answer</h3>
+      <p>Reading one instrument is the right shape for advising on Colorado
+        specifically and the wrong shape for the first question a deployer
+        actually asks, which is not <i>what does this text want</i> but
+        <b>does anybody require this of me yet</b>.</p>
+      <p>A single pass across every published reading answers it: which of
+        them ask a record to show who intervened, sorted by whether they are
+        law on a given date. As at 13 September 2026, from the readings in
+        this build:</p>
+      <ul>
+        <li><b>Twelve of twenty</b> instruments ask a record to show who
+          intervened.</li>
+        <li><b>Four are law:</b> Article 22(3) of the GDPR, applicable since
+          25 May 2018; Quebec's section 12.1, in force since 22 September
+          2023; Articles 22A to 22D of the UK GDPR, in force since 5 February
+          2026; and Article 34(1)(4) of South Korea's Framework Act, in force
+          since 22 January 2026.</li>
+        <li><b>Two more are in effect and are not law:</b> AIUC-1, a
+          certification scheme, and the ICO's automated decision-making
+          guidance, a regulator's published expectation. These are the two
+          that ask for a record of the review itself rather than only a
+          right to one, and neither can be enforced as one.</li>
+        <li>The rest is a deadline: Colorado on 1 January 2027, the EU AI
+          Act on 2 December 2027, and two sets of Colorado rules that are
+          filed and not yet law.</li>
+      </ul>
+      <p>Every line of that comes from a force block in the reading it
+        describes, and a reading whose commencement cannot be established
+        from a held source says <i>unknown</i> rather than implying a date.
+        One committed text carries a literal placeholder where its effective
+        date belongs; the library says so rather than guessing one in.</p>
+
+      <h3>What that reading cannot answer either</h3>
+      <p>Naming which instruments ask for a signal is not the same as
+        knowing whether a deployer's own records supply it, because it never
+        reads a record, only the law. Checking one file against every
+        instrument at once closes that from the other side: which of the
+        twenty a deployer fully answers, which they partly answer, and which
+        ask a record for nothing at all. The clause-level detail against one
+        named instrument is still there for the deployer who already knows
+        which law applies to them and does not want the census version of
+        the answer.</p>
+
+      <h3>Closing the gap, not only measuring it</h3>
+      <p>The library's fourth piece is deliberately not a new paid thing. It
+        names the free adapter for one of five frameworks (LangGraph,
+        CrewAI, the OpenAI Agents SDK, Pydantic AI, AutoGen), prints
+        the install line and the wiring snippet verbatim from that adapter's
+        own README, and chains straight into a full check on the record it
+        just produced. The adapter is MIT, standalone, and depends on
+        nothing sold here; it makes a system able to write who approved an
+        action, from what identity source, with what outcome, going forward.
+        That is the one field the census found missing in nine of ten
+        deployed agent systems.</p>
+      <p><b>What this does not claim, stated as plainly as everywhere else on
+        this site.</b> Producing that field closes exactly the gap this
+        library measures. It does not satisfy a law's requirements about a
+        reviewer's training, authority or independence, and no record format
+        should claim to. The tool says this in its own output rather than
+        leaving it to be assumed, the same discipline every reading here
+        holds every other instrument to.</p>
+      <p>Not every deployer is asking the census question. Somebody who
+        already knows a client operates only in Korea does not want to be
+        told which of twenty texts might apply; they want to know what
+        Korea's Framework Act specifically asks for. Scoping the final check
+        to one named instrument instead of all twenty answers that directly.
+        The install step is unchanged either way: the adapter writes one
+        record format regardless of which law it will be read against, and
+        it is the check, not the record, that is jurisdiction-specific.</p>
+
+      <h3>Why it is a subscription and not a download</h3>
+      <p>Not because of a licence check. Because of decay.</p>
+      <p>Colorado's rules were filed on 11 August 2026, revised on or about
+        23 September, and take effect on 1 January 2027. The instrument
+        tracking them is dated and re-read when they move. A copy from last
+        quarter does not stop working; it starts being <b>wrong</b>, which is
+        the one thing a compliance buyer cannot tolerate.</p>
+      <p>That is why the statute and the proposed rules are kept as separate
+        instruments. On any given date one of them may get re-read and the
+        other may not, and a customer can see which. The maintenance is the
+        product, demonstrated rather than described.</p>
+
+      <h3>Demonstrated, not described</h3>
+      <p>&ldquo;The same thing again next quarter&rdquo; is a promise until
+        somebody can see it happen. A diff between two committed versions of
+        the same reading reports the difference the way everything else in
+        this library reports anything: obligations added, obligations
+        removed, and whether force changed, none of it summarised from
+        memory. The two versions are the two commits that actually touched
+        the file, not a hand-written changelog kept alongside it, because a
+        changelog can drift from what was actually read and a diff of the
+        reading itself cannot.</p>
+      <p>An instrument read once and not yet re-read says so rather than
+        inventing a predecessor to compare against, and reports exactly
+        that.</p>
+
+      <h3>What it is not</h3>
+      <ul>
+        <li>Not legal advice, and not a compliance assessment.</li>
+        <li>Not a certification, and not a mark anybody can display.</li>
+        <li>Not an opinion about any person or any deployment.</li>
+        <li>Not a claim that a record establishes what happened. A record
+          establishes what was written down, and the difference between
+          those is the whole subject of this site.</li>
+      </ul>
+
+      <h3>What is free and stays free</h3>
+      <p>The specification, the validator, the emitter, the conformance
+        corpus, the census rubric and the converter. A specification nobody
+        can implement without permission is not a specification, and the
+        position this library is sold into requires not owning the thing it
+        is measured against.</p>
+      <p>What is sold is this library and the maintenance of it: the mapping
+        from an obligation somebody else wrote to a signal in a record, kept
+        current, with the reading published so a buyer can check the map
+        rather than trust it.</p>
+
+      <h3>Get in touch</h3>
+      <p>There is no price on this page on purpose. What a licence costs
+        depends on how many instruments and how many seats, and the honest
+        answer to that is a conversation rather than a table. Write to
+        <a href="mailto:troy@machinetestimony.com">troy@machinetestimony.com</a>
+        with what you need read and what you need checked against.</p>
+    </div>
+  </div>
+</div>
+<footer class="foot">
+  <div class="wrap">
+    <nav>
+      <div>
+        <h2>What the rules require</h2>
+        <a href="/obligation/">Every instrument read</a>
+        <a href="/colorado/">Colorado</a>
+        <a href="/colorado-deployers/">Colorado: for deployers</a>
+        <a href="/united-states/">United States</a>
+        <a href="/united-kingdom/">United Kingdom</a>
+        <a href="/south-korea/">South Korea</a>
+        <a href="/eu-ai-act/">EU AI Act</a>
+        <a href="/aiuc-1/">AIUC-1</a>
+        <a href="/chatbots/">Companion chatbots</a>
+        <a href="/explaining/">The duty to explain</a>
+      </div>
+      <div>
+        <h2>What software can show</h2>
+        <a href="/register/">The register</a>
+        <a href="/approval-binding/">Approval binding</a>
+        <a href="/#census">The conformance census</a>
+        <a href="/demand/">Who asked for it</a>
+        <a href="/directory/">Who can answer</a>
+      </div>
+      <div>
+        <h2>The record</h2>
+        <a href="/#conformance">Conformance levels</a>
+        <a href="/tr-3/">TR-3</a>
+        <a href="/approvals/">Recording who approved</a>
+        <a href="/tamper-evidence/">Tamper evidence</a>
+        <a href="/anchor/">Anchor a record</a>
+        <a href="/formats/">Record formats</a>
+        <a href="/witness/">Witness criteria</a>
+      </div>
+      <div>
+        <h2>Things you can run</h2>
+        <a href="/check/">Check a record</a>
+        <a href="/review/">Review your logs</a>
+        <a href="/assess/">Assess a system</a>
+        <a href="/ask/">Ask your supplier</a>
+        <a href="/implement/">Implementing it</a>
+        <a href="/instrument/">The instrument library</a>
+      </div>
+      <div>
+        <h2>About this project</h2>
+        <a href="/#question">The question</a>
+        <a href="/#papers">Working papers</a>
+        <a href="/#publications">Publications</a>
+        <a href="/underwriting/">Underwriting</a>
+        <a href="/#taking-part">Taking part</a>
+        <a href="/changes/">Proposing a change</a>
+      </div>
+    </nav>
+    <hr>
+  </div>
+  <div class="wrap">
+    <p>Editor: Troy Clifford. Operated by Garnet Taurus Ltd.</p>
+    <p>Specification text CC BY 4.0. Schema and tools MIT.</p>
+    <p>Machine Testimony is a research programme, not a registered institute or a certification body.</p>
+  </div>
+</footer>
+
+</body>
+</html>
