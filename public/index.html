@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Machine Testimony: verifiable records of what AI systems did</title>
-<meta name="description" content="An independent research programme on whether what an automated system says about its own reasoning and actions can be verified by someone who was not there.">
+<meta name="description" content="Test what your AI agent's own logs actually prove. A free tool reads records you already have and reports what they establish and what they do not, an independent census measures whether ten deployed agent systems can produce an audit trail at all, and a validator checks any record against a published specification.">
 <meta property="og:title" content="Machine Testimony: verifiable records of what AI systems did">
 <meta property="og:description" content="Testimony is not evidence until someone else can check it.">
 <meta property="og:type" content="website">
@@ -79,12 +79,12 @@
 
   .hero{text-align:center;padding:54px 0 46px}
   .hero h1{font-family:var(--display);font-weight:700;color:var(--band-ink);
-    font-size:clamp(2.3rem,5.4vw,3.5rem);line-height:1.05;letter-spacing:-.012em;
+    font-size:clamp(2.1rem,4.8vw,3.15rem);line-height:1.1;letter-spacing:-.012em;
     margin:0}
   .hero .strap{max-width:44rem;margin:20px auto 0;color:var(--band-ink);
     font-size:clamp(1.02rem,2vw,1.24rem);line-height:1.45;opacity:.94}
   .tiles{display:grid;gap:16px;margin:34px auto 0;max-width:52rem}
-  @media (min-width:700px){.tiles{grid-template-columns:1fr 1fr}}
+  @media (min-width:700px){.tiles{grid-template-columns:repeat(3,1fr)}}
   .tile{border:1px solid rgba(255,255,255,.6);padding:17px 20px;
     font-family:var(--sans);font-weight:600;font-size:15px;color:var(--band-ink);
     text-decoration:none;display:block}
@@ -106,6 +106,7 @@
   .block{margin:0 0 40px}
   .block p{margin:0 0 15px;max-width:46rem}
   .block p:last-child{margin-bottom:0}
+  .cta{font-weight:600}
 
   table.levels{width:100%;border-collapse:collapse;font-size:16px;font-variant-numeric:tabular-nums}
   table.levels th{text-align:left;font-family:var(--sans);font-size:12.5px;color:var(--muted);
@@ -126,6 +127,14 @@
   .entries p{margin:0;font-size:16px;max-width:44rem}
   .entries .meta{margin-top:7px;font-family:var(--sans);font-size:12.5px;
     color:var(--muted)}
+
+  .paths{display:grid;gap:22px;margin-top:6px}
+  @media (min-width:760px){.paths{grid-template-columns:repeat(3,1fr)}}
+  .path{border-top:3px solid var(--band);padding-top:14px}
+  .path h3{font-size:1.02rem;margin:0 0 8px}
+  .path p{margin:0 0 12px;font-size:15.5px;max-width:none}
+  .path ul{list-style:none;margin:0;padding:0;font-family:var(--sans);font-size:14px}
+  .path li{margin:0 0 7px}
 
   /* ── the rail ───────────────────────────────────────────────────────── */
   .rail{border-top:3px solid var(--band);padding-top:14px}
@@ -179,29 +188,28 @@
       </div>
     </div>
     <nav class="primary">
-      <a href="/instrument/">The instrument</a>
-      <a href="/obligation/">What the rules require</a>
-      <a href="/colorado/">Colorado</a>
-      <a href="/register/">The register</a>
+      <a href="/review/">Review your records</a>
       <a href="/check/">Check a record</a>
+      <a href="/register/">The register</a>
+      <a href="/colorado/">Colorado</a>
+      <a href="/obligation/">What the rules require</a>
       <a href="/tr-3/">TR-3</a>
       <a href="/assess/">Assess a system</a>
       <a href="/implement/">Implementing it</a>
-      <a href="#question">The question</a>
+      <a href="/instrument/">The instrument</a>
     </nav>
   </div>
 
   <div class="wrap hero">
-    <h1>Machine Testimony</h1>
+    <h1>Can you prove what an AI agent did?</h1>
     <p class="strap">
-      An independent research programme on whether what an automated system
-      says about its own reasoning and actions can be verified by someone who
-      was not there
+      Machine Testimony provides an open specification, independent research
+      and tools for examining what AI records can actually establish.
     </p>
     <div class="tiles">
-      <a class="tile" href="/instrument/">The instrument library, and what it is sold for</a>
-      <a class="tile" href="https://infrastructure.omem-cloud.com/spec/testimony-record/">The Testimony Record, and how to conform to it</a>
-      <a class="tile" href="https://infrastructure.omem-cloud.com/commons/">The commons corpus, and what it costs to contribute</a>
+      <a class="tile" href="/review/">Review records</a>
+      <a class="tile" href="/check/">Check a record</a>
+      <a class="tile" href="/census/2026-09/">Read the census</a>
     </div>
   </div>
 </div>
@@ -210,13 +218,22 @@
 
   <div>
 
-    <div class="block" id="question">
-      <h2 class="label">The question, and why it is not the same as the answer</h2>
+    <div class="block" id="gap">
+      <h2 class="label">Having logs is not the same as having evidence</h2>
+      <p>
+        A log proves a line of code ran. It does not, by itself, establish who
+        decided the system should act, what they were shown when they
+        decided, or whether the record could be changed afterwards without
+        anyone knowing. Those are three different facts, and most agent
+        software was not built to keep any of them apart from the others.
+      </p>
       <p>
         Machine testimony is what an automated system says about its own
         reasoning and actions: what it believed, what it was told, what it
-        decided, and who allowed it. Testimony is not evidence until someone
-        else can check it.
+        decided, and who allowed it. <b>Testimony is not evidence until
+        someone else can check it.</b> The tools below do the checking. They
+        run on records you already have, in your browser, and nothing is
+        uploaded.
       </p>
       <p>
         The question is not new. In
@@ -236,19 +253,98 @@
         integrity protects the entry rather than the claim inside it. A record
         can be cryptographically perfect and factually false.
       </p>
+    </div>
+
+    <div class="block" id="review">
+      <h2 class="label">Already have AI logs? Find out what they establish</h2>
       <p>
-        The harder questions sit underneath. What did the system believe when
-        it decided, and on what evidence. What contradicted that belief, and is
-        the losing side still in the record. When a premise was later
-        withdrawn, what happened to everything resting on it. When a human
-        approved, was it a second party or the same agent under another name.
+        Drop the records a system already writes, in whatever shape it writes
+        them, and <a href="/review/">Review</a> reports which of four
+        questions those rows can answer: who approved a consequential action,
+        whether that was a person rather than the agent itself, what the
+        system tried and did not do, and whether the file has changed since
+        it was written. It runs in the page, uploads nothing and requires no
+        registration.
+      </p>
+      <p>
+        You do not need to adopt a new record format first. Review reads what
+        you already have and reports the gap, if there is one, before you
+        change anything. <a class="cta" href="/review/">Review records</a>.
       </p>
     </div>
 
-    <div class="block" id="conformance">
-      <h2 class="label">Conformance levels</h2>
-      <p style="margin-bottom:18px">
-        Levels exist so that a system can be placed rather than described. Each
+    <div class="block" id="census">
+      <h2 class="label">We tested today's agent systems</h2>
+      <ul class="entries">
+        <li>
+          <span class="kind">Census No. 1</span>
+          <h3><a href="/census/2026-09/">What Eight Agent Systems Record About What They Did</a></h3>
+          <p>
+            Eight agent memory and agent framework systems read at pinned
+            commits and assessed against the four conformance levels: OMEM,
+            mem0, Graphiti, LangGraph, CrewAI, the OpenAI Agents SDK, AutoGen
+            and Letta Code. Four of them pause a consequential action for a
+            human decision and none records who made it. None cleanly records
+            that data was destroyed, and where a deletion is recorded the
+            deleted content is retained beside it. Every verdict cites a file
+            and a line at the commit it was read from, so it can be refuted
+            rather than argued with.
+          </p>
+          <div class="meta">4 September 2026 &middot; Troy Clifford &middot; Text CC BY 4.0 &middot; <a href="https://doi.org/10.5281/zenodo.22290922">doi:10.5281/zenodo.22290922</a> &middot; Assessments and tooling reproducible</div>
+        </li>
+        <li>
+          <span class="kind">Working Paper No. 2</span>
+          <h3><a href="/papers/wp2/">One of Eight: Can Deployed Agent Systems Record Who Approved an Action?</a></h3>
+          <p>
+            Ten widely deployed agent and agent-memory systems read at pinned
+            commits against twenty record-keeping requirements. Eight of the
+            ten take or gate consequential actions, and one of those eight can
+            identify the person who approved one: the structure carrying what
+            a human decided usually has no field for which human decided it.
+            The one that can is this programme's own implementation, which
+            the paper says in the abstract rather than leaving to be found.
+          </p>
+          <div class="meta">September 2026 &middot; Troy Clifford &middot; Text CC BY 4.0 &middot; <a href="https://doi.org/10.5281/zenodo.22738449">doi:10.5281/zenodo.22738449</a> &middot; Every verdict cites a file and a line</div>
+        </li>
+      </ul>
+      <p style="margin-top:18px">
+        The full comparison, kept current, is at <a href="/register/">the
+        register</a>. <b>How does your own system compare?</b> Read the
+        finding, then run <a href="/review/">Review</a> against your own
+        records to find out, or <a href="/challenge/">submit your own
+        system for the same public reading</a>. Read <a
+        href="/register/#correct">how to challenge a finding</a> if one of
+        the verdicts above looks wrong.
+      </p>
+    </div>
+
+    <div class="block" id="check">
+      <h2 class="label">Have a Testimony Record? Check it</h2>
+      <p>
+        If a system already emits a Testimony Record, <a href="/check/">Check</a>
+        reports the conformance level it reaches and every check behind that
+        level, and shows for each one whether it was <b>verified</b> from the
+        bytes of the record itself or only <b>attested</b>, taken on the
+        emitter's word. The validator runs in the page, the same one the
+        specification publishes, ported to JavaScript and tested against the
+        Python reference on a corpus covering every level and failure mode.
+      </p>
+      <p>
+        <b>What it proves and what it does not.</b> A level is a property of
+        the record, not a judgement about the system that wrote it. It can
+        show that an approval names a person and where that name came from. It
+        cannot show that the person read anything, and below TR-4 nothing here
+        is tamper evidence: a non-decreasing write time is consistent with a
+        record having been appended to, not proof that it was.
+      </p>
+      <p><a class="cta" href="/check/">Check a record</a>.</p>
+    </div>
+
+    <div class="block" id="build">
+      <a id="conformance"></a>
+      <h2 class="label">Make your agents produce stronger records</h2>
+      <p>
+        Levels exist so a system can be placed rather than described. Each
         contains the ones before it, and the validator reports the highest a
         record actually reaches.
       </p>
@@ -279,28 +375,108 @@
           </tr>
         </tbody>
       </table>
-      <p class="cont" style="margin-top:18px">A worked record, anchored to a Time Stamp Authority, is published at <a href="/anchor/">a record you can check without us</a>. Three commands verify it and none of them is ours.</p>
+      <p style="margin-top:18px">
+        Free adapters exist today for <b>LangGraph, CrewAI, the OpenAI Agents
+        SDK, Pydantic AI and AutoGen</b>. Each one names the approval point
+        the framework already has, wires the approver's identity from an
+        authenticated session rather than inventing one, and writes a record
+        the validator above can check. <span class="mono">instrument
+        quickstart --framework &lt;name&gt;</span> prints the install line and
+        the wiring snippet from that adapter's own README and chains straight
+        into a check on the record it just produced. This is not a paid step;
+        the adapters are MIT and depend on nothing sold here.
+      </p>
+      <p>A worked record, anchored to a Time Stamp Authority, is published at <a href="/anchor/">a record you can check without us</a>. Three commands verify it and none of them is ours. <a class="cta" href="/implement/">Implementing it</a>.</p>
+    </div>
+
+    <div class="block" id="colorado-home">
+      <h2 class="label">Colorado is asking the same question</h2>
+      <p>
+        From 1 January 2027, a Colorado deployer of automated decision-making
+        technology must give a consumer meaningful human review and keep
+        records of compliance for three years. The Attorney General's
+        proposed Rule 7.7 asks a record to show who reviewed, what evidence
+        they had, and whether they approved, modified or overrode. This
+        programme has read the signed act, the proposed rules, and measured
+        what deployed agent software can actually produce against them.
+      </p>
+      <p>
+        This is a reading of a rulemaking, not a compliance product. It does
+        not claim Colorado's endorsement or that any software is required by
+        the rule.
+      </p>
+      <p>
+        <a class="cta" href="/colorado/">The legal reading</a> and
+        <a class="cta" href="/colorado-deployers/">what your stack can show</a>.
+      </p>
+    </div>
+
+    <div class="block" id="who-is-this-for">
+      <h2 class="label">Three reasons people come here</h2>
+      <div class="paths">
+        <div class="path">
+          <h3>Building AI agents</h3>
+          <p>Build agents that leave verifiable records, not just logs.</p>
+          <ul>
+            <li><a href="https://infrastructure.omem-cloud.com/spec/testimony-record/">The specification</a></li>
+            <li><a href="https://github.com/troybrandonc-bit/machine-testimony">The emitter and adapters</a></li>
+            <li><a href="/implement/">Implementing it</a></li>
+            <li><a href="/check/">Check a record</a></li>
+          </ul>
+        </div>
+        <div class="path">
+          <h3>Lawyers, auditors, governance teams</h3>
+          <p>Find out what your AI records actually establish.</p>
+          <ul>
+            <li><a href="/review/">Review your records</a></li>
+            <li><a href="/census/2026-09/">The census</a></li>
+            <li><a href="/colorado-deployers/">Colorado research</a></li>
+            <li><a href="/assess/">The assessment rubric</a></li>
+            <li><a href="/instrument/">The maintained instrument library</a></li>
+          </ul>
+        </div>
+        <div class="path">
+          <h3>Researchers and regulators</h3>
+          <p>Measure what AI systems can actually prove.</p>
+          <ul>
+            <li><a href="/census/2026-09/">The census</a></li>
+            <li><a href="/register/">Method and per-system evidence</a></li>
+            <li><a href="/obligation/">What the rules ask a record to show</a></li>
+            <li><a href="https://infrastructure.omem-cloud.com/spec/testimony-record/">The specification</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="block" id="latest">
+      <h2 class="label">Latest research</h2>
+      <ul class="entries">
+        <li>
+          <span class="kind">14 September 2026</span>
+          <h3><a href="https://github.com/troybrandonc-bit/machine-testimony/issues/92">Validator fix: a signature scheme must carry a signature</a></h3>
+          <p>A reader found that <span class="mono">integrity.scheme: "signature"</span> reached the top conformance level with no signer, key or signature bytes. Fixed in both validators the same day and credited to the person who found it.</p>
+        </li>
+        <li>
+          <span class="kind">13 September 2026</span>
+          <h3><a href="/papers/wp2/">Working Paper No. 2 published</a></h3>
+          <p>Ten agent systems and twenty legal instruments, read against the same question: can the software show who approved an action, and does any law require it to.</p>
+        </li>
+        <li>
+          <span class="kind">11 September 2026</span>
+          <h3><a href="/colorado-deployers/">Colorado reading extended for deployers</a></h3>
+          <p>What your stack can show on 1 January 2027, and what changes it, with the free self-service route first.</p>
+        </li>
+        <li>
+          <span class="kind">4 September 2026</span>
+          <h3><a href="/census/2026-09/">The dated census published, with a DOI</a></h3>
+          <p>Eight agent systems assessed against four conformance levels, every verdict citing a file and a line at a pinned commit.</p>
+        </li>
+      </ul>
     </div>
 
     <div class="block" id="papers">
       <h2 class="label">Working papers</h2>
       <ul class="entries">
-        <li>
-          <span class="kind">Working Paper No. 2</span>
-          <h3><a href="/papers/wp2/">One of Eight: Can Deployed Agent Systems Record Who Approved an Action?</a></h3>
-          <p>
-            Ten widely deployed agent and agent-memory systems read at pinned
-            commits against twenty record-keeping requirements. Eight of the ten
-            take or gate consequential actions, and one of those eight can
-            identify the person who approved one: the structure carrying what a
-            human decided usually has no field for which human decided it. The
-            one that can is this programme's own implementation, which the paper
-            says in the abstract rather than leaving to be found. Twenty legal
-            and quasi-legal instruments were read against the same question, and
-            twelve ask a record to show who intervened, four of them law.
-          </p>
-          <div class="meta">September 2026 · Troy Clifford · Text CC BY 4.0 · <a href="https://doi.org/10.5281/zenodo.22738449">doi:10.5281/zenodo.22738449</a> · Every verdict cites a file and a line</div>
-        </li>
         <li>
           <span class="kind">Working Paper No. 1</span>
           <h3><a href="/papers/wp1/">Popularity Is Not Association</a></h3>
@@ -314,29 +490,7 @@
             both revisions, the computational behaviour of the revised system,
             and a correction to a result this programme published earlier.
           </p>
-          <div class="meta">September 2026 · Troy Clifford · Text CC BY 4.0 · <a href="https://doi.org/10.5281/zenodo.22286050">doi:10.5281/zenodo.22286050</a> · Harnesses reproducible; external data not redistributed</div>
-        </li>
-      </ul>
-    </div>
-
-    <div class="block" id="census">
-      <h2 class="label">Conformance census</h2>
-      <ul class="entries">
-        <li>
-          <span class="kind">Census No. 1</span>
-          <h3><a href="/census/2026-09/">What Eight Agent Systems Record About What They Did</a></h3>
-          <p>
-            Eight agent memory and agent framework systems read at pinned
-            commits and assessed against the four conformance levels: OMEM,
-            mem0, Graphiti, LangGraph, CrewAI, the OpenAI Agents SDK, AutoGen
-            and Letta Code. Four of them pause a consequential action for a
-            human decision and none records who made it. None cleanly records
-            that data was destroyed, and where a deletion is recorded the
-            deleted content is retained beside it. Every verdict cites a file
-            and a line at the commit it was read from, so it can be refuted
-            rather than argued with.
-          </p>
-          <div class="meta">4 September 2026 · Troy Clifford · Text CC BY 4.0 · <a href="https://doi.org/10.5281/zenodo.22290922">doi:10.5281/zenodo.22290922</a> · Assessments and tooling reproducible</div>
+          <div class="meta">September 2026 &middot; Troy Clifford &middot; Text CC BY 4.0 &middot; <a href="https://doi.org/10.5281/zenodo.22286050">doi:10.5281/zenodo.22286050</a> &middot; Harnesses reproducible; external data not redistributed</div>
         </li>
       </ul>
     </div>
@@ -351,7 +505,7 @@
             A format for what a system believed, what contradicted it, what it
             tried to do and who approved it, with four conformance levels.
           </p>
-          <div class="meta">Version 0.1 · Text CC BY 4.0 · Schema MIT · Free to implement in any language</div>
+          <div class="meta">Version 0.1 &middot; Text CC BY 4.0 &middot; Schema MIT &middot; Free to implement in any language</div>
         </li>
         <li>
           <span class="kind">Tool</span>
@@ -361,7 +515,7 @@
             repository and run it in your own continuous integration. A
             conformance claim the listener cannot check is an adjective.
           </p>
-          <div class="meta">Python · Zero dependencies</div>
+          <div class="meta">Python &middot; Zero dependencies</div>
         </li>
         <li>
           <span class="kind">Register</span>
@@ -381,7 +535,7 @@
             no fact about any person. Published with a dataset card stating
             what it does not cover.
           </p>
-          <div class="meta">CC BY 4.0 · Consent recorded per contribution · Withdrawal reaches the bank</div>
+          <div class="meta">CC BY 4.0 &middot; Consent recorded per contribution &middot; Withdrawal reaches the bank</div>
         </li>
         <li>
           <span class="kind">Benchmark</span>
@@ -392,7 +546,7 @@
             kept apart, conclusions die with their premises, every memory
             sourced.
           </p>
-          <div class="meta">Runnable harness · In the reference implementation</div>
+          <div class="meta">Runnable harness &middot; In the reference implementation</div>
         </li>
         <li>
           <span class="kind">Benchmark</span>
@@ -403,7 +557,7 @@
             reporting nothing rather than a flattering number when the record
             is too thin to measure.
           </p>
-          <div class="meta">Runnable harness · In the reference implementation</div>
+          <div class="meta">Runnable harness &middot; In the reference implementation</div>
         </li>
         <li>
           <span class="kind">Ledger</span>
@@ -418,7 +572,7 @@
     </div>
 
     <div class="block" id="taking-part">
-      <h2 class="label">Taking part</h2>
+      <h2 class="label">Taking part, and correcting us</h2>
       <p>
         The most useful thing anyone can do with this work is emit a record
         from a system we did not write and run the validator over it. The
@@ -430,9 +584,9 @@
         Nothing here needs permission. The specification text is CC BY, the
         schema and the tools are MIT, and the register lists whoever passes.
       </p>
-    
+
       <p>
-        The third is to tell us the format is wrong. <a href="/changes/">How a change gets in</a> says what is accepted, what is not, and who decides, because a format with no visible route in is one people fork rather than argue with. A defect reported this way is fixed and the erratum names whoever found it.
+        The third is to tell us the format is wrong. <a href="/changes/">How a change gets in</a> says what is accepted, what is not, and who decides, because a format with no visible route in is one people fork rather than argue with. A defect reported this way is fixed and the erratum names whoever found it. Every finding in the census is reproducible the same way: <a href="/register/#correct">a wrong verdict is a pull request or an email away</a>, and this register carries corrections that came from being told a reading was wrong.
       </p>
     </div>
 
@@ -474,6 +628,15 @@
         leaves the judgement to a person.
       </p>
     </div>
+    <div class="item">
+      <b>No legal advice, no certification</b>
+      <p>
+        Nothing here is legal advice, a compliance assessment, or a mark
+        anybody can display. A record establishes what was written down, and
+        the difference between that and what happened is the whole subject of
+        this site.
+      </p>
+    </div>
     <ul class="links">
       <li><a href="https://github.com/troybrandonc-bit/Omem">The reference implementation</a></li>
       <li><a href="https://infrastructure.omem-cloud.com/">Its documentation</a></li>
@@ -486,6 +649,15 @@
 <footer class="foot">
   <div class="wrap">
     <nav>
+      <div>
+        <h2>Things you can run</h2>
+        <a href="/review/">Review your logs</a>
+        <a href="/check/">Check a record</a>
+        <a href="/assess/">Assess a system</a>
+        <a href="/ask/">Ask your supplier</a>
+        <a href="/implement/">Implementing it</a>
+        <a href="/instrument/">The instrument library</a>
+      </div>
       <div>
         <h2>What the rules require</h2>
         <a href="/obligation/">Every instrument read</a>
@@ -502,6 +674,7 @@
       <div>
         <h2>What software can show</h2>
         <a href="/register/">The register</a>
+        <a href="/challenge/">Submit your own system</a>
         <a href="/approval-binding/">Approval binding</a>
         <a href="/#census">The conformance census</a>
         <a href="/demand/">Who asked for it</a>
@@ -518,17 +691,8 @@
         <a href="/witness/">Witness criteria</a>
       </div>
       <div>
-        <h2>Things you can run</h2>
-        <a href="/check/">Check a record</a>
-        <a href="/review/">Review your logs</a>
-        <a href="/assess/">Assess a system</a>
-        <a href="/ask/">Ask your supplier</a>
-        <a href="/implement/">Implementing it</a>
-        <a href="/instrument/">The instrument library</a>
-      </div>
-      <div>
         <h2>About this project</h2>
-        <a href="/#question">The question</a>
+        <a href="/#gap">Why a log is not evidence</a>
         <a href="/#papers">Working papers</a>
         <a href="/#publications">Publications</a>
         <a href="/underwriting/">Underwriting</a>

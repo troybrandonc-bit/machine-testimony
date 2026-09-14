@@ -41,6 +41,11 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://machinetestimony.org/challenge/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://machinetestimony.org/changes/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>

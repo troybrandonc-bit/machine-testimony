@@ -47,6 +47,28 @@ MAIN = '''<div class="wrap main">
 
     <div id="out"></div>
 
+    <h2 class="label" style="margin-top:44px" id="close-the-gap">If this finds a gap</h2>
+    <div class="block">
+      <p>A gap here is not a verdict on the system. Most agent software was
+        not built to keep who-approved apart from that-something-ran, and
+        until 2026 nobody was asking it to. Free adapters exist today for
+        <b>LangGraph, CrewAI, the OpenAI Agents SDK, Pydantic AI and
+        AutoGen</b>. Each names the approval point the framework already has
+        and takes the approver&rsquo;s identity from an authenticated session
+        rather than inventing one.</p>
+      <p><span class="mono">instrument quickstart --framework
+        &lt;name&gt;</span> names the right adapter for a deployer&rsquo;s own
+        framework, prints the install line and the wiring snippet verbatim
+        from that adapter&rsquo;s own README, and chains straight into a
+        <a href="/check/">check</a> on the record it just produced. The
+        adapter is MIT, standalone, and depends on nothing sold here; the
+        library still only measures, and the emitter, which stays free and
+        separate, is what writes.</p>
+      <p>Once a system emits a Testimony Record, <a href="/check/">Check</a>
+        reports the conformance level it reaches and every check behind that
+        level, in the same browser, uploading nothing.</p>
+    </div>
+
     <h2 class="label" style="margin-top:44px">What it will not tell you</h2>
     <div class="block">
       <p>It reports the shape of the rows it was given and concludes nothing

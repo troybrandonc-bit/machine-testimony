@@ -1,0 +1,71 @@
+name: "Evidence challenge: can your AI prove what it did?"
+description: Submit a record from your own system for a public reading, using the same rubric the census uses.
+title: "[evidence-challenge] "
+labels: ["evidence-challenge"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This runs on the same rubric and the same disclosure rules as
+        every other reading published at machinetestimony.org.
+
+        **Before you file this**, run your own record through
+        [Review](https://machinetestimony.org/review/) or
+        [Check](https://machinetestimony.org/check/) first. Both run in
+        your browser and upload nothing. Most of what you want to know,
+        you can find out yourself, privately, before anyone else sees it.
+
+        File this issue only if you want a public reading: a verdict
+        published the same way every system in the census is published,
+        with a file and a line behind every finding, open to anyone
+        challenging it back.
+
+        **What this is not.** Not a compliance assessment. Not a
+        certification. Not legal advice. Not a score or a ranking beyond
+        the same four conformance levels (TR-1 to TR-4) used everywhere
+        else on this site. A reading says what a record establishes, not
+        whether a deployment is lawful.
+  - type: input
+    id: system
+    attributes:
+      label: System or framework
+      description: What produced the record (e.g. "LangGraph, custom agent, v0.3" or "in-house tool").
+    validations:
+      required: true
+  - type: textarea
+    id: record
+    attributes:
+      label: The record, or a link to it
+      description: >
+        Paste the record (one JSON object per line, or a JSON array), or
+        a link to a gist or repo holding it. Redact anything you do not
+        want public before pasting; this issue is public the moment it is
+        filed. If you would rather not publish the record itself, paste
+        the output of Review or Check instead and describe the shape of
+        the record in words.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: claim
+    attributes:
+      label: What you believe the record shows
+      description: >
+        State plainly what you think it establishes, so the reading can
+        be checked against a claim rather than read in a vacuum.
+    validations:
+      required: false
+  - type: checkboxes
+    id: consent
+    attributes:
+      label: Before submitting
+      options:
+        - label: I understand this issue and its contents will be public.
+          required: true
+        - label: >
+            I understand the result is a reading against a published
+            rubric, not a compliance opinion, a certification, or legal
+            advice, and that a wrong verdict is corrected the same way
+            every other verdict on this site is corrected: a reply
+            pointing at the file and the line.
+          required: true

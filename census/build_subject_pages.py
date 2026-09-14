@@ -210,7 +210,7 @@ def render(doc) -> str:
     w("      <h3>How this was read</h3>")
     w("      <p>%s</p>" % esc(doc["method"]))
 
-    w("      <h3>If a verdict here is wrong</h3>")
+    w("      <h3 id=\"correct\">Found an error? Challenge a finding</h3>")
     w("      <p>Then it is wrong in the ordinary way readings are wrong, and "
       "every verdict cites a file and a line at a pinned commit precisely so "
       "that being wrong is cheap to demonstrate. The remedy is a pull request "

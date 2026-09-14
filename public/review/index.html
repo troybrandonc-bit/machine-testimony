@@ -284,15 +284,15 @@
       </div>
     </div>
     <nav class="primary">
-      <a href="/instrument/">The instrument</a>
-      <a href="/obligation/">What the rules require</a>
-      <a href="/colorado/">Colorado</a>
-      <a href="/register/">The register</a>
+      <a href="/review/">Review your records</a>
       <a href="/check/">Check a record</a>
+      <a href="/register/">The register</a>
+      <a href="/colorado/">Colorado</a>
+      <a href="/obligation/">What the rules require</a>
       <a href="/tr-3/">TR-3</a>
       <a href="/assess/">Assess a system</a>
       <a href="/implement/">Implementing it</a>
-      <a href="/#question">The question</a>
+      <a href="/instrument/">The instrument</a>
     </nav>
   </div>
 </div>
@@ -326,6 +326,28 @@
 
     <div id="out"></div>
 
+    <h2 class="label" style="margin-top:44px" id="close-the-gap">If this finds a gap</h2>
+    <div class="block">
+      <p>A gap here is not a verdict on the system. Most agent software was
+        not built to keep who-approved apart from that-something-ran, and
+        until 2026 nobody was asking it to. Free adapters exist today for
+        <b>LangGraph, CrewAI, the OpenAI Agents SDK, Pydantic AI and
+        AutoGen</b>. Each names the approval point the framework already has
+        and takes the approver&rsquo;s identity from an authenticated session
+        rather than inventing one.</p>
+      <p><span class="mono">instrument quickstart --framework
+        &lt;name&gt;</span> names the right adapter for a deployer&rsquo;s own
+        framework, prints the install line and the wiring snippet verbatim
+        from that adapter&rsquo;s own README, and chains straight into a
+        <a href="/check/">check</a> on the record it just produced. The
+        adapter is MIT, standalone, and depends on nothing sold here; the
+        library still only measures, and the emitter, which stays free and
+        separate, is what writes.</p>
+      <p>Once a system emits a Testimony Record, <a href="/check/">Check</a>
+        reports the conformance level it reaches and every check behind that
+        level, in the same browser, uploading nothing.</p>
+    </div>
+
     <h2 class="label" style="margin-top:44px">What it will not tell you</h2>
     <div class="block">
       <p>It reports the shape of the rows it was given and concludes nothing
@@ -354,11 +376,22 @@
   <div class="wrap">
     <nav>
       <div>
+        <h2>Things you can run</h2>
+        <a href="/review/">Review your logs</a>
+        <a href="/check/">Check a record</a>
+        <a href="/assess/">Assess a system</a>
+        <a href="/ask/">Ask your supplier</a>
+        <a href="/implement/">Implementing it</a>
+        <a href="/instrument/">The instrument library</a>
+      </div>
+      <div>
         <h2>What the rules require</h2>
         <a href="/obligation/">Every instrument read</a>
         <a href="/colorado/">Colorado</a>
         <a href="/colorado-deployers/">Colorado: for deployers</a>
         <a href="/united-states/">United States</a>
+        <a href="/united-kingdom/">United Kingdom</a>
+        <a href="/south-korea/">South Korea</a>
         <a href="/eu-ai-act/">EU AI Act</a>
         <a href="/aiuc-1/">AIUC-1</a>
         <a href="/chatbots/">Companion chatbots</a>
@@ -383,17 +416,8 @@
         <a href="/witness/">Witness criteria</a>
       </div>
       <div>
-        <h2>Things you can run</h2>
-        <a href="/check/">Check a record</a>
-        <a href="/review/">Review your logs</a>
-        <a href="/assess/">Assess a system</a>
-        <a href="/ask/">Ask your supplier</a>
-        <a href="/implement/">Implementing it</a>
-        <a href="/instrument/">The instrument library</a>
-      </div>
-      <div>
         <h2>About this project</h2>
-        <a href="/#question">The question</a>
+        <a href="/#gap">Why a log is not evidence</a>
         <a href="/#papers">Working papers</a>
         <a href="/#publications">Publications</a>
         <a href="/underwriting/">Underwriting</a>

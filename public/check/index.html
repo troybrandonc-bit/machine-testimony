@@ -284,15 +284,15 @@
       </div>
     </div>
     <nav class="primary">
-      <a href="/instrument/">The instrument</a>
-      <a href="/obligation/">What the rules require</a>
-      <a href="/colorado/">Colorado</a>
-      <a href="/register/">The register</a>
+      <a href="/review/">Review your records</a>
       <a href="/check/">Check a record</a>
+      <a href="/register/">The register</a>
+      <a href="/colorado/">Colorado</a>
+      <a href="/obligation/">What the rules require</a>
       <a href="/tr-3/">TR-3</a>
       <a href="/assess/">Assess a system</a>
       <a href="/implement/">Implementing it</a>
-      <a href="/#question">The question</a>
+      <a href="/instrument/">The instrument</a>
     </nav>
   </div>
 </div>
@@ -313,6 +313,10 @@
         records covering every level and every failure mode. If the two ever
         disagree the build fails, because two validators that disagree are
         worse than one.</p>
+      <p>Do not have a Testimony Record yet? <a href="/review/">Review</a>
+        reads the logs a system already writes, in whatever shape it writes
+        them, and reports what they establish before you produce anything in
+        this format.</p>
     </div>
 
     <p class="io">
@@ -328,9 +332,10 @@
 
     <h2 class="label" style="margin-top:44px" id="emit">If there is no record to hand</h2>
     <div class="block">
-      <p>Any system can emit one and the format requires nothing of ours. For a
-        LangGraph graph that already pauses for a person, it is an adapter and
-        about five minutes:</p>
+      <p>Any system can emit one and the format requires nothing of ours. Free
+        adapters exist today for <b>LangGraph, CrewAI, the OpenAI Agents SDK,
+        Pydantic AI and AutoGen</b>. For a LangGraph graph that already pauses
+        for a person, it is an adapter and about five minutes:</p>
       <pre class="snip"><code>pip install testimony-langgraph</code></pre>
       <p>The node names the action so the operator&rsquo;s own risk table can
         classify it, and the identity of whoever approves is taken from the
@@ -338,7 +343,13 @@
         adapter will not invent an approver, because there is nothing in
         LangGraph for it to find, so a graph resumed the ordinary way produces
         a record that says so rather than implying a person was involved.</p>
-      <p>The same validator ships with that package as
+      <p>Not sure which of the five applies to your framework? <span class="mono">instrument
+        quickstart --framework &lt;name&gt;</span> names the right adapter,
+        prints its install line and wiring snippet verbatim from that
+        adapter&rsquo;s own README, and chains straight into a check on the
+        record it just produced. The library still only measures; the
+        emitter, which stays free and separate, is what writes.</p>
+      <p>The same validator ships with each adapter as
         <code>testimony-validate</code>, so a record can be checked at a
         terminal as well as here.</p>
     </div>
@@ -399,11 +410,22 @@
   <div class="wrap">
     <nav>
       <div>
+        <h2>Things you can run</h2>
+        <a href="/review/">Review your logs</a>
+        <a href="/check/">Check a record</a>
+        <a href="/assess/">Assess a system</a>
+        <a href="/ask/">Ask your supplier</a>
+        <a href="/implement/">Implementing it</a>
+        <a href="/instrument/">The instrument library</a>
+      </div>
+      <div>
         <h2>What the rules require</h2>
         <a href="/obligation/">Every instrument read</a>
         <a href="/colorado/">Colorado</a>
         <a href="/colorado-deployers/">Colorado: for deployers</a>
         <a href="/united-states/">United States</a>
+        <a href="/united-kingdom/">United Kingdom</a>
+        <a href="/south-korea/">South Korea</a>
         <a href="/eu-ai-act/">EU AI Act</a>
         <a href="/aiuc-1/">AIUC-1</a>
         <a href="/chatbots/">Companion chatbots</a>
@@ -428,17 +450,8 @@
         <a href="/witness/">Witness criteria</a>
       </div>
       <div>
-        <h2>Things you can run</h2>
-        <a href="/check/">Check a record</a>
-        <a href="/review/">Review your logs</a>
-        <a href="/assess/">Assess a system</a>
-        <a href="/ask/">Ask your supplier</a>
-        <a href="/implement/">Implementing it</a>
-        <a href="/instrument/">The instrument library</a>
-      </div>
-      <div>
         <h2>About this project</h2>
-        <a href="/#question">The question</a>
+        <a href="/#gap">Why a log is not evidence</a>
         <a href="/#papers">Working papers</a>
         <a href="/#publications">Publications</a>
         <a href="/underwriting/">Underwriting</a>

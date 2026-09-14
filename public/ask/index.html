@@ -80,12 +80,12 @@
 
   .hero{text-align:center;padding:54px 0 46px}
   .hero h1{font-family:var(--display);font-weight:700;color:var(--band-ink);
-    font-size:clamp(2.3rem,5.4vw,3.5rem);line-height:1.05;letter-spacing:-.012em;
+    font-size:clamp(2.1rem,4.8vw,3.15rem);line-height:1.1;letter-spacing:-.012em;
     margin:0}
   .hero .strap{max-width:44rem;margin:20px auto 0;color:var(--band-ink);
     font-size:clamp(1.02rem,2vw,1.24rem);line-height:1.45;opacity:.94}
   .tiles{display:grid;gap:16px;margin:34px auto 0;max-width:52rem}
-  @media (min-width:700px){.tiles{grid-template-columns:1fr 1fr}}
+  @media (min-width:700px){.tiles{grid-template-columns:repeat(3,1fr)}}
   .tile{border:1px solid rgba(255,255,255,.6);padding:17px 20px;
     font-family:var(--sans);font-weight:600;font-size:15px;color:var(--band-ink);
     text-decoration:none;display:block}
@@ -107,6 +107,7 @@
   .block{margin:0 0 40px}
   .block p{margin:0 0 15px;max-width:46rem}
   .block p:last-child{margin-bottom:0}
+  .cta{font-weight:600}
 
   table.levels{width:100%;border-collapse:collapse;font-size:16px;font-variant-numeric:tabular-nums}
   table.levels th{text-align:left;font-family:var(--sans);font-size:12.5px;color:var(--muted);
@@ -127,6 +128,14 @@
   .entries p{margin:0;font-size:16px;max-width:44rem}
   .entries .meta{margin-top:7px;font-family:var(--sans);font-size:12.5px;
     color:var(--muted)}
+
+  .paths{display:grid;gap:22px;margin-top:6px}
+  @media (min-width:760px){.paths{grid-template-columns:repeat(3,1fr)}}
+  .path{border-top:3px solid var(--band);padding-top:14px}
+  .path h3{font-size:1.02rem;margin:0 0 8px}
+  .path p{margin:0 0 12px;font-size:15.5px;max-width:none}
+  .path ul{list-style:none;margin:0;padding:0;font-family:var(--sans);font-size:14px}
+  .path li{margin:0 0 7px}
 
   /* ── the rail ───────────────────────────────────────────────────────── */
   .rail{border-top:3px solid var(--band);padding-top:14px}
@@ -232,15 +241,15 @@
       </div>
     </div>
     <nav class="primary">
-      <a href="/instrument/">The instrument</a>
-      <a href="/obligation/">What the rules require</a>
-      <a href="/colorado/">Colorado</a>
-      <a href="/register/">The register</a>
+      <a href="/review/">Review your records</a>
       <a href="/check/">Check a record</a>
+      <a href="/register/">The register</a>
+      <a href="/colorado/">Colorado</a>
+      <a href="/obligation/">What the rules require</a>
       <a href="/tr-3/">TR-3</a>
       <a href="/assess/">Assess a system</a>
       <a href="/implement/">Implementing it</a>
-      <a href="/#question">The question</a>
+      <a href="/instrument/">The instrument</a>
     </nav>
   </div>
 </div>
@@ -303,6 +312,15 @@ These come from a published assessment of eight agent systems: https://machinete
   <div class="wrap">
     <nav>
       <div>
+        <h2>Things you can run</h2>
+        <a href="/review/">Review your logs</a>
+        <a href="/check/">Check a record</a>
+        <a href="/assess/">Assess a system</a>
+        <a href="/ask/">Ask your supplier</a>
+        <a href="/implement/">Implementing it</a>
+        <a href="/instrument/">The instrument library</a>
+      </div>
+      <div>
         <h2>What the rules require</h2>
         <a href="/obligation/">Every instrument read</a>
         <a href="/colorado/">Colorado</a>
@@ -318,6 +336,7 @@ These come from a published assessment of eight agent systems: https://machinete
       <div>
         <h2>What software can show</h2>
         <a href="/register/">The register</a>
+        <a href="/challenge/">Submit your own system</a>
         <a href="/approval-binding/">Approval binding</a>
         <a href="/#census">The conformance census</a>
         <a href="/demand/">Who asked for it</a>
@@ -334,17 +353,8 @@ These come from a published assessment of eight agent systems: https://machinete
         <a href="/witness/">Witness criteria</a>
       </div>
       <div>
-        <h2>Things you can run</h2>
-        <a href="/check/">Check a record</a>
-        <a href="/review/">Review your logs</a>
-        <a href="/assess/">Assess a system</a>
-        <a href="/ask/">Ask your supplier</a>
-        <a href="/implement/">Implementing it</a>
-        <a href="/instrument/">The instrument library</a>
-      </div>
-      <div>
         <h2>About this project</h2>
-        <a href="/#question">The question</a>
+        <a href="/#gap">Why a log is not evidence</a>
         <a href="/#papers">Working papers</a>
         <a href="/#publications">Publications</a>
         <a href="/underwriting/">Underwriting</a>
