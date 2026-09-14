@@ -77,11 +77,16 @@ def main():
     check("more than forty cases", len(expected) > 40, len(expected))
     check("every case carries a note explaining what it is for",
           all(v.get("note") for v in expected.values()))
-    for name in ("digest-of-nothing", "anchor-over-another-record"):
+    for name in ("digest-of-nothing", "anchor-over-another-record",
+                 "signature-hollow", "signature-missing-value"):
         check("%s does not reach TR-4" % name,
               expected[name]["level"] != "TR-4", expected[name]["level"])
     check("a record a third party signed does reach TR-4",
           expected["anchor"]["level"] == "TR-4")
+    check("a structurally complete signature reaches TR-4",
+          expected["signature-structurally-complete"]["level"] == "TR-4")
+    check("signature-over-another-digest reaches TR-4 (structural check only)",
+          expected["signature-over-another-digest"]["level"] == "TR-4")
 
     print("\nboth implementations pass it, the way an outsider would run them")
     ref = [sys.executable, os.path.join(ROOT, "spec", "testimony_validate.py"),

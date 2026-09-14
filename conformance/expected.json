@@ -863,6 +863,54 @@
   "scope": "acts",
   "spec": "testimony-record/0.4"
  },
+ "signature-hollow": {
+  "level": "TR-3",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "a signature scheme naming no signer, algorithm, or value",
+  "scope": "acts",
+  "spec": "testimony-record/0.2"
+ },
+ "signature-missing-value": {
+  "level": "TR-3",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": false
+  },
+  "note": "a signature object naming a signer and algorithm but no signature bytes",
+  "scope": "acts",
+  "spec": "testimony-record/0.2"
+ },
+ "signature-over-another-digest": {
+  "level": "TR-4",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": true
+  },
+  "note": "a signature validly formed over another digest; reaches TR-4 (attested) because reference verification evaluates structural completeness rather than cryptographic signature validity",
+  "scope": "acts",
+  "spec": "testimony-record/0.2"
+ },
+ "signature-structurally-complete": {
+  "level": "TR-4",
+  "levels_met": {
+   "TR-1": true,
+   "TR-2": true,
+   "TR-3": true,
+   "TR-4": true
+  },
+  "note": "a signature scheme carrying signer, algorithm and signature bytes, unverified",
+  "scope": "acts",
+  "spec": "testimony-record/0.2"
+ },
  "two-specs": {
   "level": null,
   "levels_met": {

@@ -269,6 +269,34 @@ def cases():
     add("anchor", "a record a third party signed, published at /anchor/",
         anchored)
 
+    # ── signature schemes (machine-testimony#92) ───────────────────────────
+    # A signature scheme must carry a nested signature object with signer,
+    # algorithm and value. Completeness is attested; cryptographic verification
+    # requires external trust roots not present in the zero-dependency validator.
+    sig_signer = "did:key:z6MkhaXgBZDvotDkL5257faiztiGiC2QtKLGpbnnEGta2doK"
+    add("signature-hollow",
+        "a signature scheme naming no signer, algorithm, or value",
+        gated() + [integrity(gated(), scheme="signature")])
+    add("signature-missing-value",
+        "a signature object naming a signer and algorithm but no signature bytes",
+        gated() + [integrity(gated(), scheme="signature",
+                             signature={"signer": sig_signer,
+                                        "algorithm": "ed25519"})])
+    add("signature-structurally-complete",
+        "a signature scheme carrying signer, algorithm and signature bytes, unverified",
+        gated() + [integrity(gated(), scheme="signature",
+                             signature={"signer": sig_signer,
+                                        "algorithm": "ed25519",
+                                        "value": "3045022100bb" * 4})])
+    add("signature-over-another-digest",
+        "a signature validly formed over another digest; reaches TR-4 (attested) "
+        "because reference verification evaluates structural completeness rather "
+        "than cryptographic signature validity",
+        gated() + [integrity(gated(), scheme="signature",
+                             signature={"signer": sig_signer,
+                                        "algorithm": "ed25519",
+                                        "value": "3045022100bb" * 4})])
+
     # An advisory system: it assesses and records, and somebody else executes.
     # Two things about it were expressible and had no worked example, so an
     # implementer had to infer both from prose. First, that `acts: false` is the
