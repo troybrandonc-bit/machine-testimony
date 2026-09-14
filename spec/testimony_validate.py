@@ -1111,6 +1111,51 @@ def validate(text: str) -> Report:
           not hollow, "; ".join(hollow[:3]),
           basis="verified")
 
+    # A signature was the one scheme with no branch at all, so a record reached
+    # TR-4 by typing the word into an enum: no signer, no algorithm, no
+    # signature bytes, and both checks above pass because `digest` is there.
+    # Reported by @RemanenetSpy on machine-testimony#92.
+    #
+    # Nothing in this repository has ever emitted `scheme: "signature"`: not a
+    # conformance fixture, not an adapter, and `testimony_emit.py` carries it in
+    # the enum and never writes it. So this tightens a member no existing record
+    # uses, which is why it is a defect fix applying to every version rather
+    # than an 0.4 addition hiding behind a version gate. Same precedent as the
+    # anchor check on 8 September 2026: a check that should always have been
+    # there is not a new requirement.
+    #
+    # The payload is nested under `signature` rather than flat, so an entry's
+    # members say which scheme they belong to without a reader having to know
+    # the scheme, exactly as `anchor` does for external-anchor.
+    unsigned = []
+    signed = []
+    for g in integrity:
+        if g.get("scheme") != "signature":
+            continue
+        signed.append(g)
+        sig = g.get("signature")
+        if not isinstance(sig, dict):
+            unsigned.append(f"line {g['_line']}: no signature object")
+            continue
+        for f in ("signer", "algorithm", "value"):
+            if not sig.get(f):
+                unsigned.append(f"line {g['_line']}: signature missing {f!r}")
+    if signed:
+        # The two claims kept apart, which is the lesson the anchor check paid
+        # for. Completeness is about bytes in this file and could be called
+        # verified; whether those bytes are a signature that checks out cannot,
+        # and presenting them as one claim is the error this format exists to
+        # expose.
+        r.add("TR-4", "a signature names its signer, its algorithm and its value",
+              not unsigned, "; ".join(unsigned[:3]),
+              basis="attested")
+        r.add("TR-4", "and that signature verifies against the named key",
+              True, "not checked here: this validator has no dependencies on "
+              "purpose, and Ed25519 or ES256 verification is not in the "
+              "standard library. The entry carries what a verifier holding the "
+              "trust roots needs to check it elsewhere",
+              basis="attested")
+
     stale = []
     for g in integrity:
         for cid in g.get("covers") or []:

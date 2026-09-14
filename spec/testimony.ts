@@ -157,6 +157,11 @@ const ATTESTED = new Set([
   "a replay scheme names the engine and its version",
   "an anchor of a kind this validator cannot recompute rests on its authority",
   "and the authority named in it issued that token",
+  // machine-testimony#92. Completeness alone could be called verified, since
+  // it is bytes in the file, but a reader who sees TR-4 and a signature scheme
+  // hears "the signature checks out", and nothing here checks one.
+  "a signature names its signer, its algorithm and its value",
+  "and that signature verifies against the named key",
 ]);
 
 export type Report = {
@@ -934,6 +939,43 @@ export function validate(text: string): Report {
   }
   add("TR-4", "an external anchor names its authority and carries its token",
     hollow.length === 0, hollow.slice(0, 3).join("; "));
+
+  /* A signature was the one scheme with no branch at all, so a record reached
+     TR-4 by typing the word into an enum: no signer, no algorithm, no
+     signature bytes, and both checks above pass because `digest` is there.
+     Reported by @RemanenetSpy on machine-testimony#92.
+
+     Nothing in this repository has ever emitted `scheme: "signature"`, so this
+     tightens a member no existing record uses, which is why it is a defect fix
+     applying to every version rather than an 0.4 addition behind a version
+     gate. The payload is nested under `signature` so an entry's members say
+     which scheme they belong to, exactly as `anchor` does. */
+  const unsigned: string[] = [];
+  const signed: Entry[] = [];
+  for (const g of integrity) {
+    if (str(g.scheme) !== "signature") continue;
+    signed.push(g);
+    const sig = g.signature as Record<string, unknown> | undefined;
+    if (!sig || typeof sig !== "object" || Array.isArray(sig)) {
+      unsigned.push(`line ${g._line}: no signature object`);
+      continue;
+    }
+    for (const f of ["signer", "algorithm", "value"])
+      if (!sig[f]) unsigned.push(`line ${g._line}: signature missing ${JSON.stringify(f)}`);
+  }
+  if (signed.length > 0) {
+    /* The two claims kept apart, which is the lesson the anchor check paid
+       for. Completeness is about bytes in this file; whether those bytes are a
+       signature that checks out is not, and presenting them as one claim is
+       the error this format exists to expose. */
+    add("TR-4", "a signature names its signer, its algorithm and its value",
+      unsigned.length === 0, unsigned.slice(0, 3).join("; "));
+    add("TR-4", "and that signature verifies against the named key", true,
+      "not checked here: this validator has no dependencies on purpose, and " +
+      "Ed25519 or ES256 verification is not in the standard library. The " +
+      "entry carries what a verifier holding the trust roots needs to check " +
+      "it elsewhere");
+  }
 
   const stale: string[] = [];
   for (const g of integrity)

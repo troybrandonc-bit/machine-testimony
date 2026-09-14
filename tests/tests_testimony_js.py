@@ -115,6 +115,30 @@ def records():
     ]
     out["a record-only system at TR-4"] = "\n".join(base)
 
+    # machine-testimony#92: `scheme: "signature"` had no branch in either
+    # validator, so a record reached TR-4 by naming the scheme and nothing
+    # else. Three shapes, because agreeing that a complete signature is
+    # complete is the easy half and agreeing about WHICH member is missing is
+    # the half a reader acts on.
+    sig_base = base[:3]
+    out["a signature scheme naming no signer, algorithm or value"] = "\n".join(
+        sig_base + [line(spec=S2, type="integrity", id="i1",
+                         at="2026-01-01T00:00:03Z", scheme="signature",
+                         digest="sha256:bb", covers=["s", "e1", "b1"])])
+    out["a signature object missing its value"] = "\n".join(
+        sig_base + [line(spec=S2, type="integrity", id="i1",
+                         at="2026-01-01T00:00:03Z", scheme="signature",
+                         digest="sha256:bb", covers=["s", "e1", "b1"],
+                         signature={"signer": "did:key:z6Mk",
+                                    "algorithm": "ed25519"})])
+    out["a structurally complete signature, unverified"] = "\n".join(
+        sig_base + [line(spec=S2, type="integrity", id="i1",
+                         at="2026-01-01T00:00:03Z", scheme="signature",
+                         digest="sha256:bb", covers=["s", "e1", "b1"],
+                         signature={"signer": "did:key:z6Mk",
+                                    "algorithm": "ed25519",
+                                    "value": "3045022100bb"})])
+
     out["the same record claiming to act"] = "\n".join(
         [line(spec=S2, type="scope", id="s", at="2026-01-01T00:00:00Z",
               acts=True, system="x")] + base[1:])
